@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'User Manager',
 	'author' => 'SciActive',
-	'version' => '1.0.2',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('user_manager'),
@@ -24,7 +24,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader&icons',
-		'component' => 'com_mailer&com_jquery&com_pgrid&com_pnotify&com_pform', //&com_jstree
+		'component' => 'com_mailer&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform', //&com_jstree
 		'package' => 'com_user-data'
 	),
 	'recommend' => array(

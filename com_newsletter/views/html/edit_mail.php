@@ -29,20 +29,20 @@ $pines->uploader->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+		<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Subject</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="<?php echo htmlspecialchars($this->entity->subject); ?>" /></label>
+		<input class="pf-field" type="text" name="subject" size="24" value="<?php echo htmlspecialchars($this->entity->subject); ?>" /></label>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Message</h1>
+		<h3>Message</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all peditor" name="data" style="width: 100%;"><?php echo htmlspecialchars($this->entity->message); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea rows="3" cols="35" class="peditor" name="data" style="width: 100%;"><?php echo htmlspecialchars($this->entity->message); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Attachments</h1>
+		<h3>Attachments</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Current Attachments</span>
@@ -56,12 +56,12 @@ $pines->uploader->load();
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Add an Attachment</span>
-		<input class="pf-field ui-widget-content ui-corner-all puploader" name="attachment" type="input" /></label>
+		<input class="pf-field puploader" name="attachment" type="input" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="update" value="yes" />
 		<input type="hidden" name="mail_id" value="<?php echo (int) $this->entity->guid; ?>" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url($this->close_option, $this->close_action)); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+		<input class="pf-button btn btn-primary" type="submit" value="Save Mail" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url($this->close_option, $this->close_action)); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>
 </form>

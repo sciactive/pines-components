@@ -34,7 +34,6 @@ switch ($this->entity->status) {
 }
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_receipt .data_col .name {
 		font-weight: bold;
 	}
@@ -89,7 +88,6 @@ switch ($this->entity->status) {
 	#p_muid_receipt .receipt_note, #p_muid_receipt .comments {
 		font-size: 75%;
 	}
-	/* ]]> */
 </style>
 <div id="p_muid_receipt" class="pf-form pf-form-twocol">
 	<?php

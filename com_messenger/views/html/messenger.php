@@ -13,8 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/jaxl.js");
 	//jaxl.pollUrl = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/jaxl.php";
-	// ]]>
 </script>

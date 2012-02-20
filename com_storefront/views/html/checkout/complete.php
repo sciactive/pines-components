@@ -22,12 +22,7 @@ $this->title = 'Order Completed';
 		Now you can
 	</div>
 	<div class="pf-element pf-buttons">
-		<script type="text/javascript">
-			// <![CDATA[
-			pines(function(){$("#p_muid_receipt, #p_muid_home").button()});
-			// ]]>
-		</script>
-		<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_receipt" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/receipt', array('id' => $this->entity->guid))); ?>');">View Your Receipt</button>
-		<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_home" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');">Go Back Home</button>
+		<button class="pf-button btn btn-primary" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/receipt', array('id' => $this->entity->guid))); ?>');">View Your Receipt</button>
+		<button class="pf-button btn btn-primary" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');">Go Back Home</button>
 	</div>
 </div>

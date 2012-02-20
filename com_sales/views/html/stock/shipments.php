@@ -21,7 +21,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $pines->com_jstree->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var submit_url = <?php echo json_encode(pines_url('com_sales', 'stock/shipments')); ?>;
@@ -114,8 +113,6 @@ $pines->com_jstree->load();
 			});
 		};
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

@@ -15,14 +15,14 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Contact Form',
 	'author' => 'SciActive',
-	'version' => '0.01.0alpha',
+	'version' => '0.02.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'A simple contact form',
 	'description' => 'A contact form used to send messages from the website.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_pform'
+		'component' => 'com_bootstrap&com_pform'
 	),
 );
 

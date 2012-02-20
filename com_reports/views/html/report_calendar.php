@@ -22,7 +22,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_calendar']);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.p_muid_calendar_actions button {
 		padding: 0;
 	}
@@ -34,10 +33,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		width: 16px;
 		height: 16px;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
@@ -208,7 +205,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

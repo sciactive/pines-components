@@ -25,7 +25,6 @@ foreach ($this->entity->products as $cur_product) {
 }
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_product_table {
 		width: 100%;
 		border-collapse: collapse;
@@ -41,7 +40,6 @@ foreach ($this->entity->products as $cur_product) {
 		width: 100%;
 		margin: -.2em;
 	}
-	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/saveship')); ?>">
 	<div class="pf-element">
@@ -117,7 +115,7 @@ foreach ($this->entity->products as $cur_product) {
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<?php echo htmlspecialchars($this->entity->comments); ?>
@@ -125,7 +123,7 @@ foreach ($this->entity->products as $cur_product) {
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Ship" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Ship" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 	</div>
 </form>

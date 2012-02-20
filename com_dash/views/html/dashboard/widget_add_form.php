@@ -15,8 +15,12 @@ $this->title = 'Add Widget(s)';
 $grid_thirds = floor($pines->config->com_bootstrap->grid_columns / 3);
 ?>
 <div class="pf-form" id="p_muid_form">
+	<style type="text/css">
+		.ui-selectable-helper {
+			z-index: 1005;
+		}
+	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$("#p_muid_form").selectable({
 				filter: ".widget_type",
@@ -34,7 +38,6 @@ $grid_thirds = floor($pines->config->com_bootstrap->grid_columns / 3);
 				$("#p_muid_count").text($(".ui-selected", "#p_muid_form").length);
 			};
 		});
-		// ]]>
 	</script>
 	<div class="pf-element pf-full-width">
 		Pick widgets from the following list to add to your dashboard. You can pick multiple by holding CTRL while selecting.

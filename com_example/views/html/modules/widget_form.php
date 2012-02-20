@@ -17,7 +17,7 @@ $pines->entity_manager->sort($foobars, 'name');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Foobar</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="id">
+			<select class="pf-field" name="id">
 				<?php foreach ($foobars as $cur_foobar) { ?>
 				<option value="<?php echo (int) $cur_foobar->guid ?>"><?php echo htmlspecialchars($cur_foobar->name); ?></option>
 				<?php } ?>

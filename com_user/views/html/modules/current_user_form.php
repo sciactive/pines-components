@@ -19,11 +19,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element">
 		<label><span class="pf-label">Text</span>
 			<span class="pf-note">"#name#" and "#username#" will be replaced by the current user's name and username.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="text" size="36" value="Logged in as #name# [#username#]." /></label>
+			<input class="pf-field" type="text" name="text" size="36" value="Logged in as #name# [#username#]." /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Text Align</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="text_align">
+			<select class="pf-field" name="text_align">
 				<option value="inherit">Don't Change</option>
 				<option value="left">Left</option>
 				<option value="right">Right</option>
@@ -33,7 +33,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Font Style</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="font_style">
+			<select class="pf-field" name="font_style">
 				<option value="inherit">Don't Change</option>
 				<option value="normal">Normal</option>
 				<option value="italic">Italic</option>
@@ -42,16 +42,16 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Margin (Pixels)</span>
-		<label class="pf-field" style="white-space: nowrap;">Top: <input class="ui-widget-content ui-corner-all" type="number" name="margin_top" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Right: <input class="ui-widget-content ui-corner-all" type="number" name="margin_right" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Bottom: <input class="ui-widget-content ui-corner-all" type="number" name="margin_bottom" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Left: <input class="ui-widget-content ui-corner-all" type="number" name="margin_left" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Top: <input type="number" name="margin_top" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Right: <input type="number" name="margin_right" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Bottom: <input type="number" name="margin_bottom" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Left: <input type="number" name="margin_left" size="5" value="0" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Padding (Pixels)</span>
-		<label class="pf-field" style="white-space: nowrap;">Top: <input class="ui-widget-content ui-corner-all" type="number" name="padding_top" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Right: <input class="ui-widget-content ui-corner-all" type="number" name="padding_right" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Bottom: <input class="ui-widget-content ui-corner-all" type="number" name="padding_bottom" size="5" value="0" /></label>
-		<label class="pf-field" style="white-space: nowrap;">Left: <input class="ui-widget-content ui-corner-all" type="number" name="padding_left" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Top: <input type="number" name="padding_top" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Right: <input type="number" name="padding_right" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Bottom: <input type="number" name="padding_bottom" size="5" value="0" /></label>
+		<label class="pf-field" style="white-space: nowrap;">Left: <input type="number" name="padding_left" size="5" value="0" /></label>
 	</div>
 </div>

@@ -15,7 +15,6 @@ $this->title = 'Account Recovery';
 $this->note = 'If you\'ve forgotten your username or password, you can use this form to recover your account.';
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var form = $("#p_muid_form");
 		$("input[name=type]", "#p_muid_form").change(function(){
@@ -24,7 +23,6 @@ $this->note = 'If you\'ve forgotten your username or password, you can use this 
 				form.find(".toggle").hide().filter("."+box.val()).show();
 		}).change();
 	});
-	// ]]>
 </script>
 <form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_user', 'recover')); ?>">
 	<div class="pf-element">
@@ -40,11 +38,11 @@ $this->note = 'If you\'ve forgotten your username or password, you can use this 
 		<label>
 			<span class="pf-label toggle password">Username</span>
 			<span class="pf-label toggle username" style="display: none;">Email Address</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="account" size="24" value="" />
+			<input class="pf-field" type="text" name="account" size="24" value="" />
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
 	</div>
 </form>

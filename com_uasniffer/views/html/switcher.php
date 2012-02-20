@@ -26,7 +26,6 @@ $switched = ($_COOKIE['com_uasniffer_switch'] == 'true');
 ?>
 <div id="p_muid_links"<?php echo ($this->center ? ' style="text-align: center;"' : ''); ?>>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var values = function(){
 				var cookies = document.cookie.split(';'), c, date = new Date();
@@ -47,7 +46,6 @@ $switched = ($_COOKIE['com_uasniffer_switch'] == 'true');
 				location.reload(true);
 			});
 		});
-		// ]]>
 	</script>
 	<?php if ($this->show_both || !($is_mobile xor $switched)) { ?>
 	<a href="javascript:void(0);"><?php echo htmlspecialchars($this->mobile_text); ?></a>

@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Shipping Address';
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Address type toggle.
 		var address_us = $("#p_muid_address_us");
@@ -40,18 +39,17 @@ $this->title = 'Shipping Address';
 			$("[name=state]", "#p_muid_form").val(<?php echo json_encode(htmlspecialchars($this->user_address->state)); ?>).change();
 			$("[name=zip]", "#p_muid_form").val(<?php echo json_encode(htmlspecialchars($this->user_address->zip)); ?>).change();
 			$("[name=address_international]", "#p_muid_form").val(<?php echo json_encode(htmlspecialchars($this->user_address->address_international)); ?>).change();
-		}).button();
+		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/shippingsave')); ?>">
 	<div class="pf-element">
 		<span class="pf-label">Autofill</span>
-		<small><button type="button" class="pf-field ui-state-default ui-corner-all" id="p_muid_use_profile">Use My Account Info</button></small>
+		<small><button type="button" class="pf-field btn" id="p_muid_use_profile">Use My Account Info</button></small>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars(isset($this->address->name) ? $this->address->name : $this->user_address->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars(isset($this->address->name) ? $this->address->name : $this->user_address->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Address Type</span>
@@ -61,16 +59,16 @@ $this->title = 'Shipping Address';
 	<div id="p_muid_address_us" style="display: none;">
 		<div class="pf-element">
 			<label><span class="pf-label">Address 1</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->address->address_1); ?>" /></label>
+				<input class="pf-field" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->address->address_1); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Address 2</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->address->address_2); ?>" /></label>
+				<input class="pf-field" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->address->address_2); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">City, State</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->address->city); ?>" />
-			<select class="pf-field ui-widget-content ui-corner-all" name="state">
+			<input class="pf-field" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->address->city); ?>" />
+			<select class="pf-field" name="state">
 				<option value="">None</option>
 				<?php foreach (array(
 						'AL' => 'Alabama',
@@ -134,21 +132,20 @@ $this->title = 'Shipping Address';
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Zip</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->address->zip); ?>" /></label>
+				<input class="pf-field" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->address->zip); ?>" /></label>
 		</div>
 	</div>
 	<div id="p_muid_address_international" style="display: none;">
 		<div class="pf-element pf-full-width">
 			<label><span class="pf-label">Address</span>
-				<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->address->address_international); ?></textarea></span></label>
+				<span class="pf-field pf-full-width">
+					<span class="pf-field" style="display: block;">
+						<textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->address->address_international); ?></textarea>
+					</span>
+				</span></label>
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<script type="text/javascript">
-			// <![CDATA[
-			pines(function(){$("#p_muid_submit").button()});
-			// ]]>
-		</script>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="Continue" />
+		<input class="pf-button btn btn-primary" id="p_muid_submit" type="submit" value="Continue" />
 	</div>
 </form>

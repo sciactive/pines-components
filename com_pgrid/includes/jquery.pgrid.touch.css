@@ -136,6 +136,7 @@
 	border-spacing: 0;
 	width: auto;
 	table-layout: fixed;
+	border-collapse: separate;
 }
 .ui-pgrid-table tbody {
 	overflow: auto;

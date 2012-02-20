@@ -15,16 +15,16 @@ $this->title = 'elFinder Uploader';
 $pines->uploader->load();
 ?>
 <form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_elfinderupload', 'result')); ?>">
-	<div class="pf-heading">
-		<h1>File Uploading Test</h1>
+	<div class="pf-element pf-heading">
+		<h3>File Uploading Test</h3>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">File</span>
-			<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="file" />
+			<input class="pf-field puploader" type="text" name="file" />
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button btn" type="submit" value="Submit" />
 	</div>
 </form>

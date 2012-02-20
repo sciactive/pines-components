@@ -16,17 +16,11 @@ if (isset($this->entity->guid))
 	$this->note = 'Created by ' . htmlspecialchars($this->entity->user->name) . ' on ' . htmlspecialchars(format_date($this->entity->p_cdate, 'date_short')) . ' - Last Modified on ' . htmlspecialchars(format_date($this->entity->p_mdate, 'date_short'));
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .amount {
 		font-weight: bold;
 		display: inline-block;
 		width: 3em;
 		text-align: right;
-	}
-	#p_muid_form .amt_btn {
-		display: inline-block;
-		width: 16px;
-		height: 16px;
 	}
 	#p_muid_form .entry {
 		width: 2em;
@@ -51,10 +45,8 @@ if (isset($this->entity->guid))
 		border: red solid 1px;
 		color: red;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var cash_symbol = <?php echo json_encode($this->entity->currency_symbol); ?>;
 
@@ -105,42 +97,41 @@ if (isset($this->entity->guid))
 
 		update_total();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/savecashout')); ?>">
 	<?php if (!empty($this->entity->review_comments)) {?>
 	<div class="pf-element pf-heading">
-		<h1>Reviewer Comments</h1>
+		<h3>Reviewer Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field"><?php echo htmlspecialchars($this->entity->review_comments); ?></div>
 	</div>
 	<?php } if (!$this->entity->cashed_out) { ?>
 	<div class="pf-element pf-heading">
-		<button class="ui-state-default ui-corner-all clear_btn" type="button" style="display: block; float: right;">Clear All</button>
-		<h1>Cash Drawer Contents</h1>
+		<button class="btn btn-danger clear_btn" type="button" style="display: block; float: right;">Clear All</button>
+		<h3>Cash Drawer Contents</h3>
 	</div>
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
+			<input class="pf-field entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
 			x <span class="amount"><?php echo htmlspecialchars($this->entity->currency_symbol . $cur_denom); ?></span>
-			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
-			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
+			<button class="pf-field btn btn-success add_btn" type="button"><i class="icon-plus icon-white"></i></button>
+			<button class="pf-field btn btn-danger remove_btn" type="button"><i class="icon-minus icon-white"></i></button>
 		</div>
 		<?php } ?>
-		<div class="ui-state-highlight ui-corner-all total">
-			<div>Total in Till</div>
+		<div class="alert alert-info total">
+			<div class="alert-heading">Total in Till</div>
 			<div id="p_muid_total_cashcount"></div>
 		</div>
 	</div>
 	<?php } else { ?>
 	<div class="pf-element pf-heading">
-		<h1>Cash Drawer has been Cashed-Out</h1>
+		<h3>Cash Drawer has been Cashed-Out</h3>
 	</div>
 	<?php
 	$variance = $this->entity->total_out - $this->entity->float;
-	$class = ($this->entity->total == $this->entity->total_out) ? 'ui-state-highlight' : 'ui-state-error';
+	$class = ($this->entity->total == $this->entity->total_out) ? 'alert-success' : 'alert-error';
 	?>
 	<div class="pf-element">
 		<span class="pf-label">Expected Count</span>
@@ -151,12 +142,12 @@ if (isset($this->entity->guid))
 		<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total_out); ?></span>
 		<hr />
 	</div>
-	<div class="pf-element <?php echo $class; ?> ui-corner-all" style="padding: .2em .5em;">
+	<div class="pf-element alert <?php echo $class; ?>" style="padding: .2em .5em;">
 		<span class="pf-label">Error</span>
 		<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total - $this->entity->total_out); ?></span>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Totals</h1>
+		<h3>Totals</h3>
 	</div>
 	<div class="pf-element pf-full-width" style="position: relative; padding-bottom: 75px;">
 		<div class="pf-element">
@@ -168,31 +159,31 @@ if (isset($this->entity->guid))
 			<span class="pf-field">$<?php echo htmlspecialchars($this->entity->float); ?></span>
 			<hr />
 		</div>
-		<div class="pf-element ui-state-highlight ui-corner-all" style="padding: .2em .5em;">
+		<div class="pf-element alert alert-info" style="padding: .2em .5em;">
 			<span class="pf-label">Total Received Cash</span>
 			<span class="pf-field">$<?php echo htmlspecialchars($variance); ?></span>
 		</div>
-		<div class="ui-state-highlight ui-corner-all total">
-			<div>Cash Received</div>
+		<div class="alert alert-info total">
+			<div class="alert-heading">Cash Received</div>
 			<div>$<?php echo htmlspecialchars($variance); ?></div>
 		</div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } if (!$this->entity->cashed_out) { ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Cash Out" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Cash Out" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="&laquo; Close" />
+		<input class="pf-button btn btn-primary" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

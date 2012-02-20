@@ -21,7 +21,5 @@ defined('P_RUN') or die('Direct access prohibited');
 	.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_datetimepicker/includes/<?php echo $pines->config->debug_mode ? 'jquery-ui-timepicker-addon.js' : 'jquery-ui-timepicker-addon.min.js'; ?>");
-	// ]]>
 </script>

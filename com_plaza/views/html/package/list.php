@@ -19,7 +19,6 @@ if (isset($pines->com_fancybox))
 	$pines->com_fancybox->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_info {
 		padding: 1em 2em;
 	}
@@ -31,10 +30,8 @@ if (isset($pines->com_fancybox))
 	#p_muid_info .short_description {
 		font-size: 1.1em;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -176,7 +173,6 @@ if (isset($pines->com_fancybox))
 			});
 		});
 	});
-	// ]]>
 </script>
 <div>
 	<table id="p_muid_grid">

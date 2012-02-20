@@ -37,7 +37,6 @@ have bugs.</p>
 			<pre style="width: 100%; height: 100%; overflow: auto;"><?php var_dump($cur_test[3]); ?></pre>
 		</div>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				var dialog = $("#p_muid_<?php echo htmlspecialchars($key); ?>_details")
 				.dialog({
@@ -51,7 +50,6 @@ have bugs.</p>
 					return false;
 				});
 			});
-			// ]]>
 		</script>
 		<?php
 	}

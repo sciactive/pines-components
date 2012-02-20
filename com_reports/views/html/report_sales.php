@@ -23,7 +23,6 @@ if (isset($this->employee->guid))
 
 ?>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function() {
 		var view_changes = 0;
 		// Create the calendar object.
@@ -117,6 +116,5 @@ if (isset($this->employee->guid))
 		var current_date = $.fullCalendar.parseDate(<?php echo (int) $this->date[0]; ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
-	// ]]>
 </script>
 <div id="p_muid_calendar"></div>

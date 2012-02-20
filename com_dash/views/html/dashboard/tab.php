@@ -15,7 +15,6 @@ $pines->com_bootstrap->load();
 $max_columns = $pines->config->com_bootstrap->grid_columns;
 ?>
 <style type="text/css" scoped="scoped">
-	/* <![CDATA[ */
 	#p_muid_tab {
 		position: relative;
 	}
@@ -27,10 +26,8 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		width: 32px;
 		margin: 0 auto;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var allow_update = false;
 		$("#p_muid_tab .column").sortable({
@@ -40,7 +37,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 			helper: "clone",
 			connectWith: "#p_muid_tab .column",
 			dropOnEmpty: true,
-			handle: "> .ui-widget-header",
+			handle: "> .widget_header",
 			beforeStop: function(){
 				// This ensures that if 2 columns are updated during sort, only
 				// 1 will fire the update.
@@ -84,20 +81,13 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		});
 		$("#p_muid_tab").on("click", ".max_widget", function(){
 			// Maximize widget.
-			$(this).closest(".object").add("#p_muid_tab").toggleClass("maximized");
+			$(this).toggleClass("icon-resize-full icon-resize-small").closest(".object").add("#p_muid_tab").toggleClass("maximized");
 		}).on("click", ".min_widget", function(){
 			// Minimize widget.
-			$(this).toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s").closest(".object").toggleClass("minimized");
-		}).on("click", ".edit_widget", function(){
-			// Bring up the edit menu.
-			var menu = $(this).closest(".controls").children(".edit_widget_menu");
-			menu.show().focus();
-		}).on("mouseleave", ".controls", function(){
+			$(this).toggleClass("icon-chevron-up icon-chevron-down").closest(".object").toggleClass("minimized");
+		}).on("mouseleave", ".object", function(){
 			// Close the edit menu.
-			$(this).children(".edit_widget_menu").hide();
-		}).on("click", ".edit_widget_menu a", function(){
-			// Close the edit menu.
-			$(this).parent().hide();
+			$(this).find(".controls").removeClass("open");
 		}).on("click", ".edit_widget_menu .widget_refresh", function(){
 			// Refresh widget.
 			reload_widget($(this).closest(".object"));
@@ -181,7 +171,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 				dataType: "json",
 				data: {"key": widget.children(".key").text()},
 				beforeSend: function(){
-					widget.find("> .ui-widget-header > .title").text("Deleting...");
+					widget.find("> .widget_header > .title").text("Deleting...");
 				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to remove the widget:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
@@ -245,7 +235,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 									url: <?php echo json_encode(pines_url('com_dash', 'dashboard/buttonssave_json')); ?>,
 									type: "POST",
 									dataType: "json",
-									data: {"key": <?php echo json_encode($this->key); ?>, "buttons": JSON.stringify(struct)},
+									data: {"key": <?php echo json_encode($this->key); ?>, "buttons": JSON.stringify(struct), "buttons_size": form.find("[name=buttons_size]:checked").val()},
 									error: function(XMLHttpRequest, textStatus){
 										pines.error("An error occured while trying to save buttons:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
@@ -254,9 +244,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 											pines.error("Error saving buttons.");
 											return;
 										}
-										var tabs = $("#p_muid_tab").closest(".ui-tabs");
-										var selected = tabs.tabs("option", "selected");
-										tabs.tabs("load", selected);
+										$("#p_muid_tab").closest(".tab-pane").data("tab_loaded", false).data("trigger_link").trigger("show");
 									}
 								});
 								form.dialog('close');
@@ -340,9 +328,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 											pines.error("Error adding widgets.");
 											return;
 										}
-										var tabs = $("#p_muid_tab").closest(".ui-tabs");
-										var selected = tabs.tabs("option", "selected");
-										tabs.tabs("load", selected);
+										$("#p_muid_tab").closest(".tab-pane").data("tab_loaded", false).data("trigger_link").trigger("show");
 									}
 								});
 								form.dialog('close');
@@ -361,17 +347,17 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 				dataType: "json",
 				data: {"key": widget.children(".key").text()},
 				beforeSend: function(){
-					widget.find("> .ui-widget-header .title").text("Loading...").end().children(".content").html("<div class=\"p_muid_loading picon picon-32 picon-throbber\"></div>");
+					widget.find("> .widget_header .title").text("Loading...").end().children(".content").html("<div class=\"p_muid_loading picon picon-32 picon-throbber\"></div>");
 				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to load the widget:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
-					widget.find("> .ui-widget-header .title").text("Error").end().children(".content").html("An error occured while trying to load the widget:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+					widget.find("> .widget_header .title").text("Error").end().children(".content").html("An error occured while trying to load the widget:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data)
 						return;
 					pines.pause();
-					widget.find("> .ui-widget-header .title").html(data.title == "" ? "Untitled Widget" : data.title).end().children(".content").html(data.content);
+					widget.find("> .widget_header .title").html(data.title == "" ? "Untitled Widget" : data.title).end().children(".content").html(data.content);
 					pines.play();
 				}
 			});
@@ -381,16 +367,15 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 			reload_widget($(this));
 		});
 	});
-	// ]]>
 </script>
 <div id="p_muid_tab">
-	<div class="buttons ui-widget-content ui-corner-all">
+	<div class="buttons well <?php echo htmlspecialchars($this->tab['buttons_size']); ?>">
 		<div class="controls">
-			<span class="edit_buttons ui-icon ui-icon-gear" title="Configure Buttons"></span>
+			<span class="edit_buttons w_icon icon-cog" title="Configure Buttons"></span>
 		</div>
 		<?php foreach ((array) $this->tab['buttons'] as $cur_button) {
 			if ($cur_button == 'separator') { ?>
-		<div class="separator ui-widget-content"><span>&nbsp;</span></div>
+		<a class="separator btn"><span>&nbsp;</span></a>
 			<?php } else {
 				$cur_def = $pines->com_dash->get_button_def($cur_button);
 				// Check its conditions.
@@ -399,7 +384,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 						continue 2;
 				} ?>
 		<a class="btn" href="<?php echo htmlspecialchars($cur_def['href']); ?>" title="<?php echo htmlspecialchars($cur_def['description']); ?>">
-			<span class="picon picon-32 <?php echo htmlspecialchars($cur_def['class']); ?>"><?php echo htmlspecialchars($cur_def['text']); ?></span>
+			<span class="picon <?php echo $this->tab['buttons_size'] == 'large' ? 'picon-32' : ''; ?> <?php echo htmlspecialchars($cur_def['class']); ?>"><?php echo htmlspecialchars($cur_def['text']); ?></span>
 		</a>
 		<?php } } ?>
 	</div>
@@ -416,22 +401,21 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 					if (!$pines->depend->check($cur_type, $cur_value))
 						continue 2;
 				} ?>
-			<div class="object ui-widget-content">
+			<div class="object well">
 				<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_w_key); ?></div>
 				<div class="options" style="display: none;"><?php echo htmlspecialchars(json_encode($cur_widget['options'])); ?></div>
-				<div class="ui-widget-header ui-helper-clearfix">
+				<div class="alert-info widget_header clearfix">
 					<span class="title">Loading...</span>
-					<div class="controls ui-helper-clearfix">
-						<span class="edit_widget ui-icon ui-icon-gear" title="Edit this Widget"></span>
-						<span class="max_widget ui-icon ui-icon-arrow-4-diag" title="Maximize this Widget"></span>
-						<span class="min_widget ui-icon ui-icon-triangle-1-n" title="Minimize this Widget"></span>
-						<div class="edit_widget_menu ui-widget-content" style="display: none;">
-							<a href="javascript:void(0);" class="widget_options">Edit Options</a>
-							<br />
-							<a href="javascript:void(0);" class="widget_refresh">Refresh Widget</a>
-							<br /><br />
-							<a href="javascript:void(0);" class="widget_remove">Remove Widget</a>
-						</div>
+					<div class="controls dropdown clearfix">
+						<span class="edit_widget w_icon icon-cog" title="Edit this Widget" data-toggle="dropdown"></span>
+						<span class="max_widget w_icon icon-resize-full" title="Maximize this Widget"></span>
+						<span class="min_widget w_icon icon-chevron-up" title="Minimize this Widget"></span>
+						<ul class="edit_widget_menu dropdown-menu">
+							<li><a href="javascript:void(0);" class="widget_options">Edit Options</a></li>
+							<li><a href="javascript:void(0);" class="widget_refresh">Refresh Widget</a></li>
+							<li class="divider"></li>
+							<li><a href="javascript:void(0);" class="widget_remove">Remove Widget</a></li>
+						</ul>
 					</div>
 				</div>
 				<div class="content">

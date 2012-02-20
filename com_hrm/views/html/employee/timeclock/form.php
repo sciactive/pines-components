@@ -15,7 +15,6 @@ $this->title = 'Edit Timeclock for '.htmlspecialchars($this->entity->user->name)
 $pines->com_datetimepicker->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_timeclock_edit .entry > div {
 		padding: .5em;
 	}
@@ -50,10 +49,8 @@ $pines->com_datetimepicker->load();
 	#p_muid_timeclock_edit button.add-button {
 		float: left;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var cur_entry;
 		var new_entry;
@@ -110,9 +107,9 @@ $pines->com_datetimepicker->load();
 				}
 			});
 			if (error)
-				$("#p_muid_submit").addClass("ui-state-disabled").attr("disabled", "disabled");
+				$("#p_muid_submit").addClass("disabled").attr("disabled", "disabled");
 			else {
-				$("#p_muid_submit").removeClass("ui-state-disabled").removeAttr("disabled");
+				$("#p_muid_submit").removeClass("disabled").removeAttr("disabled");
 				save_to_form();
 			}
 		};
@@ -301,13 +298,12 @@ $pines->com_datetimepicker->load();
 		save_to_form();
 		clean_up();
 	});
-	// ]]>
 </script>
 <div class="pf-form">
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Current Time Range</span>
 		<div class="pf-group">
-			<div style="float: right;"><button type="button" class="ui-state-default ui-corner-all" id="p_muid_change_range">Change time range.</button></div>
+			<div style="float: right;"><button type="button" class="btn" id="p_muid_change_range">Change time range.</button></div>
 			<div class="pf-field" style="font-family: monospace;">
 				<?php echo htmlspecialchars(format_date($this->time_start, 'custom', 'D d M Y h:i:s A T', $this->entity->user->get_timezone())); ?>
 				<br />
@@ -320,7 +316,7 @@ $pines->com_datetimepicker->load();
 		<?php foreach($this->entries as $entry) { ?>
 		<div class="pf-element pf-full-width entry">
 			<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
-				<button class="ui-state-default ui-corner-all">Delete</button>
+				<button class="btn btn-danger">Delete</button>
 				<span class="time">
 					In:&nbsp;&nbsp;<span class="time_in"><?php echo format_date($entry->in, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true)); ?></span>
 					<br />
@@ -340,7 +336,7 @@ $pines->com_datetimepicker->load();
 		<?php } ?>
 		<div id="p_muid_timeclock_entry_template" class="pf-element pf-full-width" style="display: none;">
 			<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
-				<button class="ui-state-default ui-corner-all">Delete</button>
+				<button class="btn btn-danger">Delete</button>
 				<span class="pf-label time">
 					In&nbsp;&nbsp;<span class="time_in"></span>
 					<br />
@@ -356,7 +352,7 @@ $pines->com_datetimepicker->load();
 			</div>
 			<div class="extras" style="display: none;">[]</div>
 		</div>
-		<button class="add-button ui-state-default ui-corner-all">Add</button>
+		<button class="add-button btn btn-success">Add</button>
 	</fieldset>
 	<form method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/save')); ?>">
 		<input type="hidden" name="clock" value="" />
@@ -364,8 +360,8 @@ $pines->com_datetimepicker->load();
 		<input type="hidden" name="time_end" value="<?php echo htmlspecialchars($this->time_end); ?>" />
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->user->guid; ?>" />
 		<div class="pf-element pf-buttons">
-			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="Submit" />
-			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
+			<input class="pf-button btn btn-primary" id="p_muid_submit" type="submit" value="Submit" />
+			<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
 		</div>
 	</form>
 </div>
@@ -373,11 +369,11 @@ $pines->com_datetimepicker->load();
 	<div style="width: 100%;">
 		<div style="width: 48%; float: left;">
 			<span>Time In:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_cur_time_in" type="text" size="24" /><br />
+			<input id="p_muid_cur_time_in" type="text" size="24" /><br />
 			<span>Time Out:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_cur_time_out" type="text" size="24" /><br />
+			<input id="p_muid_cur_time_out" type="text" size="24" /><br />
 			<span>Comments:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_cur_comments" type="text" size="24" /><br />
+			<input id="p_muid_cur_comments" type="text" size="24" /><br />
 		</div>
 		<div style="width: 48%; float: left; margin-left: 1%;">
 			<small>All times entered here are interpreted using the employee's timezone.</small><br />
@@ -397,11 +393,11 @@ $pines->com_datetimepicker->load();
 	<div style="width: 100%;">
 		<div style="width: 48%; float: left;">
 			<span>Time In:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_new_time_in" type="text" size="24" /><br />
+			<input id="p_muid_new_time_in" type="text" size="24" /><br />
 			<span>Time Out:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_new_time_out" type="text" size="24" /><br />
+			<input id="p_muid_new_time_out" type="text" size="24" /><br />
 			<span>Comments:</span><br />
-			<input class="ui-widget-content ui-corner-all" id="p_muid_new_comments" type="text" size="24" /><br />
+			<input id="p_muid_new_comments" type="text" size="24" /><br />
 		</div>
 		<div style="width: 48%; float: left; margin-left: 1%;">
 			<small>All times entered here are interpreted using the employee's timezone.</small><br />
@@ -419,7 +415,7 @@ $pines->com_datetimepicker->load();
 </div>
 <div id="p_muid_time_select_dialog" title="Select a Time Range" style="display: none;">
 	<span>Start Time:</span><br />
-	<input class="ui-widget-content ui-corner-all" id="p_muid_time_start" type="text" size="24" /><br />
+	<input id="p_muid_time_start" type="text" size="24" /><br />
 	<span>End Time:</span><br />
-	<input class="ui-widget-content ui-corner-all" id="p_muid_time_end" type="text" size="24" />
+	<input id="p_muid_time_end" type="text" size="24" />
 </div>

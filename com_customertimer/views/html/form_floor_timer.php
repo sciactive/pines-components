@@ -16,7 +16,6 @@ $pines->com_pgrid->load();
 $pines->com_customer->load_customer_select();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_station_layout {
 		position: relative;
 	}
@@ -27,12 +26,11 @@ $pines->com_customer->load_customer_select();
 	}
 	#p_muid_station_floor .station {
 		position: absolute;
-		background-image: none;
 	}
 	#p_muid_station_floor .station .name {
 		display: block;
 		float: left;
-		font: normal small sans-serif;
+		font: normal xx-small sans-serif;
 	}
 	#p_muid_station_floor .station .points_remain {
 		display: block;
@@ -50,42 +48,19 @@ $pines->com_customer->load_customer_select();
 		margin: 2px;
 		font: normal small sans-serif;
 	}
-	#p_muid_station_floor .station.filled span.ui-button-text {
-		padding: 0.4em 0.2em;
-	}
 
 	/* Status Dependent Styles */
-	#p_muid_station_floor .station.ok {
-		background-color: green;
+	#p_muid_station_floor .station.pulse {
+		background-color: black;
 		color: white;
-	}
-	#p_muid_station_floor .station.warning {
-		background-color: yellow;
-		color: black;
-	}
-	#p_muid_station_floor .station.critical {
-		background-color: red;
-		color: white;
-	}
-	#p_muid_station_floor .station.critical.pulse {
-		background-color: pink;
-		color: black;
-	}
-	#p_muid_station_layout.warning {
-		background-color: gold;
-	}
-	#p_muid_station_layout.critical {
-		background-color: crimson;
 	}
 
 	/* Customer Action Dialog */
 	#p_muid_customer_action div div {
 		margin-bottom: .2em;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var station_layout = $("#p_muid_station_layout");
 		var station_floor = $("#p_muid_station_floor");
@@ -205,7 +180,7 @@ $pines->com_customer->load_customer_select();
 		};
 		var insert_customer = function(station, customer){
 			// Insert a customer into the station.
-			station.element.addClass("filled").children("span.ui-button-text").append($("<span></span>", {
+			station.element.addClass("filled").append($("<span></span>", {
 				"class": "points_remain"
 			})).append($("<span></span>", {
 				"class": "name"
@@ -224,29 +199,29 @@ $pines->com_customer->load_customer_select();
 			$(".name", station.element).html(pines.safe(customer.name));
 			$(".points_remain", station.element).html(pines.safe(customer.points_remain));
 			if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_critical; ?>) {
-				if (station.element.hasClass("ok"))
-					station.element.removeClass("ok");
-				if (station.element.hasClass("warning"))
-					station.element.removeClass("warning");
-				if (!station.element.hasClass("critical"))
-					station.element.addClass("critical");
-				worst_status = "critical";
+				if (station.element.hasClass("btn-success"))
+					station.element.removeClass("btn-success");
+				if (station.element.hasClass("btn-warning"))
+					station.element.removeClass("btn-warning");
+				if (!station.element.hasClass("btn-danger"))
+					station.element.addClass("btn-danger");
+				worst_status = "btn-danger";
 			} else if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_warning; ?>) {
-				if (station.element.hasClass("ok"))
-					station.element.removeClass("ok");
-				if (!station.element.hasClass("warning"))
-					station.element.addClass("warning");
-				if (station.element.hasClass("critical"))
-					station.element.removeClass("critical");
-				if (worst_status != "critical")
-					worst_status = "warning";
+				if (station.element.hasClass("btn-success"))
+					station.element.removeClass("btn-success");
+				if (!station.element.hasClass("btn-warning"))
+					station.element.addClass("btn-warning");
+				if (station.element.hasClass("btn-danger"))
+					station.element.removeClass("btn-danger");
+				if (worst_status != "btn-danger")
+					worst_status = "btn-warning";
 			} else {
-				if (!station.element.hasClass("ok"))
-					station.element.addClass("ok");
-				if (station.element.hasClass("warning"))
-					station.element.removeClass("warning");
-				if (station.element.hasClass("critical"))
-					station.element.removeClass("critical");
+				if (!station.element.hasClass("btn-success"))
+					station.element.addClass("btn-success");
+				if (station.element.hasClass("btn-warning"))
+					station.element.removeClass("btn-warning");
+				if (station.element.hasClass("btn-danger"))
+					station.element.removeClass("btn-danger");
 			}
 			if (customer.points_remain <= 0)
 				start_pulsing(station);
@@ -256,9 +231,10 @@ $pines->com_customer->load_customer_select();
 		var remove_customer = function(station){
 			// Remove the customer from the station.
 			station.customer = null;
-			station.element.children("span.ui-button-text").children(".name").remove();
-			station.element.children("span.ui-button-text").children(".points_remain").remove();
-			station.element.removeClass("filled").removeClass("ok").removeClass("warning").removeClass("critical");
+			station.element.children(".name").remove();
+			station.element.children(".points_remain").remove();
+			station.element.removeClass("filled").removeClass("btn-success").removeClass("btn-warning").removeClass("btn-danger");
+			stop_pulsing(station);
 		};
 		var start_pulsing = function(station){
 			if (station.pulsing)
@@ -280,8 +256,8 @@ $pines->com_customer->load_customer_select();
 		// Make each station's element.
 		$.each(stations, function(station_id, station){
 			station.id = station_id;
-			station.element = $("<div></div>", {
-				"class": "station",
+			station.element = $("<button></button>", {
+				"class": "station btn",
 				"css": {
 					"left": (station.left*100)+"%",
 					"top": (station.top*100)+"%",
@@ -290,13 +266,12 @@ $pines->com_customer->load_customer_select();
 				},
 				"html": "<span class=\"station_id\">"+station_id+"</span>"
 			})
-			.button()
 			.appendTo(station_floor);
 		});
 
 		// Handle clicks on them.
-		station_floor.delegate("div.station", "click", function(){
-			var station_id = $("span.station_id", this).text();
+		station_floor.delegate(".station", "click", function(){
+			var station_id = $(".station_id", this).text();
 			var station = stations[station_id];
 			if ("customer" in station && station.customer)
 				customer_action(station);
@@ -323,7 +298,7 @@ $pines->com_customer->load_customer_select();
 					pines.error("An error occured while trying to refresh the status:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
-					worst_status = "ok";
+					worst_status = "btn-success";
 					$.each(stations, function(station_id, station){
 						var cur_customer = false;
 						$.each(data, function(){
@@ -342,21 +317,21 @@ $pines->com_customer->load_customer_select();
 							insert_customer(station, cur_customer);
 						}
 					});
-					if (worst_status == "critical") {
-						if (station_layout.hasClass("warning"))
-							station_layout.removeClass("warning");
-						if (!station_layout.hasClass("critical"))
-							station_layout.addClass("critical");
-					} else if (worst_status == "warning") {
-						if (!station_layout.hasClass("warning"))
-							station_layout.addClass("warning");
-						if (station_layout.hasClass("critical"))
-							station_layout.removeClass("critical");
+					if (worst_status == "btn-danger") {
+						if (station_layout.hasClass("alert-success"))
+							station_layout.removeClass("alert-success");
+						if (!station_layout.hasClass("alert-error"))
+							station_layout.addClass("alert-error");
+					} else if (worst_status == "btn-warning") {
+						if (station_layout.hasClass("alert-success"))
+							station_layout.removeClass("alert-success");
+						if (station_layout.hasClass("alert-error"))
+							station_layout.removeClass("alert-error");
 					} else {
-						if (station_layout.hasClass("warning"))
-							station_layout.removeClass("warning")
-						if (station_layout.hasClass("critical"))
-							station_layout.removeClass("critical");
+						if (!station_layout.hasClass("alert-success"))
+							station_layout.addClass("alert-success")
+						if (station_layout.hasClass("alert-error"))
+							station_layout.removeClass("alert-error");
 					}
 				}
 			});
@@ -364,9 +339,8 @@ $pines->com_customer->load_customer_select();
 		update_status();
 		setInterval(update_status, 20000);
 	});
-	// ]]>
 </script>
-<div id="p_muid_station_layout">
+<div id="p_muid_station_layout" class="alert alert-success">
 	<img id="p_muid_layout_bg" src="<?php echo htmlspecialchars($this->entity->background); ?>" alt="Station Layout" />
 	<div id="p_muid_station_floor"></div>
 	<br style="clear: both; height: 1px;" />
@@ -403,7 +377,7 @@ $pines->com_customer->load_customer_select();
 			<span class="pf-label">Customer</span>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<div class="pf-group">
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="24" />
+				<input class="pf-field" type="text" id="p_muid_customer" name="customer" size="24" />
 			</div>
 		</div>
 	</div>

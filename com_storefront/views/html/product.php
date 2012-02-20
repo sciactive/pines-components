@@ -27,7 +27,6 @@ unset($categories, $cur_category);
 $pines->com_sales->sort_specs($specs);
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_product .ppy-placeholder {
 		z-index: 100;
 	}
@@ -56,10 +55,8 @@ $pines->com_sales->sort_specs($specs);
 	#p_muid_product .desc {
 		clear: right;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("button.add_cart", "#p_muid_product").click(function(){
 			pines.com_storefront_add_to_cart(<?php echo (int) $this->entity->guid; ?>, <?php echo json_encode($this->entity->name); ?>, <?php echo (float) $this->entity->unit_price; ?>, $("#p_muid_product"));
@@ -67,9 +64,7 @@ $pines->com_sales->sort_specs($specs);
 		<?php if ($this->entity->images) { ?>
 		$(".ppy", "#p_muid_product").popeye();
 		<?php } ?>
-		$("#p_muid_tabs").tabs().find(".ui-tabs-panel").andSelf().removeClass("ui-widget-content");
 	});
-	// ]]>
 </script>
 <div id="p_muid_product">
 	<?php if ($this->entity->images) { ?>
@@ -115,29 +110,28 @@ $pines->com_sales->sort_specs($specs);
 	<br style="clear: right; height: 0;" />
 	<div>
 		<?php if (!$pines->config->com_storefront->catalog_mode) { ?>
-		<div class="button_container"><button class="add_cart ui-state-default ui-corner-all ui-state-focus">Add to Cart</button></div>
+		<div class="button_container"><button class="add_cart btn btn-large btn-primary"><i class="icon-shopping-cart icon-white"></i> Add to Cart</button></div>
 		<?php } ?>
 		<span class="price"><?php echo $pines->com_storefront->format_price($this->entity->unit_price); ?></span>
 	</div>
-	<br style="clear: both; height: 0;" />
-	<div class="pf-form ui-helper-reset">
-		<div id="p_muid_tabs">
-			<ul>
-				<li><a href="#p_muid_tabs_desc">Description</a></li>
-				<?php if ($specs) { ?>
-				<li><a href="#p_muid_tabs_specs">Specifications</a></li>
-				<?php } ?>
-			</ul>
-			<div id="p_muid_tabs_desc">
-				<?php echo format_content($this->entity->description); ?>
-			</div>
-			<?php if ($specs) { ?>
-			<div id="p_muid_tabs_specs">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_desc" data-toggle="tab">Description</a></li>
+		<?php if ($specs) { ?>
+		<li><a href="#p_muid_tab_specs" data-toggle="tab">Specifications</a></li>
+		<?php } ?>
+	</ul>
+	<div id="p_muid_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_desc">
+			<?php echo format_content($this->entity->description); ?>
+		</div>
+		<?php if ($specs) { ?>
+		<div class="tab-pane" id="p_muid_tab_specs">
+			<div class="pf-form">
 				<?php // TODO: Weight, additional fees.
 				foreach ($specs as $key => $cur_spec) {
 					if ($cur_spec['type'] == 'heading') {
 						?><div class="pf-element pf-heading">
-							<h1><?php echo htmlspecialchars($cur_spec['name']); ?></h1>
+							<h3><?php echo htmlspecialchars($cur_spec['name']); ?></h3>
 						</div><?php
 					} else {
 						switch ($cur_spec['type']) {
@@ -158,8 +152,8 @@ $pines->com_sales->sort_specs($specs);
 				unset($specs);
 				?>
 			</div>
-			<?php } ?>
 		</div>
+		<?php } ?>
 	</div>
 	<br style="clear: right; height: 0;" />
 </div>

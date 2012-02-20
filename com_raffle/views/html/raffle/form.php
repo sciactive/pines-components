@@ -16,7 +16,6 @@ $this->note = 'Provide raffle details in this form.';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Contestants
 		var contestants = $("#p_muid_form [name=contestants]");
@@ -127,7 +126,6 @@ $pines->com_pgrid->load();
 			pgrid_view_height: "200px"
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_raffle', 'raffle/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -142,7 +140,7 @@ $pines->com_pgrid->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Public</span>
@@ -158,7 +156,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<label><span class="pf-label">Places</span>
 			<span class="pf-note">The number of winners.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="places" size="5" value="<?php echo htmlspecialchars($this->entity->places); ?>" /></label>
+			<input class="pf-field" type="text" name="places" size="5" value="<?php echo htmlspecialchars($this->entity->places); ?>" /></label>
 	</div>
 	<?php } else { ?>
 	<div class="pf-element">
@@ -166,7 +164,7 @@ $pines->com_pgrid->load();
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Contestants</h1>
+		<h3>Contestants</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table class="contestants_table">
@@ -196,32 +194,32 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">First Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_contestant_first_name" size="24" />
+					<input class="pf-field" type="text" name="cur_contestant_first_name" size="24" />
 				</label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Last Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_contestant_last_name" size="24" />
+					<input class="pf-field" type="text" name="cur_contestant_last_name" size="24" />
 				</label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="email" name="cur_contestant_email" size="24" />
+					<input class="pf-field" type="email" name="cur_contestant_email" size="24" />
 				</label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Phone</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="cur_contestant_phone" size="24" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+					<input class="pf-field" type="tel" name="cur_contestant_phone" size="24" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 				</label>
 			</div>
 		</div>
 		<br style="clear: both; height: 1px;" />
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Public Contestants</h1>
+		<h3>Public Contestants</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table class="public_contestants_table">
@@ -249,7 +247,7 @@ $pines->com_pgrid->load();
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_raffle', 'raffle/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_raffle', 'raffle/list')); ?>');" value="Cancel" />
 	</div>
 </form>

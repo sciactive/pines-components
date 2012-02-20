@@ -20,11 +20,11 @@ $this->title = 'Login';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" /></label>
+			<input class="pf-field" type="text" name="username" size="24" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Password</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="24" /></label>
+			<input class="pf-field" type="password" name="password" size="24" /></label>
 	</div>
 	<div class="pf-element pf-buttons pf-centered">
 		<input type="hidden" name="option" value="com_timeoutnotice" />

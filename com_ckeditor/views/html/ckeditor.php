@@ -16,7 +16,6 @@ if (isset($pines->com_elfinder))
 $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pines->template->editor_css)), $pines->editor->get_css());
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_ckeditor/includes/ckeditor/ckeditor.js");
 	pines.load(function(){
 		CKEDITOR.config.jqueryOverrideVal = true;
@@ -88,5 +87,4 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			toolbarCanCollapse: false
 		});
 	});
-	// ]]>
 </script>

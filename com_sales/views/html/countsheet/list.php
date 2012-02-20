@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/countsheet/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var submit_url = <?php echo json_encode(pines_url('com_sales', 'countsheet/list')); ?>;
 		var submit_search = function(){
@@ -262,7 +261,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

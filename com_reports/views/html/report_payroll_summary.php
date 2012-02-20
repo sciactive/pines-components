@@ -20,7 +20,6 @@ $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		search_invoices = function(){
@@ -141,7 +140,6 @@ $pines->com_pgrid->load();
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

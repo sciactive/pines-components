@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Hours Clocked Report';
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_report {
 		background: #FFF;
 		color: #000;
@@ -22,7 +21,6 @@ $this->title = 'Hours Clocked Report';
 	#p_muid_report table {
 		width: 100%;
 	}
-	/* ]]> */
 </style>
 <div id="p_muid_report" class="pf-form">
 	<div class="pf-element">
@@ -43,14 +41,14 @@ $this->title = 'Hours Clocked Report';
 		?>
 	<div class="employee">
 		<div class="pf-element pf-heading">
-			<h1>
+			<h3>
 				<?php echo htmlspecialchars($cur_employee['entity']->name);
 				if ($this->local_timezones) { ?>
 				<small style="float: right;">
 					Timezone: <?php echo htmlspecialchars($cur_employee['timezone']); ?>
 				</small>
 				<?php } ?>
-			</h1>
+			</h3>
 			<?php if (isset($cur_employee['entity']->group->guid)) { ?>
 			<p><?php echo htmlspecialchars($cur_employee['entity']->group->name); ?></p>
 			<?php } ?>

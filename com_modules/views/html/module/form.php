@@ -26,7 +26,6 @@ foreach ($editor_modules as $cur_module) {
 $pines->com_pgrid->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .combobox {
 		position: relative;
 	}
@@ -44,10 +43,8 @@ $pines->com_pgrid->load();
 	#p_muid_form .component_modules .form {
 		display: none;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Options
 		var options = $("input[name=options]", "#p_muid_tab_options");
@@ -311,19 +308,16 @@ $pines->com_pgrid->load();
 				autobox.focus().autocomplete("search", "");
 			});
 		});
-
-		$("#p_muid_module_tabs").tabs();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_modules', 'module/save')); ?>">
-	<div id="p_muid_module_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_options">Options</a></li>
-			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_options" data-toggle="tab">Options</a></li>
+		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
+	</ul>
+	<div id="p_muid_module_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -336,7 +330,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name/Title</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+					<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -349,7 +343,7 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<span class="pf-label">Position</span>
 				<span class="combobox">
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="position" size="24" value="<?php echo htmlspecialchars($this->entity->position); ?>" />
+					<input class="pf-field" type="text" name="position" size="24" value="<?php echo htmlspecialchars($this->entity->position); ?>" />
 					<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 					<select style="display: none;">
 						<?php foreach ($pines->info->template->positions as $cur_position) {
@@ -360,10 +354,10 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Order</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="order" size="10" value="<?php echo htmlspecialchars($this->entity->order); ?>" /></label>
+					<input class="pf-field" type="text" name="order" size="10" value="<?php echo htmlspecialchars($this->entity->order); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Module Type</h1>
+				<h3>Module Type</h3>
 			</div>
 			<br class="pf-clearing" />
 			<?php $i=0; foreach ($this->modules as $cur_component => $cur_modules) { $i++; ?>
@@ -382,9 +376,9 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_options">
+		<div class="tab-pane" id="p_muid_tab_options">
 			<div class="pf-element pf-heading">
-				<h1>Module Options</h1>
+				<h3>Module Options</h3>
 				<p>If the module type has options, you can edit them below.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -411,20 +405,20 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_option_name" size="24" />
+							<input class="pf-field" type="text" name="cur_option_name" size="24" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_option_value" size="24" />
+							<input class="pf-field" type="text" name="cur_option_value" size="24" />
 						</label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Inline Module Format</h1>
+				<h3>Inline Module Format</h3>
 				<p>This is the text you would use to place this module inline with content. (As long as this module type allows inline use and com_imodules is installed.)</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -432,9 +426,9 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_conditions">
+		<div class="tab-pane" id="p_muid_tab_conditions">
 			<div class="pf-element pf-heading">
-				<h1>Module Conditions</h1>
+				<h3>Module Conditions</h3>
 				<p>Users will only see this module if these conditions are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -475,11 +469,11 @@ $pines->com_pgrid->load();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -487,12 +481,11 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 		</div>
 	</div>
-	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_modules', 'module/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_modules', 'module/list')); ?>');" value="Cancel" />
 	</div>
 </form>

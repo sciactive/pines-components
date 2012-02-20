@@ -15,11 +15,11 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Mobile Link Text</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="mobile_text" size="24" value="Mobile Version" /></label>
+			<input class="pf-field" type="text" name="mobile_text" size="24" value="Mobile Version" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Desktop Link Text</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="desktop_text" size="24" value="Desktop Version" /></label>
+			<input class="pf-field" type="text" name="desktop_text" size="24" value="Desktop Version" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Center Links</span>

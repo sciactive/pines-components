@@ -15,7 +15,7 @@ $this->title = 'Stock Location Guide';
 ?>
 <div class="pf-form">
 	<div class="pf-element pf-heading">
-		<h1><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $this->product->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($this->product->name); ?></a></h1>
+		<h3><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $this->product->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($this->product->name); ?></a></h3>
 		<p>SKU: <?php echo htmlspecialchars($this->product->sku); ?></p>
 	</div>
 	<div class="pf-element">

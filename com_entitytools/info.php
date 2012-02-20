@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Entity Manager Tools',
 	'author' => 'SciActive',
-	'version' => '1.0.0',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Tools for testing and maintaining your entity manager',
@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager',
-		'component' => 'com_jquery&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),
 	'abilities' => array(
 		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),

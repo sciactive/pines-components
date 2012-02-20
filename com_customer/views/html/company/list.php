@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customer/company/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		// Company search function for the pgrid toolbar.
@@ -130,8 +129,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var company_grid = $("#p_muid_grid").pgrid(cur_options);
 		company_grid.pgrid_get_all_rows().pgrid_delete();
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

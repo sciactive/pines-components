@@ -16,7 +16,6 @@ $pines->com_pgrid->load();
 $pines->com_hrm->load_employee_select();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var bonus_id;
@@ -96,8 +95,6 @@ $pines->com_hrm->load_employee_select();
 		$("#p_muid_grid").pgrid(cur_defaults);
 		$("#p_muid_bonus_dialog [name=employee]").employeeselect();
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -125,23 +122,23 @@ $pines->com_hrm->load_employee_select();
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element">
 			<label><span class="pf-label">Employee</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="employee" /></label>
+				<input class="pf-field" type="text" size="24" name="employee" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Bonus</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="name" /></label>
+				<input class="pf-field" type="text" size="24" name="name" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Amount</span>
-				<span class="pf-field">$ <input class="ui-widget-content ui-corner-all" type="text" size="5" name="amount" /></span></label>
+				<span class="pf-field">$ <input type="text" size="5" name="amount" /></span></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Comments</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+				<input class="pf-field" type="text" size="24" name="comments" value="" /></label>
 		</div>
 	</form>
 	<br />

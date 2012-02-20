@@ -15,7 +15,6 @@ $this->title = (!isset($this->entity->guid)) ? 'New Countsheet' : (($this->entit
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var options = {
 			pgrid_view_height: "auto",
@@ -136,7 +135,6 @@ $pines->com_pgrid->load();
 
 		update_entries();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -150,7 +148,7 @@ $pines->com_pgrid->load();
 	</div>
 	<?php } if ($this->entity->missing) { ?>
 	<div class="pf-element pf-heading">
-		<h1 style="color: red;">Uncounted Items</h1>
+		<h3 style="color: red;">Uncounted Items</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_missing_table">
@@ -180,7 +178,7 @@ $pines->com_pgrid->load();
 	</div>
 	<?php } if ($this->entity->invalid) { ?>
 	<div class="pf-element pf-heading">
-		<h1>Invalid/Unknown Entries</h1>
+		<h3>Invalid/Unknown Entries</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_invalid_table">
@@ -200,18 +198,18 @@ $pines->com_pgrid->load();
 	</div>
 	<?php } if (!empty($this->entity->review_comments)) {?>
 	<div class="pf-element pf-heading">
-		<h1>Reviewer Comments</h1>
+		<h3>Reviewer Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field"><?php echo htmlspecialchars($this->entity->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Entries</h1>
+		<h3>Entries</h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Code(s)</span>
-			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="26" name="code" id="p_muid_code"></textarea></label>
+			<textarea class="pf-field" rows="1" cols="26" name="code" id="p_muid_code"></textarea></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_entries_table">
@@ -232,10 +230,10 @@ $pines->com_pgrid->load();
 		</table>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
@@ -243,11 +241,11 @@ $pines->com_pgrid->load();
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" name="entries" value="" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="&laquo; Close" />
+		<input class="pf-button btn btn-primary" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

@@ -16,7 +16,6 @@ if (isset($pines->com_elfinder))
 $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pines->template->editor_css)), $pines->editor->get_css());
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_tinymce/includes/tiny_mce/jquery.tinymce.js");
 
 	pines(function(){
@@ -153,5 +152,4 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			preformatted : <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>
 		});
 	});
-	// ]]>
 </script>

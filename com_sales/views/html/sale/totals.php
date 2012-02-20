@@ -16,10 +16,9 @@ $pines->com_jstree->load();
 ?>
 <div id="p_muid_form" class="pf-form">
 	<div class="pf-element pf-heading">
-		<h1>Parameters</h1>
+		<h3>Parameters</h3>
 	</div>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var location = '<?php echo (int) $_SESSION['user']->group->guid ?>';
 			var date_start = $("#p_muid_date_start");
@@ -174,9 +173,8 @@ $pines->com_jstree->load();
 			});
 			var location_tree = $("#p_muid_form .location_tree");
 		});
-		// ]]>
 	</script>
-	<button id="p_muid_hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
+	<button id="p_muid_hide_parameters" class="btn" style="float: right;">Toggle Form</button>
 	<?php if (gatekeeper('com_sales/totalothersales')) { // TODO: Show all groups in the tree. ?>
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
@@ -188,14 +186,14 @@ $pines->com_jstree->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+			<input class="pf-field" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+			<input class="pf-field" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
-		<button id="p_muid_retrieve_totals" class="pf-button ui-state-default ui-corner-all">Retrieve</button>
+		<button id="p_muid_retrieve_totals" class="pf-button btn">Retrieve</button>
 	</div>
 	<div id="p_muid_result_totals" style="display: none;">
 		<div class="pf-element">
@@ -207,7 +205,7 @@ $pines->com_jstree->load();
 			<span class="pf-field"><span id="p_muid_total_date">null</span></span>
 		</div>
 		<div class="pf-element pf-heading">
-			<h1>Invoices</h1>
+			<h3>Invoices</h3>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Count</span>
@@ -315,7 +313,7 @@ $pines->com_jstree->load();
 		<br class="pf-clearing" />
 		<div class="ui-state-highlight ui-corner-all ui-helper-clearfix" style="font-weight: bold; padding-left: 1em; padding-right: 1em;">
 			<div class="pf-element pf-heading">
-				<h1>Totals</h1>
+				<h3>Totals</h3>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Subtotal</span>

@@ -21,7 +21,6 @@ if ($pines->config->com_sales->autocomplete_product)
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/receive')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -346,11 +345,9 @@ if ($pines->config->com_sales->autocomplete_product)
 			products_table.pgrid_get_all_rows().pgrid_delete();
 			pines.com_sales_update_products();
 		});
-		// ]]>
 	</script>
 	<?php if (gatekeeper('com_sales/receivelocation')) { ?>
 	<script type='text/javascript'>
-		// <![CDATA[
 		pines(function(){
 			// Location Tree
 			var location = $("#p_muid_form [name=location]");
@@ -381,7 +378,6 @@ if ($pines->config->com_sales->autocomplete_product)
 				}
 			});
 		});
-		// ]]>
 	</script>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Location</span>
@@ -427,7 +423,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<br class="pf-clearing" />
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Pending Shipments</h1>
+		<h3>Pending Shipments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">
@@ -492,7 +488,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Products to be Received</h1>
+		<h3>Products to be Received</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">
@@ -512,7 +508,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<input type="hidden" id="p_muid_products" name="products" />
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="if (confirm('Are all of the product serials correct?')) $('#p_muid_form').submit();" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="button" onclick="if (confirm('Are all of the product serials correct?')) $('#p_muid_form').submit();" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
 	</div>
 </form>

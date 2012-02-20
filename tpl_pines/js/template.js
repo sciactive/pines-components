@@ -38,12 +38,6 @@ pines(function(){
 		.find("> li:last-child > a.ui-state-default").addClass("ui-corner-tr").end()
 		.find("ul > li:first-child > a").addClass("ui-corner-tr").end()
 		.find("ul > li:last-child > a").addClass("ui-corner-bottom");
-
-		var modules = $("div.module");
-		// Add disabled element styling.
-		$(".ui-widget-content:input:disabled", modules).addClass("ui-state-disabled");
-		// UI buttons.
-		$(".ui-state-default:input:not(:not(:button, :submit, :reset))", modules).button();
 	};
 	
 	pines.tpl_pines_page_ready();

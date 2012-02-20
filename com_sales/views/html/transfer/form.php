@@ -23,7 +23,6 @@ if ($this->entity->final)
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		
 		pines(function(){
 			var products = $("#p_muid_products");
@@ -343,7 +342,6 @@ if ($this->entity->final)
 
 			update_products();
 		});
-		// ]]>
 	</script>
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -363,7 +361,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element" style="width: 49%;">
 		<span class="pf-label">Origin</span>
@@ -381,7 +379,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="shipper" <?php echo $read_only; ?>>
+			<select class="pf-field" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
@@ -391,7 +389,6 @@ if ($this->entity->final)
 	<div class="pf-element">
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				$("#p_muid_eta").datepicker({
 					dateFormat: "yy-mm-dd",
@@ -399,11 +396,10 @@ if ($this->entity->final)
 					selectOtherMonths: true
 				});
 			});
-			// ]]>
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
 		<table id="p_muid_category_grid">
@@ -558,10 +554,10 @@ if ($this->entity->final)
 		<?php } ?>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<br class="pf-clearing" />
 	<div class="pf-element pf-buttons">
@@ -569,12 +565,12 @@ if ($this->entity->final)
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

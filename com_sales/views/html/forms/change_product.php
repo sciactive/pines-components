@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element pf-heading">
-		<h1>Product to Change</h1>
+		<h3>Product to Change</h3>
 	</div>
 	<div class="pf-element">
 		<?php foreach ($this->entity->products as $key => $cur_product) {
@@ -33,11 +33,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<?php if ($items_shown) { ?>
 	<div class="pf-element pf-heading">
-		<h1>New Product</h1>
+		<h3>New Product</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Product</span>
-		<input class="pf-field ui-widget-content ui-corner-all product_box" type="text" name="new_product" value="" />
+		<input class="pf-field product_box" type="text" name="new_product" value="" />
 	</div>
 	<?php } ?>
 </form>

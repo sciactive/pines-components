@@ -16,7 +16,7 @@ $this->note = 'For the entity '.htmlspecialchars($this->entity->entities[0]->gui
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_notes', 'thread/save')); ?>">
 	<div class="pf-element pf-heading">
-		<h1>Options</h1>
+		<h3>Options</h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Hidden</span>
@@ -24,21 +24,20 @@ $this->note = 'For the entity '.htmlspecialchars($this->entity->entities[0]->gui
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Privacy</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="privacy">
+			<select class="pf-field" name="privacy">
 				<option value="only-me"<?php echo (!$this->entity->ac->other && !$this->entity->ac->group) ? ' selected="selected"' : ''; ?>>Only the Author</option>
 				<option value="my-group"<?php echo (!$this->entity->ac->other && $this->entity->ac->group) ? ' selected="selected"' : ''; ?>>The Author's Group</option>
 				<option value="everyone"<?php echo $this->entity->ac->other ? ' selected="selected"' : ''; ?>>Everyone</option>
 			</select></label>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Notes</h1>
+		<h3>Notes</h3>
 	</div>
 	<div id="p_muid_notes_link" class="pf-element">
 		<a href="javascript:void(0);" onclick="$('#p_muid_notes_link, #p_muid_notes').toggle();">Edit notes.</a>
 	</div>
 	<div id="p_muid_notes" style="display: none;">
 		<style type="text/css" scoped="scoped">
-			/* <![CDATA[ */
 			#p_muid_notes .note {
 				padding: .5em;
 				clear: left;
@@ -47,10 +46,8 @@ $this->note = 'For the entity '.htmlspecialchars($this->entity->entities[0]->gui
 			#p_muid_notes .note .pf-element {
 				padding: 0;
 			}
-			/* ]]> */
 		</style>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				$("#p_muid_notes").delegate(":checkbox", "click", function(){
 					var checkbox = $(this);
@@ -60,7 +57,6 @@ $this->note = 'For the entity '.htmlspecialchars($this->entity->entities[0]->gui
 						checkbox.closest(".note").removeClass("ui-state-error ui-corner-all");
 				});
 			});
-			// ]]>
 		</script>
 		<?php foreach ($this->entity->notes as $key => $cur_note) { ?>
 		<div class="note ui-helper-clearfix">
@@ -79,7 +75,7 @@ $this->note = 'For the entity '.htmlspecialchars($this->entity->entities[0]->gui
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_notes', 'thread/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_notes', 'thread/list')); ?>');" value="Cancel" />
 	</div>
 </form>

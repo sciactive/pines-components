@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $pines->icons->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pnotify/includes/jquery.pnotify.default.css");
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pnotify/includes/jquery.pnotify.default.icons.css");
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pnotify/includes/<?php echo $pines->config->debug_mode ? 'jquery.pnotify.js' : 'jquery.pnotify.min.js'; ?>");
@@ -36,5 +35,4 @@ $pines->icons->load();
 			};
 		}
 	});
-	// ]]>
 </script>

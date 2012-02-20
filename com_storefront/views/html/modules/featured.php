@@ -32,7 +32,6 @@ if (empty($this->title))
 	$this->title = htmlspecialchars($this->entity->name);
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_product {
 		font-size: 1.2em;
 		font-weight: bold;
@@ -51,17 +50,14 @@ if (empty($this->title))
 	#p_muid_product .price, #p_muid_product .button {
 		margin: .2em;
 	}
-	/* ]]> */
 </style>
 <span id="p_muid_product" class="com_storefront_featured_item">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$("button.add_cart", "#p_muid_product").click(function(){
 				pines.com_storefront_add_to_cart(<?php echo (int) $this->entity->guid; ?>, <?php echo json_encode($this->entity->name); ?>, <?php echo (float) $this->entity->unit_price; ?>, $("#p_muid_product"));
 			});
 		});
-		// ]]>
 	</script>
 	<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'product', array('a' => $this->entity->alias))); ?>">
 		<?php if ($this->show_name) { ?>
@@ -73,6 +69,6 @@ if (empty($this->title))
 		<?php } ?>
 	</a>
 	<?php if ($this->show_button && !$pines->config->com_storefront->catalog_mode) { ?>
-	<span class="button"><button class="add_cart ui-state-default ui-corner-all ui-state-focus">Add to Cart</button></span>
+	<span class="button"><button class="add_cart btn btn-primary">Add to Cart</button></span>
 	<?php } ?>
 </span>

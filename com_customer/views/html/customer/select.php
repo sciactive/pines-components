@@ -13,8 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_customer/includes/jquery.customerselect.js");
 	pines.com_customer_autocustomer_url = <?php echo json_encode(pines_url('com_customer', 'customer/search')); ?>;
-	// ]]>
 </script>

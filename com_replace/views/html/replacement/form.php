@@ -17,7 +17,6 @@ $pines->com_pgrid->load();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_replace', 'replacement/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			// Strings
 			var strings = $("#p_muid_form [name=strings]");
@@ -254,17 +253,14 @@ $pines->com_pgrid->load();
 			condition_dialog.find("input[name=cur_condition_type]").autocomplete({
 				"source": <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>
 			});
-
-			$("#p_muid_replacement_tabs").tabs();
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_replacement_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
+	</ul>
+	<div id="p_muid_replacement_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -277,14 +273,14 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+					<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Search and Replace Strings</h1>
+				<h3>Search and Replace Strings</h3>
 			</div>
 			<div class="pf-element pf-full-width">
 				<table class="strings_table">
@@ -314,13 +310,13 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Search For</span>
-							<textarea class="pf-field ui-widget-content ui-corner-all" name="cur_string_search" rows="3" cols="24"></textarea>
+							<textarea class="pf-field" name="cur_string_search" rows="3" cols="24"></textarea>
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Replace With</span>
-							<textarea class="pf-field ui-widget-content ui-corner-all" name="cur_string_replace" rows="3" cols="24"></textarea>
+							<textarea class="pf-field" name="cur_string_replace" rows="3" cols="24"></textarea>
 						</label>
 					</div>
 					<div class="pf-element">
@@ -408,9 +404,9 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_conditions">
+		<div class="tab-pane" id="p_muid_tab_conditions">
 			<div class="pf-element pf-heading">
-				<h1>Replacement Conditions</h1>
+				<h3>Replacement Conditions</h3>
 				<p>Strings will only be replaced if these conditions are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -451,11 +447,11 @@ $pines->com_pgrid->load();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -463,12 +459,11 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 		</div>
 	</div>
-	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_replace', 'replacement/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_replace', 'replacement/list')); ?>');" value="Cancel" />
 	</div>
 </form>

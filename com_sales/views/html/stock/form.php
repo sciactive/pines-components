@@ -70,22 +70,13 @@ $pines->com_jstree->load();
 	</div>
 	<?php } ?>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
-			$(".p_muid_option_accordian", "#p_muid_form").accordion({
-				autoHeight: false,
-				collapsible: true,
-				active: false,
-				change: function(event, ui){
-					// Change to a 1 when the accordion is active
-					if (ui.newHeader.length) {
-						ui.newContent.find(".p_muid_change_this").val("1");
-						ui.newHeader.removeClass("ui-priority-secondary");
-					} else {
-						ui.oldContent.find(".p_muid_change_this").val("");
-						ui.oldHeader.addClass("ui-priority-secondary");
-					}
-				}
+			$(".p_muid_option_accordian", "#p_muid_form").on("shown", function(){
+				$(this).find(".p_muid_change_this").val("1").end()
+				.find(".accordion-toggle").removeClass("alert-info").addClass("alert-success");
+			}).on("hide", function(){
+				$(this).find(".p_muid_change_this").val("").end()
+				.find(".accordion-toggle").removeClass("alert-success").addClass("alert-info");
 			});
 			// Location Tree
 			var location = $("#p_muid_form [name=location]");
@@ -116,192 +107,219 @@ $pines->com_jstree->load();
 				}
 			});
 		});
-		// ]]>
 	</script>
 	<br class="pf-clearing" />
-	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Availability</a></h3>
-		<div>
-			<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
-			<div class="pf-element">
-				<label><span class="pf-label">Available</span>
-					<input class="pf-field" type="checkbox" name="available" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
+	<div class="p_muid_option_accordian accordion">
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle alert-info">Change Availability</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
+					<div class="pf-element">
+						<label><span class="pf-label">Available</span>
+							<input class="pf-field" type="checkbox" name="available" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Reason</span>
+							<select class="pf-field" name="available_reason">
+								<?php if (!isset($this->entity) || $this->entity->available) { ?>
+								<option value="unavailable_on_hold">Item is on Hold</option>
+								<option value="unavailable_damaged">Item is Damaged</option>
+								<option value="unavailable_destroyed">Item is Destroyed/Trashed</option>
+								<option value="unavailable_missing">Item is Missing</option>
+								<option value="unavailable_theft">Item is Stolen</option>
+								<option value="unavailable_display">Item is a Display</option>
+								<option value="unavailable_promotion">Promotional Giveaway</option>
+								<option value="unavailable_gift">Gift Giveaway</option>
+								<option value="unavailable_error_sale">Sale Error</option>
+								<option value="unavailable_error_return">Return Error</option>
+								<?php /* <option value="unavailable_error_rma">RMA Error</option> */ ?>
+								<option value="unavailable_error_po">PO Receiving Error</option>
+								<option value="unavailable_error_transfer">Transfer Error</option>
+								<option value="unavailable_error_adjustment">Previous Adjustment Error</option>
+								<option value="unavailable_error">Other Error</option>
+								<?php } if (!isset($this->entity) || !$this->entity->available) { ?>
+								<option value="available_not_on_hold">Item is No Longer on Hold</option>
+								<option value="available_repaired">Item is Repaired</option>
+								<option value="available_not_destroyed">Item is Not Destroyed/Trashed</option>
+								<option value="available_found">Item is Found</option>
+								<option value="available_recovered">Stolen Item is Recovered</option>
+								<option value="available_not_display">Item is No Longer a Display</option>
+								<option value="available_not_promotion">Returned Promotional Giveaway</option>
+								<option value="available_not_gift">Returned Gift Giveaway</option>
+								<option value="available_error_sale">Sale Error</option>
+								<option value="available_error_return">Return Error</option>
+								<?php /* <option value="available_error_rma">RMA Error</option> */ ?>
+								<option value="available_error_po">PO Receiving Error</option>
+								<option value="available_error_transfer">Transfer Error</option>
+								<option value="available_error_adjustment">Previous Adjustment Error</option>
+								<option value="available_error">Other Error</option>
+								<?php } ?>
+							</select>
+						</label>
+					</div>
+					<br class="pf-clearing" />
+				</div>
 			</div>
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="available_reason">
-						<?php if (!isset($this->entity) || $this->entity->available) { ?>
-						<option value="unavailable_on_hold">Item is on Hold</option>
-						<option value="unavailable_damaged">Item is Damaged</option>
-						<option value="unavailable_destroyed">Item is Destroyed/Trashed</option>
-						<option value="unavailable_missing">Item is Missing</option>
-						<option value="unavailable_theft">Item is Stolen</option>
-						<option value="unavailable_display">Item is a Display</option>
-						<option value="unavailable_promotion">Promotional Giveaway</option>
-						<option value="unavailable_gift">Gift Giveaway</option>
-						<option value="unavailable_error_sale">Sale Error</option>
-						<option value="unavailable_error_return">Return Error</option>
-						<?php /* <option value="unavailable_error_rma">RMA Error</option> */ ?>
-						<option value="unavailable_error_po">PO Receiving Error</option>
-						<option value="unavailable_error_transfer">Transfer Error</option>
-						<option value="unavailable_error_adjustment">Previous Adjustment Error</option>
-						<option value="unavailable_error">Other Error</option>
-						<?php } if (!isset($this->entity) || !$this->entity->available) { ?>
-						<option value="available_not_on_hold">Item is No Longer on Hold</option>
-						<option value="available_repaired">Item is Repaired</option>
-						<option value="available_not_destroyed">Item is Not Destroyed/Trashed</option>
-						<option value="available_found">Item is Found</option>
-						<option value="available_recovered">Stolen Item is Recovered</option>
-						<option value="available_not_display">Item is No Longer a Display</option>
-						<option value="available_not_promotion">Returned Promotional Giveaway</option>
-						<option value="available_not_gift">Returned Gift Giveaway</option>
-						<option value="available_error_sale">Sale Error</option>
-						<option value="available_error_return">Return Error</option>
-						<?php /* <option value="available_error_rma">RMA Error</option> */ ?>
-						<option value="available_error_po">PO Receiving Error</option>
-						<option value="available_error_transfer">Transfer Error</option>
-						<option value="available_error_adjustment">Previous Adjustment Error</option>
-						<option value="available_error">Other Error</option>
-						<?php } ?>
-					</select>
-				</label>
-			</div>
-			<br class="pf-clearing" />
 		</div>
 	</div>
 	<?php if (isset($this->entity) && $this->entity->product->serialized) { ?>
-	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Serial</a></h3>
-		<div>
-			<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
-			<div class="pf-element">
-				<label><span class="pf-label">Serial</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="serial" size="24" value="<?php echo htmlspecialchars($this->entity->serial); ?>" /></label>
+	<div class="p_muid_option_accordian accordion">
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle alert-info">Change Serial</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
+					<div class="pf-element">
+						<label><span class="pf-label">Serial</span>
+							<input class="pf-field" type="text" name="serial" size="24" value="<?php echo htmlspecialchars($this->entity->serial); ?>" /></label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Reason</span>
+							<select class="pf-field" name="serial_reason">
+								<option value="serial_changed_reserialize">Item is Being Reserialized</option>
+								<option value="serial_changed_damaged">Serial Number is Damaged</option>
+								<option value="serial_changed_error_po">PO Receiving Error</option>
+								<option value="serial_changed_error_adjustment">Previous Adjustment Error</option>
+								<option value="serial_changed_error">Other Error</option>
+							</select>
+						</label>
+					</div>
+					<br class="pf-clearing" />
+				</div>
 			</div>
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="serial_reason">
-						<option value="serial_changed_reserialize">Item is Being Reserialized</option>
-						<option value="serial_changed_damaged">Serial Number is Damaged</option>
-						<option value="serial_changed_error_po">PO Receiving Error</option>
-						<option value="serial_changed_error_adjustment">Previous Adjustment Error</option>
-						<option value="serial_changed_error">Other Error</option>
-					</select>
-				</label>
-			</div>
-			<br class="pf-clearing" />
 		</div>
 	</div>
 	<?php } ?>
-	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Location</a></h3>
-		<div>
-			<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
-			<div class="pf-element">
-				<span class="pf-label">Location</span>
-				<script type="text/javascript">
-					// <![CDATA[
-					pines(function(){
-						$("#p_muid_location_null").change(function(){
-							if ($(this).is(":checked"))
-								$("#p_muid_location").slideUp();
-							else
-								$("#p_muid_location").slideDown();
-						}).each(function(){
-							// Slide up doesn't work on load, because it's hidden.
-							if ($(this).is(":checked"))
-								$("#p_muid_location").hide();
-						});
-					});
-					// ]]>
-				</script>
-				<label><input class="pf-field" type="checkbox" id="p_muid_location_null" name="location_null" value="ON"<?php echo !isset($this->entity->location) ? ' checked="checked"' : ''; ?> /> Not in inventory. (Sold, trashed, etc.)</label>
-				<br />
-				<div id="p_muid_location" class="pf-group">
-					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+	<div class="p_muid_option_accordian accordion">
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle alert-info">Change Location</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
+					<div class="pf-element">
+						<span class="pf-label">Location</span>
+						<script type="text/javascript">
+							pines(function(){
+								$("#p_muid_location_null").change(function(){
+									if ($(this).is(":checked"))
+										$("#p_muid_location").slideUp();
+									else
+										$("#p_muid_location").slideDown();
+								}).each(function(){
+									// Slide up doesn't work on load, because it's hidden.
+									if ($(this).is(":checked"))
+										$("#p_muid_location").hide();
+								});
+							});
+						</script>
+						<label><input class="pf-field" type="checkbox" id="p_muid_location_null" name="location_null" value="ON"<?php echo !isset($this->entity->location) ? ' checked="checked"' : ''; ?> /> Not in inventory. (Sold, trashed, etc.)</label>
+						<br />
+						<div id="p_muid_location" class="pf-group">
+							<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+						</div>
+						<input type="hidden" name="location" />
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Reason</span>
+							<select class="pf-field" name="location_reason">
+								<?php if (!isset($this->entity) || isset($this->entity->location)) { ?>
+								<option value="location_changed_shipped">Item is Shipped</option>
+								<option value="location_changed_picked_up">Item is Picked Up</option>
+								<option value="location_changed_trashed">Item is Destroyed/Trashed</option>
+								<option value="location_changed_missing">Item is Missing</option>
+								<option value="location_changed_theft">Item is Stolen</option>
+								<?php } if (!isset($this->entity) || !isset($this->entity->location)) { ?>
+								<option value="location_changed_not_trashed">Item is Not Destroyed/Trashed</option>
+								<option value="location_changed_found">Item is Found</option>
+								<option value="location_changed_recovered">Stolen Item is Recovered</option>
+								<?php } ?>
+								<option value="location_changed_promotion">Promotional Giveaway</option>
+								<option value="location_changed_gift">Gift Giveaway</option>
+								<option value="location_changed_error_sale">Sale Error</option>
+								<option value="location_changed_error_return">Return Error</option>
+								<option value="location_changed_error_po">PO Receiving Error</option>
+								<option value="location_changed_error_transfer">Transfer Error</option>
+								<option value="location_changed_error_adjustment">Previous Adjustment Error</option>
+								<option value="location_changed_error">Other Error</option>
+							</select>
+						</label>
+					</div>
+					<br class="pf-clearing" />
 				</div>
-				<input type="hidden" name="location" />
 			</div>
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="location_reason">
-						<?php if (!isset($this->entity) || isset($this->entity->location)) { ?>
-						<option value="location_changed_shipped">Item is Shipped</option>
-						<option value="location_changed_picked_up">Item is Picked Up</option>
-						<option value="location_changed_trashed">Item is Destroyed/Trashed</option>
-						<option value="location_changed_missing">Item is Missing</option>
-						<option value="location_changed_theft">Item is Stolen</option>
-						<?php } if (!isset($this->entity) || !isset($this->entity->location)) { ?>
-						<option value="location_changed_not_trashed">Item is Not Destroyed/Trashed</option>
-						<option value="location_changed_found">Item is Found</option>
-						<option value="location_changed_recovered">Stolen Item is Recovered</option>
-						<?php } ?>
-						<option value="location_changed_promotion">Promotional Giveaway</option>
-						<option value="location_changed_gift">Gift Giveaway</option>
-						<option value="location_changed_error_sale">Sale Error</option>
-						<option value="location_changed_error_return">Return Error</option>
-						<option value="location_changed_error_po">PO Receiving Error</option>
-						<option value="location_changed_error_transfer">Transfer Error</option>
-						<option value="location_changed_error_adjustment">Previous Adjustment Error</option>
-						<option value="location_changed_error">Other Error</option>
-					</select>
-				</label>
-			</div>
-			<br class="pf-clearing" />
 		</div>
 	</div>
-	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Vendor</a></h3>
-		<div>
-			<input class="p_muid_change_this" type="hidden" name="vendor_change" value="" />
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Vendor</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="vendor">
-						<option value="null">-- None --</option>
-						<?php
-						$pines->entity_manager->sort($this->vendors, 'name');
-						foreach ($this->vendors as $cur_vendor) { ?>
-						<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
-						<?php } ?>
-					</select>
-				</label>
+	<div class="p_muid_option_accordian accordion">
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle alert-info">Change Vendor</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<input class="p_muid_change_this" type="hidden" name="vendor_change" value="" />
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Vendor</span>
+							<select class="pf-field" name="vendor">
+								<option value="null">-- None --</option>
+								<?php
+								$pines->entity_manager->sort($this->vendors, 'name');
+								foreach ($this->vendors as $cur_vendor) { ?>
+								<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
+								<?php } ?>
+							</select>
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Reason</span>
+							<select class="pf-field" name="vendor_reason">
+								<option value="vendor_changed_error_po">PO Receiving Error</option>
+								<option value="vendor_changed_error_adjustment">Previous Adjustment Error</option>
+								<option value="vendor_changed_error">Other Error</option>
+							</select>
+						</label>
+					</div>
+					<br class="pf-clearing" />
+				</div>
 			</div>
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="vendor_reason">
-						<option value="vendor_changed_error_po">PO Receiving Error</option>
-						<option value="vendor_changed_error_adjustment">Previous Adjustment Error</option>
-						<option value="vendor_changed_error">Other Error</option>
-					</select>
-				</label>
-			</div>
-			<br class="pf-clearing" />
 		</div>
 	</div>
-	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Cost</a></h3>
-		<div>
-			<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
-			<div class="pf-element">
-				<label><span class="pf-label">Cost</span>
-					<span class="pf-field">$<input class="ui-widget-content ui-corner-all" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlspecialchars($this->entity->cost); ?>" /></span></label>
+	<div class="p_muid_option_accordian accordion">
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle alert-info">Change Cost</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
+					<div class="pf-element">
+						<label><span class="pf-label">Cost</span>
+							<span class="pf-field">$</span><input class="pf-field" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlspecialchars($this->entity->cost); ?>" /></label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Reason</span>
+							<select class="pf-field" name="cost_reason">
+								<option value="cost_changed_error_po">PO Receiving Error</option>
+								<option value="cost_changed_error_adjustment">Previous Adjustment Error</option>
+								<option value="cost_changed_error">Other Error</option>
+							</select>
+						</label>
+					</div>
+					<br class="pf-clearing" />
+				</div>
 			</div>
-			<div class="pf-element">
-				<label>
-					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="cost_reason">
-						<option value="cost_changed_error_po">PO Receiving Error</option>
-						<option value="cost_changed_error_adjustment">Previous Adjustment Error</option>
-						<option value="cost_changed_error">Other Error</option>
-					</select>
-				</label>
-			</div>
-			<br class="pf-clearing" />
 		</div>
 	</div>
 	<br class="pf-clearing" />
@@ -316,7 +334,7 @@ $pines->com_jstree->load();
 			?>
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars(implode(',', $guids)); ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />
 	</div>
 </form>

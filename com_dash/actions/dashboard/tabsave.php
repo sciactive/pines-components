@@ -39,9 +39,11 @@ foreach (json_decode($_REQUEST['columns'], true) as $cur_column) {
 if (empty($_REQUEST['key'])) {
 	// New tab.
 	$tab_key = uniqid();
+	$tab_name = trim($_REQUEST['name']);
 	$_SESSION['user']->dashboard->tabs[$tab_key] = array(
-		'name' => $_REQUEST['name'],
+		'name' => empty($tab_name) ? 'Untitled Tab' : $tab_name,
 		'buttons' => array(),
+		'buttons_size' => 'large',
 		'columns' => $columns
 	);
 } else {

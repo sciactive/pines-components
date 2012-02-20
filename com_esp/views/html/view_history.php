@@ -15,7 +15,7 @@ $this->title = 'ESP History ['.((int) $this->entity->guid).']';
 ?>
 <form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_esp', 'history')); ?>">
 	<div class="pf-element pf-heading">
-		<h1><?php echo htmlspecialchars($this->entity->customer->name);?></h1>
+		<h3><?php echo htmlspecialchars($this->entity->customer->name);?></h3>
 	</div>
 	<?php foreach ($this->entity->history as $cur_history) { ?>
 	<div class="pf-element">
@@ -25,7 +25,7 @@ $this->title = 'ESP History ['.((int) $this->entity->guid).']';
 	</div>
 	<?php } if (isset($this->entity->claim_info)) { ?>
 	<div class="pf-element pf-heading">
-		<h1>Accidental Claim Information</h1>
+		<h3>Accidental Claim Information</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label"><?php echo htmlspecialchars(format_date($this->entity->claim_info['date'])); ?></span>
@@ -42,7 +42,7 @@ $this->title = 'ESP History ['.((int) $this->entity->guid).']';
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_esp', 'list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_esp', 'list')); ?>');" value="Cancel" />
 	</div>
 </form>

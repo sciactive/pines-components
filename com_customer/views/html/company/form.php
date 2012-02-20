@@ -27,11 +27,10 @@ $this->note = 'Provide company profile details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Company Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				var address_us = $("#p_muid_address_us");
 				var address_international = $("#p_muid_address_international");
@@ -46,7 +45,6 @@ $this->note = 'Provide company profile details in this form.';
 					}
 				}).change();
 			});
-			// ]]>
 		</script>
 		<span class="pf-label">Address Type</span>
 		<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
@@ -55,16 +53,16 @@ $this->note = 'Provide company profile details in this form.';
 	<div id="p_muid_address_us" style="display: none;">
 		<div class="pf-element">
 			<label><span class="pf-label">Address 1</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->entity->address_1); ?>" /></label>
+				<input class="pf-field" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->entity->address_1); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Address 2</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->entity->address_2); ?>" /></label>
+				<input class="pf-field" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->entity->address_2); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">City, State</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->entity->city); ?>" />
-			<select class="pf-field ui-widget-content ui-corner-all" name="state">
+			<input class="pf-field" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->entity->city); ?>" />
+			<select class="pf-field" name="state">
 				<option value="">None</option>
 				<?php foreach (array(
 						'AL' => 'Alabama',
@@ -128,37 +126,41 @@ $this->note = 'Provide company profile details in this form.';
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Zip</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->entity->zip); ?>" /></label>
+				<input class="pf-field" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->entity->zip); ?>" /></label>
 		</div>
 	</div>
 	<div id="p_muid_address_international" style="display: none;">
 		<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Address</span>
-			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea></span></label>
+			<span class="pf-group pf-full-width">
+				<span class="pf-field" style="display: block;">
+					<textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea>
+				</span>
+			</span></label>
 		</div>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Email</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
+			<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Phone Number</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Fax</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="fax" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->fax)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field" type="tel" name="fax" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->fax)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Website</span>
 			<span class="pf-note">ex: http://www.website.com</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="url" name="website" size="24" value="<?php echo htmlspecialchars($this->entity->website); ?>" /></label>
+			<input class="pf-field" type="url" name="website" size="24" value="<?php echo htmlspecialchars($this->entity->website); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customer', 'company/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customer', 'company/list')); ?>');" value="Cancel" />
 	</div>
 </form>

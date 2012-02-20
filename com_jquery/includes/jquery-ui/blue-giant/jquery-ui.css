@@ -60,9 +60,9 @@
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Helvetica, Arial, sans-serif; font-size: 1em; }
 .ui-widget-content { border: 1px solid #a6a6a6; background: #ffffff url(images/ui-bg_flat_0_ffffff_40x100.png) 50% 50% repeat-x; color: #000000; }
-.ui-widget-content a { color: #000000; }
+/*.ui-widget-content a { color: #000000; }*/
 .ui-widget-header { border: 1px solid #a6a6a6; background: #cfcfcf url(images/ui-bg_highlight-soft_100_cfcfcf_1x100.png) 50% 50% repeat-x; color: #000000; font-weight: bold; }
-.ui-widget-header a { color: #000000; }
+/*.ui-widget-header a { color: #000000; }*/
 
 /* Interaction states
 ----------------------------------*/

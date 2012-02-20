@@ -36,7 +36,7 @@ $i = 1;
 			$comments[] = array($success_name, $cur_success[1]->comments);
 	?>
 	<div class="pf-element pf-heading">
-		<h1>Item <?php echo $i; $i++; ?></h1>
+		<h3>Item <?php echo $i; $i++; ?></h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Product</span>
@@ -58,7 +58,7 @@ $i = 1;
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<ul>

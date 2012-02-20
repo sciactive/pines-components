@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $pines->icons->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	.com_storefront_nobg {
 		background-image: none;
 		opacity: .3;
@@ -77,16 +76,8 @@ $pines->icons->load();
 		margin: 0;
 		padding: 0;
 	}
-	#com_storefront_cart button .picon, #com_storefront_cart_controls button .picon {
-		display: block;
-		float: left;
-		height: 16px;
-		width: 16px;
-	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
 		var round_to_dec = function(value){
@@ -162,13 +153,9 @@ $pines->icons->load();
 				}
 			});
 		}).delegate("div.product", "mouseenter", function(){
-			$(this).children("div.qty").addClass("ui-state-default");
+			$(this).children("div.qty").addClass("btn");
 		}).delegate("div.product", "mouseleave", function(){
-			$(this).children("div.qty").removeClass("ui-state-default");
-		}).delegate("div.product div.qty", "mouseenter", function(){
-			$(this).addClass("ui-state-hover");
-		}).delegate("div.product div.qty", "mouseleave", function(){
-			$(this).removeClass("ui-state-hover");
+			$(this).children("div.qty").removeClass("btn");
 		}).delegate("div.product div.qty", "click", function(){
 			var qty = $(this);
 			var old_val = qty.text();
@@ -298,13 +285,12 @@ $pines->icons->load();
 			});
 		};
 	});
-	// ]]>
 </script>
 <div id="com_storefront_cart">
 	<div class="template" style="display: none;">
 		<div class="guid" style="display: none;"></div>
 		<div class="unit_price" style="display: none;"></div>
-		<button type="button" class="ui-state-default ui-corner-all" title="Remove"><span class="picon picon-edit-delete"></span></button>
+		<button type="button" class="btn" title="Remove"><i class="icon-remove"></i></button>
 		<div class="name"></div>
 		<?php if ($pines->config->com_storefront->cart_prices) { ?>
 		<div class="price"></div>
@@ -316,7 +302,7 @@ $pines->icons->load();
 	<div class="product guid_<?php echo htmlspecialchars($cur_item['product']->guid); ?>">
 		<div class="guid" style="display: none;"><?php echo htmlspecialchars($cur_item['product']->guid); ?></div>
 		<div class="unit_price" style="display: none;"><?php echo htmlspecialchars($cur_item['product']->unit_price); ?></div>
-		<button type="button" class="ui-state-default ui-corner-all" title="Remove"><span class="picon picon-edit-delete"></span></button>
+		<button type="button" class="btn" title="Remove"><i class="icon-remove"></i></button>
 		<div class="name"><?php echo htmlspecialchars($cur_item['product']->name); ?></div>
 		<?php if ($pines->config->com_storefront->cart_prices) { ?>
 		<div class="price">$<?php echo htmlspecialchars($pines->com_sales->round($cur_item['product']->unit_price * $cur_item['quantity'], true)); ?></div>
@@ -335,8 +321,8 @@ $pines->icons->load();
 		<div class="cart_link"><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'cart/view')); ?>">See Cart</a></div>
 		<br style="clear: both; height: 0;" />
 		<?php } ?>
-		<button type="button" class="empty_cart ui-state-default ui-corner-all" title="Empty Cart"><span class="picon picon-trash-empty"></span></button>
-		<button type="button" class="checkout ui-state-default ui-priority-primary ui-corner-all" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');">Check-Out</button>
+		<button type="button" class="empty_cart btn btn-danger" title="Empty Cart"><i class="icon-trash icon-white"></i></button>
+		<button type="button" class="checkout btn btn-primary" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');"><i class="icon-ok icon-white"></i> Check-Out</button>
 		<br style="clear: both; height: 0;" />
 	</div>
 	<div class="no_items"<?php echo $pines->com_storefront->cart() ? ' style="display: none;"' : ''; ?>>

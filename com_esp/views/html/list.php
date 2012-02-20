@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_esp/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	var dispo_count = 0;
 	pines(function(){
 		var dispo_counter = 0;
@@ -122,9 +121,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						disposal_id += this.key;
 					});
 					if (rows.length == 1)
-						disposal_dialog.find("div.disposal_title").html('<h1>['+pines.safe(rows.pgrid_get_value(1))+']</h1>');
+						disposal_dialog.find("div.disposal_title").html('<h3>['+pines.safe(rows.pgrid_get_value(1))+']</h3>');
 					else
-						disposal_dialog.find("div.disposal_title").html('<h1>'+pines.safe(rows.length)+' ESPs</h1>');
+						disposal_dialog.find("div.disposal_title").html('<h3>'+pines.safe(rows.length)+' ESPs</h3>');
 					disposal_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_esp/printplan')) { ?>
@@ -213,8 +212,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -255,7 +252,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading disposal_title"></div>
 		<div class="pf-element">
 		<label><span class="pf-label">Dispose as</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="dispose">
+			<select class="pf-field" name="dispose">
 				<?php
 					foreach ($pines->config->com_esp->disposal_types as $cur_dispo) {
 						$dispo_array = explode(':', $cur_dispo);
@@ -270,7 +267,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <div id="p_muid_disposition_dialog" title="Filter ESP List" style="overflow: hidden; display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading">
-			<h1>View</h1>
+			<h3>View</h3>
 		</div>
 		<div class="pf-element">
 			<input class="pf-field exclusive" type="checkbox" name="all" value="all" <?php echo ($this->show == 'all') ? 'checked="checked"' : '' ?>/>All ESPs<hr style="border-top: dashed 1px; margin-top: 5px;"/><br />
@@ -286,9 +283,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			?>
 			<script type="text/javascript">
-				// <![CDATA[
 				dispo_count = <?php echo (int) $dispo_counter; ?>;
-				// ]]>
 			</script>
 		</div>
 	</form>

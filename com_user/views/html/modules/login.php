@@ -23,7 +23,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 ?>
 <?php if ($this->check_username) { ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_username_loading {
 		background-position: left;
 		background-repeat: no-repeat;
@@ -36,12 +35,10 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		padding-left: 20px;
 		line-height: 16px;
 	}
-	/* ]]> */
 </style>
 <?php } ?>
 <?php if ($this->sawasc || ($this->style != 'compact' && $this->style != 'small')) { ?>
 <script type="text/javascript">
-	// <![CDATA[
 	<?php if ($this->sawasc) { ?>
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_user/includes/hash.js");
 	<?php } ?>
@@ -66,7 +63,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		});
 		<?php } ?>
 	});
-	// ]]>
 </script>
 <?php } ?>
 <div id="p_muid_form"<?php echo ($this->style == 'compact') ? ' style="display: none;"' : ''; ?>>
@@ -76,7 +72,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 				<?php if ($this->style != 'small') { ?>
 				<span class="pf-group" style="display: block;">
 				<?php } ?>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" />
+					<input class="pf-field" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" />
 					<?php if ($this->check_username) { echo ($this->style == 'compact') ? '<br class="pf-clearing" />' : ''; ?>
 					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
 					<span class="pf-field picon" id="p_muid_username_message" style="display: none;"></span>
@@ -89,12 +85,11 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		<div class="pf-element">
 			<label><span class="pf-label">Password</span>
 				<?php echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : ''); ?>
-				<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+				<input class="pf-field" type="password" name="password" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 		</div>
 		<?php if ($pines->config->com_user->allow_registration) { ?>
 		<div class="pf-element">
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					var new_account = false;
 					var username = $("[name=username]", "#p_muid_form");
@@ -187,7 +182,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 						username.change();
 					});
 				});
-				// ]]>
 			</script>
 			<?php if ($this->style != 'small') { ?>
 			<span class="pf-label">Register</span>
@@ -199,13 +193,13 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		<div id="p_muid_register_form" style="display: none;">
 			<div class="pf-element">
 				<label><span class="pf-label">Re-enter Password</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+					<input class="pf-field" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_user->referral_codes) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Referral Code</span>
 					<span class="pf-note">Optional</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="referral_code" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+					<input class="pf-field" type="text" name="referral_code" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
 			<?php } ?>
 		</div>
@@ -223,16 +217,15 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 			<?php } if ( !empty($this->url) ) { ?>
 			<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 			<?php } ?>
-			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
+			<input class="pf-button btn btn-primary" type="submit" name="submit" value="Login" />
 			<?php if ($this->style != 'small') { ?>
-			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
+			<input class="pf-button btn" type="reset" name="reset" value="Reset" />
 			<?php } ?>
 		</div>
 	</form>
 </div>
 <?php if ($this->style == 'compact') { ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var notice = $.pnotify({
 			pnotify_title: <?php echo json_encode($this->title); ?>,
@@ -254,7 +247,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 			notice.pnotify_display();
 		});
 	});
-	// ]]>
 </script>
 <a href="javascript:void(0);" id="p_muid_compact_link"><?php echo htmlspecialchars($this->compact_text); ?></a>
 <?php } ?>

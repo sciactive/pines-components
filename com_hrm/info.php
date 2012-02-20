@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_datetimepicker&com_pgrid&com_pnotify&com_pform&com_user'
+		'component' => 'com_jquery&com_bootstrap&com_datetimepicker&com_pgrid&com_pnotify&com_pform&com_user'
 	),
 	'recommend' => array(
 		'component' => 'com_modules&com_calendar'

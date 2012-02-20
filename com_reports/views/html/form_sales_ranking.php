@@ -17,7 +17,6 @@ $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		var top_location = "<?php echo (int) $this->entity->top_location->guid; ?>";
 		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
@@ -186,24 +185,23 @@ $pines->com_pgrid->load();
 			});
 		}
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'savesalesranking')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Ranking Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ranking_name" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="ranking_name" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 
 	<div class="pf-element pf-heading">
-		<h1>Timespan and Highest Company Division</h1>
+		<h3>Timespan and Highest Company Division</h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? htmlspecialchars(format_date($this->entity->start_date, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
+			<input class="pf-field" type="text" name="start" value="<?php echo ($this->entity->start_date) ? htmlspecialchars(format_date($this->entity->start_date, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? htmlspecialchars(format_date($this->entity->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
+			<input class="pf-field" type="text" name="end" value="<?php echo ($this->entity->end_date) ? htmlspecialchars(format_date($this->entity->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">New Hire Goals</span>
@@ -221,7 +219,7 @@ $pines->com_pgrid->load();
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Sales Goals</h1>
+		<h3>Sales Goals</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_sales_goals">
@@ -242,7 +240,7 @@ $pines->com_pgrid->load();
 		<?php } ?>
 		<input type="hidden" name="top_location" />
 		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode((array) @array_combine(array_map('strval', array_keys($this->entity->sales_goals)), array_map('strval', $this->entity->sales_goals)))); ?>" />
-		<input class="ui-corner-all ui-state-default" type="submit" value="Save" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_reports', 'salesrankings')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Save" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_reports', 'salesrankings')); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -54,7 +54,6 @@ Released   : 20090820
 		$notice = $pines->page->get_notice();
 		if ( $error || $notice ) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
@@ -65,7 +64,6 @@ Released   : 20090820
 				} }
 				?>
 			});
-			// ]]>
 		</script>
 		<?php } ?>
 		<?php echo $pines->page->render_modules('top', 'module_header'); ?>

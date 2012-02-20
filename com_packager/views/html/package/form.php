@@ -19,7 +19,6 @@ $pines->com_pgrid->load();
 $pines->com_ptags->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_sortable {
 		list-style-type: none;
 		margin: 0;
@@ -56,10 +55,8 @@ $pines->com_ptags->load();
 		margin: 0;
 		padding: 0;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Conditions
 		var conditions = $("#p_muid_form [name=meta_conditions]");
@@ -168,19 +165,16 @@ $pines->com_ptags->load();
 		};
 
 		update_conditions();
-
-		$("#p_muid_package_tabs").tabs();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_packager', 'package/save')); ?>">
-	<div id="p_muid_package_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_files">Files</a></li>
-			<li><a href="#p_muid_tab_images">Images</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_files" data-toggle="tab">Files</a></li>
+		<li><a href="#p_muid_tab_images" data-toggle="tab">Images</a></li>
+	</ul>
+	<div id="p_muid_package_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -193,36 +187,33 @@ $pines->com_ptags->load();
 			<?php } ?>
 			<div class="pf-element">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
-						$("input[name=type]", "#p_muid_type_radio").change(function(){
-							var class_name = $("#p_muid_form input[name=type]:checked").val();
+						$("#p_muid_type").on("click", "button", function(){
+							var class_name = $(this).attr("data-value");
 							$("#p_muid_form div.package_type").hide();
 							$("#p_muid_form div.package_type."+class_name).show();
-						}).change();
-						$("#p_muid_type_radio").buttonset();
+						}).find("button").eq(0).click();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Type</span>
 				<div class="pf-group">
-					<div id="p_muid_type_radio">
-						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio1" value="component"<?php echo (($this->entity->type == 'component') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio1">Component</label>
-						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio2" value="template"<?php echo (($this->entity->type == 'template') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio2">Template</label>
-						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio3" value="system"<?php echo (($this->entity->type == 'system') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio3">System</label>
-						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio4" value="meta"<?php echo (($this->entity->type == 'meta') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio4">Meta Package</label>
+					<div id="p_muid_type" class="pf-field btn-group" data-toggle="buttons-radio">
+						<button class="btn<?php echo (($this->entity->type == 'component') ? ' active' : ''); ?>" type="button" data-value="component">Component</button>
+						<button class="btn<?php echo (($this->entity->type == 'template') ? ' active' : ''); ?>" type="button" data-value="template">Template</button>
+						<button class="btn<?php echo (($this->entity->type == 'system') ? ' active' : ''); ?>" type="button" data-value="system">System</button>
+						<button class="btn<?php echo (($this->entity->type == 'meta') ? ' active' : ''); ?>" type="button" data-value="meta">Meta Package</button>
 					</div>
 				</div>
 			</div>
 			<div class="package_type component">
 				<div class="pf-element pf-heading">
-					<h1>Component Package Options</h1>
+					<h3>Component Package Options</h3>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Component</span>
 						<span class="pf-note">Information will be gathered from the component's info file.</span>
-						<select class="pf-field ui-widget-content ui-corner-all" name="pkg_component">
+						<select class="pf-field" name="pkg_component">
 							<option value="null">-- Choose Component --</option>
 							<?php foreach ($this->components as $cur_component) {
 								if (substr($cur_component, 0, 4) != 'com_')
@@ -236,13 +227,13 @@ $pines->com_ptags->load();
 			</div>
 			<div class="package_type template">
 				<div class="pf-element pf-heading">
-					<h1>Template Package Options</h1>
+					<h3>Template Package Options</h3>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Template</span>
 						<span class="pf-note">Information will be gathered from the template's info file.</span>
-						<select class="pf-field ui-widget-content ui-corner-all" name="pkg_template">
+						<select class="pf-field" name="pkg_template">
 							<option value="null">-- Choose Template --</option>
 							<?php foreach ($this->components as $cur_component) {
 								if (substr($cur_component, 0, 4) != 'tpl_')
@@ -256,70 +247,74 @@ $pines->com_ptags->load();
 			</div>
 			<div class="package_type system">
 				<div class="pf-element pf-heading">
-					<h1>System Package Options</h1>
+					<h3>System Package Options</h3>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Package Name</span>
 						<span class="pf-note">Information will be gathered from the system's info file.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="system_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field" type="text" name="system_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 			</div>
 			<div class="package_type meta">
 				<div class="pf-element pf-heading">
-					<h1>Meta Package Options</h1>
+					<h3>Meta Package Options</h3>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Package Name</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field" type="text" name="meta_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Title (Common Name)</span>
 						<span class="pf-note">The name the user will see.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_name" size="24" value="<?php echo htmlspecialchars($this->entity->meta['name']); ?>" />
+						<input class="pf-field" type="text" name="meta_name" size="24" value="<?php echo htmlspecialchars($this->entity->meta['name']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Author</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_author" size="24" value="<?php echo htmlspecialchars($this->entity->meta['author']); ?>" />
+						<input class="pf-field" type="text" name="meta_author" size="24" value="<?php echo htmlspecialchars($this->entity->meta['author']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Version</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_version" size="24" value="<?php echo htmlspecialchars($this->entity->meta['version']); ?>" />
+						<input class="pf-field" type="text" name="meta_version" size="24" value="<?php echo htmlspecialchars($this->entity->meta['version']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">License</span>
 						<span class="pf-note">Provide the URL to an online version. If that's not available, provide the name of the license.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_license" size="24" value="<?php echo htmlspecialchars($this->entity->meta['license']); ?>" />
+						<input class="pf-field" type="text" name="meta_license" size="24" value="<?php echo htmlspecialchars($this->entity->meta['license']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Website</span>
 						<span class="pf-note">Provide the URL.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="url" name="meta_website" size="24" value="<?php echo htmlspecialchars($this->entity->meta['website']); ?>" />
+						<input class="pf-field" type="url" name="meta_website" size="24" value="<?php echo htmlspecialchars($this->entity->meta['website']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Short Description</span>
 						<span class="pf-note">Please provide a simple description, sentence caps, no period. E.g. "XML parsing library"</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_short_description" size="24" value="<?php echo htmlspecialchars($this->entity->meta['short_description']); ?>" />
+						<input class="pf-field" type="text" name="meta_short_description" size="24" value="<?php echo htmlspecialchars($this->entity->meta['short_description']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
 					<label>
 						<span class="pf-label">Description</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo htmlspecialchars($this->entity->meta['description']); ?></textarea></span>
+						<span class="pf-group pf-full-width">
+							<span class="pf-field" style="display: block;">
+								<textarea style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo htmlspecialchars($this->entity->meta['description']); ?></textarea>
+							</span>
+						</span>
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
@@ -371,7 +366,7 @@ $pines->com_ptags->load();
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Class</span>
-								<select class="pf-field ui-widget-content ui-corner-all" name="cur_condition_class">
+								<select class="pf-field" name="cur_condition_class">
 									<option value="depend">Depend</option>
 									<option value="recommend">Recommend</option>
 									<option value="conflict">Conflict</option>
@@ -381,13 +376,13 @@ $pines->com_ptags->load();
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Type</span>
-								<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" size="24" />
+								<input class="pf-field" type="text" name="cur_condition_type" size="24" />
 							</label>
 						</div>
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Value</span>
-								<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" />
+								<input class="pf-field" type="text" name="cur_condition_value" size="24" />
 							</label>
 						</div>
 					</div>
@@ -395,20 +390,19 @@ $pines->com_ptags->load();
 				</div>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Packaging Options</h1>
+				<h3>Packaging Options</h3>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Filename</span>
 					<span class="pf-note">Leave this blank to use the default filename scheme, "name-version".</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="filename" size="24" value="<?php echo htmlspecialchars($this->entity->filename); ?>" />
+					<input class="pf-field" type="text" name="filename" size="24" value="<?php echo htmlspecialchars($this->entity->filename); ?>" />
 				</label>
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_files">
+		<div class="tab-pane" id="p_muid_tab_files">
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					$("#p_muid_additional, #p_muid_exclude").autocomplete({
 						source: function(request, response){
@@ -456,45 +450,43 @@ $pines->com_ptags->load();
 						}
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-heading">
-				<h1>Include Files/Folders</h1>
+				<h3>Include Files/Folders</h3>
 				<p>Component and template packages already include all files in their folder and can't include others. System packages already include default system files. Folders must end with a forward slash.</p>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Search: </span>
-				<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_additional" type="text" size="24" />
-				<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
+				<input class="pf-field" id="p_muid_additional" type="text" size="24" />
+				<button class="pf-button btn btn-primary" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
 			</div>
 			<div class="pf-element">
 				<div class="pf-group">
 					<div class="pf-field">
-						<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->additional_files)); ?>" />
+						<input type="hidden" class="pf-field" name="additional_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->additional_files)); ?>" />
 					</div>
 				</div>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Exclude Files/Folders</h1>
+				<h3>Exclude Files/Folders</h3>
 				<p>System packages already exclude all components and templates, and all but the "images" and "logos" folders in "media". Folders must end with a forward slash.</p>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Search: </span>
-				<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_exclude" type="text" size="24" />
-				<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_exc_file($('#p_muid_exclude').val());">Add</button>
+				<input class="pf-field" id="p_muid_exclude" type="text" size="24" />
+				<button class="pf-button btn btn-primary" type="button" onclick="pines.com_packager_exc_file($('#p_muid_exclude').val());">Add</button>
 			</div>
 			<div class="pf-element">
 				<div class="pf-group">
 					<div class="pf-field">
-						<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="exclude_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->exclude_files)); ?>" />
+						<input type="hidden" class="pf-field" name="exclude_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->exclude_files)); ?>" />
 					</div>
 				</div>
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_images">
+		<div class="tab-pane" id="p_muid_tab_images">
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					var image_count = 0;
 
@@ -530,16 +522,19 @@ $pines->com_ptags->load();
 					$("#p_muid_sortable")
 					.delegate("li p", "click", function(){
 						var cur_alt = $(this);
-						var desc = cur_alt.text();
-						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
-						.blur(function(){
-							cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
-							update_images();
-						})
+						var desc = cur_alt.html();
+						var ta = $("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\">"+pines.safe(desc)+"</textarea>")
 						.insertAfter(cur_alt)
-						.focus()
-						.select();
+						.focusin(function(){
+							$(this).focusout(function(){
+								cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
+								update_images();
+							});
+						});
 						cur_alt.detach();
+						setTimeout(function(){
+							ta.focus().select();
+						}, 1);
 					})
 					.sortable({
 						placeholder: 'ui-state-highlight',
@@ -572,22 +567,21 @@ $pines->com_ptags->load();
 						$("#p_muid_icon_preview").attr("src", $(this).val());
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-heading">
-				<h1>Icon</h1>
+				<h3>Icon</h3>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label"><img class="pf-field" alt="Icon Preview" id="p_muid_icon_preview" src="<?php echo htmlspecialchars($this->entity->icon); ?>" /></span>
-				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_icon" type="text" name="icon" value="<?php echo htmlspecialchars($this->entity->icon); ?>" />
+				<input class="pf-field puploader" id="p_muid_icon" type="text" name="icon" value="<?php echo htmlspecialchars($this->entity->icon); ?>" />
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Screenshots</h1>
+				<h3>Screenshots</h3>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Add a Screenshot</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_screen_upload" type="text" value="" />
+					<input class="pf-field puploader" id="p_muid_screen_upload" type="text" value="" />
 					<div class="pf-field" id="p_muid_max_screenshots" style="display: none;">You currently have <span id="p_muid_screenshot_count">0</span> screenshots. If you add more than 10, most repositories will reject the package.</div>
 				</div>
 			</div>
@@ -614,12 +608,11 @@ $pines->com_ptags->load();
 			<br class="pf-clearing" />
 		</div>
 	</div>
-	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />
 	</div>
 </form>

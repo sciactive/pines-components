@@ -23,7 +23,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_warehouse']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		pines.search_details = function(){
 			// Submit the form with all of the fields.
@@ -142,7 +141,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

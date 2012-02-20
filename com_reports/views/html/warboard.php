@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_warboard_table {
 		background-color: white;
 		color: black;
@@ -35,17 +34,17 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 	#p_muid_warboard_table .location td, .important td, .hq td {
 		border: solid 1px;
 	}
-	#p_muid_warboard_table .location .label {
+	#p_muid_warboard_table .location .wb_label {
 		background-color: beige;
 	}
 	#p_muid_warboard_table .location .heading {
 		background-color: gainsboro;
 		color: #2B2B2B;
 	}
-	#p_muid_warboard_table .important .label {
+	#p_muid_warboard_table .important .wb_label {
 		background-color: lightsteelblue;
 	}
-	#p_muid_warboard_table .hq .label {
+	#p_muid_warboard_table .hq .wb_label {
 		background-color: palegreen;
 	}
 	#p_muid_warboard_table .empty {
@@ -54,7 +53,6 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 	#p_muid_warboard_table .newhire {
 		background-color: #CCFFCC;
 	}
-	/* ]]> */
 </style>
 <table id="p_muid_warboard_table">
 	<tr>
@@ -71,7 +69,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<?php } ?>
 			<td>
 				<table class="location" id="location_<?php echo (int) $cur_location->guid ?>">
-					<tr class="label">
+					<tr class="wb_label">
 						<td colspan="2">
 							<strong><?php
 							echo htmlspecialchars($cur_location->name);
@@ -82,7 +80,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 						<td><?php echo htmlspecialchars(format_phone($cur_location->phone)); ?></td>
 					</tr>
 					<?php if ($pines->config->com_reports->warboard_phone2_show) { ?>
-					<tr class="label">
+					<tr class="wb_label">
 						<td colspan="2" style="text-align: right;"><?php echo htmlspecialchars($pines->config->com_reports->warboard_phone2_label); ?>&nbsp;</td>
 						<td><?php echo htmlspecialchars(format_phone($cur_location->phone2)); ?></td>
 					</tr>
@@ -118,11 +116,9 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 					if ($empty) {
 						$location_count[$cur_location->guid]--; ?>
 					<script type="text/javascript">
-						// <![CDATA[
 						pines(function(){
 							$(".<?php echo strtolower(str_replace(' ', '_', $cur_location->guid.$cur_title)); ?>").hide();
 						});
-						// ]]>
 					</script>
 					<?php }
 					}
@@ -139,7 +135,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<td>
 			<table class="hq">
 				<tr>
-					<td class="label"><strong><?php echo htmlspecialchars($this->entity->hq->name); ?></strong></td>
+					<td class="wb_label"><strong><?php echo htmlspecialchars($this->entity->hq->name); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo htmlspecialchars(format_phone($this->entity->hq->phone)); ?></td>
@@ -169,7 +165,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<td colspan="<?php echo floor(($this->entity->columns - 1)/count($this->entity->important)); ?>">
 			<table class="important" id="important_<?php echo (int) $cur_important->guid ?>">
 				<tr>
-					<td colspan="4" class="label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
+					<td colspan="4" class="wb_label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
 				</tr>
 				<?php
 				foreach ($employees as $cur_employee) {
@@ -190,7 +186,6 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 	</tr>
 </table>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 <?php
 foreach ($this->entity->locations as $cur_location) {
@@ -207,5 +202,4 @@ foreach ($this->entity->important as $cur_important) {
 <?php } } ?>
 		return;
 	});
-	// ]]>
 </script>

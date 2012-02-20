@@ -30,17 +30,14 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .helper {
 		background-position: left;
 		background-repeat: no-repeat;
 		padding-left: 16px;
 		display: none;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		var view_changes = 0;
 		pines.selected_event = '';
@@ -412,6 +409,5 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 		else
 			pines.com_calendar_save_calendar(true);
 	};
-	// ]]>
 </script>
 <div id="p_muid_calendar"></div>

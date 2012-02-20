@@ -27,7 +27,7 @@ $this->note = 'Provide payment type details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
@@ -54,12 +54,12 @@ $this->note = 'Provide payment type details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Minimum Charge</span>
 			<span class="pf-note">The minimum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="minimum" size="24" value="<?php echo htmlspecialchars($this->entity->minimum); ?>" /></label>
+			<input class="pf-field" type="text" name="minimum" size="24" value="<?php echo htmlspecialchars($this->entity->minimum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Maximum Charge</span>
 			<span class="pf-note">The maximum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="maximum" size="24" value="<?php echo htmlspecialchars($this->entity->maximum); ?>" /></label>
+			<input class="pf-field" type="text" name="maximum" size="24" value="<?php echo htmlspecialchars($this->entity->maximum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Allow Return Payment</span>
@@ -69,7 +69,7 @@ $this->note = 'Provide payment type details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Processing Type</span>
 			<span class="pf-note">This will determine how the payment is approved and processed.</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="processing_type" size="6">
+			<select class="pf-field" name="processing_type" size="6">
 				<?php foreach ($this->processing_types as $cur_type) { ?>
 				<option value="<?php echo htmlspecialchars($cur_type['name']); ?>" title="<?php echo htmlspecialchars($cur_type['description']); ?>"<?php echo $this->entity->processing_type == $cur_type['name'] ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_type['cname']); ?></option>
 				<?php } ?>
@@ -79,7 +79,7 @@ $this->note = 'Provide payment type details in this form.';
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'paymenttype/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'paymenttype/list')); ?>');" value="Cancel" />
 	</div>
 </form>

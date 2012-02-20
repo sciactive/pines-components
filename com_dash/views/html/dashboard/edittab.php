@@ -25,11 +25,19 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		}
 	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var col_input = $("#p_muid_form [name=columns]");
 			var columns = $("#p_muid_cols").sortable({
 				axis: "x",
+				helper: "clone",
+				placeholder: "alert placeholder",
+				forcePlaceholderSize: true,
+				start: function(e, ui){
+					var classes = ui.item.attr("class");
+					ui.placeholder.addClass(classes).removeClass("alert-info");
+					// Since Bootstrap's grid uses :first-child to remove left margin, move this to the end.
+					ui.item.appendTo("#p_muid_cols");
+				},
 				update: function(){
 					update_columns();
 				}
@@ -127,7 +135,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 			update_columns();
 
 			<?php if ( !empty($this->key) ) { ?>
-			$("#p_muid_delete").button().click(function(){
+			$("#p_muid_delete").click(function(){
 				if (!confirm("Are you sure you want to delete this tab and all of its buttons, widgets, and configuration?\nThis cannot be undone."))
 					return;
 				$.ajax({
@@ -150,9 +158,14 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 							pines.error("The tab could not be deleted.");
 							return;
 						}
-						var tabs = $("#p_muid_form").closest(".ui-tabs");
-						var selected = tabs.tabs("option", "selected");
-						tabs.tabs("select", 0).tabs("remove", selected);
+						var tab_pane = $("#p_muid_form").closest(".tab-pane"),
+						tab = tab_pane.data("trigger_link").closest("li"),
+						shownext = tab.prev();
+						if (!shownext.length)
+							shownext = tab.next();
+						shownext.find("a").trigger("show").tab("show");
+						tab_pane.remove();
+						tab.remove();
 					}
 				});
 			});
@@ -160,22 +173,18 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		});
 
 		function p_muid_cancel() {
-			var tabs = $("#p_muid_form").closest(".ui-tabs");
-			var selected = tabs.tabs("option", "selected");
-			var url = tabs.children(".ui-tabs-nav").find(".ui-tabs-selected span").data("old_url");
-			tabs.tabs("url", selected, url).tabs("load", selected);
+			$("#p_muid_form").closest(".tab-pane").data("tab_loaded", false).data("trigger_link").trigger("show");
 		}
-		// ]]>
 	</script>
 	<div class="pf-element pf-heading">
 		<?php if ( !empty($this->key) ) { ?>
-		<button class="ui-state-default ui-corner-all" id="p_muid_delete" type="button" style="float: right;">Delete Tab</button>
+		<button class="btn" id="p_muid_delete" type="button" style="float: right; margin-bottom: 4px;">Delete Tab</button>
 		<?php } ?>
 		<h3>Editing <?php echo isset($this->tab) ? 'Tab ['.htmlspecialchars($this->tab['name']).']' : 'New Tab'; ?></h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->tab['name']); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->tab['name']); ?>" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Layout</span>
@@ -184,45 +193,45 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		</span>
 		<br /><br />
 		<div class="row-fluid" style="margin-bottom: 1em;">
-			<div class="span<?php echo htmlspecialchars($max_columns); ?> new_column ui-state-highlight" style="min-height: 40px; line-height: 40px; text-align: center;">Button area.</div>
+			<div class="span<?php echo htmlspecialchars($max_columns); ?> new_column alert-info" style="min-height: 40px; line-height: 40px; text-align: center;">Button area.</div>
 		</div>
 		<div class="row-fluid" id="p_muid_cols">
 			<?php if (isset($this->tab['columns'])) { foreach ($this->tab['columns'] as $cur_key => $cur_column) {
 				$col_style = htmlspecialchars($cur_column['size'] < 1 ? floor($max_columns * $cur_column['size']) : $cur_column['size']); ?>
-			<div class="span<?php echo $col_style; ?> new_column ui-state-highlight" id="<?php echo htmlspecialchars($cur_key); ?>">
+			<div class="span<?php echo $col_style; ?> new_column alert-info" id="<?php echo htmlspecialchars($cur_key); ?>">
 				<div style="padding: .4em;">
 					<div style="float: right;">
-						<a href="javascript:void(0);" class="remove_column">Remove</a>
+						<a href="javascript:void(0);" class="remove_column btn btn-mini btn-info">Remove</a>
 					</div>
-					<a href="javascript:void(0);" class="grow_column">Grow</a> <a href="javascript:void(0);" class="shrink_column">Shrink</a>
+					<a href="javascript:void(0);" class="grow_column btn btn-mini">Grow</a> <a href="javascript:void(0);" class="shrink_column btn btn-mini">Shrink</a>
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
 			<?php } } else { ?>
-			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column alert-info">
 				<div style="padding: .4em;">
 					<div style="float: right;">
-						<a href="javascript:void(0);" class="remove_column">Remove</a>
+						<a href="javascript:void(0);" class="remove_column btn btn-mini btn-info">Remove</a>
 					</div>
-					<a href="javascript:void(0);" class="grow_column">Grow</a> <a href="javascript:void(0);" class="shrink_column">Shrink</a>
+					<a href="javascript:void(0);" class="grow_column btn btn-mini">Grow</a> <a href="javascript:void(0);" class="shrink_column btn btn-mini">Shrink</a>
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
-			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column alert-info">
 				<div style="padding: .4em;">
 					<div style="float: right;">
-						<a href="javascript:void(0);" class="remove_column">Remove</a>
+						<a href="javascript:void(0);" class="remove_column btn btn-mini btn-info">Remove</a>
 					</div>
-					<a href="javascript:void(0);" class="grow_column">Grow</a> <a href="javascript:void(0);" class="shrink_column">Shrink</a>
+					<a href="javascript:void(0);" class="grow_column btn btn-mini">Grow</a> <a href="javascript:void(0);" class="shrink_column btn btn-mini">Shrink</a>
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
-			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column alert-info">
 				<div style="padding: .4em;">
 					<div style="float: right;">
-						<a href="javascript:void(0);" class="remove_column">Remove</a>
+						<a href="javascript:void(0);" class="remove_column btn btn-mini btn-info">Remove</a>
 					</div>
-					<a href="javascript:void(0);" class="grow_column">Grow</a> <a href="javascript:void(0);" class="shrink_column">Shrink</a>
+					<a href="javascript:void(0);" class="grow_column btn btn-mini">Grow</a> <a href="javascript:void(0);" class="shrink_column btn btn-mini">Shrink</a>
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
@@ -234,9 +243,9 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		<?php if ( !empty($this->key) ) { ?>
 		<input type="hidden" name="key" value="<?php echo htmlspecialchars($this->key); ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<?php if ( !empty($this->key) ) { ?>
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="p_muid_cancel();" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="p_muid_cancel();" value="Cancel" />
 		<?php } ?>
 	</div>
 	<br class="pf-clearing" />

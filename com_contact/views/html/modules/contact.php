@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Contact Us';
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.com_contact_send_message = function(){
 		var name	= $("#p_muid_form [name=author_name]").val();
 		var phone	= $("#p_muid_form [name=author_phone]").val();
@@ -31,45 +30,44 @@ $this->title = 'Contact Us';
 			$("#p_muid_form").submit();
 		}
 	};
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_contact', 'sendmessage')); ?>">
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Name</span>
 			<span class="pf-note">Enter your name here.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="author_name" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->name); ?>" />
+			<input class="pf-field" type="text" name="author_name" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->name); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Phone</span>
 			<span class="pf-note">Enter your phone number.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="author_phone" size="24" value="<?php echo htmlspecialchars(format_phone($_SESSION['user']->phone)); ?>"  onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+			<input class="pf-field" type="tel" name="author_phone" size="24" value="<?php echo htmlspecialchars(format_phone($_SESSION['user']->phone)); ?>"  onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">E-mail</span>
 			<span class="pf-note">Enter your e-mail address.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="author_email" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->email); ?>" />
+			<input class="pf-field" type="email" name="author_email" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->email); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Subject</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="" />
+			<input class="pf-field" type="text" name="subject" size="24" value="" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Message</span>
 			<span class="pf-note">Enter any questions or comments that you have.</span>
-			<textarea class="pf-field ui-widget-content ui-corner-all" name="message" cols="30" rows="8"></textarea>
+			<textarea class="pf-field" name="message" cols="30" rows="8"></textarea>
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="send_to" value="<?php echo htmlspecialchars($this->send_to); ?>">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Send Message" onclick="pines.com_contact_send_message();" />
+		<input class="pf-button btn btn-primary" type="button" value="Send Message" onclick="pines.com_contact_send_message();" />
 	</div>
 </form>

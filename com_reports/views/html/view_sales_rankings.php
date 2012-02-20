@@ -30,7 +30,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.p_muid_grid td, .p_muid_grid th {
 		font-weight: bold;
 		text-align: center;
@@ -65,10 +64,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		background-color: white;
 		color: black;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$(".p_muid_grid").each(function(){
 			var cur_grid = $(this);
@@ -96,7 +93,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			});
 		});
 	});
-	// ]]>
 </script>
 <div class="pf-form">
 	<?php foreach ($this->entity->locations as $key => $cur_location_rankings) { // TODO: Make this more customizeable. ?>

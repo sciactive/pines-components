@@ -30,10 +30,9 @@ header('Content-Type: text/html');
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
-	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/js/template.js"></script>
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
-	
+
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -43,7 +42,6 @@ header('Content-Type: text/html');
 		$notice = $pines->page->get_notice();
 		if ( $error || $notice ) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
@@ -54,7 +52,6 @@ header('Content-Type: text/html');
 				} }
 				?>
 			});
-			// ]]>
 		</script>
 		<?php
 		}

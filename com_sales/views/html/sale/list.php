@@ -22,7 +22,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/sale/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var submit_url = <?php echo json_encode(pines_url('com_sales', 'sale/list')); ?>;
 		var submit_search = function(){
@@ -413,7 +412,6 @@ Only continue if you are fully aware of the results of changing a product."))
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

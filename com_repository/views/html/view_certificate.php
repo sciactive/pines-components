@@ -16,7 +16,6 @@ $this->note = 'All new packages are signed against this certificate.';
 ?>
 <div class="pf-form">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$.ajax({
 				type: "GET",
@@ -40,10 +39,9 @@ $this->note = 'All new packages are signed against this certificate.';
 				}
 			});
 		});
-		// ]]>
 	</script>
 	<div class="pf-element pf-heading">
-		<h1>Private Key Check</h1>
+		<h3>Private Key Check</h3>
 	</div>
 	<div id="p_muid_key_loading">
 		Checking that your private key is not readable to everyone...
@@ -76,7 +74,7 @@ $this->note = 'All new packages are signed against this certificate.';
 	</div>
 	<?php if ($pines->config->com_repository->public_cert) { ?>
 	<div class="pf-element pf-heading">
-		<h1>Public URL</h1>
+		<h3>Public URL</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		Using this URL, a user can easily add your repository as a trusted
@@ -88,7 +86,7 @@ $this->note = 'All new packages are signed against this certificate.';
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Certificate</h1>
+		<h3>Certificate</h3>
 	</div>
 	<div class="pf-element">
 		The certificate text below is what you can supply to your users to allow them access to your repository. Check the details below and make sure that "CN" under "subject" is the correct address of your repository.
@@ -96,10 +94,18 @@ $this->note = 'All new packages are signed against this certificate.';
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Certificate</span>
 		<span class="pf-note">Full repository certificate text.</span>
-		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="8" cols="35"><?php echo htmlspecialchars($this->cert); ?></textarea></span>
+		<span class="pf-group pf-full-width">
+			<span class="pf-field" style="display: block;">
+				<textarea readonly="readonly" style="width: 100%;" rows="8" cols="35"><?php echo htmlspecialchars($this->cert); ?></textarea>
+			</span>
+		</span>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Certificate Details</span>
-		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="16" cols="35"><?php echo htmlspecialchars(print_r($this->data, true)); ?></textarea></span>
+		<span class="pf-group pf-full-width">
+			<span class="pf-field" style="display: block;">
+				<textarea readonly="readonly" style="width: 100%;" rows="16" cols="35"><?php echo htmlspecialchars(print_r($this->data, true)); ?></textarea>
+			</span>
+		</span>
 	</div>
 </div>

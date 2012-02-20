@@ -16,7 +16,6 @@ $pines->com_pgrid->load();
 ?>
 <form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/attachposave')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$("#p_muid_po_grid").pgrid({
 				pgrid_view_height: "300px",
@@ -32,7 +31,6 @@ $pines->com_pgrid->load();
 				}
 			});
 		});
-		// ]]>
 	</script>
 	<div class="pf-element">
 		The following is a list of POs which contain all of these items:
@@ -74,7 +72,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->id); ?>" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $pines->icons->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_button button").one("click", function(){
 			$.ajax({
@@ -45,10 +44,8 @@ $pines->icons->load();
 			});
 		});
 	});
-	// ]]>
 </script>
 <style type="text/css" scoped="scoped">
-	/* <![CDATA[ */
 	#p_muid_button button span {
 		display: block;
 		padding-top: 32px;
@@ -56,7 +53,6 @@ $pines->icons->load();
 		background-repeat: no-repeat;
 		background-position: top center;
 	}
-	/* ]]> */
 </style>
 <div id="p_muid_button" style="text-align: center;">
 	<button class="btn" title="See your dashboard in a popup dialog.">

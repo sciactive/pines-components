@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'System Configurator',
 	'author' => 'SciActive',
-	'version' => '1.0.1',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('configurator'),
@@ -23,7 +23,7 @@ return array(
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_jquery&com_ptags&com_pgrid&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_ptags&com_pgrid&com_pform'
 	),
 	'recommend' => array(
 		'service' => 'entity_manager&user_manager'

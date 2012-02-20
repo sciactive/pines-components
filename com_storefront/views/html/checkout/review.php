@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Review Your Order';
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_item_list {
 		text-align: left;
 		border-collapse: collapse;
@@ -28,7 +27,6 @@ $this->title = 'Review Your Order';
 	#p_muid_item_list .right_text {
 		text-align: right;
 	}
-	/* ]]> */
 </style>
 <form id="p_muid_review" class="pf-form pf-form-twocol" method="POST" action="<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/reviewsave')); ?>">
 	<div class="pf-element">
@@ -67,7 +65,7 @@ $this->title = 'Review Your Order';
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Products</h1>
+		<h3>Products</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_item_list" style="width: 100%;">
@@ -121,7 +119,7 @@ $this->title = 'Review Your Order';
 	</div>
 	<?php if (!$this->no_form) { ?>
 	<div class="pf-element pf-heading">
-		<h1>Paying With</h1>
+		<h3>Paying With</h3>
 	</div>
 	<?php if (is_array($this->entity->payments)) { foreach ($this->entity->payments as $cur_payment) { ?>
 	<div class="pf-element">
@@ -131,20 +129,17 @@ $this->title = 'Review Your Order';
 	<?php } } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Order Comments</span>
-		<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
+		<textarea class="pf-field" rows="1" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 	</div>
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				var buttons = $(":button, :submit, :reset", "#p_muid_review .pf-buttons").click(function(){
-					buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
+					buttons.attr("disabled", "disabled").addClass("disabled");
 				});
-				$("#p_muid_submit").button()
 			});
-			// ]]>
 		</script>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="<?php echo htmlspecialchars($pines->config->com_storefront->complete_order_text); ?>" />
+		<input class="pf-button btn btn-primary" type="submit" value="<?php echo htmlspecialchars($pines->config->com_storefront->complete_order_text); ?>" />
 	</div>
 	<?php } ?>
 </form>

@@ -24,7 +24,6 @@ $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_grid .amount {
 		text-align: right;
 	}
@@ -35,10 +34,8 @@ $pines->com_pgrid->load();
 		text-align: right;
 		font-weight: bold;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
@@ -123,7 +120,6 @@ $pines->com_pgrid->load();
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

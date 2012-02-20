@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Customer Timer',
 	'author' => 'SciActive',
-	'version' => '1.0.1',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Customer account timer',
@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader',
-		'component' => 'com_customer&com_jquery&com_pgrid&com_pnotify&com_pform',
+		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform',
 		'package' => 'com_customertimer-data'
 	),
 	'abilities' => array(

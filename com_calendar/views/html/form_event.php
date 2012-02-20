@@ -17,17 +17,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .form_center {
 		text-align: center;
 	}
 	#p_muid_form .form_input {
 		width: 170px;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-// <![CDATA[
 	pines(function(){
 		$("#p_muid_start").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -104,9 +101,9 @@ defined('P_RUN') or die('Direct access prohibited');
 		var timespan = $("[name=time_start], [name=time_end]", "#p_muid_form");
 		$("#p_muid_form [name=all_day]").change(function(){
 			if ($(this).is(":checked")) {
-				timespan.addClass("ui-state-disabled").attr("disabled", "disabled");
+				timespan.attr("disabled", "disabled");
 			} else {
-				timespan.removeClass("ui-state-disabled").removeAttr("disabled");
+				timespan.removeAttr("disabled");
 			}
 		}).change();
 
@@ -134,27 +131,26 @@ defined('P_RUN') or die('Direct access prohibited');
 			});
 		});
 	});
-// ]]>
 </script>
 <div class="pf-form calendar_form" id="p_muid_form">
 	<div style="float: left;">
 		<div class="pf-element">
 			<label>
 				<span class="pf-label">Label</span><br />
-				<input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo htmlspecialchars($this->entity->label); ?>" />
+				<input class="form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo htmlspecialchars($this->entity->label); ?>" />
 			</label>
 		</div>
-		<div class="pf-element pf-full-width">
+		<div class="pf-element">
 			<label>
 				<span class="pf-label">Info</span><br />
-				<textarea class="ui-widget-content ui-corner-all" rows="2" cols="18" name="information"><?php echo htmlspecialchars($this->entity->information); ?></textarea>
+				<textarea rows="2" cols="18" name="information"><?php echo htmlspecialchars($this->entity->information); ?></textarea>
 			</label>
 		</div>
 		<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 		<div class="pf-element">
 			<label>
 				<span class="pf-label">Employee</span><br />
-				<select class="ui-widget-content ui-corner-all form_input" name="employee"></select>
+				<select class="form_input" name="employee"></select>
 			</label>
 			<label><input class="pf-field" type="checkbox" name="private" value="ON" <?php echo ($this->entity->private) ? 'checked="checked" ' : ''; ?>/>Private</label>
 		</div>
@@ -173,14 +169,12 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 	?>
 	<div style="float: right;">
-		<div class="pf-element">
-			<span class="pf-label">Start</span>
-			<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
-		</div>
 		<div class="pf-element pf-full-width">
-			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? htmlspecialchars(format_date(time(), 'date_sort', '', $this->timezone)) : htmlspecialchars($start_date); ?>" />
+			<label style="float: right;"><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
+			<span class="pf-label">Start</span><br style="clear: right;" />
+			<input class="form_center" type="text" size="10" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? htmlspecialchars(format_date(time(), 'date_sort', '', $this->timezone)) : htmlspecialchars($start_date); ?>" />
 			<span class="combobox">
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_start" size="8" value="<?php echo empty($start_time) ? htmlspecialchars(format_date(time(), 'time_short', '', $this->timezone)) : htmlspecialchars($start_time); ?>" />
+				<input class="pf-field" type="text" name="time_start" size="10" value="<?php echo empty($start_time) ? htmlspecialchars(format_date(time(), 'time_short', '', $this->timezone)) : htmlspecialchars($start_time); ?>" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>
@@ -210,13 +204,11 @@ defined('P_RUN') or die('Direct access prohibited');
 				</select>
 			</span>
 		</div>
-		<div class="pf-element">
-			<span class="pf-label">End</span>
-		</div>
 		<div class="pf-element pf-full-width">
-			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? htmlspecialchars(format_date(time(), 'date_sort', '', $this->timezone)) : htmlspecialchars($end_date); ?>" />
+			<span class="pf-label">End</span><br style="clear: right;" />
+			<input class="form_center" type="text" size="10" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? htmlspecialchars(format_date(time(), 'date_sort', '', $this->timezone)) : htmlspecialchars($end_date); ?>" />
 			<span class="combobox">
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_end" size="8" value="<?php echo empty($end_time) ? htmlspecialchars(format_date(time(), 'time_short', '', $this->timezone)) : htmlspecialchars($end_time); ?>" />
+				<input class="pf-field" type="text" name="time_end" size="10" value="<?php echo empty($end_time) ? htmlspecialchars(format_date(time(), 'time_short', '', $this->timezone)) : htmlspecialchars($end_time); ?>" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>

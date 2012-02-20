@@ -17,17 +17,14 @@ $pines->editor->load();
 $pines->com_pgrid->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_rate {
 		padding-left: 25px;
 	}
-	#p_muid_rate .label {
+	#p_muid_rate .comp_label {
 		font-size: 0.8em;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_form [name=hire_date], #p_muid_form [name=training_completion_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -109,30 +106,27 @@ $pines->com_pgrid->load();
 		$("#p_muid_form [name=pay_type]").change(function(){
 			var pay_type = $(this);
 			if (pay_type.val() == "hourly" || pay_type.val() == "hourly_commission" || pay_type.val() == "commission_draw") {
-				$("#p_muid_rate .label").empty().append("/Hour");
+				$("#p_muid_rate .comp_label").empty().append("/Hour");
 				$("#p_muid_rate").show();
 			} else if (pay_type.val() == "salary" || pay_type.val() == "salary_commission") {
-				$("#p_muid_rate .label").empty().append("/Year");
+				$("#p_muid_rate .comp_label").empty().append("/Year");
 				$("#p_muid_rate").show();
 			} else {
 				$("#p_muid_rate").hide();
 			}
 		}).change();
-
-		$("#p_muid_employee_tabs").tabs();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/save')); ?>">
-	<div id="p_muid_employee_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
-			<?php if ($pines->config->com_hrm->com_sales) { ?>
-			<li><a href="#p_muid_tab_commissions">Commissions</a></li>
-			<?php } ?>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_attributes" data-toggle="tab">Attributes</a></li>
+		<?php if ($pines->config->com_hrm->com_sales) { ?>
+		<li><a href="#p_muid_tab_commissions" data-toggle="tab">Commissions</a></li>
+		<?php } ?>
+	</ul>
+	<div id="p_muid_employee_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
@@ -149,26 +143,26 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Nickname</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="nickname" value="<?php echo $this->entity->nickname; ?>" /></label>
+					<input class="pf-field" type="text" size="24" name="nickname" value="<?php echo $this->entity->nickname; ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn')) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ssn" size="24" value="<?php echo htmlspecialchars($this->entity->ssn); ?>" /></label>
+					<input class="pf-field" type="text" name="ssn" size="24" value="<?php echo htmlspecialchars($this->entity->ssn); ?>" /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">New Hire</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="new_hire" value="ON" <?php echo $this->entity->new_hire ? 'checked="checked" ' : ''; ?>/></label>
+					<input class="pf-field" type="checkbox" name="new_hire" value="ON" <?php echo $this->entity->new_hire ? 'checked="checked" ' : ''; ?>/></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hire Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : htmlspecialchars(format_date($this->entity->hire_date, 'date_sort')); ?>" /></label>
+					<input class="pf-field" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : htmlspecialchars(format_date($this->entity->hire_date, 'date_sort')); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="job_title">
+					<select class="pf-field" name="job_title">
 						<?php foreach ($pines->config->com_hrm->employee_departments as $cur_dept) { $cur_dept = explode(':', $cur_dept); ?>
 						<option value="<?php echo htmlspecialchars($cur_dept[0]); ?>" <?php echo ($this->entity->job_title == $cur_dept[0]) ? 'selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_dept[0]); ?></option>
 						<?php } ?>
@@ -176,12 +170,12 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Training Completion Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : htmlspecialchars(format_date($this->entity->training_completion_date, 'date_sort')); ?>" /></label>
+					<input class="pf-field" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : htmlspecialchars(format_date($this->entity->training_completion_date, 'date_sort')); ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_hrm->com_calendar) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Schedule Color</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="color">
+					<select class="pf-field" name="color">
 						<option value="aqua" <?php echo ($this->entity->color == 'aqua') ? 'selected="selected"' : ''; ?>>Aqua</option>
 						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
 						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
@@ -204,12 +198,12 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone Extension</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="number" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
+					<input class="pf-field" type="number" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Compensation</span>
 				<span class="pf-field" style="display: inline-block;">
-					<select class="ui-widget-content ui-corner-all" name="pay_type">
+					<select name="pay_type">
 						<option value="hourly" <?php echo ($this->entity->pay_type == 'hourly') ? 'selected="selected"' : ''; ?>>Hourly</option>
 						<option value="commission" <?php echo ($this->entity->pay_type == 'commission') ? 'selected="selected"' : ''; ?>>Commission</option>
 						<option value="hourly_commission" <?php echo ($this->entity->pay_type == 'hourly_commission') ? 'selected="selected"' : ''; ?>>Hourly + Commission</option>
@@ -217,14 +211,14 @@ $pines->com_pgrid->load();
 						<option value="salary" <?php echo ($this->entity->pay_type == 'salary') ? 'selected="selected"' : ''; ?>>Salary</option>
 						<option value="salary_commission" <?php echo ($this->entity->pay_type == 'salary_commission') ? 'selected="selected"' : ''; ?>>Salary + Commission</option>
 					</select>
-					<label id="p_muid_rate">$<input class="ui-widget-content ui-corner-all" type="text" name="pay_rate" size="8" value="<?php echo htmlspecialchars($this->entity->pay_rate); ?>" /><span class="label"></span></label>
+					<label id="p_muid_rate">$<input type="text" name="pay_rate" size="8" value="<?php echo htmlspecialchars($this->entity->pay_rate); ?>" /><span class="comp_label"></span></label>
 				</span>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hours in Full Workday</span>
 					<span class="pf-note">When the employee is scheduled "all day", it will be considered this many hours.</span>
 					<span class="pf-note">Leave blank to use the default.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="workday_length" size="24" value="<?php echo htmlspecialchars($this->entity->workday_length); ?>" /></label>
+					<input class="pf-field" type="text" name="workday_length" size="24" value="<?php echo htmlspecialchars($this->entity->workday_length); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
@@ -232,7 +226,7 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_attributes">
+		<div class="tab-pane" id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<table class="attributes_table">
 					<thead>
@@ -257,13 +251,13 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_name" size="24" />
+							<input class="pf-field" type="text" name="cur_attribute_name" size="24" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_value" size="24" />
+							<input class="pf-field" type="text" name="cur_attribute_value" size="24" />
 						</label>
 					</div>
 				</div>
@@ -273,7 +267,6 @@ $pines->com_pgrid->load();
 		</div>
 		<?php if ($pines->config->com_hrm->com_sales) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				// Commissions
 				var commissions_table = $("#p_muid_form .commissions_table");
@@ -294,9 +287,8 @@ $pines->com_pgrid->load();
 					]
 				});
 			});
-			// ]]>
 		</script>
-		<div id="p_muid_tab_commissions">
+		<div class="tab-pane" id="p_muid_tab_commissions">
 			<div class="pf-element pf-full-width">
 				<table class="commissions_table">
 					<thead>
@@ -334,11 +326,10 @@ $pines->com_pgrid->load();
 		<?php } ?>
 	</div>
 	<div class="pf-element pf-buttons">
-		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="Cancel" />
 	</div>
 </form>

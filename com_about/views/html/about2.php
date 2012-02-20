@@ -14,15 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = htmlspecialchars("About {$pines->info->name}");
 $this->note = htmlspecialchars("Version {$pines->info->version}");
 ?>
-<script type="text/javascript">
-	// <![CDATA[
-	pines(function(){
-		if (!$.fn.buttonset)
-			return;
-		$("#p_muid_buttons").buttonset().children("button").button();
-	});
-	// ]]>
-</script>
 <p>
 <?php echo htmlspecialchars($pines->info->name); ?> is a PHP application
 framework from
@@ -42,10 +33,9 @@ libraries to make development of even very complex systems easy.
 by using a database abstraction system called an Entity Manager. Choosing the
 right database is as simple as installing a new component.
 </p>
-<p id="p_muid_buttons" style="float: right;">
-	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>
-	<button type="button" onclick="window.open('http://sourceforge.net/projects/pines/');">Project Page</button>
-	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">API Documentation</button>
-	<button type="button" onclick="window.open('http://sourceforge.net/donate/index.php?group_id=264165');">Donate</button>
+<p class="btn-group" style="float: right;">
+	<button type="button" class="btn btn-primary" onclick="pines.get('http://pinesframework.org/', null, '_blank');">Pines Framework</button>
+	<button type="button" class="btn" onclick="pines.get('http://sourceforge.net/projects/pines/', null, '_blank');">Pines on SourceForge</button>
+	<button type="button" class="btn" onclick="pines.get('http://sourceforge.net/donate/index.php?group_id=264165', null, '_blank');">Donate</button>
 </p>
 <br style="clear: both; height: 1px;" />

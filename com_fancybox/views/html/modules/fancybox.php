@@ -93,18 +93,16 @@ if (isset($this->index))
 	$options->index = (int) $this->index;
 
 if ($this->include_basic_style == 'true') { ?>
-<style type="text/css">/* <![CDATA[ */
+<style type="text/css">
 #p_muid_fancybox img {
 background:none repeat scroll 0 0 white;
 border:1px solid #BBBBBB;
 margin:0 7px 7px 0;
 padding:5px;
-}
-/* ]]> */</style>
+}</style>
 <?php } ?>
-<script type="text/javascript">// <![CDATA[
-pines(function(){$('a', '#p_muid_fancybox').fancybox(<?php echo json_encode($options); ?>);});
-// ]]></script>
+<script type="text/javascript">
+pines(function(){$('a', '#p_muid_fancybox').fancybox(<?php echo json_encode($options); ?>);});</script>
 <div id="p_muid_fancybox" class="<?php echo htmlspecialchars($this->class); ?>">
 	<?php
 	foreach ($images as $cur_image) {

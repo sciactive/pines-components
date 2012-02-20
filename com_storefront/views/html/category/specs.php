@@ -22,7 +22,6 @@ if (!$specs) {
 
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_specs select {
 		display: block;
 	}
@@ -45,7 +44,7 @@ foreach ($specs as $cur_spec) {
 			?>
 <div>
 	<strong><?php echo htmlspecialchars($cur_spec['name']); ?>:</strong>
-	<select name="" class="ui-widget-content ui-corner-all">
+	<select name="">
 		<option value="">Any</option>
 		<option value="true">Yes</option>
 		<option value="false">No</option>

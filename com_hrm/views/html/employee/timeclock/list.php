@@ -17,7 +17,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -116,7 +115,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -166,11 +164,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<div class="pf-element">
 			<label><span class="pf-label">Start Date</span>
-				<input class="pf-field ui-widget-content ui-corner-all" name="date_start" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_start, 'custom', 'Y-m-d')); ?>" /></label>
+				<input class="pf-field" name="date_start" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_start, 'custom', 'Y-m-d')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">End Date</span>
-				<input class="pf-field ui-widget-content ui-corner-all" name="date_end" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_end - 1, 'custom', 'Y-m-d')); ?>" /></label>
+				<input class="pf-field" name="date_end" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_end - 1, 'custom', 'Y-m-d')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Local Timezones</span>

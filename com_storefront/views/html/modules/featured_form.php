@@ -23,7 +23,7 @@ $pines->entity_manager->sort($products, 'name');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Product</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="id">
+			<select class="pf-field" name="id">
 				<option value="random">-- Random --</option>
 				<?php foreach ($products as $cur_product) { ?>
 				<option value="<?php echo (int) $cur_product->guid; ?>"><?php echo htmlspecialchars($cur_product->name); ?></option>
@@ -33,7 +33,7 @@ $pines->entity_manager->sort($products, 'name');
 	<div class="pf-element">
 		<label><span class="pf-label">Alt Text</span>
 			<span class="pf-note">Leave blank to use product name.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="alt_text" size="24" value="" /></label>
+			<input class="pf-field" type="text" name="alt_text" size="24" value="" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Show Name</span>

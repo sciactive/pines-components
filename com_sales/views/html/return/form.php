@@ -32,7 +32,6 @@ if ($pines->config->com_sales->autocomplete_product)
 
 if ($this->entity->specials) { ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_specials .special {
 		float: left;
 		margin-top: .5em;
@@ -45,7 +44,6 @@ if ($this->entity->specials) { ?>
 	#p_muid_specials .special_discount {
 		text-align: right;
 	}
-	/* ]]> */
 </style>
 <?php } ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'return/save')); ?>">
@@ -60,7 +58,6 @@ if ($this->entity->specials) { ?>
 	</div>
 	<?php } ?>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -282,7 +279,7 @@ if ($this->entity->specials) { ?>
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (product.pricing_method != "variable") {
-								alert("The selected product does not allow variable pricing.")
+								alert("The selected product does not allow variable pricing.");
 								return;
 							}
 							var price = rows.pgrid_get_value(6);
@@ -537,7 +534,7 @@ if ($this->entity->specials) { ?>
 					return;
 				}
 				$.each(product.return_checklists, function(i, cur_checklist){
-					checklist_form.append('<div class="pf-element pf-heading"><h1>'+pines.safe(cur_checklist.label)+'</h1></div>');
+					checklist_form.append('<div class="pf-element pf-heading"><h3>'+pines.safe(cur_checklist.label)+'</h3></div>');
 					$.each(cur_checklist.conditions, function(i, cur_condition){
 						var cur_element = $('<div class="pf-element pf-full-width condition"><span class="pf-label">'+pines.safe(cur_condition.condition)+'</span></div>');
 						// Make checkboxes.
@@ -775,11 +772,7 @@ if ($this->entity->specials) { ?>
 				});
 			};
 
-			$("button.payment-button", "#p_muid_form").hover(function(){
-				$(this).addClass("ui-state-hover");
-			}, function(){
-				$(this).removeClass("ui-state-hover");
-			}).click(function(){
+			$("button.payment-button", "#p_muid_form").click(function(){
 				var payment_type = JSON.parse(this.value);
 				// TODO: Minimums, maximums
 				get_amount(function(amount){
@@ -798,40 +791,29 @@ if ($this->entity->specials) { ?>
 
 			var get_amount = function(callback){
 				// TODO: Minimums, maximums
-				$("<div title=\"Payment Amount\"></div>").each(function(){
+				var amount_due = $("#p_muid_amount_due").html();
+				$("<div title=\"Payment Amount\" style=\"text-align: center; font-size: 22px; font-weight: bold;\"></div>").each(function(){
 					var amount_dialog = $(this);
 					// A button for the current amount due.
-					var cur_amount = $("#p_muid_amount_due").html();
-					if (parseFloat(cur_amount) <= 0 && parseFloat($("#p_muid_change").html()) > 0)
-						cur_amount = "-"+$("#p_muid_change").html();
-					amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).html(cur_amount).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					if (parseFloat(amount_due) <= 0 && parseFloat($("#p_muid_change").html()) > 0)
+						amount_due = "-"+$("#p_muid_change").html();
+					amount_dialog.append($("<button class=\"btn btn-primary\"></button>").html("$"+amount_due).css({"min-height": "70px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						amount_dialog.dialog("close");
-						callback(round_to_dec(parseFloat(cur_amount), true));
+						callback(round_to_dec(amount_due, true));
 					}));
 					// Buttons for common amounts.
-					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
-						var cur_amount = this;
-						amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-							$(this).addClass("ui-state-hover");
-						}, function(){
-							$(this).removeClass("ui-state-hover");
-						}).html(String(cur_amount)).css({"float": "left", "min-height": "60px", "min-width": "60px", "text-align": "center", "margin": "2px"})
+					$.each(["1", "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"], function(){
+						var cur_amount = this,
+						button_style = (parseFloat(cur_amount) > parseFloat(amount_due)) ? "btn-success" : "btn-info";
+						amount_dialog.append($("<button class=\"btn "+button_style+"\"></button>").html("$"+String(cur_amount)).css({"min-height": "70px", "min-width": "70px", "text-align": "center", "margin": "2px"})
 						.click(function(){
 							amount_dialog.dialog("close");
 							callback(round_to_dec(cur_amount, true));
 						}));
 					});
 					// A button for a custom amount.
-					amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).html("Another Amount").css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					amount_dialog.append($("<button class=\"btn btn-primary\"></button>").html("Another Amount").css({"min-height": "70px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						var cur_amount = null;
 						do {
@@ -845,6 +827,7 @@ if ($this->entity->specials) { ?>
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
+					width: 400,
 					close: function(){$(this).remove();}
 				});
 			};
@@ -956,10 +939,10 @@ if ($this->entity->specials) { ?>
 					if (product.discountable && discount != "") {
 						var discount_price;
 						if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
-							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount = parseFloat(discount.replace(/[^0-9.\-]/, ''));
 							discount_price = price - discount;
 						} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
-							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount = parseFloat(discount.replace(/[^0-9.\-]/, ''));
 							discount_price = price - (price * (discount / 100));
 						}
 						if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
@@ -1009,7 +992,7 @@ if ($this->entity->specials) { ?>
 				// Now add all the specials to the specials section.
 				var special_box = $("#p_muid_specials").empty();
 				$.each(specials, function(i, cur_special){
-					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
+					special_box.append("<div class=\"special well\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
 				});
 				$("#p_muid_specials_total").html(round_to_dec(total_specials, true));
 				if (round_to_dec(total_specials) > 0)
@@ -1041,7 +1024,7 @@ if ($this->entity->specials) { ?>
 				rows.each(function(i){
 					var cur_row = $(this);
 					if (cur_row.pgrid_get_value(3) != "declined") {
-						var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
+						var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.\-]/g, ""));
 						if (isNaN(amount))
 							amount = 0;
 						amount_tendered += amount;
@@ -1140,7 +1123,7 @@ if ($this->entity->specials) { ?>
 
 			pines.com_sales_run_submit = function(){
 				if (!check_return_total()) return false;
-				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("ui-state-disabled");
+				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("disabled");
 				$("#p_muid_form").submit();
 			};
 
@@ -1156,7 +1139,6 @@ if ($this->entity->specials) { ?>
 			// Load any initial products.
 			update_products();
 		});
-		// ]]>
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
@@ -1165,7 +1147,7 @@ if ($this->entity->specials) { ?>
 			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlspecialchars("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided' || isset($this->entity->sale->guid)) echo 'disabled="disabled" '; ?>/>
+			<input class="pf-field" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlspecialchars("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided' || isset($this->entity->sale->guid)) echo 'disabled="disabled" '; ?>/>
 		</label>
 	</div>
 	<?php } ?>
@@ -1234,11 +1216,9 @@ if ($this->entity->specials) { ?>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
 					<td>NA<script type="text/javascript">
-						// <![CDATA[
 						pines(function(){
 							$("#p_muid_tr_<?php echo htmlspecialchars($cur_id); ?>").data("return_checklists", <?php echo json_encode((array) $cur_product['return_checklists']); ?>);
 						});
-						// ]]>
 					</script></td>
 					<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['price']); ?></td>
@@ -1257,7 +1237,7 @@ if ($this->entity->specials) { ?>
 		<div class="pf-form">
 			<div class="pf-element">
 				<label><span class="pf-label">Serial Number</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+					<input class="pf-field" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
 			</div>
 		</div>
 		<br />
@@ -1274,7 +1254,7 @@ if ($this->entity->specials) { ?>
 				<label>
 					<span class="pf-label">Employee</span>
 					<span class="pf-note">Enter part of a name, title, email, or phone # to search.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_salesperson" name="item_salesperson" size="24" value="" />
+					<input class="pf-field" type="text" id="p_muid_salesperson" name="item_salesperson" size="24" value="" />
 				</label>
 			</div>
 		</div>
@@ -1311,7 +1291,7 @@ if ($this->entity->specials) { ?>
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="btn payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-financial-payment-mode" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlspecialchars($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
@@ -1343,7 +1323,7 @@ if ($this->entity->specials) { ?>
 				<span class="pf-label">Amount Returned</span><span class="pf-field" id="p_muid_amount_tendered">0.00</span><br />
 				<span class="pf-label">Amount Remaining</span><span class="pf-field" id="p_muid_amount_due">0.00</span><br />
 				<div id="p_muid_overpaid" style="display: none; font-weight: bold;">
-					<span class="pf-label">Overpaid</span><span style="font-weight: bold;" class="pf-field ui-state-error ui-corner-all" id="p_muid_change">0.00</span>
+					<span class="pf-label">Overpaid</span><span style="font-weight: bold;" class="pf-field alert-error" id="p_muid_change">0.00</span>
 				</div>
 			</div>
 			<hr class="pf-field" style="clear: both;" />
@@ -1352,13 +1332,13 @@ if ($this->entity->specials) { ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Return Information</span>
 		<div class="pf-group">
-			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
+			<input class="pf-field btn" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
 			<hr class="pf-field" style="clear: both; margin-top: 15px;" />
 		</div>
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
-			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
+			<textarea class="pf-field pf-full-width" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 	</div>
 	<?php if (isset($this->entity->sale->guid)) { ?>
@@ -1384,15 +1364,15 @@ if ($this->entity->specials) { ?>
 		<input type="hidden" id="p_muid_return_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Process" onclick="$('#p_muid_return_process_type').val('process'); pines.com_sales_run_check(true);" />
+		<input class="pf-button btn btn-primary" type="button" value="Process" onclick="$('#p_muid_return_process_type').val('process'); pines.com_sales_run_check(true);" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed' && $this->entity->status != 'quoted') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_return_process_type').val('quote'); pines.com_sales_run_check();" />
+		<input class="pf-button btn btn-primary" type="button" value="Quote" onclick="$('#p_muid_return_process_type').val('quote'); pines.com_sales_run_check();" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_return_process_type').val('save'); pines.com_sales_run_check();" />
+		<input class="pf-button btn btn-primary" type="button" value="Save" onclick="$('#p_muid_return_process_type').val('save'); pines.com_sales_run_check();" />
 		<?php } ?>
 
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'return/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'return/list')); ?>');" value="Cancel" />
 	</div>
 </form>

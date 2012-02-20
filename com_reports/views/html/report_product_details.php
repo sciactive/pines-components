@@ -23,14 +23,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_product_details']);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.p_muid_return td {
 		color: red;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		pines.search_details = function(){
 			if ($("#p_muid_types_dialog [name=types_sold]").attr('checked'))
@@ -177,7 +174,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			types_dialog.dialog('open');
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

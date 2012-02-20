@@ -18,7 +18,6 @@ $pines->com_pgrid->load();
 $pines->uploader->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Attributes
 		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
@@ -225,26 +224,23 @@ $pines->uploader->load();
 			}
 		});
 		*/ ?>
-
-		$("#p_muid_tabs").tabs();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'savegroup')); ?>">
-	<div id="p_muid_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_logo">Logo</a></li>
-			<li><a href="#p_muid_tab_location">Address</a></li>
-			<?php if ( $this->display_abilities ) { ?>
-			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
-			<?php } ?>
-			<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
-			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
-			<?php } ?>
-			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_logo" data-toggle="tab">Logo</a></li>
+		<li><a href="#p_muid_tab_location" data-toggle="tab">Address</a></li>
+		<?php if ( $this->display_abilities ) { ?>
+		<li><a href="#p_muid_tab_abilities" data-toggle="tab">Abilities</a></li>
+		<?php } ?>
+		<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
+		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
+		<?php } ?>
+		<li><a href="#p_muid_tab_attributes" data-toggle="tab">Attributes</a></li>
+	</ul>
+	<div id="p_muid_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
@@ -254,12 +250,12 @@ $pines->uploader->load();
 			<?php if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Group Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="groupname" size="24" value="<?php echo htmlspecialchars($this->entity->groupname); ?>" /></label>
+					<input class="pf-field" type="text" name="groupname" size="24" value="<?php echo htmlspecialchars($this->entity->groupname); ?>" /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Display Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+					<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<?php if ($this->display_enable) { ?>
 			<div class="pf-element">
@@ -269,25 +265,25 @@ $pines->uploader->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
+					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone 1</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone 2</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone2" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone2)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field" type="tel" name="phone2" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone2)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="fax" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->fax)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field" type="tel" name="fax" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->fax)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Timezone</span>
 					<span class="pf-note">Users in this group will inherit this timezone. Primary group has priority over secondary groups.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="timezone" size="1">
+					<select class="pf-field" name="timezone" size="1">
 						<option value="">--System Default--</option>
 						<?php
 						$tz = DateTimeZone::listIdentifiers();
@@ -301,7 +297,7 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Parent</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="parent" size="1">
+					<select class="pf-field" name="parent" size="1">
 						<option value="none">--No Parent--</option>
 						<?php
 						$pines->user_manager->group_sort($this->group_array, 'name');
@@ -335,7 +331,7 @@ $pines->uploader->load();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_logo">
+		<div class="tab-pane" id="p_muid_tab_logo">
 			<div class="pf-element">
 				<span class="pf-label"><?php echo (isset($this->entity->logo)) ? 'Currently Set Logo' : 'Inherited Logo'; ?></span>
 				<div class="pf-group">
@@ -348,14 +344,13 @@ $pines->uploader->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Change Logo</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="image" /></label>
+					<input class="pf-field puploader" type="text" name="image" /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_location">
+		<div class="tab-pane" id="p_muid_tab_location">
 			<div class="pf-element">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var address_us = $("#p_muid_address_us");
 						var address_international = $("#p_muid_address_international");
@@ -370,7 +365,6 @@ $pines->uploader->load();
 							}
 						}).change();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
 				<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
@@ -379,16 +373,16 @@ $pines->uploader->load();
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->entity->address_1); ?>" /></label>
+						<input class="pf-field" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->entity->address_2); ?>" /></label>
+						<input class="pf-field" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->entity->city); ?>" />
-					<select class="pf-field ui-widget-content ui-corner-all" name="state">
+					<input class="pf-field" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->entity->city); ?>" />
+					<select class="pf-field" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',
@@ -452,45 +446,46 @@ $pines->uploader->load();
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->entity->zip); ?>" /></label>
+						<input class="pf-field" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea></span></label>
+						<span class="pf-group pf-full-width">
+							<span class="pf-field" style="display: block;">
+								<textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea>
+							</span>
+						</span></label>
 				</div>
 			</div>
 			<br class="pf-clearing" />
 		</div>
 		<?php if ( $this->display_abilities ) { ?>
-		<div id="p_muid_tab_abilities">
+		<div class="tab-pane" id="p_muid_tab_abilities">
+			<style type="text/css" scoped="scoped">
+				#p_muid_tab_abilities .abilities_accordion {
+					margin-bottom: .2em;
+				}
+				#p_muid_tab_abilities .abilities_accordion .accordion-heading .component {
+					float: right;
+				}
+			</style>
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
-					var sections = $("#p_muid_form .abilities_accordian");
-					sections.accordion({
-						autoHeight: false,
-						collapsible: true,
-						active: false
+					var sections = $("#p_muid_tab_abilities .abilities_accordion .collapse");
+					$("#p_muid_tab_abilities button.expand_all").click(function(){
+						sections.collapse("show");
 					});
-					$("#p_muid_form button.expand_all").button().click(function(){
-						sections.each(function(){
-							var section = $(this);
-							if (section.accordion("option", "active") === false)
-								section.accordion("activate", 0);
-						});
-					});
-					$("#p_muid_form button.collapse_all").button().click(function(){
-						sections.accordion("activate", false);
+					$("#p_muid_tab_abilities button.collapse_all").click(function(){
+						sections.collapse("hide");
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-full-width ui-helper-clearfix">
-				<div style="float: right; clear: both;">
-					<button type="button" class="expand_all">Expand All</button>
-					<button type="button" class="collapse_all">Collapse All</button>
+				<div class="btn-group" style="float: right; clear: both;">
+					<button type="button" class="expand_all btn">Expand All</button>
+					<button type="button" class="collapse_all btn">Collapse All</button>
 				</div>
 			</div>
 			<br class="pf-clearing" />
@@ -501,28 +496,33 @@ $pines->uploader->load();
 					$section_abilities = (array) $pines->info->$cur_section->abilities;
 				}
 				if (!$section_abilities) continue; ?>
-			<div class="abilities_accordian">
-				<h3><a href="#"><?php echo ($cur_section == 'system') ? htmlspecialchars($pines->info->name) : htmlspecialchars($pines->info->$cur_section->name); ?> (<?php echo htmlspecialchars($cur_section); ?>)</a></h3>
-				<div>
-					<div class="pf-element">
-						<?php foreach ($section_abilities as $cur_ability) { ?>
-						<label>
-							<input type="checkbox" name="<?php echo htmlspecialchars($cur_section); ?>[]" value="<?php echo htmlspecialchars($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
-							<?php echo htmlspecialchars($cur_ability[1]); ?>&nbsp;<small><?php echo htmlspecialchars($cur_ability[2]); ?></small>
-						</label>
-						<br class="pf-clearing" />
-						<?php } ?>
+			<div class="abilities_accordion accordion">
+				<div class="accordion-group">
+					<a class="accordion-heading ui-helper-clearfix" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+						<big class="accordion-toggle"><?php echo ($cur_section == 'system') ? htmlspecialchars($pines->info->name) : htmlspecialchars($pines->info->$cur_section->name); ?> <span class="component"><?php echo htmlspecialchars($cur_section); ?></span></big>
+					</a>
+					<div class="accordion-body collapse">
+						<div class="accordion-inner">
+							<div class="pf-element">
+								<?php foreach ($section_abilities as $cur_ability) { ?>
+								<label>
+									<input type="checkbox" name="<?php echo htmlspecialchars($cur_section); ?>[]" value="<?php echo htmlspecialchars($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+									<?php echo htmlspecialchars($cur_ability[1]); ?>&nbsp;<small><?php echo htmlspecialchars($cur_ability[2]); ?></small>
+								</label>
+								<br class="pf-clearing" />
+								<?php } ?>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php } ?>
-		<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
-		<div id="p_muid_tab_conditions">
+		<?php } if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
+		<div class="tab-pane" id="p_muid_tab_conditions">
 			<div class="pf-element pf-heading">
-				<h1>Ability Conditions</h1>
+				<h3>Ability Conditions</h3>
 				<p>Users will only inherit abilities from this group if these conditions are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -563,11 +563,11 @@ $pines->uploader->load();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -575,7 +575,7 @@ $pines->uploader->load();
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>
-		<div id="p_muid_tab_attributes">
+		<div class="tab-pane" id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<table class="attributes_table">
 					<thead>
@@ -593,11 +593,11 @@ $pines->uploader->load();
 				<div class="pf-form">
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
+							<input class="pf-field" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
+							<input class="pf-field" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -607,11 +607,10 @@ $pines->uploader->load();
 	</div>
 
 	<div class="pf-element pf-buttons">
-		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_user', 'listgroups')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_user', 'listgroups')); ?>');" value="Cancel" />
 	</div>
 </form>

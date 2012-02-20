@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_products .product {
 		float: left;
 		width: 28%;
@@ -70,10 +69,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	#p_muid_products button.add_cart {
 		float: right;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var tallest = 0;
 		$("div.product_main", "#p_muid_products").each(function(){
@@ -96,7 +93,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			return false;
 		});
 	});
-	// ]]>
 </script>
 <?php foreach ($products as $key => $cur_product) { ?>
 <div class="product ui-widget-content">
@@ -113,7 +109,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="product_button">
 		<?php if (!$pines->config->com_storefront->catalog_mode) { ?>
-		<button class="add_cart ui-state-default ui-corner-all ui-state-focus">Add to Cart</button>
+		<button class="add_cart btn btn-primary"><i class="icon-shopping-cart icon-white"></i> Add to Cart</button>
 		<?php } ?>
 	</div>
 </div>

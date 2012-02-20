@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var display_editor_window;
 		var current_holder;
@@ -48,7 +47,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					.addClass("displays_holder")
 				).append($("<input />")
 					.attr({type: "button", value: "Edit Displays"})
-					.addClass("displays_button field ui-state-default ui-corner-all")
+					.addClass("displays_button field btn")
 					.click(function(){
 						open_display_editor($(this).prev("input"));
 					})
@@ -56,5 +55,4 @@ defined('P_RUN') or die('Direct access prohibited');
 			);
 		});
 	});
-	// ]]>
 </script>

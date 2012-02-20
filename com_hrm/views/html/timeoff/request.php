@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .form_center {
 		text-align: center;
 	}
@@ -30,10 +29,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		border: 0;
 		background: transparent none;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-// <![CDATA[
 	pines(function(){
 		$("#p_muid_start").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -52,11 +49,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		var timespan = $("[name=time_start], [name=time_end]", "#p_muid_form");
 		$("#p_muid_form [name=all_day]").change(function(){
-			if ($(this).is(":checked")) {
-				timespan.addClass("ui-state-disabled").attr("disabled", "disabled");
-			} else {
-				timespan.removeClass("ui-state-disabled").removeAttr("disabled");
-			}
+			if ($(this).is(":checked"))
+				timespan.attr("disabled", "disabled");
+			else
+				timespan.removeAttr("disabled");
 		}).change();
 
 		$("#p_muid_start").change(function(){
@@ -66,11 +62,10 @@ defined('P_RUN') or die('Direct access prohibited');
 				$("#p_muid_end").val($(this).val());
 		}).change();
 	});
-// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">
-		<span class="pf-note">Reason for Time Off</span><input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo htmlspecialchars($this->entity->reason); ?>" />
+		<span class="pf-note">Reason for Time Off</span><input class="form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo htmlspecialchars($this->entity->reason); ?>" />
 	</div>
 	<?php
 		if ($this->entity->guid) {
@@ -84,8 +79,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo $this->entity->all_day ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($start_date); ?>" />
-		<select class="ui-widget-content ui-corner-all" name="time_start">
+		<span class="pf-note">Start</span><input class="form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($start_date); ?>" />
+		<select name="time_start">
 			<option value="0" <?php echo ($start_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
 			<option value="2" <?php echo ($start_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
@@ -113,8 +108,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		</select>
 	</div>
 	<div class="pf-element">
-		<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($end_date); ?>" />
-		<select class="ui-widget-content ui-corner-all" name="time_end">
+		<span class="pf-note">End</span><input class="form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($end_date); ?>" />
+		<select name="time_end">
 			<option value="0" <?php echo ($end_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
 			<option value="2" <?php echo ($end_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
@@ -144,7 +139,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div id="p_muid_requests" class="ui-widget-content ui-corner-all">
 		<div class="pf-form" style="margin: 0 .5em .5em;">
 			<div class="pf-element pf-heading">
-				<h1><span class="ui-state-highlight">Pending</span>/<span class="ui-state-error">Declined</span> Requests</h1>
+				<h3><span class="ui-state-highlight">Pending</span>/<span class="ui-state-error">Declined</span> Requests</h3>
 			</div>
 			<?php foreach ($this->requests as $cur_request) {
 			$style = ($cur_request->status == 'declined') ? 'ui-state-error' : 'ui-state-highlight'; ?>

@@ -19,7 +19,6 @@ $pines->icons->load();
 	Notes will be available once this page is saved.
 	<?php } else { ?>
 	<style type="text/css" scoped="scoped">
-		/* <![CDATA[ */
 		#p_muid_current_threads.picon {
 			background-repeat: no-repeat;
 			background-position: top right;
@@ -66,10 +65,8 @@ $pines->icons->load();
 			width: 100%;
 			padding: 0;
 		}
-		/* ]]> */
 	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		function p_muid_load_threads() {
 			var thread_box = $("#p_muid_current_threads");
 			// Load current threads.
@@ -116,7 +113,7 @@ $pines->icons->load();
 
 		function p_muid_format_thread(thread) {
 			var html = $("<div class=\"thread ui-widget-content\"></div>").data("thread", thread);
-			html.append("<div class=\"ui-widget-header\"><div class=\"privacy ui-icon "+(thread.privacy == "everyone" ? "ui-icon-unlocked" : (thread.privacy == "my-group" ? "ui-icon-locked" : "ui-icon-person"))+"\" title=\""+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+"\"></div>\n\
+			html.append("<div class=\"ui-widget-header\"><div class=\"privacy\"><i class=\""+(thread.privacy == "everyone" ? "icon-eye-open" : (thread.privacy == "my-group" ? "icon-lock" : "icon-user"))+"\" title=\""+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+"\"></i></div>\n\
 			<div class=\"date\">"+pines.safe(thread.date)+"</div>\n\
 			<div class=\"user\">"+pines.safe(thread.user)+"</div></div>");
 			var note_div = $("<div class=\"notes\"></div>");
@@ -182,11 +179,11 @@ $pines->icons->load();
 					dataType: "json",
 					data: {"text": text, "id": thread.guid},
 					beforeSend: function(){
-						textarea.attr("disabled", "disabled").addClass("ui-state-disabled");
+						textarea.attr("disabled", "disabled");
 						thread_box.addClass("picon picon-throbber");
 					},
 					complete: function(){
-						textarea.removeAttr("disabled").removeClass("ui-state-disabled");
+						textarea.removeAttr("disabled");
 						thread_box.removeClass("picon picon-throbber");
 					},
 					error: function(XMLHttpRequest, textStatus){
@@ -204,13 +201,11 @@ $pines->icons->load();
 			});
 			p_muid_load_threads();
 		});
-		// ]]>
 	</script>
 	<div id="p_muid_current_threads">Loading...</div>
 	<?php if (gatekeeper('com_notes/newthread')) { ?>
 	<hr />
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			// New thread box.
 			var new_thread = $("#p_muid_new_thread");
@@ -223,6 +218,7 @@ $pines->icons->load();
 			}).keypress(function(e){
 				if (e.keyCode != 13 || e.shiftKey)
 					return;
+				e.preventDefault();
 				submit_button.click();
 			});
 			if (new_thread.prop("scrollHeight")) {
@@ -231,33 +227,12 @@ $pines->icons->load();
 				});
 			}
 			// Thread privacy.
-			var detail_hider_timer;
-			var privacy_button = $("#p_muid_new_thread_privacy").data("thread-privacy", "everyone").button({
-				text: false,
-				icons: {primary: "ui-icon-unlocked"}
-			}).toggle(function(){
-				privacy_button.data("thread-privacy", "my-group").button("option", {"label": "My Group", "icons": {primary: "ui-icon-locked"}});
-			}, function(){
-				privacy_button.data("thread-privacy", "only-me").button("option", {"label": "Only Me", "icons": {primary: "ui-icon-person"}});
-			}, function(){
-				privacy_button.data("thread-privacy", "everyone").button("option", {"label": "Everyone", "icons": {primary: "ui-icon-unlocked"}});
-			}).click(function(){
-				var details = $("#p_muid_thread_privacy_details").children().hide()
-				.filter("."+privacy_button.data("thread-privacy")).show().parent();
-				if (detail_hider_timer)
-					clearTimeout(detail_hider_timer);
-				details.stop(true, true);
-				if (details.is(":not(:visible)"))
-					details.slideDown("fast");
-				detail_hider_timer = setTimeout(function(){
-					details.slideUp("fast");
-				}, 2000);
-			});
+			var privacy_button = $("#p_muid_new_thread_privacy").data("thread-privacy", "everyone");
 			// Save the new thread.
 			var submit_button = $("#p_muid_new_thread_submit").click(function(){
 				var text = new_thread.val();
 				var privacy = privacy_button.data("thread-privacy");
-				if (text == "" || new_thread.css("font-style") == "italic") {
+				if (text.match(/^\s*$/) || new_thread.css("font-style") == "italic") {
 					alert("Please enter a note first.");
 					return;
 				}
@@ -267,12 +242,12 @@ $pines->icons->load();
 					dataType: "json",
 					data: {"text": text, "privacy": privacy, "id": <?php echo json_encode((int) $this->entity->guid); ?>},
 					beforeSend: function(){
-						new_thread.attr("disabled", "disabled").addClass("ui-state-disabled");
+						new_thread.attr("disabled", "disabled");
 						thread_buttons.hide();
 						$("#p_muid_thread_throbber").show();
 					},
 					complete: function(){
-						new_thread.removeAttr("disabled").removeClass("ui-state-disabled");
+						new_thread.removeAttr("disabled");
 						$("#p_muid_thread_throbber").hide();
 						thread_buttons.show();
 					},
@@ -289,22 +264,21 @@ $pines->icons->load();
 					}
 				});
 			});
-			var thread_buttons = $("#p_muid_new_thread_buttons").buttonset();
+			var thread_buttons = $("#p_muid_new_thread_buttons");
 		});
-		// ]]>
 	</script>
-	<div style="width: 100%;">
-		<textarea class="ui-widget-content" id="p_muid_new_thread" rows="1" cols="12" style="width: 100%; padding: 0; margin: .5em 0 .1em; font-style: italic;">New Thread</textarea>
-		<div id="p_muid_new_thread_buttons" style="text-align: right; font-size: .8em;">
-			<button id="p_muid_new_thread_privacy" class="ui-state-default ui-corner-all">Everyone</button>
-			<button id="p_muid_new_thread_submit" class="ui-state-default ui-corner-all">Save</button>
+	<div style="width: 100%;" class="ui-clearfix">
+		<textarea id="p_muid_new_thread" rows="1" cols="12" style="width: 100%; padding: 0; margin: .5em 0 .1em; font-style: italic;">New Thread</textarea>
+		<div id="p_muid_new_thread_buttons" class="btn-group" style="font-size: .8em;">
+			<button id="p_muid_new_thread_submit" class="btn">Save</button>
+			<button id="p_muid_new_thread_privacy" class="btn dropdown-toggle" data-toggle="dropdown" title="Everyone."><i class="icon-eye-open"></i></button>
+			<ul class="dropdown-menu">
+				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'everyone').html('&lt;i class=&quot;icon-eye-open&quot;&gt;&lt;/i&gt;').attr('title', 'Everyone.');"><i class="icon-eye-open"></i> Share with everyone.</a></li>
+				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'my-group').html('&lt;i class=&quot;icon-lock&quot;&gt;&lt;/i&gt;').attr('title', 'My group.');"><i class="icon-lock"></i> Share with my group.</a></li>
+				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'only-me').html('&lt;i class=&quot;icon-user&quot;&gt;&lt;/i&gt;').attr('title', 'Only me.');"><i class="icon-user"></i> Keep private to me.</a></li>
+			</ul>
 		</div>
 		<div id="p_muid_thread_throbber" class="picon picon-throbber" style="display: none; height: 16px; background-repeat: no-repeat; background-position: top right;"></div>
-		<div id="p_muid_thread_privacy_details" style="display: none;">
-			<div class="only-me">Only you can see this thread.</div>
-			<div class="my-group">Anyone in your group can see this thread.</div>
-			<div class="everyone">Anyone can see this thread.</div>
-		</div>
 	</div>
 	<?php } } ?>
 </div>

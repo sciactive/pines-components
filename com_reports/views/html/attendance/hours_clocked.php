@@ -22,14 +22,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/attendance/hours_clocked']);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_grid tr.total td {
 		font-weight: bold;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		pines.search_attendance = function(){
 			// Submit the form with all of the fields.
@@ -167,7 +164,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 	});
-	// ]]>
 </script>
 <?php if (isset($this->employees)) { ?>
 <table id="p_muid_grid">

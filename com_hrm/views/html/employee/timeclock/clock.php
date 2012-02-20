@@ -35,23 +35,16 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 $pines->icons->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
-	#p_muid_timeclock .p_muid_btn {
-		display: inline-block;
-		width: 16px;
+	#p_muid_timeclock button span {
+		display: block;
 		height: 16px;
 	}
-	#p_muid_timeclock button {
-		padding: 0.2em;
+	#p_muid_timeclock .p_muid_btn {
+		width: 16px;
 	}
-	#p_muid_timeclock button .ui-button-text {
-		padding: 0;
-	}
-	/* ]]> */
 </style>
 <div class="pf-form" id="p_muid_timeclock">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var do_clock = function(pin){
 				var loader;
@@ -107,7 +100,7 @@ $pines->icons->load();
 				<?php if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin)) { ?>
 				var dialog = $("<div></div>", {
 					"title": "Please Verify Your PIN",
-					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field ui-widget-content ui-corner-all" /></label></div></div><br />'
+					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field" /></label></div></div><br />'
 				}).dialog({
 					modal: true,
 					open: function(){
@@ -193,7 +186,6 @@ $pines->icons->load();
 				}
 			});
 		};
-		// ]]>
 	</script>
 	<div class="pf-element">
 		<span class="pf-label"><?php echo htmlspecialchars($this->entity->user->name); ?></span>
@@ -201,10 +193,12 @@ $pines->icons->load();
 	</div>
 	<div class="pf-element" id="p_muid_comments" style="display: <?php echo $this->entity->clocked_in_time() ? 'block' : 'none'; ?>;">
 		<label><span class="pf-label">Comments</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="comments" size="7" /></label>
+			<input class="pf-field" type="text" name="comments" size="7" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<button class="ui-state-default ui-corner-all" type="button" style="float: right;" onclick="pines.com_hrm_time_off_form();" title="Request Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
-		<button class="pf-field ui-state-default ui-corner-all" id="p_muid_button" type="button" style="float: right;"><span class="p_muid_button_text"><?php echo $this->entity->clocked_in_time() ? 'Clock Out' : 'Clock In'; ?></span></button>
+		<div class="btn-group" style="float: right;">
+			<button class="btn" id="p_muid_button" type="button"><span class="p_muid_button_text"><?php echo $this->entity->clocked_in_time() ? 'Clock Out' : 'Clock In'; ?></span></button>
+			<button class="btn" type="button" onclick="pines.com_hrm_time_off_form();" title="Request Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
+		</div>
 	</div>
 </div>

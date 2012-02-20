@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_pay_report .right_text {
 		text-align: right;
 	}
@@ -31,11 +30,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	#p_muid_pay_report .item_list tr td p {
 		margin: 0;
 	}
-	/* ]]> */
 </style>
 <div id="p_muid_pay_report" class="pf-form">
 	<div class="pf-element pf-full-width" style="text-align: center;">
-		<h1>Payroll Report</h1>
+		<h3>Payroll Report</h3>
 	</div>
 	<div class="pf-element" style="float: right; clear: right;">
 		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->system_name); ?>" /></div>

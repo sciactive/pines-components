@@ -18,15 +18,12 @@ $pines->com_pgrid->load();
 $pines->com_menueditor->load_editor();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_pages .page {
 		cursor: default;
 	}
-	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'category/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$("#p_muid_menu_entries").menueditor({
 				disabled_fields: ['link'],
@@ -166,25 +163,21 @@ $pines->com_menueditor->load_editor();
 			condition_dialog.find("input[name=cur_condition_type]").autocomplete({
 				"source": <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>
 			});
-
-			$("#p_muid_category_tabs").tabs();
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_category_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
-			<li><a href="#p_muid_tab_head">Page Head</a></li>
-			<?php } ?>
-			<li><a href="#p_muid_tab_menu">Menu</a></li>
-			<li><a href="#p_muid_tab_page">Page</a></li>
-			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
+		<li><a href="#p_muid_tab_head" data-toggle="tab">Page Head</a></li>
+		<?php } ?>
+		<li><a href="#p_muid_tab_menu" data-toggle="tab">Menu</a></li>
+		<li><a href="#p_muid_tab_page" data-toggle="tab">Page</a></li>
+		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
+	</ul>
+	<div id="p_muid_category_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var alias = $("#p_muid_form [name=alias]");
 						$("#p_muid_form [name=name]").change(function(){
@@ -197,45 +190,48 @@ $pines->com_menueditor->load_editor();
 								alias.val("");
 						});
 					});
-					// ]]>
 				</script>
 				<label>
 					<span class="pf-label">Name</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+						</span>
 					</span>
 				</label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<label>
 					<span class="pf-label">Alias</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+						</span>
 					</span>
 				</label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						$("#p_muid_use_name").change(function(){
 							if ($(this).is(":checked"))
-								$("#p_muid_title").attr("disabled", "disabled").addClass("ui-state-disabled");
+								$("#p_muid_title").attr("disabled", "disabled");
 							else
-								$("#p_muid_title").removeAttr("disabled").removeClass("ui-state-disabled");
+								$("#p_muid_title").removeAttr("disabled");
 						}).change();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Page Title</span>
 				<div class="pf-group pf-full-width">
 					<label><input class="pf-field" type="checkbox" id="p_muid_use_name" name="title_use_name" value="ON"<?php echo $this->entity->title_use_name ? ' checked="checked"' : ''; ?> /> Use name as title.</label><br />
-					<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					<span class="pf-field" style="display: block;">
+						<input style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					</span>
 				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Title Position</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="title_position">
+					<select class="pf-field" name="title_position">
 						<option value="null">Use Default</option>
 						<option value="prepend"<?php echo $this->entity->title_position === 'prepend' ? ' selected="selected"' : ''; ?>>Prepend to Site Title</option>
 						<option value="append"<?php echo $this->entity->title_position === 'append' ? ' selected="selected"' : ''; ?>>Append to Site Title</option>
@@ -259,7 +255,7 @@ $pines->com_menueditor->load_editor();
 			<div class="pf-element">
 				<label><span class="pf-label">Link Menu</span>
 					<span class="pf-note">Link the menu item and breadcrumbs to the category's page.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="link_menu">
+					<select class="pf-field" name="link_menu">
 						<option value="null">Use Default</option>
 						<option value="true"<?php echo $this->entity->link_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->link_menu === false ? ' selected="selected"' : ''; ?>>No</option>
@@ -268,7 +264,7 @@ $pines->com_menueditor->load_editor();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Parent</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="parent">
+					<select class="pf-field" name="parent">
 						<option value="null">-- No Parent --</option>
 						<?php
 						/**
@@ -305,7 +301,7 @@ $pines->com_menueditor->load_editor();
 				<span class="pf-note">These pages are assigned to this category. Drag and drop them into the desired order.</span>
 				<div class="pf-group">
 					<?php if ($this->entity->pages) { ?>
-					<ol id="p_muid_pages" class="pf-field ui-widget-content ui-corner-all" style="padding: 1em 1em 1em 3em; min-width: 300px;">
+					<ol id="p_muid_pages" class="pf-field well" style="padding: 1em 1em 1em 3em; min-width: 300px;">
 						<?php foreach ($this->entity->pages as $cur_page) { ?>
 						<li class="page" title="<?php echo htmlspecialchars($cur_page->guid); ?>"><?php echo htmlspecialchars($cur_page->name); ?> <a href="<?php echo htmlspecialchars(pines_url('com_content', 'page/edit', array('id' => $cur_page->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a> <a href="#" class="remove">Remove</a></li>
 						<?php } ?>
@@ -319,13 +315,12 @@ $pines->com_menueditor->load_editor();
 			<br class="pf-clearing" />
 		</div>
 		<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
-		<div id="p_muid_tab_head">
+		<div class="tab-pane" id="p_muid_tab_head">
 			<?php if (gatekeeper('com_content/editmeta')) { ?>
 			<div class="pf-element pf-heading">
-				<h1>Meta Tags</h1>
+				<h3>Meta Tags</h3>
 			</div>
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					// Meta Tags
 					var meta_tags = $("#p_muid_form [name=meta_tags]");
@@ -419,7 +414,6 @@ $pines->com_menueditor->load_editor();
 						"source": <?php echo (string) json_encode(array('description', 'author', 'keywords', 'robots', 'rating', 'distribution')); ?>
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-full-width">
 				<table class="meta_tags_table">
@@ -459,18 +453,18 @@ $pines->com_menueditor->load_editor();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Content</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
 			<?php } if ($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) { ?>
 			<div class="pf-element pf-heading">
-				<h1>Custom Head Code</h1>
+				<h3>Custom Head Code</h3>
 			</div>
 			<div class="pf-element">
 				The page head can contain extra CSS and JavaScript files, which
@@ -486,11 +480,14 @@ $pines->com_menueditor->load_editor();
 			<div class="pf-element pf-full-width">
 				<label><span class="pf-label">Custom Head Code</span>
 					<span class="pf-note"><a href="javascript:void(0);" onclick="$('#p_muid_custom_head_help').dialog({width: 800, height: 600, modal: false})">Read Me First</a></span>
-					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="custom_head"><?php echo htmlspecialchars($this->entity->custom_head); ?></textarea></span></label>
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<textarea style="width: 100%;" rows="3" cols="35" name="custom_head"><?php echo htmlspecialchars($this->entity->custom_head); ?></textarea>
+						</span>
+					</span></label>
 			</div>
 			<div id="p_muid_custom_head_help" title="Custom Head Code" style="display: none;">
 				<style type="text/css">
-					/* <![CDATA[ */
 					#p_muid_custom_head_help .code_block {
 						background: #F6F6F6;
 						border: 1px solid #DDDDDD;
@@ -561,7 +558,6 @@ $pines->com_menueditor->load_editor();
 					#p_muid_custom_head_help .vg { color: #003333 } /* Name.Variable.Global */
 					#p_muid_custom_head_help .vi { color: #003333 } /* Name.Variable.Instance */
 					#p_muid_custom_head_help .il { color: #FF6600 } /* Literal.Number.Integer.Long */
-					/* ]]> */
 				</style>
 				<div class="pf-form">
 					<div class="pf-element">
@@ -577,9 +573,7 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadcss(pines.rela_location+"path/to/css/file.css");
-	// ]]>
 </script>
 */
 							?>
@@ -597,9 +591,7 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadcss("http://example.com/path/to/css/file.css");
-	// ]]>
 </script>
 */
 							?>
@@ -621,9 +613,7 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs(pines.rela_location+"path/to/js/file.js");
-	// ]]>
 </script>
 */
 							?>
@@ -641,9 +631,7 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("http://example.com/path/to/js/file.js");
-	// ]]>
 </script>
 */
 							?>
@@ -661,13 +649,11 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines.load(function(){
 		// This code will run before all files have
 		// been loaded and before the page is ready.
 		... code ...
 	});
-	// ]]>
 </script>
 */
 							?>
@@ -689,13 +675,11 @@ $pines->com_menueditor->load_editor();
 							<?php
 /* pygmentize -l html -f html -o /dev/stdout pygments.html
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// This code will run after all files have 
 		// been loaded and after the page is ready.
 		... code ...
 	});
-	// ]]>
 </script>
 */
 							?>
@@ -719,18 +703,18 @@ $pines->com_menueditor->load_editor();
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>
-		<div id="p_muid_tab_menu">
+		<div class="tab-pane" id="p_muid_tab_menu">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Menu Entries</span>
 				<span class="pf-note">It isn't necessary to add the same conditions on menu entries. They will only appear if the Category Conditions are met.</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="com_menueditor_entries" id="p_muid_menu_entries" size="24" value="<?php echo htmlspecialchars(json_encode($this->entity->com_menueditor_entries)); ?>" />
+					<input class="pf-field" type="text" name="com_menueditor_entries" id="p_muid_menu_entries" size="24" value="<?php echo htmlspecialchars(json_encode($this->entity->com_menueditor_entries)); ?>" />
 				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Pages in Menu</span>
 					<span class="pf-note">Show the pages in this category in the menu.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="show_pages_in_menu">
+					<select class="pf-field" name="show_pages_in_menu">
 						<option value="null">Use Default</option>
 						<option value="true"<?php echo $this->entity->show_pages_in_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_pages_in_menu === false ? ' selected="selected"' : ''; ?>>No</option>
@@ -738,10 +722,10 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_page">
+		<div class="tab-pane" id="p_muid_tab_page">
 			<div class="pf-element">
 				<label><span class="pf-label">Show Title</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="show_title">
+					<select class="pf-field" name="show_title">
 						<option value="null">Use Default</option>
 						<option value="true"<?php echo $this->entity->show_title === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_title === false ? ' selected="selected"' : ''; ?>>No</option>
@@ -750,27 +734,27 @@ $pines->com_menueditor->load_editor();
 			<div class="pf-element">
 				<label><span class="pf-label">Show Breadcrumbs</span>
 					<span class="pf-note">Show breadcrumb links on the category's page.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="show_breadcrumbs">
+					<select class="pf-field" name="show_breadcrumbs">
 						<option value="null">Use Default</option>
 						<option value="true"<?php echo $this->entity->show_breadcrumbs === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_breadcrumbs === false ? ' selected="selected"' : ''; ?>>No</option>
 					</select></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Intro</h1>
+				<h3>Intro</h3>
 			</div>
 			<div class="pf-element pf-full-width">
 				<textarea rows="8" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo htmlspecialchars($this->entity->intro); ?></textarea>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Page Variants</h1>
+				<h3>Page Variants</h3>
 			</div>
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					$("#p_muid_variant_template").change(function(){
 						var cur_template = $(this).val();
-						$("option", "#p_muid_variant_variant").hide().filter("."+cur_template).show();
+						var show_this = $("option", "#p_muid_variant_variant").hide().filter("."+cur_template).show().eq(0).attr("value");
+						$("#p_muid_variant_variant").val(show_this);
 					}).change();
 					$("#p_muid_variant_button").click(function(){
 						var cur_template = $("#p_muid_variant_template").val();
@@ -781,18 +765,17 @@ $pines->com_menueditor->load_editor();
 						var cur_template_name = $("option:selected", "#p_muid_variant_template").text();
 						var cur_variant = $("#p_muid_variant_variant").val();
 						var new_html = '<div class="pf-element pf-full-width '+pines.safe(cur_template)+'">\
-							<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>\
+							<button class="pf-field btn btn-danger remove" style="float: right;" type="button">Remove</button>\
 							<span class="pf-label">'+pines.safe(cur_template_name)+'</span>\
 							<span class="pf-field">'+pines.safe(cur_variant)+'</span>\
 							<input type="hidden" name="variants[]" value="'+pines.safe(cur_template)+'::'+pines.safe(cur_variant)+'" />\
 						</div>';
-						$("#p_muid_variants").append(new_html).find(":button").button();
+						$("#p_muid_variants").append(new_html);
 					});
 					$("#p_muid_variants").delegate(".remove", "click", function(){
 						$(this).closest(".pf-element").remove();
-					}).find(":button").button();
+					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element">
 				<span class="pf-label">Add a Variant</span>
@@ -823,24 +806,24 @@ $pines->com_menueditor->load_editor();
 				?>
 				<span class="pf-field">None of the enabled templates have any page variants.</span>
 				<?php } else { ?>
-				<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_variant_template">
+				<select class="pf-field" id="p_muid_variant_template" style="max-width: 200px;">
 					<?php foreach ($variants as $cur_template => $cur_variants) { ?>
 					<option value="<?php echo htmlspecialchars($cur_template); ?>"<?php echo $cur_template == $pines->current_template ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$pines->info->$cur_template->name} ($cur_template)"); ?></option>
 					<?php } ?>
 				</select>
-				<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_variant_variant">
+				<select class="pf-field" id="p_muid_variant_variant" style="max-width: 200px;">
 					<?php foreach ($variants as $cur_template => $cur_variants) {
 						foreach ($cur_variants as $cur_description => $cur_variant) { ?>
 					<option class="<?php echo htmlspecialchars($cur_template); ?>" value="<?php echo htmlspecialchars($cur_variant); ?>"><?php echo htmlspecialchars($cur_description); ?></option>
 					<?php } } ?>
 				</select>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" id="p_muid_variant_button">Add</button>
+				<button class="pf-field btn btn-success" type="button" id="p_muid_variant_button">Add</button>
 				<?php } ?>
 			</div>
 			<div id="p_muid_variants">
 				<?php foreach ((array) $this->entity->variants as $cur_template => $cur_variant) { ?>
 				<div class="pf-element pf-full-width <?php echo htmlspecialchars($cur_template); ?>">
-					<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>
+					<button class="pf-field btn btn-danger remove" style="float: right;" type="button">Remove</button>
 					<span class="pf-label"><?php echo htmlspecialchars("{$pines->info->$cur_template->name} ($cur_template)"); ?></span>
 					<span class="pf-field"><?php echo htmlspecialchars($cur_variant); ?></span>
 					<input type="hidden" name="variants[]" value="<?php echo htmlspecialchars("{$cur_template}::{$cur_variant}"); ?>" />
@@ -849,9 +832,9 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_conditions">
+		<div class="tab-pane" id="p_muid_tab_conditions">
 			<div class="pf-element pf-heading">
-				<h1>Page Conditions</h1>
+				<h3>Page Conditions</h3>
 				<p>Users will only see this page if these conditions are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -892,11 +875,11 @@ $pines->com_menueditor->load_editor();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -905,11 +888,10 @@ $pines->com_menueditor->load_editor();
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_content', 'category/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_content', 'category/list')); ?>');" value="Cancel" />
 	</div>
 </form>

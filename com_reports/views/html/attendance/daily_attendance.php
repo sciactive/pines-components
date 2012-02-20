@@ -21,7 +21,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/attendance/daily_attendance']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		pines.search_attendance = function(){
 			// Submit the form with all of the fields.
@@ -120,7 +119,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -160,7 +158,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 </table>
 <div id="p_muid_date_dialog" title="Date Selector" style="display: none;">
 	<style type="text/css" >
-		/* <![CDATA[ */
 		#p_muid_form {
 			padding-left: 25px;
 		}
@@ -168,10 +165,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			width: 80%;
 			text-align: center;
 		}
-		/* ]]> */
 	</style>
 	<script type='text/javascript'>
-		// <![CDATA[
 		pines(function(){
 			$("#p_muid_date").datepicker({
 				dateFormat: "yy-mm-dd",
@@ -181,13 +176,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				selectOtherMonths: true
 			});
 		});
-		// ]]>
 	</script>
 	<div class="pf-form" id="p_muid_form" action="">
 		<div class="timespan">
 			<div class="pf-element">
 				<label><span class="pf-label">Pick a Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" id="p_muid_date" name="date" value="<?php echo isset($this->date) ? htmlspecialchars(format_date($this->date, 'date_sort')) : ''; ?>" /></label>
+					<input class="pf-field form_date" type="text" id="p_muid_date" name="date" value="<?php echo isset($this->date) ? htmlspecialchars(format_date($this->date, 'date_sort')) : ''; ?>" /></label>
 			</div>
 		</div>
 	</div>

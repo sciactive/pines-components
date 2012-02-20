@@ -64,12 +64,10 @@ if (empty($this->theme))
 <div class="slider-wrapper theme-<?php echo htmlspecialchars($this->theme); ?>">
 	<div class="ribbon"></div>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_nivoslider/includes/themes/<?php echo htmlspecialchars(clean_filename($this->theme)); ?>/<?php echo htmlspecialchars(clean_filename($this->theme)); ?>.css");
 		pines(function(){
 			$('#p_muid_slider').nivoSlider(<?php echo json_encode($options); ?>);
 		});
-		// ]]>
 	</script>
 	<div id="p_muid_slider" class="nivoSlider <?php echo htmlspecialchars($this->class); ?>" style="<?php echo htmlspecialchars((isset($this->width) ? "width: $this->width; " : '').(isset($this->height) ? "height: $this->height;" : '')); ?>">
 		<?php

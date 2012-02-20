@@ -19,7 +19,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/cashcount/formreview']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	var p_muid_notice;
 
@@ -81,7 +80,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/savestatus')); ?>">
 	<table id="p_muid_grid">
@@ -185,7 +183,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Update Status</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="status" size="1">
+			<select class="pf-field" name="status" size="1">
 				<option value="closed" <?php echo ($this->entity->status == 'closed') ? 'selected="selected"' : ''; ?>>Closed (Approved)</option>
 				<option value="flagged" <?php echo ($this->entity->status == 'flagged') ? 'selected="selected"' : ''; ?>>Flagged (Declined)</option>
 				<option value="info_requested" <?php echo ($this->entity->status == 'info_requested') ? 'selected="selected"' : ''; ?>>Info Requested</option>
@@ -194,16 +192,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</label>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Review Comments</h1>
+		<h3>Review Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="review_comments"><?php echo htmlspecialchars($this->entity->review_comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="review_comments"><?php echo htmlspecialchars($this->entity->review_comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
-		<input name="approve" class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input name="approve" class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 	</div>
 </form>

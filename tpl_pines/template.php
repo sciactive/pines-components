@@ -48,6 +48,7 @@ header('Content-Type: text/html');
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 	<meta name="HandheldFriendly" content="true" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<style type="text/css">.page-width {width: auto;<?php echo $pines->config->template->width === 0 ? '' : ' max-width: '.(int) $pines->config->template->width.'px;'; ?>}</style>
@@ -59,9 +60,8 @@ header('Content-Type: text/html');
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 	<?php if ($pines->config->tpl_pines->menu_delay) { ?>
-	<script type="text/javascript">// <![CDATA[
-		pines.tpl_pines_menu_delay = true;
-	// ]]></script>
+	<script type="text/javascript">
+		pines.tpl_pines_menu_delay = true;</script>
 	<?php } ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/template.js"></script>
 	<?php if ($pines->config->tpl_pines->ajax) { ?>
@@ -81,7 +81,6 @@ header('Content-Type: text/html');
 		$notice = $pines->page->get_notice();
 		if ( $error || $notice ) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
@@ -92,7 +91,6 @@ header('Content-Type: text/html');
 				} }
 				?>
 			});
-			// ]]>
 		</script>
 		<?php
 		}

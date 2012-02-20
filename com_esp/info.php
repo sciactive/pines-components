@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Extended Service Plans',
 	'author' => 'SciActive',
-	'version' => '1.0.1',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Extended service plan manager',
@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&icons',
-		'component' => 'com_customer&com_jquery&com_pgrid&com_pnotify&com_pform&com_sales'
+		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform&com_sales'
 	),
 	'abilities' => array(
 		array('listplans', 'List ESPs', 'User can see ESPs.'),

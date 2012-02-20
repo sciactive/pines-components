@@ -17,7 +17,7 @@ $pines->entity_manager->sort($categories, 'name');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Category</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="id">
+			<select class="pf-field" name="id">
 				<?php foreach ($categories as $cur_category) { ?>
 				<option value="<?php echo (int) $cur_category->guid; ?>"><?php echo htmlspecialchars($cur_category->name); ?></option>
 				<?php } ?>
@@ -26,6 +26,6 @@ $pines->entity_manager->sort($categories, 'name');
 	<div class="pf-element">
 		<label><span class="pf-label">Page Limit</span>
 			<span class="pf-note">Only show this many pages. Leave blank for unlimited.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" style="text-align: right;" type="text" name="page_limit" size="5" value="" /></label>
+			<input class="pf-field" style="text-align: right;" type="text" name="page_limit" size="5" value="" /></label>
 	</div>
 </div>

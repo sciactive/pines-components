@@ -26,6 +26,6 @@ $this->title = 'Entity Manager Benchmark';
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="sure" value="yes" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Yes, proceed." />
+		<input class="pf-button btn btn-primary" type="submit" value="Yes, proceed." />
 	</div>
 </form>

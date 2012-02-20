@@ -20,7 +20,7 @@ body {
 #column_container .module .module_title {
 	margin-bottom: .5em;
 }
-/* Header styles */
+/* Header */
 #header {
 	border-top: 0 !important;
 	border-left: 0 !important;
@@ -55,7 +55,7 @@ body {
 #header .module .module_content, #footer .module .module_content {
 	font-weight: normal;
 }
-/* Menu styles */
+/* Menu */
 #header .menuwrap {
 	clear: both;
 	background: none !important;
@@ -79,7 +79,14 @@ body {
 #main_menu ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
 }
-/* Footer styles */
+/* Breadcrumbs */
+#breadcrumbs .module {
+	padding: 0;
+}
+#breadcrumbs .breadcrumb {
+	margin: 0;
+}
+/* Footer */
 #footer {
 	border-left: 0 !important;
 	border-right: 0 !important;
@@ -93,7 +100,7 @@ body {
 	padding:10px;
 	margin:0;
 }
-/* Content styles */
+/* Content */
 #column_container {
 	position: relative;
 	background: transparent url(../images/shadow-top.png) repeat-x scroll left top;

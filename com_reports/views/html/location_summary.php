@@ -20,7 +20,6 @@ $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	.p_muid_location_actions button {
 		padding: 0;
 	}
@@ -38,10 +37,8 @@ $pines->com_pgrid->load();
 	#p_muid_grid .total {
 		text-align: right;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
@@ -160,7 +157,6 @@ $pines->com_pgrid->load();
 			});
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

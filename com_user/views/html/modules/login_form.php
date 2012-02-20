@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Style</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="style">
+			<select class="pf-field" name="style">
 				<option value="normal">Normal</option>
 				<option value="small">Small</option>
 				<option value="compact">Compact</option>
@@ -24,7 +24,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element">
 		<label><span class="pf-label">Compact Link Text</span>
 			<span class="pf-note">Only applicable for "Compact" style.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="compact_text" size="24" value="Login/Register" /></label>
+			<input class="pf-field" type="text" name="compact_text" size="24" value="Login/Register" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Hide Recovery Link</span>
@@ -34,6 +34,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element">
 		<label><span class="pf-label">URL</span>
 			<span class="pf-note">URL to which to redirect the user after they log in.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="url" size="24" value="" /></label>
+			<input class="pf-field" type="text" name="url" size="24" value="" /></label>
 	</div>
 </div>

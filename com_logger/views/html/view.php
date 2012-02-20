@@ -86,7 +86,6 @@ foreach ($matches as $match) {
 
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var search_logs = function(){
 			// Submit the form with all of the fields.
@@ -233,11 +232,10 @@ foreach ($matches as $match) {
 			});
 		};
 	});
-	// ]]>
 </script>
 <div class="pf-form">
 	<div class="pf-element pf-heading">
-		<h1>Total Log Entries: <strong><?php echo count($matches); ?></strong></h1>
+		<h3>Total Log Entries: <strong><?php echo count($matches); ?></strong></h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div style="width: 200px; padding-right: 100px; float: left;">

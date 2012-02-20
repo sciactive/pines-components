@@ -63,7 +63,6 @@ if ($pines->config->com_sales->com_esp) {
 }
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_specials .special {
 		float: left;
 		margin-top: .5em;
@@ -76,7 +75,6 @@ if ($pines->config->com_sales->com_esp) {
 	#p_muid_specials .special_discount {
 		text-align: right;
 	}
-	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -90,7 +88,6 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<?php } ?>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -360,8 +357,7 @@ if ($pines->config->com_sales->com_esp) {
 								alert("Delivery options are not available for non stocked items. Please deselect any non stocked items.");
 								return;
 							}
-							delivery_select.find("input[value="+rows.eq(0).pgrid_get_value(4)+"]").attr("checked", "true");
-							delivery_select.find("input").button("refresh");
+							delivery_select.find("button").removeClass("active").filter("[data-value="+rows.eq(0).pgrid_get_value(4)+"]").addClass("active");
 							delivery_dialog.dialog("open");
 						}
 					},
@@ -424,7 +420,7 @@ if ($pines->config->com_sales->com_esp) {
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (!product.discountable) {
-								alert("The selected product is not discountable.")
+								alert("The selected product is not discountable.");
 								return;
 							}
 							var discount = rows.pgrid_get_value(7);
@@ -614,8 +610,7 @@ if ($pines->config->com_sales->com_esp) {
 					if (data.stock_type != "non_stocked" && ((del_dia == "only-non-serialized" && !data.serialized) || del_dia == "all")) {
 						products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 						cur_row.pgrid_select_rows();
-						delivery_select.find("input[value=in-store]").attr("checked", "true");
-						delivery_select.find("input").button("refresh");
+						delivery_select.find("button").removeClass("active").filter("[data-value=in-store]").addClass("active");
 						delivery_dialog.dialog("open");
 					}
 				};
@@ -676,12 +671,11 @@ if ($pines->config->com_sales->com_esp) {
 					success();
 			};
 			// Delivery Dialog
-			var delivery_select = $("#p_muid_delivery_select").children("div").buttonset().end()
-			.delegate("input", "click", function() {
+			var delivery_select = $("#p_muid_delivery_select").delegate("button", "click", function(){
 				var rows = products_table.pgrid_get_selected_rows();
 				if (!rows)
 					return;
-				var delivery = $(this).val();
+				var delivery = $(this).attr("data-value");
 				if (delivery == "warehouse") {
 					rows.each(function(){
 						var cur_row = $(this);
@@ -876,7 +870,7 @@ if ($pines->config->com_sales->com_esp) {
 			};
 			<?php } ?>
 			$("#p_muid_special_code").click(function(){
-				$("<div title=\"Enter a Special Code\"><input class=\"special_code ui-widget-content ui-corner-all\" type=\"text\" size=\"24\" /></div>").dialog({
+				$("<div title=\"Enter a Special Code\"><input class=\"special_code\" type=\"text\" size=\"24\" /></div>").dialog({
 					modal: true,
 					autoOpen: true,
 					buttons: {
@@ -920,9 +914,7 @@ if ($pines->config->com_sales->com_esp) {
 				}
 				var form = $("<div title=\"Remove a Special Code\"></div>");
 				$.each(added_specials, function(i, cur_special){
-					form.append($("<button type=\"button\">"+pines.safe(cur_special.name)+"</button>").button({
-						icons: {primary: "ui-icon-circle-minus"}
-					}).click(function(){
+					form.append($("<button type=\"button\" class=\"btn btn-danger\"><i class=\"icon-minus icon-white\"></i>"+pines.safe(cur_special.name)+"</button>").click(function(){
 						added_specials.splice(i, 1);
 						update_products();
 						form.dialog("close").remove();
@@ -1097,11 +1089,7 @@ if ($pines->config->com_sales->com_esp) {
 				});
 			};
 
-			$("button.payment-button", "#p_muid_form").hover(function(){
-				$(this).addClass("ui-state-hover");
-			}, function(){
-				$(this).removeClass("ui-state-hover");
-			}).click(function(){
+			$("button.payment-button", "#p_muid_form").click(function(){
 				var payment_type = JSON.parse(this.value);
 				// TODO: Minimums, maximums
 				get_amount(function(amount){
@@ -1120,37 +1108,27 @@ if ($pines->config->com_sales->com_esp) {
 
 			var get_amount = function(callback){
 				// TODO: Minimums, maximums
-				$("<div title=\"Payment Amount\"></div>").each(function(){
+				var amount_due = $("#p_muid_amount_due").html();
+				$("<div title=\"Payment Amount\" style=\"text-align: center; font-size: 22px; font-weight: bold;\"></div>").each(function(){
 					var amount_dialog = $(this);
 					// A button for the current amount due.
-					amount_dialog.append($("<button></button>").addClass("ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					amount_dialog.append($("<button class=\"btn btn-primary\"></button>").html("$"+amount_due).css({"min-height": "70px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						amount_dialog.dialog("close");
-						callback(round_to_dec($("#p_muid_amount_due").html(), true));
+						callback(round_to_dec(amount_due, true));
 					}));
 					// Buttons for common amounts.
-					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
-						var cur_amount = this;
-						amount_dialog.append($("<button></button>").addClass("ui-state-default ui-corner-all").hover(function(){
-							$(this).addClass("ui-state-hover");
-						}, function(){
-							$(this).removeClass("ui-state-hover");
-						}).html(String(cur_amount)).css({"float": "left", "min-height": "60px", "min-width": "60px", "text-align": "center", "margin": "2px"})
+					$.each(["1", "5", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"], function(){
+						var cur_amount = this,
+						button_style = (parseFloat(cur_amount) > parseFloat(amount_due)) ? "btn-success" : "btn-info";
+						amount_dialog.append($("<button class=\"btn "+button_style+"\"></button>").html("$"+String(cur_amount)).css({"min-height": "70px", "min-width": "70px", "text-align": "center", "margin": "2px"})
 						.click(function(){
 							amount_dialog.dialog("close");
 							callback(round_to_dec(cur_amount, true));
 						}));
 					});
 					// A button for a custom amount.
-					amount_dialog.append($("<button></button>").addClass("ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).html("Another Amount").css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					amount_dialog.append($("<button class=\"btn btn-primary\"></button>").html("Another Amount").css({"min-height": "70px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						var cur_amount = null;
 						do {
@@ -1164,6 +1142,7 @@ if ($pines->config->com_sales->com_esp) {
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
+					width: 400,
 					close: function(){$(this).remove();}
 				});
 			};
@@ -1267,10 +1246,10 @@ if ($pines->config->com_sales->com_esp) {
 					if (product.discountable && discount != "") {
 						var discount_price;
 						if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
-							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount = parseFloat(discount.replace(/[^0-9.\-]/, ''));
 							discount_price = price - discount;
 						} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
-							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount = parseFloat(discount.replace(/[^0-9.\-]/, ''));
 							discount_price = price - (price * (discount / 100));
 						}
 						if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
@@ -1348,10 +1327,10 @@ if ($pines->config->com_sales->com_esp) {
 									var price = parseFloat(cur_row.pgrid_get_value(6));
 									if (product.discountable && cur_discount != "") {
 										if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
-											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 											price = price - cur_discount;
 										} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
-											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 											price = price - (price * (cur_discount / 100));
 										}
 									}
@@ -1376,10 +1355,10 @@ if ($pines->config->com_sales->com_esp) {
 									var price = parseFloat(cur_row.pgrid_get_value(6));
 									if (product.discountable && cur_discount != "") {
 										if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
-											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 											price = price - cur_discount;
 										} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
-											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 											price = price - (price * (cur_discount / 100));
 										}
 									}
@@ -1388,7 +1367,7 @@ if ($pines->config->com_sales->com_esp) {
 								});
 								break;
 							case "item_amount":
-								if (!rows.filter("[title="+cur_dis.qualifier+"]").length);
+								if (!rows.filter("[title="+cur_dis.qualifier+"]").length)
 									break;
 								discount += cur_dis.value;
 								break;
@@ -1402,10 +1381,10 @@ if ($pines->config->com_sales->com_esp) {
 								var price = parseFloat(cur_row.pgrid_get_value(6));
 								if (cur_row.discountable && cur_discount != "") {
 									if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
-										cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+										cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 										price = price - cur_discount;
 									} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
-										cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+										cur_discount = parseFloat(cur_discount.replace(/[^0-9.\-]/, ''));
 										price = price - (price * (cur_discount / 100));
 									}
 								}
@@ -1432,9 +1411,9 @@ if ($pines->config->com_sales->com_esp) {
 					$.each(cur_special.requirements, function(i, cur_req){
 						if (!apply_special)
 							return;
+						var matching;
 						switch (cur_req.type) {
 							case "has_special":
-								var matching;
 								if (cur_req.value == 'any') {
 									// Have to subtract this special.
 									matching = specials.length - 1;
@@ -1447,7 +1426,6 @@ if ($pines->config->com_sales->com_esp) {
 									apply_special = false;
 								break;
 							case "has_not_special":
-								var matching;
 								if (cur_req.value == 'any') {
 									// Have to subtract this special.
 									matching = specials.length - 1;
@@ -1479,7 +1457,7 @@ if ($pines->config->com_sales->com_esp) {
 				// Now add all the specials to the specials section.
 				var special_box = $("#p_muid_specials").empty();
 				$.each(specials, function(i, cur_special){
-					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
+					special_box.append("<div class=\"special well\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
 				});
 				// Update the specials input box.
 				$("#p_muid_specials_input").val(JSON.stringify(added_specials));
@@ -1512,7 +1490,7 @@ if ($pines->config->com_sales->com_esp) {
 				rows.each(function(i){
 					var cur_row = $(this);
 					if (cur_row.pgrid_get_value(3) != "declined") {
-						var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
+						var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.\-]/g, ""));
 						if (isNaN(amount))
 							amount = 0;
 						amount_tendered += amount;
@@ -1656,14 +1634,13 @@ if ($pines->config->com_sales->com_esp) {
 			<?php } ?>
 
 			pines.com_sales_run_submit = function(){
-				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("ui-state-disabled");
+				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("disabled");
 				$("#p_muid_form").submit();
 			};
 
 			// Load any initial products.
 			update_products();
 		});
-		// ]]>
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
@@ -1672,7 +1649,7 @@ if ($pines->config->com_sales->com_esp) {
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlspecialchars("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') echo 'disabled="disabled" '; ?>/>
+			<input class="pf-field" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlspecialchars("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') echo 'disabled="disabled" '; ?>/>
 		</label>
 	</div>
 	<?php } ?>
@@ -1764,14 +1741,14 @@ if ($pines->config->com_sales->com_esp) {
 	<div id="p_muid_delivery_dialog" title="Select Delivery Type" style="display: none;">
 		<div id="p_muid_delivery_select">
 			The item is being taken from current inventory:
-			<div style="padding: 1em;">
-				<input type="radio" name="delivery_type" id="p_muid_deliv_rad1" value="in-store" /><label for="p_muid_deliv_rad1" title="The customer is receiving the item right now.">In Store</label>
-				<input type="radio" name="delivery_type" id="p_muid_deliv_rad2" value="shipped" /><label for="p_muid_deliv_rad2" title="The item is being shipped to the customer.">Ship to Customer</label>
-				<input type="radio" name="delivery_type" id="p_muid_deliv_rad3" value="pick-up" /><label for="p_muid_deliv_rad3" title="The customer will pick up the item later.">Pick Up</label>
+			<div class="btn-group" style="padding: 1em;">
+				<button type="button" class="btn" data-value="in-store" title="The customer is receiving the item right now.">In Store</button>
+				<button type="button" class="btn" data-value="shipped" title="The item is being shipped to the customer.">Ship to Customer</button>
+				<button type="button" class="btn" data-value="pick-up" title="The customer will pick up the item later.">Pick Up</button>
 			</div>
 			The item needs to be ordered:
-			<div style="padding: 1em;">
-				<input type="radio" name="delivery_type" id="p_muid_deliv_rad4" value="warehouse" /><label for="p_muid_deliv_rad4" title="The item should be ordered.">Warehouse</label>
+			<div class="btn-group" style="padding: 1em;">
+				<button type="button" class="btn" data-value="warehouse" title="The item should be ordered.">Warehouse</button>
 			</div>
 		</div>
 	</div>
@@ -1779,7 +1756,7 @@ if ($pines->config->com_sales->com_esp) {
 		<div class="pf-form">
 			<div class="pf-element">
 				<label><span class="pf-label">Serial Number</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+					<input class="pf-field" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
 			</div>
 			<div class="pf-element" id="p_muid_available_serials" style="display: none;">
 				<span class="pf-label">Some Available</span>
@@ -1801,7 +1778,7 @@ if ($pines->config->com_sales->com_esp) {
 				<label>
 					<span class="pf-label">Employee</span>
 					<span class="pf-note">Enter part of a name, title, email, or phone # to search.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_salesperson" name="item_salesperson" size="24" value="" />
+					<input class="pf-field" type="text" id="p_muid_salesperson" name="item_salesperson" size="24" value="" />
 				</label>
 			</div>
 		</div>
@@ -1843,7 +1820,7 @@ if ($pines->config->com_sales->com_esp) {
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="btn payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-financial-payment-mode" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlspecialchars($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
@@ -1882,8 +1859,8 @@ if ($pines->config->com_sales->com_esp) {
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Sale Information</span>
 		<div class="pf-group">
-			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Shipping Address" onclick="$('#p_muid_shipping_dialog').dialog('open');" />
-			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
+			<input class="pf-field btn" type="button" value="Edit Shipping Address" onclick="$('#p_muid_shipping_dialog').dialog('open');" />
+			<input class="pf-field btn" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
 			<hr class="pf-field" style="clear: both; margin-top: 15px;" />
 		</div>
 	</div>
@@ -1897,11 +1874,10 @@ if ($pines->config->com_sales->com_esp) {
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>
+					<input class="pf-field" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var address_us = $("#p_muid_address_us");
 						var address_international = $("#p_muid_address_international");
@@ -1916,7 +1892,6 @@ if ($pines->config->com_sales->com_esp) {
 							}
 						}).change();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
 				<label><input class="pf-field" type="radio" name="shipping_address_type" value="us"<?php echo (!isset($this->entity->shipping_address->address_type) || $this->entity->shipping_address->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
@@ -1925,16 +1900,16 @@ if ($pines->config->com_sales->com_esp) {
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_address_1" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_1); ?>" /></label>
+						<input class="pf-field" type="text" name="shipping_address_1" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_address_2" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_2); ?>" /></label>
+						<input class="pf-field" type="text" name="shipping_address_2" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_city" size="15" value="<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>" />
-					<select class="pf-field ui-widget-content ui-corner-all" name="shipping_state">
+					<input class="pf-field" type="text" name="shipping_city" size="15" value="<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>" />
+					<select class="pf-field" name="shipping_state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',
@@ -1998,13 +1973,17 @@ if ($pines->config->com_sales->com_esp) {
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_zip" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>" /></label>
+						<input class="pf-field" type="text" name="shipping_zip" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="shipping_address_international"><?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?></textarea></span></label>
+						<span class="pf-group pf-full-width">
+							<span class="pf-field" style="display: block;">
+								<textarea style="width: 100%;" rows="3" cols="35" name="shipping_address_international"><?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?></textarea>
+							</span>
+						</span></label>
 				</div>
 			</div>
 		</div>
@@ -2012,7 +1991,7 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
-			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
+			<textarea class="pf-field pf-full-width" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 	</div>
 	<?php if (!empty($this->returns)) { ?>
@@ -2040,19 +2019,19 @@ if ($pines->config->com_sales->com_esp) {
 		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_check(true);" />
+		<input class="pf-button btn btn-primary" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_check(true);" />
 		<?php } ?>
 
 		<?php if ( $pines->config->com_sales->allow_invoicing && ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') ) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_check();" />
+		<input class="pf-button btn btn-primary" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_check();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { if ($pines->config->com_sales->allow_quoting) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_check();" />
+		<input class="pf-button btn btn-primary" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_check();" />
 		<?php } } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_check();" />
+		<input class="pf-button btn btn-primary" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_check();" />
 		<?php } ?>
 
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'sale/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'sale/list')); ?>');" value="Cancel" />
 	</div>
 </form>

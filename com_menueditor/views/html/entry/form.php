@@ -68,7 +68,6 @@ foreach ($menus as &$cur_child) {
 unset($cur_child);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .combobox {
 		position: relative;
 	}
@@ -82,10 +81,8 @@ unset($cur_child);
 		top: 50%;
 		margin-top: -8px;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		// Position box.
 		$(".combobox", "#p_muid_form").each(function(){
@@ -284,16 +281,15 @@ unset($cur_child);
 			"source": <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_menueditor', 'entry/save')); ?>">
 	<div class="pf-element pf-heading">
-		<h1>Menu Entry Location</h1>
+		<h3>Menu Entry Location</h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Menu</span>
 			<span class="pf-note">What menu does this entry belong to?</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="top_menu" id="p_muid_top_menu">
+			<select class="pf-field" name="top_menu" id="p_muid_top_menu">
 				<option value="--new--"<?php echo isset($this->entity->top_menu) ? '' : ' selected="selected"'; ?>>-- New Menu --</option>
 				<?php foreach ($menus as $key => $cur_menu) { ?>
 				<option value="<?php echo htmlspecialchars($key); ?>"<?php echo $this->entity->top_menu == $key ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_menu[0]->data); ?></option>
@@ -329,7 +325,7 @@ unset($cur_child);
 		<input type="hidden" name="location" id="p_muid_location" value="<?php echo htmlspecialchars($this->location); ?>" />
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Menu Entry Information</h1>
+		<h3>Menu Entry Information</h3>
 	</div>
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -344,7 +340,7 @@ unset($cur_child);
 	<div class="pf-element" id="p_muid_position">
 		<span class="pf-label">Position</span>
 		<span class="combobox">
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="position" size="24" value="<?php echo htmlspecialchars($this->entity->position); ?>" />
+			<input class="pf-field" type="text" name="position" size="24" value="<?php echo htmlspecialchars($this->entity->position); ?>" />
 			<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 			<select style="display: none;">
 				<?php foreach ($pines->info->template->positions as $cur_position) {
@@ -357,19 +353,19 @@ unset($cur_child);
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
 			<span class="pf-note">This is what will make its path. It also determines its position alphanumerically if the location is sorted.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<?php } if (!in_array('text', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Text</span>
 			<span class="pf-note">This is the text that will appear on the menu entry.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="text" size="24" value="<?php echo htmlspecialchars($this->entity->text); ?>" /></label>
+			<input class="pf-field" type="text" name="text" size="24" value="<?php echo htmlspecialchars($this->entity->text); ?>" /></label>
 	</div>
 	<?php } if (!in_array('sort_order', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Sort Order</span>
 			<span class="pf-note">Menu entries created by this system will be sorted using this value. However, if they are placed in a sorted parent, they will use the name.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="sort_order" size="24" value="<?php echo htmlspecialchars($this->entity->sort_order); ?>" /></label>
+			<input class="pf-field" type="text" name="sort_order" size="24" value="<?php echo htmlspecialchars($this->entity->sort_order); ?>" /></label>
 	</div>
 	<?php } if (!in_array('enabled', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
@@ -384,16 +380,16 @@ unset($cur_child);
 	<?php } if (!in_array('link', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Link</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="link" size="24" value="<?php echo htmlspecialchars($this->entity->link); ?>" /></label>
+			<input class="pf-field" type="text" name="link" size="24" value="<?php echo htmlspecialchars($this->entity->link); ?>" /></label>
 	</div>
 	<?php } if (!in_array('text', (array) $this->disabled_fields) && gatekeeper('com_menueditor/jsentry')) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Onclick JavaScript</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="onclick" size="24" value="<?php echo htmlspecialchars($this->entity->onclick); ?>" /></label>
+			<input class="pf-field" type="text" name="onclick" size="24" value="<?php echo htmlspecialchars($this->entity->onclick); ?>" /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Menu Entry Conditions</h1>
+		<h3>Menu Entry Conditions</h3>
 		<p>Users will only see this entry if these conditions are met.</p>
 	</div>
 	<?php if (!in_array('children', (array) $this->disabled_fields)) { ?>
@@ -441,11 +437,11 @@ unset($cur_child);
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Type</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+					<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Value</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+					<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 			</div>
 		</div>
 		<br style="clear: both; height: 1px;" />
@@ -455,8 +451,8 @@ unset($cur_child);
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_menueditor', 'entry/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_menueditor', 'entry/list')); ?>');" value="Cancel" />
 	</div>
 	<?php } ?>
 </form>

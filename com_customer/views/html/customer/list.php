@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customer/customer/list']);
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_interaction_dialog .combobox {
 		position: relative;
 	}
@@ -46,10 +45,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	* html .ui-autocomplete {
 		height: 200px;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Customer search function for the pgrid toolbar.
 		var customer_search_box;
@@ -251,7 +248,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		});
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -298,7 +294,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php if (gatekeeper('com_customer/manageinteractions') && $pines->config->com_customer->com_calendar) { ?>
 		<div class="pf-element pf-full-width">
 			<label><span class="pf-label">Employee</span>
-				<select class="ui-widget-content ui-corner-all" name="employee">
+				<select name="employee">
 				<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
 					echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
@@ -314,7 +310,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>
-				<select class="ui-widget-content ui-corner-all" name="interaction_type">
+				<select name="interaction_type">
 					<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
 						$cur_type = explode(':', $cur_type);
 						echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
@@ -323,12 +319,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="22" name="interaction_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label">Time</span>
 			<span class="combobox">
-				<input class="ui-widget-content ui-corner-all" type="text" name="interaction_time" size="18" value="<?php echo htmlspecialchars(format_date(time(), 'time_short')); ?>" />
+				<input type="text" name="interaction_time" size="18" value="<?php echo htmlspecialchars(format_date(time(), 'time_short')); ?>" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>
@@ -361,14 +357,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element">
 			<label>
 				<span class="pf-label">Status</span>
-				<select class="ui-widget-content ui-corner-all" name="interaction_status">
+				<select name="interaction_status">
 					<option value="open">Open</option>
 					<option value="closed">Closed</option>
 				</select>
 			</label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="interaction_comments"></textarea>
+			<textarea rows="3" cols="40" name="interaction_comments"></textarea>
 		</div>
 	</form>
 	<br />

@@ -15,15 +15,12 @@ $this->title = 'Location &amp; Date';
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .form_date {
 		width: 80%;
 		text-align: center;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_form [name=start_date], #p_muid_form [name=end_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -61,23 +58,22 @@ $pines->com_jstree->load();
 			}
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>">
 	<div class="pf-element location_tree" style="padding-bottom: 0px;"></div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? htmlspecialchars(format_date($this->start_date, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
+		<input class="pf-field form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? htmlspecialchars(format_date($this->start_date, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? htmlspecialchars(format_date($this->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
+		<input class="pf-field form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? htmlspecialchars(format_date($this->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />
 		<?php if ($this->finished) { ?>
 		<input type="hidden" name="finished" value="true" />
 		<?php } ?>
-		<input type="submit" value="Update" class="ui-state-default ui-corner-all" />
+		<input type="submit" value="Update" class="btn btn-primary" />
 	</div>
 </form>

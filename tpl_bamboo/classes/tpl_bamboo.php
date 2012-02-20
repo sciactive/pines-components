@@ -51,15 +51,13 @@ class tpl_bamboo extends template {
 				$return = '<ul class="dropdown dropdown-vertical dropdown-vertical-rtl">';
 				break;
 			case 'main_menu':
-				if (!$pines->config->tpl_bamboo->buttonized_menu)
-					$header_style = true;
 			default:
 				$return = '<ul class="dropdown dropdown-horizontal">';
 				break;
 		}
 		foreach ($menu as $key => &$value) {
 			if ((int) $key === $key) continue;
-			$return .= $this->sub_menu($value, $header_style);
+			$return .= $this->sub_menu($value);
 		}
 		$return .= '</ul>';
 		return $return;
@@ -69,12 +67,10 @@ class tpl_bamboo extends template {
 	 * Format a sub menu in HTML.
 	 * 
 	 * @param array &$menu The menu.
-	 * @param bool $header_style Whether the menu buttons should use a header style.
 	 * @return string The menu's HTML.
 	 */
-	public function sub_menu(&$menu, $header_style = false) {
+	public function sub_menu(&$menu) {
 		$count = count($menu);
-		// TODO: Remove target attribute. It's not XHTML 1.0 Strict.
 		$return = '<li><a'.($count > 1 ? ' class="dir"' : '').' href="'.
 			(isset($menu[0]['href']) ? htmlspecialchars($menu[0]['href']) : 'javascript:void(0);').'"'.
 			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
@@ -82,11 +78,6 @@ class tpl_bamboo extends template {
 			.'>'.
 			htmlspecialchars($menu[0]['text']).
 			'</a>';
-		//$return = '<li class="ui-state-default"><a'.
-		//	(count($menu) > 1 ? ' class="dir" href="' : ' href="').
-		//	(isset($menu[0]['href']) ? $menu[0]['href'] : 'javascript:void(0);').
-		//	(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
-		//	htmlspecialchars($menu[0]['text']).'</a>';
 		if ($count > 1) {
 			$return .= '<ul>';
 			foreach ($menu as $key => &$value) {

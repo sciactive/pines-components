@@ -18,7 +18,6 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 ?>
 <form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/assignstocksave')); ?>">
 	<style type="text/css">
-		/* <![CDATA[ */
 		#p_muid_form .products .entry {
 			padding: .4em;
 			float: left;
@@ -28,13 +27,13 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			margin-right: 2em;
 		}
 		#p_muid_form .products .entry a.remove {
-			padding: .2em;
 			float: right;
+			font-size: 0.8em;
+			line-height: 1em;
+			padding: 0.2em;
 		}
-		/* ]]> */
 	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var current_item;
 			
@@ -45,9 +44,6 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 				current_item = $(this).closest("div.nonserial");
 				quantity_box.val(current_item.find(".qty_left").text());
 				location_dialog.dialog("open");
-			}).delegate(".products .entry a.remove", "hover", function(){
-				$(this).toggleClass("ui-state-hover");
-				refresh_entries();
 			}).delegate(".products .entry a.remove", "click", function(){
 				$(this).closest(".entry").remove();
 				refresh_entries();
@@ -89,7 +85,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 							alert("Only "+data.length+" items were found that matched your query.");
 						var entries = current_item.find(".entries");
 						$.each(data, function(i, entry){
-							entries.append("<div class=\"ui-widget-content ui-corner-all entry\"><a href=\"javascript:void(0);\" class=\"remove ui-state-default ui-corner-all\">X</a><div>Location: "+pines.safe(entry.location_name)+"</div><span class=\"location\" style=\"display: none\">"+pines.safe(entry.location)+"</span><span class=\"product\" style=\"display: none\">"+pines.safe(entry.product)+"</span><div"+(entry.serial ? "" : " style=\"display: none\"")+">Serial: <span class=\"serial\">"+(entry.serial ? pines.safe(entry.serial) : "")+"</span></div></div>");
+							entries.append("<div class=\"ui-widget-content ui-corner-all entry\"><a href=\"javascript:void(0);\" class=\"remove btn btn-mini btn-danger\">&times;</a><div>Location: "+pines.safe(entry.location_name)+"</div><span class=\"location\" style=\"display: none\">"+pines.safe(entry.location)+"</span><span class=\"product\" style=\"display: none\">"+pines.safe(entry.product)+"</span><div"+(entry.serial ? "" : " style=\"display: none\"")+">Serial: <span class=\"serial\">"+(entry.serial ? pines.safe(entry.serial) : "")+"</span></div></div>");
 						});
 						refresh_entries();
 					}
@@ -228,11 +224,10 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 				}
 			});
 		});
-		// ]]>
 	</script>
 	<?php foreach ($this->items as $cur_item) { ?>
 	<div class="pf-element pf-heading">
-		<h1>Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></h1>
+		<h3>Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></h3>
 		<p>
 			<div style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo htmlspecialchars(format_date($cur_item['sale']->tender_date, 'full_long')); ?>.</div>
 			<div style="float: left; padding-right: 2em;">Location: <?php echo htmlspecialchars("{$cur_item['sale']->group->name} [{$cur_item['sale']->group->groupname}]"); ?>.</div>
@@ -271,7 +266,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		<div class="pf-form">
 			<div class="pf-element">
 				<label><span class="pf-label">Serial Number</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+					<input class="pf-field" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
 			</div>
 		</div>
 		<br />
@@ -286,7 +281,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Quantity</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_quantity" name="quantity" size="5" value="" /></label>
+					<input class="pf-field" type="text" id="p_muid_quantity" name="quantity" size="5" value="" /></label>
 			</div>
 			<input type="hidden" name="location" value="<?php echo htmlspecialchars($warehouse->guid); ?>" />
 		</div>
@@ -294,7 +289,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="items" id="p_muid_items" value="[]" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
 	</div>
 </form>

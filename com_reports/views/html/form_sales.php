@@ -16,15 +16,12 @@ $this->title = 'New Report';
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.form_date {
 		width: 80%;
 		text-align: center;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -79,26 +76,25 @@ $pines->com_jstree->load();
 			<?php } ?>
 		};
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element">
 		<label><input type="checkbox" name="descendents" value="ON" <?php echo $this->descendents ? 'checked="checked"' : ''; ?> /> Include Descendents</label>
 		<div class="pf-element location_tree"></div>
 	</div>
-	<div class="pf-element">
-		<select class="ui-widget-content ui-corner-all" style="width: 100%;" name="employee"></select>
+	<div class="pf-element pf-full-width">
+		<select style="max-width: 100%;" name="employee"></select>
 	</div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="ui-widget-content ui-corner-all form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? htmlspecialchars(format_date($this->date[0], 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
+		<input class="form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? htmlspecialchars(format_date($this->date[0], 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="ui-widget-content ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? htmlspecialchars(format_date($this->date[1] - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
+		<input class="form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? htmlspecialchars(format_date($this->date[1] - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
-		<input class="ui-corner-all ui-state-default" type="submit" value="View Report" />
+		<input class="btn btn-primary" type="submit" value="View Report" />
 	</div>
 </form>

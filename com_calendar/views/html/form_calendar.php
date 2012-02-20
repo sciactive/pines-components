@@ -19,7 +19,11 @@ if ($pines->config->com_calendar->com_customer)
 	$pines->com_customer->load_customer_select();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
+	#p_muid_filter button {
+		padding: 4px;
+		font-size: 8px;
+		line-height: 10px;
+	}
 	.p_muid_btn {
 		display: inline-block;
 		width: 16px;
@@ -35,9 +39,6 @@ if ($pines->config->com_calendar->com_customer)
 		font-size: 0.8em;
 		list-style-type: disc;
 		padding-left: 10px;
-	}
-	#p_muid_filter .ui-button-text-only .ui-button-text {
-		padding: 0.2em;
 	}
 	.calendar_form .combobox {
 		position: relative;
@@ -66,10 +67,8 @@ if ($pines->config->com_calendar->com_customer)
 	* html .ui-autocomplete {
 		height: 200px;
 	}
-	/* ]]> */
 </style>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
@@ -103,7 +102,7 @@ if ($pines->config->com_calendar->com_customer)
 			});
 		});
 
-		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
+		$("#p_muid_filter").delegate("button", "click", function() {
 			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 				view_type: <?php echo json_encode($this->view_type); ?>,
 				start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
@@ -111,7 +110,7 @@ if ($pines->config->com_calendar->com_customer)
 				location: <?php echo json_encode((string) $this->location->guid); ?>,
 				employee: <?php echo json_encode((string) $this->employee->guid); ?>,
 				descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
-				filter: $(this).val()
+				filter: $(this).attr("data-value")
 			});
 		});
 		<?php if ($pines->config->com_calendar->com_customer) { ?>
@@ -551,25 +550,24 @@ if ($pines->config->com_calendar->com_customer)
 		});
 	};
 	<?php } ?>
-	// ]]>
 </script>
-<div id="p_muid_filter" style="padding: 0; margin: 0;">
-	<input type="radio" name="filter" id="p_muid_filter_rad1" value="all" <?php echo ($this->filter == 'all') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad1" title="Show all calendar events.">all</label>
-	<input type="radio" name="filter" id="p_muid_filter_rad2" value="shifts" <?php echo ($this->filter == 'shifts') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad2" title="Show scheduled employee shifts.">shifts</label>
-	<input type="radio" name="filter" id="p_muid_filter_rad3" value="appointments" <?php echo ($this->filter == 'appointments') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad3" title="Show customer appointments.">appts</label>
-	<input type="radio" name="filter" id="p_muid_filter_rad4" value="events" <?php echo ($this->filter == 'events') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad4" title="Show calendar events.">events</label>
+<div id="p_muid_filter" class="btn-group" style="padding: 0; margin: 0;">
+	<button class="btn btn-mini<?php echo ($this->filter == 'all') ? ' active' : ''; ?>" type="button" data-value="all" title="Show all calendar events.">all</button>
+	<button class="btn btn-mini<?php echo ($this->filter == 'shifts') ? ' active' : ''; ?>" type="button" data-value="shifts" title="Show scheduled employee shifts.">shifts</button>
+	<button class="btn btn-mini<?php echo ($this->filter == 'appointments') ? ' active' : ''; ?>" type="button" data-value="appointments" title="Show customer appointments.">appts</button>
+	<button class="btn btn-mini<?php echo ($this->filter == 'events') ? ' active' : ''; ?>" type="button" data-value="events" title="Show calendar events.">events</button>
 </div>
-<div style="margin: 0.75em 0; text-align: center;" id="p_muid_actions">
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
+<div style="margin: 0.75em 0;" id="p_muid_actions">
+	<button class="btn btn-mini" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
+	<button class="btn btn-mini" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
+	<button class="btn btn-mini" type="button" onclick="pines.com_calendar_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
+	<button class="btn btn-mini" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
+	<button class="btn btn-mini" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<?php } ?>
 </div>
 <div>
-	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
+	<select id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all"><?php echo htmlspecialchars($this->location->name); ?></option>
 		<?php
 		// Load employees for this location.
@@ -616,12 +614,12 @@ if ($pines->config->com_calendar->com_customer)
 			</div>
 		</div>
 		<div class="pf-element pf-full-width">
-			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="review_comments"></textarea>
+			<textarea rows="3" cols="40" name="review_comments"></textarea>
 		</div>
 		<div class="pf-element">
 			<label>
 				<span class="pf-label">Status</span>
-				<select class="ui-widget-content ui-corner-all" name="status">
+				<select name="status">
 					<option value="open">Open</option>
 					<option value="closed">Closed</option>
 					<option value="canceled">Canceled</option>
@@ -636,12 +634,12 @@ if ($pines->config->com_calendar->com_customer)
 	<div class="pf-form calendar_form">
 		<div class="pf-element">
 			<label><span class="pf-label">Customer</span>
-				<input class="ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="22" value="" /></label>
+				<input type="text" id="p_muid_customer" name="customer" size="22" value="" /></label>
 		</div>
 		<?php if (gatekeeper('com_customer/manageinteractions')) { ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Employee</span>
-				<select class="ui-widget-content ui-corner-all" name="employee">
+				<select name="employee">
 				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
 					if ($cur_employee->in_group($this->location) || ($this->descendents && $cur_employee->is_descendent($this->location)))
@@ -658,7 +656,7 @@ if ($pines->config->com_calendar->com_customer)
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>
-				<select class="ui-widget-content ui-corner-all" name="interaction_type">
+				<select name="interaction_type">
 					<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
 						$cur_type = explode(':', $cur_type);
 						echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
@@ -667,12 +665,12 @@ if ($pines->config->com_calendar->com_customer)
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="22" name="interaction_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label">Time</span>
 			<span class="combobox">
-				<input class="ui-widget-content ui-corner-all" type="text" name="interaction_time" size="20" value="" />
+				<input type="text" name="interaction_time" size="20" value="" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>
@@ -708,14 +706,14 @@ if ($pines->config->com_calendar->com_customer)
 		<div class="pf-element">
 			<label>
 				<span class="pf-label">Status</span>
-				<select class="ui-widget-content ui-corner-all" name="interaction_status">
+				<select name="interaction_status">
 					<option value="open">Open</option>
 					<option value="closed">Closed</option>
 				</select>
 			</label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="interaction_comments"></textarea>
+			<textarea rows="3" cols="40" name="interaction_comments"></textarea>
 		</div>
 	</div>
 	<br class="pf-clearing" />

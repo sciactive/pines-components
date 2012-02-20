@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$bc = '<span class="breadcrumb_item">'.htmlspecialchars($this->entity->name).'</span>';
+$bc = '<li class="active"><span class="breadcrumb_item">'.htmlspecialchars($this->entity->name).'</span></li>';
 
 if ($this->entity->has_tag('product')) {
 	$categories = (array) $pines->entity_manager->get_entities(
@@ -38,14 +38,14 @@ if ($this->entity->has_tag('product')) {
 }
 
 while (isset($cur_entity)) {
-	$bc = '<a href="'.htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $cur_entity->alias))).'" class="breadcrumb_item">'.htmlspecialchars($cur_entity->name).'</a> <span class="breadcrumb_sep">&gt;</span> ' . $bc;
+	$bc = '<li><a href="'.htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $cur_entity->alias))).'" class="breadcrumb_item">'.htmlspecialchars($cur_entity->name).'</a> <span class="divider">&gt;</span></li> ' . $bc;
 	if ($cur_entity->show_menu)
 		unset($cur_entity);
 	else
 		$cur_entity = $cur_entity->parent;
 }
 
-$bc = '<a href="'.htmlspecialchars(pines_url()).'" class="breadcrumb_item">Home</a> <span class="breadcrumb_sep">&gt;</span> ' . $bc;
+$bc = '<ul class="breadcrumb"><li><a href="'.htmlspecialchars(pines_url()).'" class="breadcrumb_item">Home</a> <span class="divider">&gt;</span></li> ' . $bc . '</ul>';
 
 echo $bc;
 ?>

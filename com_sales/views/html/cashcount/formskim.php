@@ -15,17 +15,11 @@ $this->title = 'Skim from Cash Count ['.((int) $this->entity->cashcount->guid).'
 $this->note = 'Count the cash as you take it out of the drawer.';
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_form .amount {
 		font-weight: bold;
 		display: inline-block;
 		width: 3em;
 		text-align: right;
-	}
-	#p_muid_form .amt_btn {
-		display: inline-block;
-		width: 16px;
-		height: 16px;
 	}
 	#p_muid_form .entry {
 		width: 2em;
@@ -50,10 +44,8 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 		border: red solid 1px;
 		color: red;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var cash_symbol = <?php echo json_encode($this->entity->cashcount->currency_symbol); ?>;
 
@@ -109,44 +101,43 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 
 		update_total();
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/saveskim')); ?>">
 	<?php if (!empty($this->entity->cashcount->review_comments)) {?>
 	<div class="pf-element pf-heading">
-		<h1>Reviewer Comments</h1>
+		<h3>Reviewer Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field"><?php echo htmlspecialchars($this->entity->cashcount->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<button class="ui-state-default ui-corner-all clear_btn" type="button" style="display: block; float: right;">Clear All</button>
-		<h1>Cash being <strong>Removed</strong> from Drawer</h1>
+		<button class="btn btn-danger clear_btn" type="button" style="display: block; float: right;">Clear All</button>
+		<h3>Cash being <strong>Removed</strong> from Drawer</h3>
 	</div>
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->cashcount->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" />
+			<input class="pf-field entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" />
 			x <span class="amount"><?php echo htmlspecialchars($this->entity->cashcount->currency_symbol . $cur_denom); ?></span>
-			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
-			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
+			<button class="pf-field btn btn-success add_btn" type="button"><i class="icon-plus icon-white"></i></button>
+			<button class="pf-field btn btn-danger remove_btn" type="button"><i class="icon-minus icon-white"></i></button>
 		</div>
 		<?php } ?>
-		<div class="ui-state-highlight ui-corner-all total">
-			<div>Skim Total</div>
+		<div class="alert alert-info total">
+			<div class="alert-heading">Skim Total</div>
 			<div id="p_muid_total_skim"></div>
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->cashcount->guid ?>" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all submit_button" type="button" value="Finish Skim" onclick="pines.com_sales_verify();" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary submit_button" type="button" value="Finish Skim" onclick="pines.com_sales_verify();" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 	</div>
 </form>

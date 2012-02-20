@@ -15,7 +15,6 @@ $this->title = 'File Manager';
 $pines->com_elfinder->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		<?php if (!$this->ckeditor) { ?>
 		$(".com_elfinder_finder").elfinder({
@@ -39,6 +38,5 @@ $pines->com_elfinder->load();
 		});
 		<?php } ?>
 	});
-	// ]]>
 </script>
 <div class="com_elfinder_finder"></div>

@@ -95,6 +95,7 @@ class com_dash_dashboard extends entity {
 			uniqid() => array(
 				'name' => 'Home',
 				'buttons' => $default_buttons,
+				'buttons_size' => 'large',
 				'columns' => array(
 					uniqid() => array(
 						'size' => 1/2,

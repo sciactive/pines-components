@@ -23,12 +23,13 @@ if ($pines->config->com_sales->com_storefront) {
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'category/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			$("#p_muid_spec_options").ptags({ptags_delimiter: ';;', ptags_sortable: null});
 			$("#p_muid_spec_do_sort").click(function(){
 				var tags_elem = $("#p_muid_spec_options");
+				if (tags_elem.val() == "")
+					return;
 				var tags = tags_elem.val().split(';;');
 				// Natural Sort http://my.opera.com/GreyWyvern/blog/show.dml/1671288
 				for (var z = 0, t; t = tags[z]; z++) {
@@ -181,25 +182,24 @@ if ($pines->config->com_sales->com_storefront) {
 				source: <?php echo json_encode($pines->info->template->positions); ?>
 			});
 			<?php } ?>
-
-			$("#p_muid_category_tabs").tabs();
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_category_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<?php if ($pines->config->com_sales->com_storefront) { ?>
-			<li><a href="#p_muid_tab_storefront">Storefront</a></li>
-			<li><a href="#p_muid_tab_head">Page Head</a></li>
-			<?php } ?>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<?php if ($pines->config->com_sales->com_storefront) { ?>
+		<li><a href="#p_muid_tab_storefront" data-toggle="tab">Storefront</a></li>
+		<li><a href="#p_muid_tab_head" data-toggle="tab">Page Head</a></li>
+		<?php } ?>
+	</ul>
+	<div id="p_muid_category_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<div class="pf-element pf-full-width">
 				<label>
 					<span class="pf-label">Name</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+						</span>
 					</span>
 				</label>
 			</div>
@@ -220,7 +220,7 @@ if ($pines->config->com_sales->com_storefront) {
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Parent</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="parent">
+					<select class="pf-field" name="parent">
 						<option value="null">-- No Parent --</option>
 						<?php
 						/**
@@ -256,7 +256,7 @@ if ($pines->config->com_sales->com_storefront) {
 				<span class="pf-label">Products</span>
 				<span class="pf-note">These products are assigned to this category.</span>
 				<div class="pf-group">
-					<div class="pf-field ui-widget-content ui-corner-all" style="padding: 1em; min-width: 300px; max-height: 200px; overflow: auto;">
+					<div class="pf-field well" style="padding: 1em; min-width: 300px; max-height: 200px; overflow: auto;">
 						<?php foreach ($this->entity->products as $cur_product) { ?>
 						<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo htmlspecialchars("{$cur_product->sku} : {$cur_product->name}"); ?></a><br />
 						<?php } ?>
@@ -266,10 +266,9 @@ if ($pines->config->com_sales->com_storefront) {
 			<br class="pf-clearing" />
 		</div>
 		<?php if ($pines->config->com_sales->com_storefront) { ?>
-		<div id="p_muid_tab_storefront">
+		<div class="tab-pane" id="p_muid_tab_storefront">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var alias = $("#p_muid_form [name=alias]");
 						$("#p_muid_form [name=name]").change(function(){
@@ -282,12 +281,13 @@ if ($pines->config->com_sales->com_storefront) {
 								alias.val("");
 						});
 					});
-					// ]]>
 				</script>
 				<label>
 					<span class="pf-label">Alias</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+						</span>
 					</span>
 				</label>
 			</div>
@@ -295,8 +295,10 @@ if ($pines->config->com_sales->com_storefront) {
 				<label>
 					<span class="pf-label">Replace Title</span>
 					<span class="pf-note">If this is not empty, it will be used, instead of the name, as the title above the content.</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="replace_title" value="<?php echo htmlspecialchars($this->entity->replace_title); ?>" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="replace_title" value="<?php echo htmlspecialchars($this->entity->replace_title); ?>" />
+						</span>
 					</span>
 				</label>
 			</div>
@@ -314,7 +316,7 @@ if ($pines->config->com_sales->com_storefront) {
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Menu Position</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
+					<input class="pf-field" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Child Categories</span>
@@ -329,28 +331,27 @@ if ($pines->config->com_sales->com_storefront) {
 							var guid = $("#p_muid_show_page_selector").val();
 							var name = $("#p_muid_show_page_selector option:selected").html();
 
-							$("<div class=\"pf-field ui-widget-content\">"+pines.safe(name)+"<input type=\"hidden\" name=\"show_pages[]\" value=\""+pines.safe(guid)+"\" /> <a href=\"javascript:void(0);\" class=\"remove_page\" style=\"float: right;\"><small>X</small></a></div>").appendTo($("#p_muid_show_pages"));
+							$("<div class=\"pf-field well\">"+pines.safe(name)+"<input type=\"hidden\" name=\"show_pages[]\" value=\""+pines.safe(guid)+"\" /> <a href=\"javascript:void(0);\" class=\"remove_page close\" style=\"float: right;\">&times;</a></div>").appendTo($("#p_muid_show_pages"));
 						});
 						
 						$("#p_muid_show_pages").delegate("a.remove_page", "click", function(){
 							$(this).closest("div.pf-field").remove();
 						}).sortable();
 					});
-					// ]]>
 				</script>
 				<label><span class="pf-label">Show Pages</span>
 					<span class="pf-note">Show content page(s) when browsing this category. You can use page conditions to control which page is shown.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_show_page_selector">
+					<select class="pf-field" id="p_muid_show_page_selector">
 						<?php foreach ($pages as $cur_page) { ?>
 						<option value="<?php echo (int) $cur_page->guid; ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
 						<?php } ?>
 					</select></label>
-				<button class="pf-field ui-state-default ui-corner-all" id="p_muid_add_show_page" type="button">Add</button>
+				<button class="pf-field btn btn-success" id="p_muid_add_show_page" type="button">Add</button>
 				<div class="pf-group" id="p_muid_show_pages" style="margin-top: .5em; padding: .2em;">
 					<?php foreach ((array) $this->entity->show_pages as $cur_show_page) {
 						if (!isset($cur_show_page->guid))
 							continue; ?>
-					<div class="pf-field ui-widget-content"><?php echo htmlspecialchars($cur_show_page->name); ?><input type="hidden" name="show_pages[]" value="<?php echo htmlspecialchars($cur_show_page->guid); ?>" /> <a href="javascript:void(0);" class="remove_page" style="float: right;"><small>X</small></a></div>
+					<div class="pf-field well"><?php echo htmlspecialchars($cur_show_page->name); ?><input type="hidden" name="show_pages[]" value="<?php echo htmlspecialchars($cur_show_page->guid); ?>" /> <a href="javascript:void(0);" class="remove_page close" style="float: right;">&times;</a></div>
 					<?php } ?>
 				</div>
 			</div>
@@ -403,37 +404,33 @@ if ($pines->config->com_sales->com_storefront) {
 				<input type="hidden" name="specs" />
 			</div>
 			<style type="text/css">
-				/* <![CDATA[ */
 				#p_muid_spec_dialog .ui-ptags-tag {
 					display: block;
 					margin-top: 0.2em;
 					text-align: left;
 				}
-				/* ]]> */
 			</style>
 			<div id="p_muid_spec_dialog" style="display: none;" title="Add a Spec">
 				<div class="pf-form">
 					<script type="text/javascript">
-						// <![CDATA[
 						pines(function(){
 							$("#p_muid_spec_type").change(function(){
 								$("#p_muid_spec_forms").children().hide().filter("."+$(this).val()).show();
 							}).change();
 						});
-						// ]]>
 					</script>
 					<div class="pf-element">
 						<label><span class="pf-label">Sort Order</span>
 							<span class="pf-note">Leave blank to sort by name.</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_spec_order" size="4" /></label>
+							<input class="pf-field" type="text" name="cur_spec_order" size="4" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_spec_name" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_spec_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_spec_type" name="cur_spec_type">
+							<select class="pf-field" id="p_muid_spec_type" name="cur_spec_type">
 								<option value="string">String (Text)</option>
 								<option value="float">Number</option>
 								<option value="bool">Boolean (Yes/No)</option>
@@ -455,9 +452,9 @@ if ($pines->config->com_sales->com_storefront) {
 							<div class="pf-element">
 								<span class="pf-label">Options</span>
 								<span class="pf-note">Hit Enter after each option.</span>
-								<span class="pf-note"><button type="button" class="ui-state-default ui-corner-all" id="p_muid_spec_do_sort">Sort Alphanumerically</button></span>
+								<span class="pf-note"><button type="button" class="btn" id="p_muid_spec_do_sort">Sort Alphanumerically</button></span>
 								<div class="pf-group">
-									<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_spec_options" name="cur_spec_options" size="24" />
+									<input class="pf-field" type="text" id="p_muid_spec_options" name="cur_spec_options" size="24" />
 								</div>
 							</div>
 						</div>
@@ -470,39 +467,38 @@ if ($pines->config->com_sales->com_storefront) {
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_head">
+		<div class="tab-pane" id="p_muid_tab_head">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						$("#p_muid_use_name").change(function(){
 							if ($(this).is(":checked"))
-								$("#p_muid_title").attr("disabled", "disabled").addClass("ui-state-disabled");
+								$("#p_muid_title").attr("disabled", "disabled");
 							else
-								$("#p_muid_title").removeAttr("disabled").removeClass("ui-state-disabled");
+								$("#p_muid_title").removeAttr("disabled");
 						}).change();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Page Title</span>
 				<div class="pf-group pf-full-width">
 					<label><input class="pf-field" type="checkbox" id="p_muid_use_name" name="title_use_name" value="ON"<?php echo $this->entity->title_use_name ? ' checked="checked"' : ''; ?> /> Use name as title.</label><br />
-					<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					<span class="pf-field" style="display: block;">
+						<input style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					</span>
 				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Title Position</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="title_position">
+					<select class="pf-field" name="title_position">
 						<option value="prepend"<?php echo $this->entity->title_position === 'prepend' ? ' selected="selected"' : ''; ?>>Prepend to Site Title</option>
 						<option value="append"<?php echo $this->entity->title_position === 'append' ? ' selected="selected"' : ''; ?>>Append to Site Title</option>
 						<option value="replace"<?php echo $this->entity->title_position === 'replace' ? ' selected="selected"' : ''; ?>>Replace Site Title</option>
 					</select></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Meta Tags</h1>
+				<h3>Meta Tags</h3>
 			</div>
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					// Meta Tags
 					var meta_tags = $("#p_muid_form [name=meta_tags]");
@@ -596,7 +592,6 @@ if ($pines->config->com_sales->com_storefront) {
 						"source": <?php echo (string) json_encode(array('description', 'author', 'keywords', 'robots', 'rating', 'distribution')); ?>
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-full-width">
 				<table class="meta_tags_table">
@@ -636,11 +631,11 @@ if ($pines->config->com_sales->com_storefront) {
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Content</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -650,11 +645,10 @@ if ($pines->config->com_sales->com_storefront) {
 		<?php } ?>
 	</div>
 	<div class="pf-element pf-buttons">
-		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'category/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'category/list')); ?>');" value="Cancel" />
 	</div>
 </form>

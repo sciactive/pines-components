@@ -17,7 +17,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/employee/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var employees;
@@ -181,9 +180,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						rehire_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
+						rehire_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.pgrid_get_value(3))+'</h3>');
 					else
-						rehire_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
+						rehire_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.length)+' Employees</h3>');
 					rehire_dialog.dialog("open");
 					}},
 				<?php } else { ?>
@@ -233,9 +232,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						bonus_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
+						bonus_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.pgrid_get_value(3))+'</h3>');
 					else
-						bonus_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
+						bonus_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.length)+' Employees</h3>');
 					bonus_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
@@ -247,9 +246,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						adjustment_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
+						adjustment_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.pgrid_get_value(3))+'</h3>');
 					else
-						adjustment_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
+						adjustment_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.length)+' Employees</h3>');
 					adjustment_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
@@ -261,9 +260,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						issue_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
+						issue_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.pgrid_get_value(3))+'</h3>');
 					else
-						issue_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
+						issue_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.length)+' Employees</h3>');
 					issue_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/removeemployee') && $this->employed) { ?>
@@ -275,9 +274,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						terminate_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
+						terminate_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.pgrid_get_value(3))+'</h3>');
 					else
-						terminate_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
+						terminate_dialog.find("div.dialog_title").html('<h3>'+pines.safe(rows.length)+' Employees</h3>');
 					terminate_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
@@ -345,8 +344,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -378,19 +375,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">
 			<label><span class="pf-label">Description</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="name" value="" /></label>
+				<input type="text" size="24" name="name" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Amount</span>
-				$ <input class="ui-widget-content ui-corner-all" type="text" size="5" name="amount" value="" /></label>
+				$ <input type="text" size="5" name="amount" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Comments</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+				<input type="text" size="24" name="comments" value="" /></label>
 		</div>
 	</form>
 	<br />
@@ -401,19 +398,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">
 			<label><span class="pf-label">Description</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="name" value="" /></label>
+				<input type="text" size="24" name="name" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Amount</span>
-				$ <input class="ui-widget-content ui-corner-all" type="text" size="5" name="amount" value="" /></label>
+				$ <input type="text" size="5" name="amount" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Comments</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+				<input type="text" size="24" name="comments" value="" /></label>
 		</div>
 	</form>
 	<br />
@@ -424,7 +421,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">
 			<label><span class="pf-label">Issue</span>
-				<select class="ui-widget-content ui-corner-all" name="issue_type">
+				<select name="issue_type">
 					<?php
 						foreach ($pines->com_hrm->get_issue_types() as $cur_issue) {
 							echo '<option value="'.htmlspecialchars($cur_issue->guid).'">'.htmlspecialchars($cur_issue->name).'</option>';
@@ -434,11 +431,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Occurred on</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+				<input type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label"># of Occurrences</span>
-				<select class="ui-widget-content ui-corner-all" name="quantity">
+				<select name="quantity">
 					<option value="1" selected="selected">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -448,7 +445,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Comments</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+				<input type="text" size="24" name="comments" value="" /></label>
 		</div>
 	</form>
 	<br />
@@ -459,7 +456,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">
 			<label><span class="pf-label">Reason for Termination</span>
-			<select class="ui-widget-content ui-corner-all" name="reason">
+			<select name="reason">
 				<?php 
 					foreach ($pines->config->com_hrm->termination_reasons as $cur_dispo) {
 						$dispo_array = explode(':', $cur_dispo);
@@ -470,7 +467,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Effective Date</span>
-			<input class="ui-widget-content ui-corner-all" type="text" size="16" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+			<input type="text" size="16" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 	</form>
 	<br />
@@ -481,7 +478,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">
 			<label><span class="pf-label">Effective Date</span>
-			<input class="ui-widget-content ui-corner-all" type="text" size="16" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+			<input type="text" size="16" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 	</form>
 	<br />

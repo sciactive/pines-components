@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_plaza/repository/list']);
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var state_xhr;
@@ -52,8 +51,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -84,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<a href="javascript:void(0);" onclick="$(this).next().dialog({'width': 800});">Open Detail</a>
 				<div title="Repository Certificate Detail" style="display: none;">
 					<div style="padding: 0 1em 1em 0;">
-						<textarea class="ui-widget-content ui-corner-all" readonly="readonly" cols="24" rows="5" style="width: 100%; height: 500px;"><?php print_r($repository['data']); ?></textarea>
+						<textarea readonly="readonly" cols="24" rows="5" style="width: 100%; height: 500px;"><?php print_r($repository['data']); ?></textarea>
 					</div>
 				</div>
 			</td>

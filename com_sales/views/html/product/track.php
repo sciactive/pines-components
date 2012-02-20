@@ -19,14 +19,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_grid a {
 		text-decoration: underline;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var submit_url = <?php echo json_encode(pines_url('com_sales', 'product/track')); ?>;
 		var submit_search = function(){
@@ -195,7 +192,6 @@ $pines->com_jstree->load();
 			types_dialog.dialog('open');
 		};
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Storefront',
 	'author' => 'SciActive',
-	'version' => '1.0.4dev',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'eCommerce storefront based on com_sales',
@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&user_manager&icons&uploader',
-		'component' => 'com_customer&com_sales&com_jquery&com_pgrid&com_pnotify&com_popeye&com_pform'
+		'component' => 'com_customer&com_sales&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_popeye&com_pform'
 	),
 	'abilities' => array(),
 );

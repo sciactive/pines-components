@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $pines->com_jstree->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Group Tree
 		var location = $("#p_muid_assign_dialog [name=location]");
@@ -131,7 +130,6 @@ $pines->com_jstree->load();
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -183,7 +181,7 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Count Type</span>
-			<select class="ui-widget-content ui-corner-all" name="count_type">
+			<select name="count_type">
 				<option value="cash_count">Cash Count</option>
 				<option value="cash_audit">Cash Audit</option>
 				<option value="cash_skim">Cash Skim</option>

@@ -22,18 +22,6 @@ p {
 img {
 	margin:10px 0 5px;
 }
-#content .module {
-	margin: .4em 0 .6em;
-}
-#content .module .module_title {
-	margin-bottom: .5em;
-}
-/* General styles */
-body {
-	border: none !important;
-	background-image: none !important;
-	text-align: left;
-}
 /* Header styles */
 #header {
 	border-top: 0 !important;
@@ -44,6 +32,7 @@ body {
 #page_title {
 	margin: 0 10px;
 	padding: 0;
+	font-size: 1.3em;
 }
 #page_title a {
 	text-decoration: none;
@@ -67,7 +56,9 @@ body {
 	margin: 0 !important;
 }
 #menu_link, #menu_back, ul.menu li a {
-	padding: .5em 0;
+	padding: 1em;
+	font-size: 18px;
+	line-height: 18px;
 }
 ul.menu {
 	padding: 0;
@@ -94,6 +85,10 @@ ul.menu li a {
 ul.menu li a.expander {
 	width: 15%;
 	float: right;
+	clear: right;
+	max-height: 18px;
+	overflow: hidden;
+	text-align: center;
 }
 ul.menu li a.expander + a {
 	margin-right: 15%;
@@ -105,7 +100,6 @@ ul.menu li a.expander + a {
 	border-top-width: 3px !important;
 	border-bottom-width: 3px !important;
 	background-image: none !important;
-	font-weight: normal;
 }
 #copyright {
 	text-align: center;
@@ -113,6 +107,9 @@ ul.menu li a.expander + a {
 	margin: 0;
 }
 /* Content styles */
+#content_container {
+	padding: 0 .4em;
+}
 .module {
 	padding: .4em 0;
 }
@@ -135,12 +132,11 @@ ul.menu li a.expander + a {
 .module .module_content {
 	padding: .2em 0 0;
 }
-/* ----------- Styled Inputs ----------- */
-input.ui-state-default,
-input.ui-widget-content,
-select.ui-widget-content,
-textarea.ui-widget-content {
-	padding: .4em .1em;
+#content .module {
+	margin: .4em 0 .6em;
+}
+#content .module .module_title {
+	margin-bottom: .5em;
 }
 /* ----------- Pines Form ----------- */
 .pf-form div.pf-element.pf-full-width .pf-full-width {

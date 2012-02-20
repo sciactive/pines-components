@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.com_timeoutnotice = {
 		"check_url": <?php echo json_encode(pines_url('com_timeoutnotice', 'check')); ?>,
 		"login_url": <?php echo json_encode(pines_url('com_timeoutnotice', 'login')); ?>,
@@ -23,5 +22,4 @@ defined('P_RUN') or die('Direct access prohibited');
 		"redirect_url": <?php echo json_encode($pines->config->com_timeoutnotice->redirect_url); ?>
 	};
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_timeoutnotice/includes/timeout_notice.js", true);
-	// ]]>
 </script>

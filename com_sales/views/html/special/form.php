@@ -41,7 +41,6 @@ $pines->entity_manager->sort($specials, 'name');
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'special/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			$(".p_muid_product_select", "#p_muid_form").productselect();
 			$(".p_muid_date_select", "#p_muid_form").datepicker({
@@ -351,18 +350,15 @@ $pines->entity_manager->sort($specials, 'name');
 			};
 
 			update_requirements();
-
-			$("#p_muid_special_tabs").tabs();
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_special_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
-			<li><a href="#p_muid_tab_requirements">Requirements</a></li>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
+		<li><a href="#p_muid_tab_requirements" data-toggle="tab">Requirements</a></li>
+	</ul>
+	<div id="p_muid_special_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -376,11 +372,11 @@ $pines->entity_manager->sort($specials, 'name');
 			<div class="pf-element">
 				<label><span class="pf-label">Code</span>
 					<span class="pf-note">This code can be used to add the special to a sale. It is not case sensitive.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="code" size="24" value="<?php echo htmlspecialchars($this->entity->code); ?>" onchange="this.value=this.value.toUpperCase();" /></label>
+					<input class="pf-field" type="text" name="code" size="24" value="<?php echo htmlspecialchars($this->entity->code); ?>" onchange="this.value=this.value.toUpperCase();" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+					<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -403,10 +399,10 @@ $pines->entity_manager->sort($specials, 'name');
 			<div class="pf-element">
 				<label><span class="pf-label">Quantity per Ticket</span>
 					<span class="pf-note">Enter 0 (zero) for unlimited.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="per_ticket" size="24" value="<?php echo htmlspecialchars($this->entity->per_ticket); ?>" onchange="this.value=this.value.replace(/\D/g, '');" /></label>
+					<input class="pf-field" type="text" name="per_ticket" size="24" value="<?php echo htmlspecialchars($this->entity->per_ticket); ?>" onchange="this.value=this.value.replace(/\D/g, '');" /></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Discounts</h1>
+				<h3>Discounts</h3>
 				<p>These discounts will be applied for this special.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -434,7 +430,7 @@ $pines->entity_manager->sort($specials, 'name');
 				<div class="pf-form">
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<select class="pf-field ui-widget-content ui-corner-all" name="cur_discount_type" id="p_muid_cur_discount_type">
+							<select class="pf-field" name="cur_discount_type" id="p_muid_cur_discount_type">
 								<option value="order_amount">Whole Order (Amount)</option>
 								<option value="order_percent">Whole Order (Percent)</option>
 								<option value="product_amount">Specific Product (Amount) (x Qty)</option>
@@ -449,13 +445,13 @@ $pines->entity_manager->sort($specials, 'name');
 						<div class="dis_form product_amount product_percent item_amount item_percent">
 							<div class="pf-element">
 								<label><span class="pf-label">Product</span>
-									<input class="pf-field ui-widget-content ui-corner-all p_muid_product_select" type="text" size="24" /></label>
+									<input class="pf-field p_muid_product_select" type="text" size="24" /></label>
 							</div>
 						</div>
 						<?php /* <div class="dis_form category_amount category_percent">
 							<div class="pf-element">
 								<label><span class="pf-label">Category</span>
-									<select class="pf-field ui-widget-content ui-corner-all">
+									<select class="pf-field">
 										<?php foreach ($categories as $cur_cat) {
 											$num_parents = 0;
 											$cur_parent = $cur_cat->parent;
@@ -472,16 +468,16 @@ $pines->entity_manager->sort($specials, 'name');
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" name="cur_discount_value" type="text" size="24" /></label>
+							<input class="pf-field" name="cur_discount_value" type="text" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_conditions">
+		<div class="tab-pane" id="p_muid_tab_conditions">
 			<div class="pf-element pf-heading">
-				<h1>Special Conditions</h1>
+				<h3>Special Conditions</h3>
 				<p>The special will only be applied if these conditions are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -522,20 +518,20 @@ $pines->entity_manager->sort($specials, 'name');
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_requirements">
+		<div class="tab-pane" id="p_muid_tab_requirements">
 			<div class="pf-element pf-heading">
-				<h1>Special Requirements</h1>
+				<h3>Special Requirements</h3>
 				<p>The special will only be applied if these requirements are met.</p>
 			</div>
 			<div class="pf-element pf-full-width">
@@ -582,7 +578,7 @@ $pines->entity_manager->sort($specials, 'name');
 				<div class="pf-form">
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<select class="pf-field ui-widget-content ui-corner-all" name="cur_requirement_type" id="p_muid_cur_requirement_type">
+							<select class="pf-field" name="cur_requirement_type" id="p_muid_cur_requirement_type">
 								<option value="subtotal_eq">Sale Subtotal Equals</option>
 								<option value="subtotal_lt">Sale Subtotal Less Than</option>
 								<option value="subtotal_gt">Sale Subtotal Greater Than</option>
@@ -600,19 +596,19 @@ $pines->entity_manager->sort($specials, 'name');
 						<div class="req_form subtotal_eq subtotal_gt subtotal_lt">
 							<div class="pf-element">
 								<label><span class="pf-label">Value</span>
-									<span class="pf-field">$<input class="ui-widget-content ui-corner-all" type="text" size="24" /></span></label>
+									<span class="pf-field">$<input type="text" size="24" /></span></label>
 							</div>
 						</div>
 						<div class="req_form has_product has_not_product">
 							<div class="pf-element">
 								<label><span class="pf-label">Product</span>
-									<input class="pf-field ui-widget-content ui-corner-all p_muid_product_select" type="text" size="24" /></label>
+									<input class="pf-field p_muid_product_select" type="text" size="24" /></label>
 							</div>
 						</div>
 						<?php /* <div class="req_form has_category has_not_category">
 							<div class="pf-element">
 								<label><span class="pf-label">Category</span>
-									<select class="pf-field ui-widget-content ui-corner-all">
+									<select class="pf-field">
 										<?php foreach ($categories as $cur_cat) {
 											$num_parents = 0;
 											$cur_parent = $cur_cat->parent;
@@ -629,7 +625,7 @@ $pines->entity_manager->sort($specials, 'name');
 						<div class="req_form has_special has_not_special">
 							<div class="pf-element">
 								<label><span class="pf-label">Special</span>
-									<select class="pf-field ui-widget-content ui-corner-all">
+									<select class="pf-field">
 										<option value="any">-- Any Other Special --</option>
 										<?php foreach ($specials as $cur_special) { ?>
 										<option value="<?php echo htmlspecialchars($cur_special->guid); ?>"><?php echo htmlspecialchars($cur_special->name); ?></option>
@@ -641,7 +637,7 @@ $pines->entity_manager->sort($specials, 'name');
 							<div class="pf-element">
 								<label><span class="pf-label">Date</span>
 									<span class="pf-label">Before and after date use the time of midnight on their dates in <strong>your</strong> timezone.</span>
-									<input class="pf-field ui-widget-content ui-corner-all p_muid_date_select" type="text" size="24" /></label>
+									<input class="pf-field p_muid_date_select" type="text" size="24" /></label>
 							</div>
 							<div class="pf-element">
 								Because the time used is midnight, after date is inclusive of the date you select, and before date is not inclusive. So to include only all of January, pick Jan 1st to Feb 1st.
@@ -654,12 +650,11 @@ $pines->entity_manager->sort($specials, 'name');
 			<br class="pf-clearing" />
 		</div>
 	</div>
-	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'special/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'special/list')); ?>');" value="Cancel" />
 	</div>
 </form>

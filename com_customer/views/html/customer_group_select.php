@@ -15,7 +15,6 @@ $this->title = 'Default Customer Groups';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Group Grid
 		$("#p_muid_group_grid").pgrid({
@@ -42,7 +41,6 @@ $pines->com_pgrid->load();
 			pgrid_view_height: "300px"
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_customer', 'defaultgroupssave')); ?>">
 	<div class="pf-element pf-full-width">
@@ -76,6 +74,6 @@ $pines->com_pgrid->load();
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" />
+		<input class="pf-button btn btn-primary" type="submit" value="Save" />
 	</div>
 </form>

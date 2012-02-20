@@ -347,9 +347,9 @@ class com_sales_sale extends entity {
 		$module->entity = $this;
 		// TODO: Allow more customization for email subject/content.
 		$subject = 'Receipt for ' . $this->customer->name;
-		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
+		$content = "<style type=\"text/css\">\n";
 		$content .= file_get_contents('components/com_pform/includes/pform.css');
-		$content .= "\n/* ]]> */</style>";
+		$content .= "\n</style>";
 		$content .= $module->render();
 
 		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, $subject, $content);
@@ -1499,7 +1499,7 @@ class com_sales_sale extends entity {
 		$total_before_tax_specials = 0.00;
 		$total_specials = 0.00;
 		// First build an array of specials that match and their discounts.
-		foreach (array_merge($this->added_specials, $this->elig_specials) as $cur_special) {
+		foreach (array_merge((array) $this->added_specials, (array) $this->elig_specials) as $cur_special) {
 			$apply_special = true;
 			foreach ($cur_special->requirements as $cur_req) {
 				if (!$apply_special)

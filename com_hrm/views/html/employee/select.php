@@ -13,8 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_hrm/includes/jquery.employeeselect.js");
 	pines.com_hrm_autoemployee_url = <?php echo json_encode(pines_url('com_hrm', 'employee/search')); ?>;
-	// ]]>
 </script>

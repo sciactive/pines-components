@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type='text/javascript'>
-	// <![CDATA[
 	pines(function(){
 
 		// Location Tree
@@ -50,18 +49,17 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element pf-heading">
-		<h1>User</h1>
+		<h3>User</h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Override User</span>
-			<input class="pf-field ui-widget-content ui-corner-all salesperson_box" type="text" name="user" value="<?php echo isset($this->entity->user->guid) ? htmlspecialchars("{$this->entity->user->guid}: {$this->entity->user->name}") : ''; ?>" /></label>
+			<input class="pf-field salesperson_box" type="text" name="user" value="<?php echo isset($this->entity->user->guid) ? htmlspecialchars("{$this->entity->user->guid}: {$this->entity->user->name}") : ''; ?>" /></label>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Location</h1>
+		<h3>Location</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">Override Location</span>

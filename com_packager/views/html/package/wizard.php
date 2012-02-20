@@ -16,7 +16,6 @@ $this->note = 'This wizard will create packages from enabled components and temp
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_form table").pgrid({
 			pgrid_paginate: false,
@@ -44,11 +43,10 @@ $pines->com_pgrid->load();
 			pgrid_sort_ord: 'asc'
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_packager', 'package/wizardsave')); ?>">
 	<div class="pf-element pf-heading">
-		<h1>Choose Packages</h1>
+		<h3>Choose Packages</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table>
@@ -79,7 +77,7 @@ $pines->com_pgrid->load();
 		</table>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Create Packages" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Create Packages" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />
 	</div>
 </form>

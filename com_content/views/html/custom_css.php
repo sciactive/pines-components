@@ -17,9 +17,7 @@ if (!$pines->com_content->get_custom_css()) {
 }
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	<?php foreach ($pines->com_content->get_custom_css() as $cur_file) { ?>
 	pines.loadcss(<?php echo json_encode($pines->config->location.$cur_file); ?>);
 	<?php } ?>
-	// ]]>
 </script>

@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_products .product {
 		padding: .5em;
 		margin: .5em;
@@ -24,7 +23,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		background-image: none !important;
 		cursor: pointer;
 		font-weight: inherit !important;
-	}#p_muid_products .product_right, #p_muid_products .product_main {
+	}
+	#p_muid_products .product_right, #p_muid_products .product_main {
 		margin: 0;
 		padding: 0;
 		width: 25%;
@@ -50,7 +50,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		background-image: none;
 	}
 	#p_muid_products .padding_box {
-		padding: .4em;
+		padding: .8em;
 	}
 	#p_muid_products .price {
 		font-size: 1.6em;
@@ -71,10 +71,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	#p_muid_products .price .value {
 		display: none;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_products").delegate("div.product", "mouseenter", function(){
 			$(this).addClass("ui-state-default ui-state-active");
@@ -91,19 +89,18 @@ defined('P_RUN') or die('Direct access prohibited');
 			return false;
 		});
 	});
-	// ]]>
 </script>
 <div style="height: .5em;">&nbsp;</div>
 <?php foreach ($products as $key => $cur_product) { ?>
 <div class="product ui-widget-content">
 	<div class="product_guid" style="display: none;"><?php echo htmlspecialchars($cur_product->guid); ?></div>
 	<div class="product_alias" style="display: none;"><?php echo htmlspecialchars($cur_product->alias); ?></div>
-	<div class="product_right ui-state-default">
+	<div class="product_right well">
 		<div class="padding_box">
 			<div class="price"><?php echo $pines->com_storefront->format_price($cur_product->unit_price); ?><span class="value"><?php echo isset($cur_product->unit_price) ? round($cur_product->unit_price, 2) : ''; ?></span></div>
 			<div class="product_button">
 				<?php if (!$pines->config->com_storefront->catalog_mode) { ?>
-				<button class="add_cart ui-state-default ui-corner-all ui-state-focus">Add to Cart</button>
+				<button class="add_cart btn btn-primary"><i class="icon-shopping-cart icon-white"></i> Add to Cart</button>
 				<?php } ?>
 			</div>
 		</div>

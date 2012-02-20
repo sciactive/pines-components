@@ -15,7 +15,6 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 ?>
 <div id="p_muid_info">
 	<style type="text/css">
-		/* <![CDATA[ */
 		#p_muid_info {
 			padding: 1em 2em;
 		}
@@ -42,14 +41,13 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 			max-height: 100px;
 			vertical-align: top;
 		}
-		/* ]]> */
 	</style>
 	<div class="pf-form">
 		<div class="pf-element pf-heading">
 			<?php if (!empty($this->package['icon'])) { ?>
 			<img src="<?php echo htmlspecialchars(pines_url('com_plaza', 'package/media', array('local' => 'false', 'name' => $this->package['package'], 'publisher' => $this->package['publisher'], 'media' => $this->package['icon']))); ?>" alt="Icon" class="icon" style="width: 32px; height: 32px;" />
 			<?php } ?>
-			<h1><span class="name"><?php echo htmlspecialchars($this->package['name']); ?></span><span class="package" style="float: right;"><?php echo htmlspecialchars($this->package['package']); ?></span></h1>
+			<h3><span class="name"><?php echo htmlspecialchars($this->package['name']); ?></span><span class="package" style="float: right;"><?php echo htmlspecialchars($this->package['package']); ?></span></h3>
 			<p style="clear: right;">
 				<span>By <span class="author"><?php echo htmlspecialchars($this->package['author']); ?></span></span>
 				<span class="version">Version <span class="text"><?php echo htmlspecialchars($this->package['version']); ?></span></span>
@@ -90,11 +88,9 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 			</div>
 		</div>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				$("#p_muid_fancybox > a").fancybox({titleShow: true, titlePosition: "inside"});
 			});
-			// ]]>
 		</script>
 		<?php } else { ?>
 		<div class="pf-element screenshots">

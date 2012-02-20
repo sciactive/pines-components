@@ -16,7 +16,6 @@ $pines->com_bootstrap->load();
 ?>
 <div id="p_muid_dashboard">
 	<style type="text/css" scoped="scoped">
-		/* <![CDATA[ */
 		#p_muid_dashboard .buttons {
 			padding: .5em .25em 0;
 			margin-bottom: .5em;
@@ -29,7 +28,7 @@ $pines->com_bootstrap->load();
 		#p_muid_dashboard .buttons:hover .controls {
 			visibility: visible;
 		}
-		#p_muid_dashboard .buttons .controls .ui-icon {
+		#p_muid_dashboard .buttons .controls .w_icon {
 			cursor: pointer;
 		}
 		#p_muid_dashboard .buttons a {
@@ -37,21 +36,28 @@ $pines->com_bootstrap->load();
 		}
 		#p_muid_dashboard .buttons a span {
 			display: block;
-			padding-top: 32px;
-			min-width: 50px;
 			background-repeat: no-repeat;
+		}
+		#p_muid_dashboard .buttons.small a span {
+			padding-left: 18px;
+			background-position: center left;
+		}
+		#p_muid_dashboard .buttons.large a span {
+			padding-top: 32px;
 			background-position: top center;
+			min-width: 32px;
 		}
 		#p_muid_dashboard .buttons .separator {
-			display: inline-block;
-			margin: 0 .25em .5em;
+			cursor: default;
 			width: 1px;
-			padding: .2em 0;
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: -.1em;
+			margin-right: -.1em;
 		}
 		#p_muid_dashboard .buttons .separator span {
-			display: block;
-			padding-top: 32px;
 			width: 1px;
+			min-width: inherit;
 		}
 		#p_muid_dashboard .column {
 			min-height: 20px;
@@ -77,7 +83,7 @@ $pines->com_bootstrap->load();
 		#p_muid_dashboard .object.minimized {
 			height: auto !important;
 		}
-		#p_muid_dashboard .object > .ui-widget-header {
+		#p_muid_dashboard .object > .widget_header {
 			cursor: move;
 		}
 		#p_muid_dashboard .object .controls {
@@ -90,16 +96,14 @@ $pines->com_bootstrap->load();
 			visibility: visible;
 		}
 		#p_muid_dashboard .object .controls .edit_widget_menu {
-			padding: .5em;
-			white-space: nowrap;
 			position: absolute;
-			top: 100%;
+			left: auto;
 			right: 0;
-			z-index: 5000;
 		}
-		#p_muid_dashboard .object .controls .ui-icon {
+		#p_muid_dashboard .object .controls .w_icon {
 			float: right;
 			cursor: pointer;
+			margin-left: .2em;
 		}
 		#p_muid_dashboard .object > .content {
 			padding: .5em;
@@ -107,33 +111,19 @@ $pines->com_bootstrap->load();
 		#p_muid_dashboard .object.minimized > .content {
 			display: none;
 		}
-		#p_muid_page_tabs > ul li .ui-icon {
-			float: right;
+		#p_muid_page_tabs > ul li .w_icon {
 			cursor: pointer;
 		}
-		/* ]]> */
 	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
-			var tabs = $("#p_muid_page_tabs").tabs({
-				<?php if (!empty($this->selected_tab)) {
-					$i = 0;
-					foreach(array_keys($this->entity->tabs) as $k) {
-						if($k == $this->selected_tab)
-							break;
-						$i++;
-					}
-					echo "selected: $i,\n";
-				} ?>
-				cache: true
-			}).find(".ui-tabs-nav").sortable({
+			$("#p_muid_page_nav").sortable({
 				axis: "x",
 				items: "> li:not(.new_tab_button)",
 				update: function(){
 					var struct = [];
-					$("#p_muid_page_tabs > ul > li[id]").each(function(){
-						struct.push($(this).attr("id"));
+					$("#p_muid_page_nav li:not(.new_tab_button) a").each(function(){
+						struct.push($(this).attr("href").replace(/^#/, ""));
 					});
 					$.ajax({
 						url: <?php echo json_encode(pines_url('com_dash', 'dashboard/savetabs_json')); ?>,
@@ -151,24 +141,46 @@ $pines->com_bootstrap->load();
 						}
 					});
 				}
-			}).end();
-			p_muid_edit_tab = function(tab, url){
-				var index = tab.prevAll().length;
-				// Load the edit page, then reset the url.
-				tabs.tabs("url", index, url).tabs("select", index).tabs("load", index);
-			};
+			});
+			$("#p_muid_page_nav a").on("click", ".edit_tab", function(e){
+				e.preventDefault();
+				e.stopPropagation();
+			}).on("show", function(e){
+				var tab = $($(e.target).attr("href"));
+				if (tab.data("tab_loaded"))
+					return;
+				tab.data("tab_loaded", true).data("trigger_link", $(this)).load(tab.attr("data-url"));
+			});
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_page_tabs" style="clear: both;">
-		<ul>
-			<?php foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
-			<li id="<?php echo htmlspecialchars($cur_key); ?>">
-				<a href="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key))); ?>"><?php echo htmlspecialchars($cur_tab['name']); ?></a>
-				<span class="edit_tab ui-icon ui-icon-gear" title="Edit this Tab" onclick="p_muid_edit_tab($(this).closest('li'), <?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/edittab', array('key' => $cur_key)))); ?>); $(this).data('old_url', <?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key)))); ?>);"></span>
-			</li>
+	<ul class="nav nav-tabs" style="clear: both;" id="p_muid_page_nav">
+		<?php $first = true; foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
+		<li class="<?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>">
+			<a href="#<?php echo htmlspecialchars($cur_key); ?>" data-toggle="tab">
+				<?php echo htmlspecialchars($cur_tab['name']); ?>
+				<span class="edit_tab w_icon icon-cog" title="Edit this Tab" onclick="var link = $(this).closest('a'); $('#<?php echo htmlspecialchars($cur_key); ?>').data('tab_loaded', true).data('trigger_link', link).load(<?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/edittab', array('key' => $cur_key)))); ?>); link.tab('show');"></span>
+			</a>
+		</li>
+		<?php $first = false; } ?>
+		<li class="new_tab_button"><a href="#p_muid_edit_tab" data-toggle="tab"><span class="icon-plus"></span></a></li>
+	</ul>
+	<div class="tab-content" id="p_muid_page_tabs">
+		<?php $first = true; foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
+		<div class="tab-pane <?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>" id="<?php echo htmlspecialchars($cur_key); ?>" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key))); ?>">
+			<?php if ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) { ?>
+			<script type="text/javascript">
+				pines(function(){
+					$("#<?php echo htmlspecialchars($cur_key); ?>").data("tab_loaded", true);
+				});
+			</script>
+			<?php echo $pines->com_dash->show_dash_tab($cur_key);
+			} else { ?>
+			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
 			<?php } ?>
-			<li class="new_tab_button"><a href="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/edittab')); ?>"><span class="ui-icon ui-icon-plus"></span>&nbsp;</a></li>
-		</ul>
+		</div>
+		<?php $first = false; } ?>
+		<div class="tab-pane" id="p_muid_edit_tab" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/edittab')); ?>">
+			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
+		</div>
 	</div>
 </div>

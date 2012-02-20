@@ -27,7 +27,6 @@ foreach ($users as $key => &$cur_user) {
 unset($cur_user);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_chat input {
 		width: 100%;
 	}
@@ -101,10 +100,8 @@ unset($cur_user);
 		top: 10%;
 		left: 85%;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.com_messenger_chat = function(user_name, user_jid){
 		var current_tab = '#p_muid_tab_'+user_jid;
 		// Create the new chat window if it doesn't exist.
@@ -275,7 +272,6 @@ unset($cur_user);
 			<?php }
 		} ?>
 	});
-	// ]]>
 </script>
 <form id="p_muid_chat" class="pf-form" style="clear: both;" onsubmit="return false;">
 	<ul class="chat_tabs">

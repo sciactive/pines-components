@@ -15,17 +15,187 @@ $this->title = htmlspecialchars($this->position);
 $this->note = 'This is example content.';
 ?>
 <p>
-	Curabitur imperdiet dictum leo, eu aliquam lorem vestibulum et. Proin ornare nibh sit amet urna lobortis pulvinar. Aenean dui tortor, interdum non placerat in, rutrum sed quam. Ut urna nunc, laoreet sed mollis sed, pharetra quis magna. Etiam placerat eleifend dapibus. Morbi aliquam lobortis interdum. Pellentesque dictum, felis quis luctus bibendum, turpis nunc feugiat sem, sed imperdiet diam quam eget sapien. Fusce scelerisque suscipit turpis porta viverra. Nunc nec nisi eget lorem fermentum gravida sed vitae risus. Nulla erat leo, ornare imperdiet convallis id, malesuada ut tellus. Aliquam vitae risus id elit pulvinar elementum. Fusce semper pulvinar dui non semper. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed quis quam eu justo lobortis tempor. Donec hendrerit risus quis leo pharetra aliquet. Fusce condimentum lobortis adipiscing. Duis quam lorem, semper et tempor eu, tristique sed ligula. Nam malesuada placerat dui, eget tempus erat dignissim id.
+	Curabitur imperdiet dictum leo, eu aliquam lorem vestibulum et. Proin ornare
+	nibh sit amet urna lobortis pulvinar. Aenean dui tortor, interdum non
+	placerat in, rutrum sed quam. Ut urna nunc, laoreet sed mollis sed, pharetra
+	quis magna. Etiam placerat eleifend dapibus. Morbi aliquam lobortis
+	interdum. Pellentesque dictum, felis quis luctus bibendum, turpis nunc
+	feugiat sem, sed imperdiet diam quam eget sapien. Fusce scelerisque suscipit
+	turpis porta viverra. Nunc nec nisi eget lorem fermentum gravida sed vitae
+	risus. Nulla erat leo, ornare imperdiet convallis id, malesuada ut tellus.
+	Aliquam vitae risus id elit pulvinar elementum. Fusce semper pulvinar dui
+	non semper. Class aptent taciti sociosqu ad litora torquent per conubia
+	nostra, per inceptos himenaeos. Sed quis quam eu justo lobortis tempor.
+	Donec hendrerit risus quis leo pharetra aliquet. Fusce condimentum lobortis
+	adipiscing. Duis quam lorem, semper et tempor eu, tristique sed ligula. Nam
+	malesuada placerat dui, eget tempus erat dignissim id.
 </p>
-<p>
-	Fusce sit amet placerat massa. Phasellus eu lectus massa. Vestibulum eu sem risus. Proin lacus metus, consequat sodales imperdiet vitae, accumsan in diam. Pellentesque tempus, nulla a rutrum pretium, augue urna fringilla lacus, in pulvinar lectus enim ut enim. Nam venenatis congue erat, sed placerat nibh elementum eu. Nunc rutrum nibh ac nibh viverra blandit. Etiam hendrerit diam vulputate tellus pharetra mollis. Proin luctus purus ac lectus eleifend cursus. Morbi tempus congue magna vitae faucibus. Ut lacinia massa varius ante rutrum nec dapibus est pharetra. Nulla facilisi. Pellentesque nec eros urna, eu rhoncus turpis. Nam vitae dolor nisl, id convallis augue. Maecenas turpis velit, molestie quis placerat vel, pellentesque sit amet mauris. In ut quam ut turpis semper varius et sit amet odio. Suspendisse commodo pretium purus, vitae tempus ante tristique vitae. Proin euismod dictum nibh a pulvinar. Maecenas tristique, elit vel eleifend hendrerit, nulla magna malesuada turpis, vel tempor purus sapien vel leo.
-</p>
-<p>
-	In varius risus vitae sem facilisis molestie. Nullam vel augue felis. Donec turpis dui, consectetur suscipit rutrum a, aliquam nec dui. Suspendisse arcu lacus, laoreet fermentum eleifend ut, laoreet nec risus. Morbi quis turpis neque, eget scelerisque leo. Quisque pretium, nunc ac malesuada dapibus, quam elit interdum nisi, tincidunt commodo velit velit a ipsum. Fusce rutrum libero non leo tristique tristique. Fusce non nulla felis. Donec et dui eget urna ullamcorper semper nec a elit. Vivamus massa lectus, varius ac bibendum facilisis, faucibus ac augue. Suspendisse mattis, justo vel semper rutrum, dolor lacus imperdiet risus, quis sagittis leo massa ut diam. Aliquam sit amet tellus libero, quis aliquet elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce pretium placerat sapien, dictum varius enim facilisis id. Duis orci libero, scelerisque vulputate mattis id, tempor eget est. Duis sed urna eu neque sollicitudin pulvinar vitae sed neque. In at nulla nunc. Vestibulum ornare vulputate lorem a facilisis. Quisque velit orci, facilisis in viverra ut, pellentesque ac enim.
-</p>
-<p>
-	Donec urna est, tincidunt vitae ullamcorper a, dictum vitae ipsum. Ut ut lectus lorem. Praesent sed molestie tellus. Nulla nisl orci, tincidunt vitae lobortis sit amet, viverra et arcu. Praesent ultricies sem non augue gravida mollis et ac nisl. Aenean et justo ipsum. Proin semper ullamcorper eros, placerat auctor justo tempus vel. Curabitur mollis tortor sit amet mi adipiscing et mattis tortor interdum. Donec lorem diam, blandit eget mollis sit amet, eleifend eu nunc. Vivamus id est sit amet velit scelerisque ullamcorper. Donec massa tellus, mollis vel varius ut, volutpat ac orci. Integer mattis luctus quam, vitae consequat nisl viverra ac. Nulla vel lorem orci, eget tristique nisi. Phasellus vel erat eget ipsum elementum tempor eget in lorem. Integer sem ligula, euismod sit amet aliquet non, porta in tellus. Donec consequat ligula at magna viverra ac accumsan lectus rutrum. Aliquam quis justo eget quam eleifend gravida.
-</p>
-<p>
-	Mauris nec felis purus, at feugiat justo. Sed eget lacus et leo dapibus pellentesque. Vivamus enim nisi, rhoncus non varius non, gravida ac ligula. Aenean luctus bibendum urna, a faucibus nibh condimentum in. Pellentesque tristique tortor sed erat consequat dictum. Donec suscipit nisl in erat iaculis lobortis. Pellentesque tempus, diam ut consectetur euismod, leo mi dapibus mauris, sit amet molestie nibh lorem vitae neque. Donec ut tellus nec erat pretium dignissim eu ut sem. Praesent tortor felis, vestibulum sed imperdiet nec, elementum et massa. In hac habitasse platea dictumst. Proin molestie porttitor tortor, non dapibus turpis consequat ac. Sed pulvinar purus nec lectus congue scelerisque. Cras odio nunc, rutrum a commodo in, tempor a magna.
-</p>
+<ul class="thumbnails">
+	<li class="span4">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/360x268" />
+		</a>
+	</li>
+	<li class="span2">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/160x120" />
+		</a>
+	</li>
+	<li class="span2">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/160x120" />
+		</a>
+	</li>
+	<li class="span2">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/160x120" />
+		</a>
+	</li>
+	<li class="span2">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/160x120" />
+		</a>
+	</li>
+	<li class="span2">
+		<a class="thumbnail" href="#">
+			<img alt="" src="http://placehold.it/160x120" />
+		</a>
+	</li>
+</ul>
+<div class="row-fluid">
+	<div class="span6">
+		<h3>Fusce Sit Amet</h3>
+		<p>
+			Phasellus eu lectus massa. Vestibulum eu sem risus. Proin lacus
+			metus, consequat sodales imperdiet vitae, accumsan in diam.
+			Pellentesque tempus, nulla a rutrum pretium, augue urna fringilla
+			lacus, in pulvinar lectus enim ut enim. Nam venenatis congue erat,
+			sed placerat nibh elementum eu.
+		</p>
+	</div>
+	<div class="span3">
+		<h3>In Varius Risus</h3>
+		<div style="padding-top: 2em;">
+			<button class="btn btn-large">Morbi Est Tortor</button>
+		</div>
+	</div>
+	<div class="span3">
+		<h3><a href="#">Duis Convallis</a></h3>
+		<p>
+			Duis <a href="#">convallis</a> est ut augue fringilla non elementum risus cursus.
+		</p>
+		<ul>
+			<li>Aenean.</li>
+			<li>Nulla.</li>
+			<li>Etiam.</li>
+		</ul>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span4">
+		<h3>Typography</h3>
+		<p>
+			<strong>strong</strong> <em>em</em> <abbr title="abbreviation">abbr</abbr> <b>b tag</b> <i>i tag</i> <code>code</code>
+		</p>
+		<address>
+			<strong>Address, Inc</strong><br />
+			123 Fake St<br>
+			San Diego, CA 92123<br />
+			<abbr title="Phone">P:</abbr> (800) 555-1234
+		</address>
+	</div>
+	<div class="span4">
+		<h3>Definition List</h3>
+		<dl>
+			<dt>Praesent</dt>
+			<dd>Sed volutpat tristique neque, id adipiscing nunc sollicitudin et.</dd>
+			<dt>Varius</dt>
+			<dd>Sed vitae enim massa, in accumsan leo.</dd>
+			<dt>Euismod</dt>
+			<dd>Aliquam varius fermentum tellus, vel rutrum nisi sagittis ut.</dd>
+		</dl>
+	</div>
+	<div class="span4">
+		<h1>h1. Heading</h1>
+		<h2>h2. Heading</h2>
+		<h3>h3. Heading</h3>
+		<h4>h4. Heading</h4>
+		<h5>h5. Heading</h5>
+		<h6>h6. Heading</h6>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<h3>Blockquote</h3>
+		<p>Blockquote with a cite:</p>
+		<blockquote>
+			Ut id lectus nec mauris varius laoreet at sed ligula. Mauris tempus
+			varius nibh at placerat.
+			<small>Generic McPerson in <cite title="The pre tag example.">The Next Paragraph</cite></small>
+		</blockquote>
+	</div>
+	<div class="span6">
+		<h3>Pre Tag</h3>
+		<pre>Ut id lectus nec mauris varius laoreet at sed ligula. Mauris tempus varius nibh at placerat. Ut mollis, dui quis facilisis luctus, nibh diam dignissim eros, vel sagittis felis lorem a velit.</pre>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<h3>Default Table</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>Author</th>
+					<th>Book</th>
+					<th>ISBN-13</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Douglas Adams</td>
+					<td>The Hitchhiker's Guide to the Galaxy</td>
+					<td>9780345391803</td>
+				</tr>
+				<tr>
+					<td>Lois Lowry</td>
+					<td>The Giver</td>
+					<td>9780440237686</td>
+				</tr>
+				<tr>
+					<td>Suzanne Collins</td>
+					<td>The Hunger Games</td>
+					<td>9780439023528</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="span6">
+		<h3>Styled Table</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Author</th>
+					<th>Book</th>
+					<th>ISBN-13</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Douglas Adams</td>
+					<td>The Hitchhiker's Guide to the Galaxy</td>
+					<td>9780345391803</td>
+				</tr>
+				<tr>
+					<td>Lois Lowry</td>
+					<td>The Giver</td>
+					<td>9780440237686</td>
+				</tr>
+				<tr>
+					<td>Suzanne Collins</td>
+					<td>The Hunger Games</td>
+					<td>9780439023528</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

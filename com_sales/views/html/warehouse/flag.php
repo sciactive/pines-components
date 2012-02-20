@@ -15,7 +15,6 @@ $this->title = 'Flag Warehouse Items';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_sales/includes/farbtastic/farbtastic.css");
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_sales/includes/farbtastic/farbtastic.js");
 	pines(function(){
@@ -74,7 +73,6 @@ $pines->com_pgrid->load();
 			});
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/flagsave')); ?>">
 	<div class="pf-element pf-heading">
@@ -94,7 +92,7 @@ $pines->com_pgrid->load();
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Flag these Items</h1>
+		<h3>Flag these Items</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Colors</span>
@@ -117,7 +115,7 @@ $pines->com_pgrid->load();
 				<br />
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Presets</h1>
+				<h3>Presets</h3>
 			</div>
 			<div class="pf-element" style="font-size: 1.4em;">
 				<a title="#000000,#ffffff" href="javascript: void(0);" class="color_preset">Sample Text</a>
@@ -150,11 +148,15 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Comments</span>
-			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->comments); ?></textarea></span></label>
+			<span class="pf-group pf-full-width">
+				<span class="pf-field" style="display: block;">
+					<textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->comments); ?></textarea>
+				</span>
+			</span></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->id); ?>" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
 	</div>
 </form>

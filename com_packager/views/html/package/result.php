@@ -14,16 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Packaging Results';
 ?>
 <div class="pf-form" id="p_muid_package_result">
-	<!--<script type="text/javascript">
-		// <![CDATA[
-		pines(function(){
-			if ($.fn.button)
-				$("#p_muid_package_result a").button();
-		});
-		// ]]>
-	</script>-->
 	<div class="pf-element pf-heading">
-		<h1>Successful Packages</h1>
+		<h3>Successful Packages</h3>
 	</div>
 	<?php $successes = 0; foreach ($this->results as $cur_result) {
 		if (!$cur_result['result'])
@@ -41,7 +33,7 @@ $this->title = 'Packaging Results';
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Failed Packages</h1>
+		<h3>Failed Packages</h3>
 	</div>
 	<?php $failures = 0; foreach ($this->results as $cur_result) {
 		if ($cur_result['result'])

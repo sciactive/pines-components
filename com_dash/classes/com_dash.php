@@ -98,6 +98,7 @@ class com_dash extends component {
 	 */
 	public function show_dash_tab($key) {
 		$module = $_SESSION['user']->dashboard->print_tab($key);
+		$module->detach();
 		return $module->render();
 	}
 

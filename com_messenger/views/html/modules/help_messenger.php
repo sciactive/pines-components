@@ -70,7 +70,6 @@ $chat_log = $_SESSION['chats'];
 	}
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		jaxl.pollUrl = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/bosh.php";
 		boshchat = {
@@ -200,7 +199,6 @@ $chat_log = $_SESSION['chats'];
 			$('#p_muid_chat .read').animate({ scrollTop: $('#p_muid_chat .read').prop('scrollHeight') }, 300);
 		<?php } ?>
 	});
-	// ]]>
 </script>
 <form id="p_muid_chat" class="pf-form" style="clear: both;" onsubmit="return false;">
 	<div class="read"></div>

@@ -19,7 +19,6 @@ $pines->com_pgrid->load();
 $pines->com_ptags->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	#p_muid_sortable {
 		list-style-type: none;
 		margin: 0;
@@ -47,11 +46,9 @@ $pines->com_ptags->load();
 		margin: .4em 0 0;
 		padding: 0;
 	}
-	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'product/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var vendors = $("#p_muid_vendors");
 			var vendors_table = $("#p_muid_vendors_table");
@@ -162,34 +159,39 @@ $pines->com_ptags->load();
 				$("#p_muid_cur_vendor_link").val("");
 				vendors.val(JSON.stringify(vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
 			};
-
-			$("#p_muid_product_tabs").tabs();
 			update_vendors();
 		});
-		// ]]>
 	</script>
-	<div id="p_muid_product_tabs" style="clear: both;">
-		<ul>
-			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_categories">Categories</a></li>
-			<li><a href="#p_muid_tab_images">Images</a></li>
-			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
-			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
-			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
-			<?php if ($pines->config->com_sales->com_hrm) { ?>
-			<li><a href="#p_muid_tab_commission">Commission</a></li>
-			<?php } ?>
-			<?php if ($pines->config->com_sales->com_storefront) { ?>
-			<li><a href="#p_muid_tab_storefront">Storefront</a></li>
-			<li><a href="#p_muid_tab_head">Page Head</a></li>
-			<?php } ?>
-		</ul>
-		<div id="p_muid_tab_general">
+	<ul class="nav nav-tabs" style="clear: both;">
+		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_categories" data-toggle="tab">Categories</a></li>
+		<li><a href="#p_muid_tab_purchasing" data-toggle="tab">Purchasing</a></li>
+		<li><a href="#p_muid_tab_pricing" data-toggle="tab">Pricing</a></li>
+		<li><a href="#p_muid_tab_attributes" data-toggle="tab">Attributes</a></li>
+		<?php if ($pines->config->com_sales->com_hrm) { ?>
+		<li><a href="#p_muid_tab_commission" data-toggle="tab">Commission</a></li>
+		<?php } ?>
+		<li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">Appearance <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="#p_muid_tab_images" data-toggle="tab">Images</a></li>
+				<?php if ($pines->config->com_sales->com_storefront) { ?>
+				<li class="divider"></li>
+				<li><a href="#p_muid_tab_storefront" data-toggle="tab">Storefront</a></li>
+				<li><a href="#p_muid_tab_head" data-toggle="tab">Page Head</a></li>
+				<?php } ?>
+			</ul>
+		</li>
+	</ul>
+	<div id="p_muid_product_tabs" class="tab-content">
+		<div class="tab-pane active" id="p_muid_tab_general">
 			<div class="pf-element pf-full-width">
 				<label>
 					<span class="pf-label">Name</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+						</span>
 					</span>
 				</label>
 			</div>
@@ -209,11 +211,11 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Product SKU</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="sku" size="24" value="<?php echo htmlspecialchars($this->entity->sku); ?>" /></label>
+					<input class="pf-field" type="text" name="sku" size="24" value="<?php echo htmlspecialchars($this->entity->sku); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="manufacturer">
+					<select class="pf-field" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
 						<option value="<?php echo (int) $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_manufacturer->name); ?></option>
@@ -222,12 +224,16 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer SKU</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlspecialchars($this->entity->manufacturer_sku); ?>" /></label>
+					<input class="pf-field" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlspecialchars($this->entity->manufacturer_sku); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<label><span class="pf-label">Receipt Description</span>
 					<span class="pf-note">A short description to be shown on receipts.</span>
-					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo htmlspecialchars($this->entity->receipt_description); ?></textarea></span></label>
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<textarea style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo htmlspecialchars($this->entity->receipt_description); ?></textarea>
+						</span>
+					</span></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Short Description</span><br />
@@ -239,10 +245,9 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_categories">
+		<div class="tab-pane" id="p_muid_tab_categories">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						// Category Grid
 						$("#p_muid_category_grid").pgrid({
@@ -270,7 +275,6 @@ $pines->com_ptags->load();
 							pgrid_view_height: "300px"
 						});
 					});
-					// ]]>
 				</script>
 				<table id="p_muid_category_grid">
 					<thead>
@@ -297,148 +301,9 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_images">
-			<script type="text/javascript">
-				// <![CDATA[
-				pines(function(){
-					var last_image = "";
-
-					var update_images = function(){
-						var images = [];
-						$("li", "#p_muid_sortable").each(function(){
-							var cur_entry = $(this);
-							images.push({
-								"file": cur_entry.find("img").attr("src"),
-								"alt": cur_entry.find("p").html()
-							});
-						});
-						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
-					};
-					update_images();
-					
-					var add_image = function(image){
-						last_image = image;
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+pines.safe(image.replace(/.*\//, ''))+"\" src=\""+pines.safe(image)+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
-						update_images();
-					};
-					var auto_add = function(){
-						if (last_image == "")
-							return;
-						var last_file = last_image.replace(/.*\//, "");
-						var last_number = parseInt(last_file.match(/\d+/));
-						if (isNaN(last_number)) {
-							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
-							return;
-						}
-						var new_number = last_number + 1;
-						var new_file = last_file.replace(/\d+/, new_number);
-						var new_image = last_image.replace(last_file, new_file);
-						if (last_image == new_image) {
-							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
-							return;
-						}
-						$.ajax({
-							type: "GET",
-							url: new_image,
-							error: function(){
-								alert("No more files found.");
-							},
-							success: function(){
-								add_image(new_image);
-								auto_add();
-							}
-						});
-					};
-
-					$("#p_muid_image_upload").change(function(){
-						add_image($(this).val());
-						$(this).val("");
-					});
-					$("#p_muid_auto_add").click(function(){
-						auto_add();
-					});
-					$("#p_muid_sortable")
-					.delegate("li p", "click", function(){
-						var cur_alt = $(this);
-						var desc = cur_alt.html();
-						var ta = $("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
-						.insertAfter(cur_alt)
-						.focusout(function(){
-							cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
-							update_images();
-						});
-						cur_alt.detach();
-						setTimeout(function(){
-							ta.focus().select();
-						}, 1);
-					})
-					.sortable({
-						placeholder: 'ui-state-highlight',
-						distance: 20,
-						update: function(){update_images();}
-					})
-					.draggable({
-						distance: 20
-					});
-					$("#p_muid_image_trash").droppable({
-						drop: function(e, ui){
-							ui.draggable.hide("explode", {}, 500, function(){
-								ui.draggable.remove();
-								update_images();
-							});
-						}
-					});
-					//$("#p_muid_sortable").disableSelection();
-
-					$("#p_muid_thumbnail").change(function(){
-						$("#p_muid_thumbnail_preview").attr("src", $(this).val());
-					});
-				});
-				// ]]>
-			</script>
-			<div class="pf-element">
-				<span class="pf-label">Add an Image</span>
-				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_image_upload" type="text" value="" />
-				<button class="ui-state-default ui-corner-all" type="button" id="p_muid_auto_add">Auto Add Last Directory</button>
-			</div>
-			<div class="pf-element">
-				<span class="pf-label">Images</span>
-				<span class="pf-note">The first image will be the default image.</span>
-				<div class="pf-note">
-					Drag image here to remove:
-					<div class="ui-widget-content ui-corner-all" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
-						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
-					</div>
-				</div>
-				<div class="pf-group">
-					<ul id="p_muid_sortable" class="pf-field">
-						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
-						<li class="ui-state-default ui-corner-all">
-							<img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['file']); ?>" />
-							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
-						</li>
-						<?php } } ?>
-					</ul>
-					<br class="pf-clearing" />
-				</div>
-			</div>
-			<div class="pf-element">
-				<span class="pf-label">Thumbnail</span>
-				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
-			</div>
-			<div class="pf-element">
-				<span class="pf-label">Thumbnail Preview</span>
-				<div class="pf-group">
-					<img class="pf-field" alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
-				</div>
-			</div>
-			<input type="hidden" name="images" />
-			<br class="pf-clearing" />
-		</div>
-		<div id="p_muid_tab_purchasing">
+		<div class="tab-pane" id="p_muid_tab_purchasing">
 			<div class="pf-element">
 				<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					var stock_type = $("#p_muid_form [name=stock_type]");
 					var pricing_method = $("#p_muid_form [name=pricing_method]");
@@ -462,11 +327,10 @@ $pines->com_ptags->load();
 						}
 					}).change();
 				});
-				// ]]>
 				</script>
 				<label><span class="pf-label">Stock Type</span>
 					<span class="pf-note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="stock_type">
+					<select class="pf-field" name="stock_type">
 						<?php foreach (array('regular_stock' => 'Regular Stock', 'stock_optional' => 'Stock Optional', 'non_stocked' => 'Non Stocked') as $cur_stock_key => $cur_stock_type) { ?>
 						<option value="<?php echo htmlspecialchars($cur_stock_key); ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_stock_type); ?></option>
 						<?php } ?>
@@ -528,71 +392,69 @@ $pines->com_ptags->load();
 					<br class="pf-clearing" />
 					<div class="pf-element">
 						<label><span class="pf-label">Vendor SKU</span>
-							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_sku" size="15" id="p_muid_cur_vendor_sku" /></label>
+							<input type="text" class="pf-field" name="cur_vendor_sku" size="15" id="p_muid_cur_vendor_sku" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Cost</span>
-							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_cost" size="8" id="p_muid_cur_vendor_cost" /></label>
+							<input type="text" class="pf-field" name="cur_vendor_cost" size="8" id="p_muid_cur_vendor_cost" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Link</span>
-							<input type="url" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_link" size="20" id="p_muid_cur_vendor_link" /></label>
+							<input type="url" class="pf-field" name="cur_vendor_link" size="20" id="p_muid_cur_vendor_link" /></label>
 					</div>
 				</div>
 				<br />
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_pricing">
+		<div class="tab-pane" id="p_muid_tab_pricing">
 			<div class="pf-element">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var pricing_method = $("#p_muid_form [name=pricing_method]");
 						var unit_price = $("#p_muid_form [name=unit_price]");
 						var margin = $("#p_muid_form [name=margin]");
 						pricing_method.change(function(){
 							if (pricing_method.val() == "margin") {
-								unit_price.attr('disabled', 'disabled').addClass("ui-state-disabled");
-								margin.removeAttr('disabled').removeClass("ui-state-disabled");
+								unit_price.attr('disabled', 'disabled');
+								margin.removeAttr('disabled');
 							} else {
-								margin.attr('disabled', 'disabled').addClass("ui-state-disabled");
-								unit_price.removeAttr('disabled').removeClass("ui-state-disabled");
+								margin.attr('disabled', 'disabled');
+								unit_price.removeAttr('disabled');
 							}
 						}).change();
 					});
-					// ]]>
 				</script>
 				<label><span class="pf-label">Pricing Method</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="pricing_method">
+					<select class="pf-field" name="pricing_method">
 						<option value="fixed" title="Only one price will be available."<?php echo $this->entity->pricing_method == 'fixed' ? ' selected="selected"' : ''; ?>>Fixed Pricing</option>
 						<option value="variable" title="An employee can increase/decrease the price."<?php echo $this->entity->pricing_method == 'variable' ? ' selected="selected"' : ''; ?>>Variable Pricing</option>
 						<option value="margin" title="The price is based on the cost of the item."<?php echo $this->entity->pricing_method == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
 					</select></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Defaults</h1>
+				<h3>Defaults</h3>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Unit Price</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="unit_price" size="24" value="<?php echo htmlspecialchars($this->entity->unit_price); ?>" /></label>
+					<input class="pf-field" type="text" name="unit_price" size="24" value="<?php echo htmlspecialchars($this->entity->unit_price); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Margin</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="margin" size="24" value="<?php echo htmlspecialchars($this->entity->margin); ?>" /></label>
+					<input class="pf-field" type="text" name="margin" size="24" value="<?php echo htmlspecialchars($this->entity->margin); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Floor</span>
 					<span class="pf-note">The lowest price allowed.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="floor" size="24" value="<?php echo htmlspecialchars($this->entity->floor); ?>" /></label>
+					<input class="pf-field" type="text" name="floor" size="24" value="<?php echo htmlspecialchars($this->entity->floor); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Ceiling</span>
 					<span class="pf-note">The highest price allowed.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ceiling" size="24" value="<?php echo htmlspecialchars($this->entity->ceiling); ?>" /></label>
+					<input class="pf-field" type="text" name="ceiling" size="24" value="<?php echo htmlspecialchars($this->entity->ceiling); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Taxes/Fees</h1>
+				<h3>Taxes/Fees</h3>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Tax Exempt</span>
@@ -602,7 +464,7 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Additional Fees</span>
 					<span class="pf-note">These fees will be applied in addition to the group's default taxes. If you select a fee/tax applied to a group, it will be applied twice to this product for that group.</span>
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="additional_tax_fees[]" size="6" multiple="multiple">
+					<select class="pf-field" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
 						<option value="<?php echo (int) $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tax_fee->name); ?></option>
 						<?php } ?>
@@ -612,7 +474,7 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Return Fee Checklists</span>
 					<span class="pf-note">These checklists will be used to calculate additional restocking/return fees.</span>
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="return_checklists[]" size="6" multiple="multiple">
+					<select class="pf-field" name="return_checklists[]" size="6" multiple="multiple">
 						<?php foreach ($this->return_checklists as $cur_return_checklist) { ?>
 						<option value="<?php echo (int) $cur_return_checklist->guid; ?>"<?php echo ($cur_return_checklist->in_array($this->entity->return_checklists)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_return_checklist->name); ?></option>
 						<?php } ?>
@@ -620,14 +482,14 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_attributes">
+		<div class="tab-pane" id="p_muid_tab_attributes">
 			<div class="pf-element">
 				<label><span class="pf-label">Weight</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="weight" size="10" value="<?php echo htmlspecialchars($this->entity->weight); ?>" /> lbs.</label>
+					<input class="pf-field" type="text" name="weight" size="10" value="<?php echo htmlspecialchars($this->entity->weight); ?>" /> lbs.</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">RMA Available After</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="rma_after" size="10" value="<?php echo htmlspecialchars($this->entity->rma_after); ?>" /> days.</label>
+					<input class="pf-field" type="text" name="rma_after" size="10" value="<?php echo htmlspecialchars($this->entity->rma_after); ?>" /> days.</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Serialized</span>
@@ -665,13 +527,11 @@ $pines->com_ptags->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Barcodes</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="additional_barcodes" size="24" value="<?php echo htmlspecialchars(implode(',', $this->entity->additional_barcodes)); ?>" />
+					<input class="pf-field" type="text" name="additional_barcodes" size="24" value="<?php echo htmlspecialchars(implode(',', $this->entity->additional_barcodes)); ?>" />
 					<script type="text/javascript">
-						// <![CDATA[
 						pines(function(){
 							$("#p_muid_form [name=additional_barcodes]").ptags();
 						});
-						// ]]>
 					</script>
 				</div>
 			</div>
@@ -679,7 +539,7 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Product Actions</span>
 					<span class="pf-note">These actions will be executed when an event takes place with this product.</span>
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="actions[]" size="6" multiple="multiple">
+					<select class="pf-field" name="actions[]" size="6" multiple="multiple">
 						<?php foreach ($this->actions as $cur_action) { ?>
 						<option value="<?php echo htmlspecialchars($cur_action['name']); ?>" title="<?php echo htmlspecialchars($cur_action['description']); ?>"<?php echo in_array($cur_action['name'], $this->entity->actions) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_action['cname']); ?></option>
 						<?php } ?>
@@ -689,7 +549,6 @@ $pines->com_ptags->load();
 		</div>
 		<?php if ($pines->config->com_sales->com_hrm) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				// Commissions
 				var commissions = $("#p_muid_form [name=commissions]");
@@ -784,9 +643,8 @@ $pines->com_ptags->load();
 
 				update_commissions();
 			});
-			// ]]>
 		</script>
-		<div id="p_muid_tab_commission">
+		<div class="tab-pane" id="p_muid_tab_commission">
 			<div class="pf-element pf-full-width">
 				<table class="commissions_table">
 					<thead>
@@ -813,7 +671,7 @@ $pines->com_ptags->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Group</span>
-							<select class="pf-field ui-widget-content ui-corner-all" name="cur_commission_group">
+							<select class="pf-field" name="cur_commission_group">
 								<?php foreach ($this->groups as $cur_group) {
 								?><option value="<?php echo htmlspecialchars("{$cur_group->guid}: {$cur_group->name}"); ?>"><?php echo htmlspecialchars("{$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 								} ?>
@@ -823,7 +681,7 @@ $pines->com_ptags->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Type</span>
-							<select class="pf-field ui-widget-content ui-corner-all" name="cur_commission_type">
+							<select class="pf-field" name="cur_commission_type">
 								<option value="spiff">Spiff (Fixed Amount)</option>
 								<option value="percent_price">% Price (Before Tax, After Specials)</option>
 								<option value="percent_line_total">% Line Total (Before Tax, Before Specials)</option>
@@ -833,16 +691,154 @@ $pines->com_ptags->load();
 					<div class="pf-element">
 						<label><span class="pf-label">Amount</span>
 							<span class="pf-note">$ or %</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_commission_amount" size="24" onkeyup="this.value=this.value.replace(/[^\d.]/g, '');" /></label>
+							<input class="pf-field" type="text" name="cur_commission_amount" size="24" onkeyup="this.value=this.value.replace(/[^\d.]/g, '');" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<?php } if ($pines->config->com_sales->com_storefront) { ?>
+		<?php } ?>
+		<div class="tab-pane" id="p_muid_tab_images">
+			<script type="text/javascript">
+				pines(function(){
+					var last_image = "";
+
+					var update_images = function(){
+						var images = [];
+						$("li", "#p_muid_sortable").each(function(){
+							var cur_entry = $(this);
+							images.push({
+								"file": cur_entry.find("img").attr("src"),
+								"alt": cur_entry.find("p").html()
+							});
+						});
+						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
+					};
+					update_images();
+					
+					var add_image = function(image){
+						last_image = image;
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+pines.safe(image.replace(/.*\//, ''))+"\" src=\""+pines.safe(image)+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						update_images();
+					};
+					var auto_add = function(){
+						if (last_image == "")
+							return;
+						var last_file = last_image.replace(/.*\//, "");
+						var last_number = parseInt(last_file.match(/\d+/));
+						if (isNaN(last_number)) {
+							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
+							return;
+						}
+						var new_number = last_number + 1;
+						var new_file = last_file.replace(/\d+/, new_number);
+						var new_image = last_image.replace(last_file, new_file);
+						if (last_image == new_image) {
+							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
+							return;
+						}
+						$.ajax({
+							type: "GET",
+							url: new_image,
+							error: function(){
+								alert("No more files found.");
+							},
+							success: function(){
+								add_image(new_image);
+								auto_add();
+							}
+						});
+					};
+
+					$("#p_muid_image_upload").change(function(){
+						add_image($(this).val());
+						$(this).val("");
+					});
+					$("#p_muid_auto_add").click(function(){
+						auto_add();
+					});
+					$("#p_muid_sortable")
+					.delegate("li p", "click", function(){
+						var cur_alt = $(this);
+						var desc = cur_alt.html();
+						var ta = $("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\">"+pines.safe(desc)+"</textarea>")
+						.insertAfter(cur_alt)
+						.focusin(function(){
+							$(this).focusout(function(){
+								cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
+								update_images();
+							});
+						});
+						cur_alt.detach();
+						setTimeout(function(){
+							ta.focus().select();
+						}, 1);
+					})
+					.sortable({
+						placeholder: 'ui-state-highlight',
+						distance: 20,
+						update: function(){update_images();}
+					})
+					.draggable({
+						distance: 20
+					});
+					$("#p_muid_image_trash").droppable({
+						drop: function(e, ui){
+							ui.draggable.hide("explode", {}, 500, function(){
+								ui.draggable.remove();
+								update_images();
+							});
+						}
+					});
+					//$("#p_muid_sortable").disableSelection();
+
+					$("#p_muid_thumbnail").change(function(){
+						$("#p_muid_thumbnail_preview").attr("src", $(this).val());
+					});
+				});
+			</script>
+			<div class="pf-element">
+				<span class="pf-label">Add an Image</span>
+				<input class="pf-field puploader" id="p_muid_image_upload" type="text" value="" />
+				<button class="btn" type="button" id="p_muid_auto_add">Auto Add Last Directory</button>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Images</span>
+				<span class="pf-note">The first image will be the default image.</span>
+				<div class="pf-note">
+					Drag image here to remove:
+					<div class="ui-widget-content ui-corner-all" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
+						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
+					</div>
+				</div>
+				<div class="pf-group">
+					<ul id="p_muid_sortable" class="pf-field">
+						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
+						<li class="ui-state-default ui-corner-all">
+							<img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['file']); ?>" />
+							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
+						</li>
+						<?php } } ?>
+					</ul>
+					<br class="pf-clearing" />
+				</div>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Thumbnail</span>
+				<input class="pf-field puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Thumbnail Preview</span>
+				<div class="pf-group">
+					<img class="pf-field" alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+				</div>
+			</div>
+			<input type="hidden" name="images" />
+			<br class="pf-clearing" />
+		</div>
+		<?php if ($pines->config->com_sales->com_storefront) { ?>
 		<style type="text/css">
-			/* <![CDATA[ */
 			#p_muid_tab_storefront .combobox {
 				position: relative;
 			}
@@ -856,10 +852,8 @@ $pines->com_ptags->load();
 				top: 50%;
 				margin-top: -8px;
 			}
-			/* ]]> */
 		</style>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				var category_grid = $("#p_muid_category_grid");
 				var show_specs = function(){
@@ -899,16 +893,14 @@ $pines->com_ptags->load();
 					$("#p_muid_featured_image_preview").attr("src", $(this).val());
 				});
 			});
-			// ]]>
 		</script>
-		<div id="p_muid_tab_storefront">
+		<div class="tab-pane" id="p_muid_tab_storefront">
 			<div class="pf-element">
 				<label><span class="pf-label">Shown in Storefront</span>
 					<input class="pf-field" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						var alias = $("#p_muid_form [name=alias]");
 						$("#p_muid_form [name=name]").change(function(){
@@ -921,12 +913,13 @@ $pines->com_ptags->load();
 								alias.val("");
 						});
 					});
-					// ]]>
 				</script>
 				<label>
 					<span class="pf-label">Alias</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+					<span class="pf-group pf-full-width">
+						<span class="pf-field" style="display: block;">
+							<input style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+						</span>
 					</span>
 				</label>
 			</div>
@@ -936,7 +929,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Featured Image</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_featured_image" type="text" name="featured_image" value="<?php echo htmlspecialchars($this->entity->featured_image); ?>" /></label>
+					<input class="pf-field puploader" id="p_muid_featured_image" type="text" name="featured_image" value="<?php echo htmlspecialchars($this->entity->featured_image); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Featured Image Preview</span>
@@ -953,7 +946,7 @@ $pines->com_ptags->load();
 					<?php } ?>
 					<?php if (!empty($cur_category->specs)) { ?>
 					<div class="pf-element pf-heading">
-						<h1><?php echo htmlspecialchars($cur_category->name); ?></h1>
+						<h3><?php echo htmlspecialchars($cur_category->name); ?></h3>
 					</div>
 					<?php foreach ($cur_category->specs as $key => $cur_spec) { ?>
 					<div class="pf-element">
@@ -966,17 +959,17 @@ $pines->com_ptags->load();
 							case 'string':
 							case 'float':
 								if (empty($cur_spec['options'])) {
-									?><input class="pf-field ui-widget-content ui-corner-all" type="text" name="<?php echo htmlspecialchars($key); ?>" size="24" value="<?php echo htmlspecialchars($this->entity->specs[$key]); ?>" /><?php
+									?><input class="pf-field" type="text" name="<?php echo htmlspecialchars($key); ?>" size="24" value="<?php echo htmlspecialchars($this->entity->specs[$key]); ?>" /><?php
 								} else {
 									if ($cur_spec['restricted']) {
-										?><select class="pf-field ui-widget-content ui-corner-all" name="<?php echo htmlspecialchars($key); ?>">
+										?><select class="pf-field" name="<?php echo htmlspecialchars($key); ?>">
 											<?php foreach ($cur_spec['options'] as $cur_option) {
 												?><option value="<?php echo htmlspecialchars($cur_option); ?>"<?php echo $this->entity->specs[$key] == $cur_option ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_option); ?></option><?php
 											} ?>
 										</select><?php
 									} else {
 										?><span class="combobox">
-											<input class="pf-field ui-widget-content ui-corner-all" type="text" name="<?php echo htmlspecialchars($key); ?>" size="24" value="<?php echo htmlspecialchars($this->entity->specs[$key]); ?>" />
+											<input class="pf-field" type="text" name="<?php echo htmlspecialchars($key); ?>" size="24" value="<?php echo htmlspecialchars($this->entity->specs[$key]); ?>" />
 											<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 											<select style="display: none;">
 												<?php foreach ($cur_spec['options'] as $cur_option) {
@@ -1001,39 +994,38 @@ $pines->com_ptags->load();
 			</fieldset>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_head">
+		<div class="tab-pane" id="p_muid_tab_head">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
-					// <![CDATA[
 					pines(function(){
 						$("#p_muid_use_name").change(function(){
 							if ($(this).is(":checked"))
-								$("#p_muid_title").attr("disabled", "disabled").addClass("ui-state-disabled");
+								$("#p_muid_title").attr("disabled", "disabled");
 							else
-								$("#p_muid_title").removeAttr("disabled").removeClass("ui-state-disabled");
+								$("#p_muid_title").removeAttr("disabled");
 						}).change();
 					});
-					// ]]>
 				</script>
 				<span class="pf-label">Page Title</span>
 				<div class="pf-group pf-full-width">
 					<label><input class="pf-field" type="checkbox" id="p_muid_use_name" name="title_use_name" value="ON"<?php echo $this->entity->title_use_name ? ' checked="checked"' : ''; ?> /> Use name as title.</label><br />
-					<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					<span class="pf-field" style="display: block;">
+						<input style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+					</span>
 				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Title Position</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="title_position">
+					<select class="pf-field" name="title_position">
 						<option value="prepend"<?php echo $this->entity->title_position === 'prepend' ? ' selected="selected"' : ''; ?>>Prepend to Site Title</option>
 						<option value="append"<?php echo $this->entity->title_position === 'append' ? ' selected="selected"' : ''; ?>>Append to Site Title</option>
 						<option value="replace"<?php echo $this->entity->title_position === 'replace' ? ' selected="selected"' : ''; ?>>Replace Site Title</option>
 					</select></label>
 			</div>
 			<div class="pf-element pf-heading">
-				<h1>Meta Tags</h1>
+				<h3>Meta Tags</h3>
 			</div>
 			<script type="text/javascript">
-				// <![CDATA[
 				pines(function(){
 					// Meta Tags
 					var meta_tags = $("#p_muid_form [name=meta_tags]");
@@ -1127,7 +1119,6 @@ $pines->com_ptags->load();
 						"source": <?php echo (string) json_encode(array('description', 'author', 'keywords', 'robots', 'rating', 'distribution')); ?>
 					});
 				});
-				// ]]>
 			</script>
 			<div class="pf-element pf-full-width">
 				<table class="meta_tags_table">
@@ -1167,11 +1158,11 @@ $pines->com_ptags->load();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Content</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_value" size="24" /></label>
+							<input class="pf-field" type="text" name="cur_meta_tag_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
@@ -1181,11 +1172,10 @@ $pines->com_ptags->load();
 		<?php } ?>
 	</div>
 	<div class="pf-element pf-buttons">
-		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'product/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'product/list')); ?>');" value="Cancel" />
 	</div>
 </form>

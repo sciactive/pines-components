@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'CKEditor',
 	'author' => 'SciActive',
-	'version' => '1.0.1',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('editor'),
@@ -23,7 +23,7 @@ return array(
 	'description' => 'CKEditor based editor widget.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_jquery&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),
 	'recommend' => array(
 		'component' => 'com_elfinder'

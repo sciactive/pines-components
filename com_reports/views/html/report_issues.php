@@ -20,7 +20,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_issues']);
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.p_muid_issue_actions button {
 		padding: 0;
 	}
@@ -32,10 +31,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		width: 16px;
 		height: 16px;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
@@ -238,7 +235,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		<?php } ?>
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -268,11 +264,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><div class="p_muid_issue_actions">
 				<?php if (gatekeeper('com_hrm/resolveissue')) {
 					if ($cur_issue->status != 'resolved') { ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
 					<?php } else { ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
 					<?php } ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
 				<?php } ?>
 				</div></td>
 		</tr>

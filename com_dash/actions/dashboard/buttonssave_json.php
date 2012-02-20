@@ -39,6 +39,8 @@ foreach ($buttons as $cur_component => $cur_button_set) {
 }
 
 // Reset the buttons array.
+$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons_size'] = $_REQUEST['buttons_size'];
+// Reset the buttons array.
 $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'] = array();
 
 // Add all the buttons.

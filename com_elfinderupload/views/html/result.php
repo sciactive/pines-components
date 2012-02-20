@@ -14,8 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'elFinder Uploader';
 ?>
 <div class="pf-form">
-	<div class="pf-heading">
-		<h1>File Uploading Result</h1>
+	<div class="pf-element pf-heading">
+		<h3>File Uploading Result</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">File</span>

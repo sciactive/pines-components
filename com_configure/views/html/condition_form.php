@@ -16,7 +16,6 @@ $this->note = 'Provide condition details in this form.';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Conditions
 		var conditions = $("#p_muid_form [name=conditions]");
@@ -121,15 +120,14 @@ $pines->com_pgrid->load();
 			"source": <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_configure', 'condition/save')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Conditional Configuration</h1>
+		<h3>Conditional Configuration</h3>
 		<p>Configuration for this will only be applied if all these conditions are met.</p>
 	</div>
 	<div class="pf-element pf-full-width">
@@ -170,11 +168,11 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Type</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
+					<input class="pf-field" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Value</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+					<input class="pf-field" type="text" name="cur_condition_value" size="24" /></label>
 			</div>
 		</div>
 		<br style="clear: both; height: 1px;" />
@@ -183,7 +181,7 @@ $pines->com_pgrid->load();
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'list', array('percondition' => '1'))); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'list', array('percondition' => '1'))); ?>');" value="Cancel" />
 	</div>
 </form>

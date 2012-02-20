@@ -15,15 +15,13 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : ((
 $this->note = 'Provide PO details in this form.';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
-$read_only = $disabled_class = '';
+$read_only = '';
 if ($this->entity->final) {
 	$read_only = 'readonly="readonly"';
-	$disabled_class = 'ui-state-disabled';
 }
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'po/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -298,7 +296,6 @@ if ($this->entity->final) {
 
 			pines.com_sales_select_vendor(cur_vendor, true);
 		});
-		// ]]>
 	</script>
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -319,11 +316,11 @@ if ($this->entity->final) {
 	<div class="pf-element">
 		<label><span class="pf-label">PO #</span>
 			<span class="pf-note">If left blank, one will be auto-generated.</span>
-			<input class="pf-field ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" type="text" name="po_number" size="24" value="<?php echo htmlspecialchars($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" name="po_number" size="24" value="<?php echo htmlspecialchars($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Vendor</span>
@@ -332,7 +329,7 @@ if ($this->entity->final) {
 			<?php } else { ?>
 				<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="pf-field" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
 				<?php
 				$pines->entity_manager->sort($this->vendors, 'name');
@@ -344,13 +341,13 @@ if ($this->entity->final) {
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
-			<div class="pf-field location_tree ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" style="height: 180px; width: 200px; overflow: auto;"></div>
+			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
 		<input type="hidden" name="destination" />
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" name="shipper"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="pf-field" name="shipper"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
@@ -360,7 +357,6 @@ if ($this->entity->final) {
 	<div class="pf-element">
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				$("#p_muid_eta").datepicker({
 					dateFormat: "yy-mm-dd",
@@ -368,11 +364,10 @@ if ($this->entity->final) {
 					selectOtherMonths: true
 				});
 			});
-			// ]]>
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content ui-corner-all <?php echo $disabled_class; ?>" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
@@ -457,11 +452,11 @@ if ($this->entity->final) {
 		<div class="pf-form">
 			<div class="pf-element">
 				<label><span class="pf-label">Quantity</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_product_quantity" size="24" id="p_muid_cur_product_quantity" /></label>
+					<input class="pf-field" type="text" name="cur_product_quantity" size="24" id="p_muid_cur_product_quantity" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_product_cost" size="24" id="p_muid_cur_product_cost" /></label>
+					<input class="pf-field" type="text" name="cur_product_cost" size="24" id="p_muid_cur_product_cost" /></label>
 			</div>
 		</div>
 		<br />
@@ -534,20 +529,20 @@ if ($this->entity->final) {
 		<?php } ?>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Comments</h1>
+		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
 		<?php if (!$this->entity->final) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'po/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'po/list')); ?>');" value="Cancel" />
 	</div>
 </form>

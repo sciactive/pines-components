@@ -15,11 +15,7 @@ $this->title = htmlspecialchars($this->entity->name);
 $pines->com_pgrid->load();
 ?>
 <style type="text/css" >
-	/* <![CDATA[ */
 	.p_muid_issue_actions button {
-		padding: 0;
-	}
-	.p_muid_issue_actions button .ui-button-text {
 		padding: 0;
 	}
 	.p_muid_btn {
@@ -27,10 +23,8 @@ $pines->com_pgrid->load();
 		width: 16px;
 		height: 16px;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
@@ -113,7 +107,7 @@ $pines->com_pgrid->load();
 			} else {
 				comments = prompt('Comments:');
 				if (comments == null)
-					comments = '';
+					return;
 			}
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_hrm', 'issue/process')); ?>,
@@ -133,166 +127,196 @@ $pines->com_pgrid->load();
 			});
 		};
 		<?php } ?>
-		$("#p_muid_div").accordion({autoHeight: false});
 	});
-	// ]]>
 </script>
-<div class="pf-form" id="p_muid_div">
-	<?php if (!empty($this->entity->employment_history)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Employment History</a></h3>
-	<div>
-		<table id="p_muid_history">
-			<thead>
-				<tr>
-					<th>Date</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($this->entity->employment_history as $cur_history) { ?>
-				<tr>
-					<td><?php echo htmlspecialchars(format_date($cur_history[0], 'date_long')); ?></td>
-					<td><?php echo htmlspecialchars($cur_history[1]); ?></td>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } if (!empty($this->issues)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Issues/Transgressions</a></h3>
-	<div>
-		<table id="p_muid_issues">
-			<thead>
-				<tr>
-					<th>Date</th>
-					<th>Issue</th>
-					<th>Quantity</th>
-					<th>Penalty</th>
-					<th>Filed by</th>
-					<th>Status</th>
-					<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
-					<th>Actions</th>
-					<?php } ?>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($this->issues as $cur_issue) { ?>
-				<tr onmouseover="p_muid_notice.com_hrm_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
-					<td><?php echo htmlspecialchars(format_date($cur_issue->date, 'date_short')); ?></td>
-					<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>
-					<td>x<?php echo htmlspecialchars($cur_issue->quantity); ?></td>
-					<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
-					<td><?php echo htmlspecialchars($cur_issue->user->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_issue->status); ?></td>
-					<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
-					<td><div class="p_muid_issue_actions">
-						<?php if ($cur_issue->status != 'resolved') { ?>
-						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
-						<?php } else { ?>
-						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
+<div class="pf-form">
+	<div id="p_muid_div" class="accordion">
+		<?php if (!empty($this->entity->employment_history)) { ?>
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle">Employment History</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<table id="p_muid_history">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->entity->employment_history as $cur_history) { ?>
+							<tr>
+								<td><?php echo htmlspecialchars(format_date($cur_history[0], 'date_long')); ?></td>
+								<td><?php echo htmlspecialchars($cur_history[1]); ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php } if (!empty($this->issues)) { ?>
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle">Issues/Transgressions</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<table id="p_muid_issues">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Issue</th>
+								<th>Quantity</th>
+								<th>Penalty</th>
+								<th>Filed by</th>
+								<th>Status</th>
+								<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
+								<th>Actions</th>
+								<?php } ?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->issues as $cur_issue) { ?>
+							<tr onmouseover="p_muid_notice.com_hrm_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
+								<td><?php echo htmlspecialchars(format_date($cur_issue->date, 'date_short')); ?></td>
+								<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>
+								<td>x<?php echo htmlspecialchars($cur_issue->quantity); ?></td>
+								<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
+								<td><?php echo htmlspecialchars($cur_issue->user->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_issue->status); ?></td>
+								<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
+								<td><div class="p_muid_issue_actions">
+									<?php if ($cur_issue->status != 'resolved') { ?>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+									<?php } else { ?>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
+									<?php } ?>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+								</div></td>
+								<?php } ?>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php } if (!empty($this->sales)) { ?>
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle">Sales History</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<table id="p_muid_sales">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Date</th>
+								<th>Customer</th>
+								<th>First Item</th>
+								<th>Price</th>
+								<th>Status</th>
+								<th>Location</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach ($this->sales as $cur_sale) { ?>
+							<tr title="<?php echo (int) $cur_sale->guid ?>">
+								<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
+								<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
+								<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
+								<td><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></td>
+								<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
+								<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
+								<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
+							</tr>
 						<?php } ?>
-						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
-					</div></td>
-					<?php } ?>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php } if (!empty($this->returns)) { ?>
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle">Return History</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<table id="p_muid_returns">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Date</th>
+								<th>Customer</th>
+								<th>First Item</th>
+								<th>Price</th>
+								<th>Status</th>
+								<th>Location</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach ($this->returns as $cur_return) { ?>
+							<tr title="<?php echo (int) $cur_return->guid ?>">
+								<td><?php echo htmlspecialchars($cur_return->id); ?></td>
+								<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
+								<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
+								<td><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></td>
+								<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
+								<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
+								<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
+							</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php } if (!empty($this->paystubs)) { ?>
+		<div class="accordion-group">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+				<big class="accordion-toggle">Paystubs</big>
+			</a>
+			<div class="accordion-body collapse">
+				<div class="accordion-inner">
+					<table id="p_muid_paystubs">
+						<thead>
+							<tr>
+								<th>From</th>
+								<th>To</th>
+								<th>Amount</th>
+								<th>Penalties</th>
+								<th>Bonuses</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						foreach ($this->paystubs as $cur_paystub) {
+							foreach ($cur_paystub->payroll as $cur_payment) {
+								if ($cur_payment['employee']->guid != $this->entity->guid)
+									continue; ?>
+							<tr title="<?php echo (int) $cur_paystub->guid ?>">
+								<td><?php echo htmlspecialchars(format_date($cur_paystub->start)); ?></td>
+								<td><?php echo htmlspecialchars(format_date($cur_paystub->end)); ?></td>
+								<td>$<?php echo htmlspecialchars(number_format($cur_payment['total_pay'], 2, '.', '')); ?></td>
+								<td>$<?php echo htmlspecialchars(number_format($cur_payment['penalties'], 2, '.', '')); ?></td>
+								<td>$<?php echo htmlspecialchars(number_format($cur_payment['bonuses'], 2, '.', '')); ?></td>
+							</tr>
+						<?php }
+						} ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+		<br class="pf-clearing" />
 	</div>
-	<?php } if (!empty($this->sales)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Sales History</a></h3>
-	<div>
-		<table id="p_muid_sales">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Customer</th>
-					<th>First Item</th>
-					<th>Price</th>
-					<th>Status</th>
-					<th>Location</th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php foreach ($this->sales as $cur_sale) { ?>
-				<tr title="<?php echo (int) $cur_sale->guid ?>">
-					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
-					<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
-					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
-					<td><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></td>
-					<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
-					<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
-					<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } if (!empty($this->returns)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Return History</a></h3>
-	<div>
-		<table id="p_muid_returns">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Customer</th>
-					<th>First Item</th>
-					<th>Price</th>
-					<th>Status</th>
-					<th>Location</th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php foreach ($this->returns as $cur_return) { ?>
-				<tr title="<?php echo (int) $cur_return->guid ?>">
-					<td><?php echo htmlspecialchars($cur_return->id); ?></td>
-					<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
-					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
-					<td><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></td>
-					<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
-					<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
-					<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } if (!empty($this->paystubs)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Paystubs</a></h3>
-	<div>
-		<table id="p_muid_paystubs">
-			<thead>
-				<tr>
-					<th>From</th>
-					<th>To</th>
-					<th>Amount</th>
-					<th>Penalties</th>
-					<th>Bonuses</th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			foreach ($this->paystubs as $cur_paystub) {
-				foreach ($cur_paystub->payroll as $cur_payment) {
-					if ($cur_payment['employee']->guid != $this->entity->guid)
-						continue; ?>
-				<tr title="<?php echo (int) $cur_paystub->guid ?>">
-					<td><?php echo htmlspecialchars(format_date($cur_paystub->start)); ?></td>
-					<td><?php echo htmlspecialchars(format_date($cur_paystub->end)); ?></td>
-					<td>$<?php echo htmlspecialchars(number_format($cur_payment['total_pay'], 2, '.', '')); ?></td>
-					<td>$<?php echo htmlspecialchars(number_format($cur_payment['penalties'], 2, '.', '')); ?></td>
-					<td>$<?php echo htmlspecialchars(number_format($cur_payment['bonuses'], 2, '.', '')); ?></td>
-				</tr>
-			<?php }
-			} ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } ?>
-	<br class="pf-clearing" />
 </div>
 <?php if (gatekeeper('com_hrm/listemployees')) { ?>
-<input class="pf-button ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="&laquo; Employees" />
+<input class="btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="&laquo; Employees" />
 <?php } ?>

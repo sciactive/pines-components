@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'About',
 	'author' => 'SciActive',
-	'version' => '1.0.0',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Configurable about page',
@@ -24,7 +24,7 @@ return array(
 		'pines' => '<2'
 	),
 	'recommend' => array(
-		'component' => 'com_jquery'
+		'component' => 'com_bootstrap'
 	),
 	'abilities' => array(
 		array('show', 'About Page', 'User can see the about page.')

@@ -19,6 +19,7 @@ $pines->page->override = true;
 
 $module = new module('com_dash', 'dashboard/buttons_form');
 $module->current_buttons = $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'];
+$module->buttons_size = $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons_size'];
 $module->buttons = $pines->com_dash->button_types();
 foreach ($module->buttons as $cur_component => $cur_button_set) {
 	foreach ($cur_button_set as $cur_button_name => $cur_button) {

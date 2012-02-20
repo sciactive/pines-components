@@ -15,7 +15,6 @@ $this->title = 'Employee Issue Types';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var issue_dialog = $("#p_muid_issue_dialog");
@@ -78,8 +77,6 @@ $pines->com_pgrid->load();
 		};
 		$("#p_muid_grid").pgrid(cur_defaults);
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -103,15 +100,15 @@ $pines->com_pgrid->load();
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element">
 			<label><span class="pf-label">Issue</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="name" /></label>
+				<input class="pf-field" type="text" size="24" name="name" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Description</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="description" value="" /></label>
+				<input class="pf-field" type="text" size="24" name="description" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Penalty</span>
-				<span class="pf-field">$ <input class="ui-widget-content ui-corner-all" type="text" size="3" name="penalty" /></span></label>
+				<span class="pf-field">$ <input type="text" size="3" name="penalty" /></span></label>
 		</div>
 	</form>
 	<br />

@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines.com_plaza = {
 		ajax_box: null,
 		ajax_show: function(){
@@ -68,5 +67,4 @@ defined('P_RUN') or die('Direct access prohibited');
 			});
 		}
 	};
-	// ]]>
 </script>

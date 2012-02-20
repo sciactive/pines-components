@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	var file;
 	var pages;
 	var displays = [];
@@ -232,7 +231,6 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 		get_values();
 	}
-	// ]]>
 </script>
 <div id="p_muid_editor">
 	<div id="p_muid_left_div" style="float: left; width: 200px;">
@@ -240,8 +238,8 @@ defined('P_RUN') or die('Direct access prohibited');
 			<label>Displays:<br />
 				<select id="p_muid_displays" onchange="get_values();">
 				</select></label>
-			<input type="button" class="ui-state-default ui-corner-all" value="+" name="display_add" onclick="display_add();" />
-			<input type="button" class="ui-state-default ui-corner-all" value="-" name="display_remove" onclick="display_remove();" />
+			<input type="button" class="btn" value="+" name="display_add" onclick="display_add();" />
+			<input type="button" class="btn" value="-" name="display_remove" onclick="display_remove();" />
 		</div>
 		<div id="p_muid_form_div" style="float: left; clear: left;">
 			<div style="float: left; clear: left;">

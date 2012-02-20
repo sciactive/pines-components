@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Timer Status';
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_customer_status {
 		position: fixed;
 		top: 0;
@@ -50,10 +49,8 @@ $this->title = 'Customer Timer Status';
 		background-color: darkred;
 		color: red;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var customer_status = $("#p_muid_customer_status");
 
@@ -86,6 +83,5 @@ $this->title = 'Customer Timer Status';
 
 		update_status();
 	});
-	// ]]>
 </script>
 <div id="p_muid_customer_status">Loading, please wait...</div>

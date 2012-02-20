@@ -14,11 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Shopping Cart';
 ?>
 <?php if ($pines->com_storefront->cart()) { ?>
-<script type="text/javascript">
-	// <![CDATA[
-	pines(function(){$("#p_muid_checkout").button()});
-	// ]]>
-</script>
 <div>
 	<table style="width: 100%;">
 		<thead>
@@ -47,7 +42,7 @@ $this->title = 'Shopping Cart';
 	<br />
 	<div style="padding: .5em;">Subtotal <small>(before tax/fees)</small><div style="float: right; text-align: right;"><?php echo $pines->com_storefront->format_price($subtotal, 'long'); ?></div></div>
 	<br style="clear: both;" /><br />
-	<button type="button" class="checkout ui-state-default ui-priority-primary ui-corner-all" id="p_muid_checkout" style="float: right; clear: right;" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');">Check-Out</button>
+	<button type="button" class="checkout btn btn-primary" style="float: right; clear: right;" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');">Check-Out</button>
 	<br style="height: 0; clear: both;" />
 </div>
 <?php } else { ?>

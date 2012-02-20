@@ -21,7 +21,6 @@ if (!isset($this->entity->customer->email) && !$pines->config->com_sales->receip
 $sale = $this->entity->has_tag('sale');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		$("#p_muid_email").click(function(){
 			pines.get(<?php echo json_encode(pines_url('com_sales', $sale ? 'sale/sendreceipt' : 'return/sendreceipt', array('id' => $this->entity->guid))); ?>);
@@ -35,13 +34,12 @@ $sale = $this->entity->has_tag('sale');
 		$("#p_muid_print").click();
 		<?php } } ?>
 	});
-	// ]]>
 </script>
 <div style="text-align: center;">
 	<?php if (isset($this->entity->customer->email)) { ?>
-	<button id="p_muid_email" class="ui-state-default ui-corner-all">Email Customer</button>
+	<button id="p_muid_email" class="btn"><i class="icon-envelope"></i> Email Customer</button>
 	<br /><br />
 	<?php } if ($pines->config->com_sales->receipt_printer) { ?>
-	<button id="p_muid_print" class="ui-state-default ui-corner-all">Receipt Printer</button>
+	<button id="p_muid_print" class="btn"><i class="icon-print"></i> Receipt Printer</button>
 	<?php } ?>
 </div>

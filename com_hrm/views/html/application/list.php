@@ -17,15 +17,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/application/list']);
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_hire_dialog ul, #p_muid_reject_dialog ul {
 		padding-left: 30px;
 		list-style: circle;
 	}
-	/* ]]> */
 </style>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		var selected_ids;
 		var hire_dialog = $("#p_muid_hire_dialog");
@@ -136,7 +133,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
@@ -163,7 +159,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element">
 			<div class="pf-element dialog_info"></div>
 			<label><span class="pf-label">Effective Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
+			<input class="pf-field" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 	</form>
 	<br />

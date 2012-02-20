@@ -18,7 +18,6 @@ $pines->com_pgrid->load();
 <p>All storefront products appear to be valid.</p>
 <?php } else { ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function() {
 		var options = {
 			pgrid_view_height: "200px",
@@ -47,12 +46,11 @@ $pines->com_pgrid->load();
 		};
 		$("#p_muid_grid, #p_muid_grid2").pgrid(options);
 	});
-	// ]]>
 </script>
 <div class="pf-form">
 	<?php if (!empty($this->items)) { ?>
-	<div class="pf-heading">
-		<h1>These items need to be listed as stock optional</h1>
+	<div class="pf-element pf-heading">
+		<h3>These items need to be listed as stock optional</h3>
 	</div>
 	<table id="p_muid_grid">
 		<thead>
@@ -81,8 +79,8 @@ $pines->com_pgrid->load();
 		</tbody>
 	</table>
 	<?php } if (!empty($this->image_descs)) { ?>
-	<div class="pf-heading">
-		<h1>These items need image descriptions</h1>
+	<div class="pf-element pf-heading">
+		<h3>These items need image descriptions</h3>
 	</div>
 	<table id="p_muid_grid2">
 		<thead>

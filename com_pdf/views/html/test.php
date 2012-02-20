@@ -16,16 +16,16 @@ $this->title = 'PDF Display Editor Testing'
 <form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_pdf', 'testprint')); ?>">
 	<div class="pf-element display_edit" id="p_muid_name">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" value="<?php echo htmlspecialchars($entity->name); ?>" /></label>
+			<input class="pf-field" type="text" name="name" value="<?php echo htmlspecialchars($entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element" id="p_muid_age">
 		<label><span class="pf-label">Age</span>
 			<span class="pf-note">Not displayed.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="number" name="age" value="<?php echo htmlspecialchars($entity->age); ?>" /></label>
+			<input class="pf-field" type="number" name="age" value="<?php echo htmlspecialchars($entity->age); ?>" /></label>
 	</div>
 	<div class="pf-element display_edit" id="p_muid_phone">
 		<label><span class="pf-label">Phone</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" value="<?php echo htmlspecialchars($entity->phone); ?>" /></label>
+			<input class="pf-field" type="tel" name="phone" value="<?php echo htmlspecialchars($entity->phone); ?>" /></label>
 	</div>
 	<div class="pf-element display_edit" id="p_muid_favfood"><span class="pf-label">What's your favorite food?</span>
 		<span class="pf-note">This will be your lunch.</span>
@@ -40,7 +40,7 @@ $this->title = 'PDF Display Editor Testing'
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="reset" value="Reset" />
 	</div>
 </form>

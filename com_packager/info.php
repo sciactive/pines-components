@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Package Creator',
 	'author' => 'SciActive',
-	'version' => '1.0.2',
+	'version' => '1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Pines package creator',
@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader&editor&configurator',
-		'component' => 'com_slim&com_jquery&com_pgrid&com_ptags&com_pform',
+		'component' => 'com_slim&com_jquery&com_bootstrap&com_pgrid&com_ptags&com_pform',
 		'package' => 'com_packager-data'
 	),
 	'abilities' => array(

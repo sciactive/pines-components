@@ -14,12 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).']';
 ?>
 <style type="text/css">
-	/* <![CDATA[ */
 	#p_muid_offer .employee_app_style .pf-label, #p_muid_offer .employee_app_style .pf-note {
 		font-weight: bold;
 		text-align: right;
 	}
-	/* ]]> */
 </style>
 <div class="pf-form pf-form-twocol" id="p_muid_offer">
 	<div class="pf-element pf-full-width">
@@ -30,7 +28,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 	</div>
 	<?php if (!empty($this->entity->notes)) { ?>
 		<div class="pf-element pf-heading">
-			<h1>Notes</h1>
+			<h3>Notes</h3>
 		</div>
 		<?php foreach ($this->entity->notes as $cur_note) { ?>
 		<div class="pf-element pf-full-width">
@@ -42,7 +40,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 	} ?>
 	<div class="employee_app_style">
 		<div class="pf-element pf-heading">
-			<h1>Credit Application Setup Information</h1>
+			<h3>Credit Application Setup Information</h3>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Name:</span>
@@ -67,7 +65,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 			</span>
 		</div>
 		<div class="pf-element pf-heading">
-			<h1>Education</h1>
+			<h3>Education</h3>
 		</div>
 		<?php foreach ($this->entity->education as $cur_school) { ?>
 		<div class="pf-element">
@@ -81,7 +79,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		<br class="pf-clearing" />
 		<?php } ?>
 		<div class="pf-element pf-heading">
-			<h1>Employment History</h1>
+			<h3>Employment History</h3>
 		</div>
 		<?php foreach ($this->entity->employment as $cur_employer) { ?>
 		<div class="pf-element">
@@ -108,7 +106,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		<br class="pf-clearing" />
 		<?php } ?>
 		<div class="pf-element pf-heading">
-			<h1>References</h1>
+			<h3>References</h3>
 		</div>
 		<?php foreach ($this->entity->references as $cur_reference) { ?>
 		<div class="pf-element">
@@ -131,7 +129,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		<br class="pf-clearing" />
 		<?php } ?>
 		<div class="pf-element pf-heading">
-			<h1>References</h1>
+			<h3>References</h3>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">File Location:</span>

@@ -23,9 +23,9 @@ all.each(function(){
 	container = input.parent();
 	// Build interface.
 	var toolbar = $("<div class=\"ui-widget-header ui-corner-all ui-menu-editor-toolbar\">\n\
-<button class=\"ui-menueditor-add\" type=\"button\">New Entry</button>\n\
-<button class=\"ui-menueditor-clear\" type=\"button\">Clear All Entries</button>\n\
-</div>").appendTo(container).find(":button").button().end()
+<button class=\"ui-menueditor-add btn btn-success\" type=\"button\">New Entry</button>\n\
+<button class=\"ui-menueditor-clear btn btn-danger\" type=\"button\">Clear All Entries</button>\n\
+</div>").appendTo(container)
 	.delegate(".ui-menueditor-add", "click", function(){
 		edit_entry();
 	}).delegate(".ui-menueditor-clear", "click", function(){
@@ -104,11 +104,11 @@ all.each(function(){
 			entry.addClass("ui-priority-secondary");
 		else
 			entry.removeClass("ui-priority-secondary");
-		entry.append($("<button type=\"button\">Delete</button>").button().click(function(){
+		entry.append($("<button type=\"button\" class=\"btn btn-danger\">Delete</button>").click(function(){
 			$(this).closest(".ui-menu-editor-entry").remove();
 			update_entries();
 		}))
-		.append($("<button type=\"button\">Edit</button>").button().click(function(){
+		.append($("<button type=\"button\" class=\"btn\">Edit</button>").click(function(){
 			edit_entry($(this).closest(".ui-menu-editor-entry"));
 		}))
 		.append("<div class=\"ui-menu-editor-entry-name\">"+pines.safe(values.text)+" ["+pines.safe(values.name)+"]</div>")

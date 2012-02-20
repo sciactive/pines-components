@@ -16,14 +16,11 @@ $this->note = 'Provide shipment details in this form.';
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/saveship')); ?>">
 	<style type="text/css">
-		/* <![CDATA[ */
 		#p_muid_packing_list .number_box {
 			cursor: pointer;
 		}
-		/* ]]> */
 	</style>
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			var packing_list = $("#p_muid_packing_list");
 			var packing_list_input = packing_list.children("input[name=packing_list]");
@@ -80,7 +77,6 @@ $this->note = 'Provide shipment details in this form.';
 
 			update_packing_list();
 		});
-		// ]]>
 	</script>
 	<div class="pf-element">
 		<span class="pf-label">Shipping Address</span>
@@ -98,7 +94,7 @@ $this->note = 'Provide shipment details in this form.';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="shipper">
+			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo (int) $cur_shipper->guid ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
@@ -108,7 +104,6 @@ $this->note = 'Provide shipment details in this form.';
 	<div class="pf-element">
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
-			// <![CDATA[
 			pines(function(){
 				$("#p_muid_eta").datepicker({
 					dateFormat: "yy-mm-dd",
@@ -116,16 +111,19 @@ $this->note = 'Provide shipment details in this form.';
 					selectOtherMonths: true
 				});
 			});
-			// ]]>
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" /></label>
+			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Tracking Number(s)</span>
 			<span class="pf-note">One per line.</span>
-			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="tracking_numbers"><?php echo isset($this->entity->tracking_numbers) ? implode("\n", $this->entity->tracking_numbers) : ''; ?></textarea></span></label>
+			<span class="pf-group pf-full-width">
+				<span class="pf-field" style="display: block;">
+					<textarea style="width: 100%;" rows="3" cols="35" name="tracking_numbers"><?php echo isset($this->entity->tracking_numbers) ? implode("\n", $this->entity->tracking_numbers) : ''; ?></textarea>
+				</span>
+			</span></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipped</span>
@@ -137,7 +135,7 @@ $this->note = 'Provide shipment details in this form.';
 		default: 
 			?>
 	<div class="pf-element pf-heading">
-		<h1>Sale #<?php echo htmlspecialchars($this->entity->id); ?> Packing List</h1>
+		<h3>Sale #<?php echo htmlspecialchars($this->entity->id); ?> Packing List</h3>
 		<?php if ($this->entity->warehouse_pending) { ?>
 		<p><strong>There are still unassigned warehouse items on this sale. It can only be partially shipped.</strong></p>
 		<?php } ?>
@@ -211,7 +209,7 @@ $this->note = 'Provide shipment details in this form.';
 		<input type="hidden" name="type" value="<?php echo htmlspecialchars($this->type); ?>" />
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/shipments')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/shipments')); ?>');" value="Cancel" />
 	</div>
 </form>

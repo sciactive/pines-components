@@ -19,7 +19,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $module_types = $pines->com_modules->module_types();
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 
 	pines(function(){
 		var state_xhr;
@@ -60,8 +59,6 @@ $module_types = $pines->com_modules->module_types();
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-
-	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>

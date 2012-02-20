@@ -21,19 +21,16 @@ defined('P_RUN') or die('Direct access prohibited');
 <![endif]-->
 */
 ?>
-<script type="text/javascript">// <![CDATA[
+<script type="text/javascript">
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform.css");
 <?php if ($pines->depend->check('component', 'com_bootstrap')) { ?>
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-bootstrap.css");
-<?php } ?>
-// ]]></script>
+<?php } ?></script>
 <!--[if lt IE 8]>
-<script type="text/javascript">// <![CDATA[
-pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-8.css");
-// ]]></script>
+<script type="text/javascript">
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-8.css");</script>
 <![endif]-->
 <!--[if lt IE 6]>
-<script type="text/javascript">// <![CDATA[
-pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-6.css");
-// ]]></script>
+<script type="text/javascript">
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-6.css");</script>
 <![endif]-->

@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/business/loan",
+		"text": "Loan",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/business/loan/loans",
+			"text": "Loans",
+			"href": ["com_loan","loan/list"],
+			"depend": {
+				"ability": "com_loan/listloans"
+			}
+		},
+		{
+			"path": "main_menu/business/loan/newloan",
+			"text": "New Loan",
+			"href": ["com_loan","loan/edit"],
+			"depend": {
+				"ability": "com_loan/newloan"
+			}
+		}
+]

@@ -13,9 +13,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/css/<?php echo $pines->config->debug_mode ? 'bootstrap.css' : 'bootstrap.min.css'; ?>");
-	// Don't load JavaScript yet, cause it messes with jQuery UI.
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/js/<?php echo $pines->config->debug_mode ? 'bootstrap.js' : 'bootstrap.min.js'; ?>");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/<?php echo htmlspecialchars($pines->config->com_bootstrap->theme); ?>/css/<?php echo $pines->config->debug_mode ? 'bootstrap.css' : 'bootstrap.min.css'; ?>");
+	<?php if ($pines->config->com_bootstrap->responsive) { ?>
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/<?php echo htmlspecialchars($pines->config->com_bootstrap->theme); ?>/css/<?php echo $pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css'; ?>");
+	<?php } ?>
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/<?php echo htmlspecialchars($pines->config->com_bootstrap->theme); ?>/js/<?php echo $pines->config->debug_mode ? 'bootstrap.js' : 'bootstrap.min.js'; ?>");
 	// Get the current number of columns in the CSS grid.
 	pines.com_bootstrap_get_columns = function(){
 		var cur_grid = 0, cur_test;

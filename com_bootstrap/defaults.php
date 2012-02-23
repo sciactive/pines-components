@@ -14,10 +14,29 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'theme',
+		'cname' => 'Theme',
+		'description' => 'Bootstrap theme. To use your own, put the files in the "custom" folder under com_bootstrap/includes.',
+		'value' => 'normal',
+		'options' => array(
+			'normal',
+			'dark',
+			'custom',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'grid_columns',
 		'cname' => 'Total Grid Columns',
 		'description' => 'You must put the total number of columns in your grid layout here. This is used by other components to style their content.',
 		'value' => 12,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'responsive',
+		'cname' => 'Include Responsive Stylesheet',
+		'description' => 'Include the responsive stylesheet for mobile browsers. Don\'t set this if you\'re using a custom theme and there is no bootstrap-responsive.min.css file in the "css" folder.',
+		'value' => true,
 		'peruser' => true,
 	),
 	array(

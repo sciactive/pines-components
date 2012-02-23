@@ -1,0 +1,259 @@
+.btn {
+  color: @black;
+  text-shadow: 0 1px 1px rgba(128,128,128,.75);
+  .buttonBackground(@grayLight, darken(@grayLight, 10%));
+}
+.btn:hover {
+  color: @black;
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-warning,
+.btn-warning:hover,
+.btn-danger,
+.btn-danger:hover,
+.btn-success,
+.btn-success:hover,
+.btn-info,
+.btn-info:hover,
+.btn-inverse,
+.btn-inverse:hover {
+  color: @black;
+}
+.btn-primary {
+  .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
+}
+.btn-warning {
+  .buttonBackground(lighten(@orange, 15%), @orange);
+}
+.btn-danger {
+  .buttonBackground(lighten(@red, 15%), @red);
+}
+.btn-success {
+  .buttonBackground(lighten(@green, 15%), @green);
+}
+.btn-info {
+  .buttonBackground(lighten(@blue, 15%), @blue);
+}
+.btn-inverse {
+  .buttonBackground(lighten(@grayDark, 15%), @grayDark);
+}
+
+
+
+
+label {
+  color: @textColor;
+}
+input,
+textarea,
+select,
+.uneditable-input {
+  color: @textColor;
+  background-color: @grayLighter;
+  border-color: @grayDark;
+}
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  background-color: @grayLighter;
+  border-color: @grayLight;
+}
+.control-group.warning {
+  .formFieldState(@warningBackground, @warningBackground, @warningText);
+}
+.control-group.error {
+  .formFieldState(@errorBackground, @errorBackground, @errorText);
+}
+.control-group.success {
+  .formFieldState(@successBackground, @successBackground, @successText);
+}
+.form-actions {
+  background-color: @grayLighter;
+}
+.placeholder(@grayDark);
+.help-block {
+  color: @grayDark;
+}
+.input-prepend,
+.input-append {
+  .add-on {
+    color: @textColor;
+    background-color: @grayLighter;
+    border-color: @grayDark;
+  }
+}
+
+
+
+.dropdown-menu {
+  background-color: @grayLight;
+  border-color: @grayLighter;
+
+  a {
+    color: @black;
+  }
+}
+
+
+
+
+.well {
+  background-color: @grayLighter;
+}
+
+
+
+
+.breadcrumb {
+  #gradient > .vertical(@grayLighter, @white);
+  .divider {
+    color: @grayDark;
+  }
+}
+
+
+
+.pagination a:hover,
+.pagination .active a {
+  background-color: @grayLight;
+  color: @black;
+}
+
+
+.pagination .disabled a,
+.pagination .disabled a:hover {
+  color: @gray;
+}
+
+
+
+
+.pager a {
+  background-color: @grayLighter;
+}
+.pager a:hover {
+  background-color: @grayLight;
+}
+
+
+
+
+
+.hero-unit {
+  background-color: @grayLighter;
+}
+
+
+
+
+code,
+pre {
+  color: @black;
+}
+code {
+  color: lighten(#d14, 20%);
+  background-color: @grayLight;
+  border-color: @gray;
+}
+pre {
+  background-color: @grayLight;
+}
+
+
+
+
+
+.table-striped {
+  tbody {
+    tr:nth-child(odd) td,
+    tr:nth-child(odd) th {
+      background-color: @grayLighter;
+    }
+  }
+}
+.table {
+  tbody tr:hover td,
+  tbody tr:hover th {
+    background-color: @grayLight;
+  }
+}
+
+
+
+
+h1, h2, h3, h4, h5, h6 {
+  small {
+    color: @gray;
+  }
+}
+.muted {
+  color: darken(@textColor, 30%);
+}
+
+
+
+
+
+.label {
+  color: @black;
+  background-color: @gray;
+}
+.label:hover {
+  color: @black;
+}
+.label-important        { background-color: @errorBackground; }
+.label-important:hover  { background-color: darken(@errorBackground, 10%); }
+.label-warning          { background-color: @warningBackground; }
+.label-warning:hover    { background-color: darken(@warningBackground, 10%); }
+.label-success          { background-color: @successBackground; }
+.label-success:hover    { background-color: darken(@successBackground, 10%); }
+.label-info             { background-color: @infoBackground; }
+.label-info:hover       { background-color: darken(@infoBackground, 10%); }
+
+
+
+.popover-inner {
+  background: @white; // has to be full background declaration for IE fallback
+}
+.popover-title {
+  background-color: @grayDarker;
+  color: @white;
+}
+.popover-content {
+  background-color: @black;
+  color: @white;
+}
+
+
+
+
+.carousel-caption {
+  background: @grayLight;
+  background: rgba(0,0,0,.75);
+}
+.carousel-caption h4,
+.carousel-caption p {
+  color: @black;
+}
+
+
+
+
+.modal-backdrop {
+  background-color: @grayDark;
+}
+.modal-footer {
+  background-color: @grayLighter;
+}
+
+
+
+
+
+.navbar .nav > li > a {
+  text-shadow: 0 -1px 0 rgba(128,128,128,.25);
+}

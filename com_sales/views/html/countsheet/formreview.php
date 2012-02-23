@@ -38,7 +38,7 @@ $pines->com_pgrid->load();
 	<?php if ($this->entity->missing) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-error">Missing Items</big>
 			</a>
 			<div class="accordion-body collapse in">
@@ -74,7 +74,7 @@ $pines->com_pgrid->load();
 	<?php } if ($this->entity->matched) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-success">Matched Items</big>
 			</a>
 			<div class="accordion-body collapse in">
@@ -110,7 +110,7 @@ $pines->com_pgrid->load();
 	<?php } if ($this->entity->potential) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Potential Matches</big>
 			</a>
 			<div class="accordion-body collapse in">
@@ -169,7 +169,7 @@ $pines->com_pgrid->load();
 	<?php } if ($this->entity->duplicate) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert" style="margin-bottom: 0;">Duplicate Items</big>
 			</a>
 			<div class="accordion-body collapse in">
@@ -205,7 +205,7 @@ $pines->com_pgrid->load();
 	<?php } if ($this->entity->history) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert" style="margin-bottom: 0;">Past Items</big>
 			</a>
 			<div class="accordion-body collapse in">
@@ -237,7 +237,7 @@ $pines->com_pgrid->load();
 	<?php } if ($this->entity->invalid) { ?>
 	<div class="accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Invalid/Unknown Entries</big>
 			</a>
 			<div class="accordion-body collapse in">

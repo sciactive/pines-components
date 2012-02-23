@@ -111,7 +111,7 @@ $pines->com_jstree->load();
 	<br class="pf-clearing" />
 	<div class="p_muid_option_accordian accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Change Availability</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -169,7 +169,7 @@ $pines->com_jstree->load();
 	<?php if (isset($this->entity) && $this->entity->product->serialized) { ?>
 	<div class="p_muid_option_accordian accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Change Serial</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -199,7 +199,7 @@ $pines->com_jstree->load();
 	<?php } ?>
 	<div class="p_muid_option_accordian accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Change Location</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -261,7 +261,7 @@ $pines->com_jstree->load();
 	</div>
 	<div class="p_muid_option_accordian accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Change Vendor</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -297,7 +297,7 @@ $pines->com_jstree->load();
 	</div>
 	<div class="p_muid_option_accordian accordion">
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle alert-info">Change Cost</big>
 			</a>
 			<div class="accordion-body collapse">

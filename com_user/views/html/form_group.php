@@ -498,7 +498,7 @@ $pines->uploader->load();
 				if (!$section_abilities) continue; ?>
 			<div class="abilities_accordion accordion">
 				<div class="accordion-group">
-					<a class="accordion-heading ui-helper-clearfix" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+					<a class="accordion-heading ui-helper-clearfix" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 						<big class="accordion-toggle"><?php echo ($cur_section == 'system') ? htmlspecialchars($pines->info->name) : htmlspecialchars($pines->info->$cur_section->name); ?> <span class="component"><?php echo htmlspecialchars($cur_section); ?></span></big>
 					</a>
 					<div class="accordion-body collapse">

@@ -843,7 +843,7 @@ $pines->com_customer->load_company_select();
 		<div class="tab-pane" id="p_muid_tab_history">
 			<div class="accordion">
 				<div class="accordion-group">
-					<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+					<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 						<big class="accordion-toggle">Customer Interaction</big>
 					</a>
 					<div class="accordion-body collapse in">
@@ -889,7 +889,7 @@ $pines->com_customer->load_company_select();
 					?>
 				<div class="accordion">
 					<div class="accordion-group">
-						<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse">
+						<a class="accordion-heading" href="javascript:void(0);" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 							<big class="accordion-toggle">Purchases and Returns</big>
 						</a>
 						<div class="accordion-body collapse in">

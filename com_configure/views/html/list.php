@@ -133,7 +133,7 @@ $this->title = 'Configure Components';
 		<?php foreach($this->components as $cur_component) {
 			if (($this->per_user || $this->per_condition) && !$cur_component->is_configurable()) continue; ?>
 		<div class="accordion-group">
-			<a class="accordion-heading ui-helper-clearfix" href="javascript:void(0);" data-parent="#p_muid_components" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading ui-helper-clearfix" href="javascript:void(0);" data-parent="#p_muid_components" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">
 					<span class="title"><?php echo htmlspecialchars($cur_component->info->name); ?></span>
 					<?php echo $cur_component->config ? ' <span class="label label-info">Modified</span>' : ''; echo $cur_component->is_disabled() ? ' <span class="label label-important">Disabled</span>' : ''; ?>

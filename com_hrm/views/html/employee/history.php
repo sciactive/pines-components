@@ -133,7 +133,7 @@ $pines->com_pgrid->load();
 	<div id="p_muid_div" class="accordion">
 		<?php if (!empty($this->entity->employment_history)) { ?>
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Employment History</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -159,7 +159,7 @@ $pines->com_pgrid->load();
 		</div>
 		<?php } if (!empty($this->issues)) { ?>
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Issues/Transgressions</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -206,7 +206,7 @@ $pines->com_pgrid->load();
 		</div>
 		<?php } if (!empty($this->sales)) { ?>
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Sales History</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -242,7 +242,7 @@ $pines->com_pgrid->load();
 		</div>
 		<?php } if (!empty($this->returns)) { ?>
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Return History</big>
 			</a>
 			<div class="accordion-body collapse">
@@ -278,7 +278,7 @@ $pines->com_pgrid->load();
 		</div>
 		<?php } if (!empty($this->paystubs)) { ?>
 		<div class="accordion-group">
-			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse">
+			<a class="accordion-heading" href="javascript:void(0);" data-parent="#p_muid_div" data-toggle="collapse" data-target=":focus + .collapse" tabindex="0">
 				<big class="accordion-toggle">Paystubs</big>
 			</a>
 			<div class="accordion-body collapse">

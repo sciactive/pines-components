@@ -15,7 +15,7 @@ $this->title = 'Loan Overview';
 ?>
 <div class="pf-form">
 	<div class="pf-element pf-heading">
-		<h1>Summary</h1>
+		<h3>Summary</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-label" style="width:280px;margin-right:60px;">
@@ -114,43 +114,42 @@ $this->title = 'Loan Overview';
 			<span>Total Interest: <span style="float:right;"><?php echo '$'.htmlspecialchars($this->entity->total_interest_sum); ?></span></span><br/>
 			<span>Est. Interest Savings: <span style="float:right;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->est_interest_savings, true)); ?></span></span><br/><br/>
 			
-			<div style="border:1px solid #ccc; padding:3px;"><span style="font-weight:bold;font-size:1.1em;"><?php echo $payment_frequency;?> Payment: <span style="float:right;"><?php echo '$'.htmlspecialchars($this->entity->frequency_payment); ?></span></span></div><br/>
+			<div style="border:1px solid #ccc; padding:3px;"><span style="font-weight:bold;font-size:1.1em;"><?php echo $payment_frequency;?> Payment: <span style="float:right;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->frequency_payment, true)); ?></span></span></div><br/>
 		</div>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Amortization Schedule</h1>
+		<h3>Amortization Schedule</h3>
 	</div>
-	<div class="pf-element pf-full-width">
-		<table cellspacing="0" cellpadding="0" border="0" style="border:1px solid #ccc; width:100%;text-align:right;">
-			<tbody>
-			<tr class="ui-widget-header" style="text-align:center;border:0;color:#454545;">
-				<td style="border-bottom:1px solid #b0b0b0;">Payment Due Date</td>
-				<td style="border-bottom:1px solid #b0b0b0;">Payment</td>
-				<td style="border-bottom:1px solid #b0b0b0;">Interest Payment</td>
-				<td style="border-bottom:1px solid #b0b0b0;">Principal Payment</td>
-				<td style="border-bottom:1px solid #b0b0b0;">Balance</td>
-			</tr>
-			<tr>
-				<td style="border-bottom:1px solid #eee;padding-right:7px;" colspan="5"><span style="float:left; padding-left:7px;">Principal Balance:</span><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->principal, true)); ?></td>
-			</tr>
-			<?php
-			foreach ($this->entity->schedule as $schedule) {
-			?>
+	<div class="pf-element pf-full-width" style="overflow: auto;">
+		<table class="table" style="min-width:100%;font-size:.8em;">
+			<thead>
 				<tr>
-					<td style="border-bottom:1px solid #eee;padding-left:7px; text-align:left;"><?php echo htmlspecialchars(format_date($schedule['scheduled_date_expected'], "date_short")); ?></td>
-					<td style="border-bottom:1px solid #eee;padding-right:7px;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_amount_expected'], true)); ?></td>
-					<td style="border-bottom:1px solid #eee;padding-right:7px;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_interest_expected'], true)); ?></td>
-					<td style="border-bottom:1px solid #eee;padding-right:7px;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_principal_expected'], true)); ?></td>
-					<td style="border-bottom:1px solid #eee;padding-right:7px;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['scheduled_balance'], true)); ?></td>
+					<th>Payment Due Date</th>
+					<th>Payment</th>
+					<th>Interest Payment</th>
+					<th>Principal Payment</th>
+					<th>Balance</th>
 				</tr>
-			<?php
-			}
-			?>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="4">Principal Balance</td>
+					<td>$<?php echo htmlspecialchars($pines->com_sales->round($this->entity->principal, true)); ?></td>
+				</tr>
+				<?php foreach ($this->entity->schedule as $schedule) { ?>
+				<tr>
+					<td><?php echo htmlspecialchars(format_date($schedule['scheduled_date_expected'], "date_short")); ?></td>
+					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_amount_expected'], true)); ?></td>
+					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_interest_expected'], true)); ?></td>
+					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['payment_principal_expected'], true)); ?></td>
+					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($schedule['scheduled_balance'], true)); ?></td>
+				</tr>
+				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Verify</h1>
+		<h3>Verify</h3>
 		<p>Is this information correct?</p>
 	</div>
 	<div class="pf-element pf-buttons">
@@ -170,8 +169,8 @@ $this->title = 'Loan Overview';
 			<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 			<?php } ?>
 			<input id="p_muid_loan_process_type" type="hidden" name="loan_process_type" value="none" />
-			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="$('#p_muid_loan_process_type').val('submit'); $('#p_muid_loan_form').submit();" value="Yes, Continue." />
-			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="$('#p_muid_loan_process_type').val('go_back'); $('#p_muid_loan_form').submit();" value="No, Go Back." />
+			<input class="pf-button btn btn-primary" type="button" onclick="$('#p_muid_loan_process_type').val('submit'); $('#p_muid_loan_form').submit();" value="Yes, Continue." />
+			<input class="pf-button btn" type="button" onclick="$('#p_muid_loan_process_type').val('go_back'); $('#p_muid_loan_form').submit();" value="No, Go Back." />
 		</form>
 	</div>
 </div>

@@ -17,7 +17,6 @@ $pines->com_customer->load_customer_select();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_loan', 'loan/save')); ?>">
 	<script type="text/javascript">
-		// <![CDATA[
 		pines(function(){
 			// Creation date Date Picker.
 			$("#p_muid_creation_date").datepicker({
@@ -101,7 +100,6 @@ $pines->com_customer->load_customer_select();
 				dateFormat: 'yy-mm-dd'
 			});
 		});
-		// ]]>
 	</script>
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -114,27 +112,27 @@ $pines->com_customer->load_customer_select();
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Customer</h1>
+		<h3>Customer</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
-		<input id="p_muid_customer" class="pf-field ui-widget-content ui-corner-all" type="text" name="customer" value="<?php echo (isset($this->entity->customer->guid) ? htmlspecialchars("{$this->entity->customer->guid}: {$this->entity->customer->name}") : ''); ?>"/>
+		<input id="p_muid_customer" class="pf-field" type="text" name="customer" value="<?php echo (isset($this->entity->customer->guid) ? htmlspecialchars("{$this->entity->customer->guid}: {$this->entity->customer->name}") : ''); ?>"/>
 	</div>
 	<div class="pf-element pf-heading">
-		<h1>Loan Information</h1>
+		<h3>Loan Information</h3>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Creation Date</span>
-		<input id="p_muid_creation_date" class="pf-field ui-widget-content ui-corner-all" type="text" name="creation_date" value="<?php echo ((strlen(strtotime($this->entity->creation_date) > 0)) ? htmlspecialchars(format_date(strtotime($this->entity->creation_date), 'date_sort')) : ''); ?>"/>
+		<input id="p_muid_creation_date" class="pf-field" type="text" name="creation_date" value="<?php echo ((strlen(strtotime($this->entity->creation_date) > 0)) ? htmlspecialchars(format_date(strtotime($this->entity->creation_date), 'date_sort')) : ''); ?>"/>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Principal Amount</span>
-		<input id="p_muid_prin" class="pf-field ui-widget-content ui-corner-all" type="text" name="principal" value="<?php echo (!empty($this->entity->principal) ? htmlspecialchars("\${$this->entity->principal}") : ''); ?>"/>
+		<input id="p_muid_prin" class="pf-field" type="text" name="principal" value="<?php echo (!empty($this->entity->principal) ? htmlspecialchars("\${$this->entity->principal}") : ''); ?>"/>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">APR</span>
 		<span class="pf-note">Annual Percentage Rate</span>
-		<input id="p_muid_apr" class="pf-field ui-widget-content ui-corner-all" type="text" name="apr" value="<?php echo (!empty($this->entity->apr) ? htmlspecialchars("{$this->entity->apr}%") : ''); ?>"/>
+		<input id="p_muid_apr" class="pf-field" type="text" name="apr" value="<?php echo (!empty($this->entity->apr) ? htmlspecialchars("{$this->entity->apr}%") : ''); ?>"/>
 	</div>
 	<div class="pf-element">
 		<label for="p_muid_term">
@@ -142,8 +140,8 @@ $pines->com_customer->load_customer_select();
 			<span class="pf-note">Length of loan in years or months.</span>
 		</label>
 		<div class="pf-group">
-			<input id="p_muid_term" class="pf-field ui-widget-content ui-corner-all" type="text" name="term" value="<?php echo (!empty($this->entity->term) ? htmlspecialchars($this->entity->term) : ''); ?>"/>
-			<select class="pf-field ui-widget-content ui-corner-all" name="term_type">
+			<input id="p_muid_term" class="pf-field" type="text" name="term" value="<?php echo (!empty($this->entity->term) ? htmlspecialchars($this->entity->term) : ''); ?>"/>
+			<select class="pf-field" name="term_type">
 				<option value="months"<?php echo $this->entity->term_type == 'months' ? ' selected="selected"' : ''; ?>>Months</option>
 				<option value="years"<?php echo $this->entity->term_type == 'years' ? ' selected="selected"' : ''; ?>>Years</option>
 			</select>
@@ -151,12 +149,12 @@ $pines->com_customer->load_customer_select();
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">First Payment Date</span>
-		<input id="p_muid_first_payment_date" class="pf-field ui-widget-content ui-corner-all" type="text" name="first_payment_date" value="<?php echo ((strlen(strtotime($this->entity->first_payment_date)) > 0) ? htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), 'date_sort')) : ''); ?>"/>
+		<input id="p_muid_first_payment_date" class="pf-field" type="text" name="first_payment_date" value="<?php echo ((strlen(strtotime($this->entity->first_payment_date)) > 0) ? htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), 'date_sort')) : ''); ?>"/>
 	</div>
 	<div class="pf-element">	
 		<label>
 			<span class="pf-label">Payment Frequency</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="payment_frequency">
+			<select class="pf-field" name="payment_frequency">
 				<option value="12"<?php echo $this->entity->payment_frequency == '12' ? ' selected="selected"' : ''; ?>>Monthly</option>
 				<option value="1"<?php echo $this->entity->payment_frequency == '1' ? ' selected="selected"' : ''; ?>>Annually</option>
 				<option value="2"<?php echo $this->entity->payment_frequency == '2' ? ' selected="selected"' : ''; ?>>Semi-Annually</option>
@@ -171,7 +169,7 @@ $pines->com_customer->load_customer_select();
 	<div class="pf-element">	
 		<label>
 			<span class="pf-label">Compound Frequency</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="compound_frequency">
+			<select class="pf-field" name="compound_frequency">
 				<option value="12"<?php echo $this->entity->compound_frequency == '12' ? ' selected="selected"' : ''; ?>>Monthly</option>
 				<option value="1"<?php echo $this->entity->compound_frequency == '1' ? ' selected="selected"' : ''; ?>>Annually</option>
 				<option value="2"<?php echo $this->entity->compound_frequency == '2' ? ' selected="selected"' : ''; ?>>Semi-Annually</option>
@@ -188,7 +186,7 @@ $pines->com_customer->load_customer_select();
 		<label>
 			<span class="pf-label">Payment Type</span>
 			<span class="pf-note">Default is at the end of the period.</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="payment_type">
+			<select class="pf-field" name="payment_type">
 				<option value="ending"<?php echo $this->entity->payment_type == 0 ? ' selected="selected"' : ''; ?>>End of Period</option>
 				<option value="beginning"<?php echo $this->entity->payment_type == 1 ? ' selected="selected"' : ''; ?>>Beginning of Period</option>
 			</select>
@@ -198,7 +196,7 @@ $pines->com_customer->load_customer_select();
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_loan', 'loan/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
+		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_loan', 'loan/list')); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	// <![CDATA[
 	pines(function(){
 		// Creation date Date Picker.
 		$("#p_muid_date_input").datepicker({
@@ -29,7 +28,6 @@ defined('P_RUN') or die('Direct access prohibited');
 				$(this).closest(".ui-dialog-content").dialog("option", "buttons")["Make Payment"]();
 		});
 	});
-	// ]]>
 </script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element pf-full-width">
@@ -48,7 +46,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<span class="pf-note">Payment Due: <?php echo (isset($this->entity->payments[0]['next_payment_due'])) ? htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span>
 		</span>
 		<span class="pf-field">
-			<input id="p_muid_payment_amount" style="float:right;text-align:right;" class="pf-field ui-widget-content ui-corner-all" type="text" name="payment_amount" readonly="readonly" value="<?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->payoff_amount, true)); ?>"/>
+			<input id="p_muid_payment_amount" style="float:right;text-align:right;" class="pf-field" type="text" name="payment_amount" readonly="readonly" value="<?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->payoff_amount, true)); ?>"/>
 		</span>
 	</div>
 	<div class="pf-element pf-full-width">
@@ -56,7 +54,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<span class="pf-note">Received:</span>
 		</span>
 		<span class="pf-field">
-			<input id="p_muid_date_input" style="float:right;text-align:right;" class="pf-field ui-widget-content ui-corner-all" type="text" name="payment_date_input" value="<?php echo date('Y-m-d'); ?>"/>
+			<input id="p_muid_date_input" style="float:right;text-align:right;" class="pf-field" type="text" name="payment_date_input" value="<?php echo date('Y-m-d'); ?>"/>
 		</span>
 	</div>
 </form>

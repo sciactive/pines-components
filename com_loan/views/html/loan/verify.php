@@ -23,10 +23,10 @@ $this->title = 'Loan Overview';
 			<span style="font-weight:bold;">APR: <span style="float:right;"><?php echo htmlspecialchars($this->entity->apr).'%'; ?></span></span><br/>
 			<span style="font-weight:bold;">Term: <span style="float:right;"><?php echo htmlspecialchars($this->entity->term); echo " ".htmlspecialchars($this->entity->term_type); ?></span></span><br/>
 			<div style="line-height:0px;border-bottom:1px solid #ddd; margin: 5px 0;">&nbsp;</div>
-			
+
 			<span>First Payment: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
 			<span>Payment Frequency: <span style="float:right;">
-				<?php 
+				<?php
 				switch ($this->entity->payment_frequency) {
 					case "12":
 						echo "Monthly";
@@ -113,7 +113,7 @@ $this->title = 'Loan Overview';
 			<span>Total Payments: <span style="float:right;"><?php echo '$'.htmlspecialchars($this->entity->total_payment_sum); ?></span></span><br/>
 			<span>Total Interest: <span style="float:right;"><?php echo '$'.htmlspecialchars($this->entity->total_interest_sum); ?></span></span><br/>
 			<span>Est. Interest Savings: <span style="float:right;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->est_interest_savings, true)); ?></span></span><br/><br/>
-			
+
 			<div style="border:1px solid #ccc; padding:3px;"><span style="font-weight:bold;font-size:1.1em;"><?php echo $payment_frequency;?> Payment: <span style="float:right;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->frequency_payment, true)); ?></span></span></div><br/>
 		</div>
 	</div>

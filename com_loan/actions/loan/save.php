@@ -68,20 +68,20 @@ if(empty($loan->principal)){
 	return;
 }
 if (preg_match ('/\$/', $loan->principal)) {
-    $loan->principal = str_replace('$', '', $loan->principal);
+	$loan->principal = str_replace('$', '', $loan->principal);
 }
 if(!is_numeric($loan->principal)){
 	$loan->print_form();
 	pines_notice('Please enter a numeric value for the principal amount.');
 	return;
-} 
+}
 if(empty($loan->apr)){
 	$loan->print_form();
 	pines_notice('An annual percentage rate (APR) is required.');
 	return;
 }
 if (preg_match ('/\%/', $loan->apr)) {
-    $loan->apr = str_replace('%', '', $loan->apr);
+	$loan->apr = str_replace('%', '', $loan->apr);
 }
 if(!is_numeric($loan->apr)){
 	$loan->print_form();
@@ -120,7 +120,7 @@ switch ($loan->payment_frequency) {
 	case "52":
 		$loan->payment_frequency = (int) $loan->payment_frequency;
 		break;
-	default: 
+	default:
 		$loan->print_form();
 		pines_notice('A payment frequency is required.');
 		return;
@@ -138,7 +138,7 @@ switch ($loan->compound_frequency) {
 	case "360":
 		$loan->compound_frequency = (int) $loan->compound_frequency;
 		break;
-	default: 
+	default:
 		$loan->print_form();
 		pines_notice('A compound frequency is required.');
 		return;
@@ -151,7 +151,7 @@ switch ($loan->payment_type) {
 	case "beginning":
 		$loan->payment_type = 1;
 		break;
-	default: 
+	default:
 		$loan->print_form();
 		pines_notice('A payment type is required.');
 		return;
@@ -186,7 +186,7 @@ for ($i = 0; $i < $nper; $i++) {
 	if ($i == 0) {
 		$schedule[$i]['scheduled_date_expected'] = strtotime($loan->first_payment_date);
 		$schedule[$i]['scheduled_current_balance'] = $loan->principal;
-		$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $loan->rate_per_period) / 100, true); 
+		$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $loan->rate_per_period) / 100, true);
 		$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
 		$schedule[$i]['payment_interest_paid'] = 0.00; // no payments made at time of loan creation.
 		$schedule[$i]['payment_principal_paid'] = 0.00; // no payments made at time of loan creation.
@@ -204,13 +204,13 @@ for ($i = 0; $i < $nper; $i++) {
 			$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
 		}
 		$schedule[$i]['payment_amount_expected'] = $schedule[$i]['payment_principal_expected'] + $schedule[$i]['payment_interest_expected'];
-		$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation. 
+		$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation.
 		$schedule[$i]['scheduled_balance'] = $schedule[$i]['scheduled_current_balance'] - $schedule[$i]['payment_principal_expected'];
 	}
 	$schedule[$i]['additional_payment'] = null;
 	$schedule[$i]['payment_status'] = "not due yet" ;
-	$sum_int = $sum_int + $schedule[$i]['payment_interest_expected']; 
-	$sum_prin = $sum_prin + $schedule[$i]['payment_principal_expected']; 
+	$sum_int = $sum_int + $schedule[$i]['payment_interest_expected'];
+	$sum_prin = $sum_prin + $schedule[$i]['payment_principal_expected'];
 }
 $loan->schedule = $schedule;
 // Calculate remaining variables.
@@ -238,4 +238,3 @@ if($loan->loan_process_type == "submit"){
 	pines_redirect(pines_url('com_loan', 'loan/list'));
 }
 ?>
-

@@ -39,5 +39,5 @@ $loan->save();
 $loan->get_payments_array();
 $loan->save();
 pines_redirect(pines_url('com_loan', 'loan/editpayments', array('id' => $loan->guid)));
-return;
+
 ?>

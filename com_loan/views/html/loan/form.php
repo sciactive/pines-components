@@ -25,10 +25,10 @@ $pines->com_customer->load_customer_select();
 				yearRange: '-50',
 				dateFormat: 'yy-mm-dd'
 			});
-			
+
 			// Customer Autocomplete.
 			$("#p_muid_customer").customerselect();
-			
+
 			// Principal Amount Checker - adds preceding $ and checks for non-numeric entries.
 			// Also, if a "bad" value is entered in, it reverts back to the last "good" value, if there was one.
 			var prin_inp = $("#p_muid_prin");
@@ -53,7 +53,7 @@ $pines->com_customer->load_customer_select();
 				}
 				orig_prin_value = prin_inp.val();
 			});
-			
+
 			// APR checker - adds %, checks for non-numeric entries, and hints user to make sure it's correct.
 			// Also, if a "bad" value is entered in, it reverts back to the last "good" value, if there was one.
 			var apr_inp = $("#p_muid_apr");
@@ -80,7 +80,7 @@ $pines->com_customer->load_customer_select();
 				}
 				orig_apr_value = apr_inp.val();
 			});
-			
+
 			// Check that term is an integer.
 			var term_inp = $("#p_muid_term");
 			var orig_term_value = term_inp.val();
@@ -91,7 +91,7 @@ $pines->com_customer->load_customer_select();
 						term_inp.val(orig_term_value);
 					}
 			});
-			
+
 			// First Payment Date Date-Picker.
 			$("#p_muid_first_payment_date").datepicker({
 				changeMonth: true,
@@ -151,7 +151,7 @@ $pines->com_customer->load_customer_select();
 		<span class="pf-label">First Payment Date</span>
 		<input id="p_muid_first_payment_date" class="pf-field" type="text" name="first_payment_date" value="<?php echo ((strlen(strtotime($this->entity->first_payment_date)) > 0) ? htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), 'date_sort')) : ''); ?>"/>
 	</div>
-	<div class="pf-element">	
+	<div class="pf-element">
 		<label>
 			<span class="pf-label">Payment Frequency</span>
 			<select class="pf-field" name="payment_frequency">
@@ -166,7 +166,7 @@ $pines->com_customer->load_customer_select();
 			</select>
 		</label>
 	</div>
-	<div class="pf-element">	
+	<div class="pf-element">
 		<label>
 			<span class="pf-label">Compound Frequency</span>
 			<select class="pf-field" name="compound_frequency">
@@ -182,7 +182,7 @@ $pines->com_customer->load_customer_select();
 			</select>
 		</label>
 	</div>
-	<div class="pf-element">	
+	<div class="pf-element">
 		<label>
 			<span class="pf-label">Payment Type</span>
 			<span class="pf-note">Default is at the end of the period.</span>

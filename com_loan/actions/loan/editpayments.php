@@ -42,17 +42,17 @@ if ($_REQUEST['editpayments'] == "edit_payment") {
 	$edit_payment_id = count($_REQUEST['payment_id']) ? $_POST['payment_id'] : array();
 	$check_delete_payment = count($_REQUEST['delete_payment']) ? $_REQUEST['delete_payment'] : array();
 	$edit_error_type = count($_REQUEST['error_type']) ? $_REQUEST['error_type'] : array();
-	// So when we create histories of payments, we want the history before ANY of these payments 
+	// So when we create histories of payments, we want the history before ANY of these payments
 	// were processed - NOT in between each tweek from editing multiple payments, or it wouldn't make
 	// much sense to the user observing the changes.
-	
+
 	// That being the case, get the current, untampered with paid and payments array, and pass them
 	// to match_paid_id and match_payment_id instead of looking through them as they change with each
 	// payment edit.
-	
+
 	$use_paid_array = $loan->paid;
 	$use_payments_array = $loan->payments;
-	
+
 	$c = 0;
 	foreach ($edit_payment_amount as $cur_payment_amount) {
 		// Define and validate key variables
@@ -66,11 +66,11 @@ if ($_REQUEST['editpayments'] == "edit_payment") {
 		}
 		// Remove possible dollar sign from price.
 		$payment_amount = str_replace('$', '', $payment_amount);
-		
+
 		// Round payment and past due amounts.
 		$payment_amount = $pines->com_sales->round((float)$payment_amount);
 		$loan->past_due = $pines->com_sales->round($loan->past_due );
-		
+
 		// Check if deleting the payment
 		$delete_this_payment = false;
 		foreach ($check_delete_payment as $delete_id) {
@@ -79,8 +79,8 @@ if ($_REQUEST['editpayments'] == "edit_payment") {
 				$delete_this_payment = true;
 			}
 		}
-				
-		
+
+
 		// Find payment ID in the OLD paid array to see if it exists.
 		$loan->match_paid_id($payment_id, $use_paid_array);
 		$num = $loan->match_info['num'];
@@ -147,14 +147,14 @@ if ($_REQUEST['editpayments'] == "edit_payment") {
 		}
 		$c++;
 	}
-	
+
 	if (!empty($loan->get_edit_results))
 		$loan->get_edit_results($loan->get_edit_results);
 	$loan->get_edit_results = null;
 	if (!empty($loan->get_delete_results))
 		$loan->get_delete_results($loan->get_delete_results);
 	$loan->get_delete_results = null;
-	
+
 	// Run clean up pay by dates after making payments.
 	$loan->cleanup_pbds();
 

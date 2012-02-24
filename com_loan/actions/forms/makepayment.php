@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_loan/makepayment') )
 		punt_user(null, pines_url('com_loan', 'forms/makepayment'));
+
 if ( isset($_REQUEST['id']) ) {
 	$loan = com_loan_loan::factory((int) $_REQUEST['id']);
 	if (!isset($loan->guid)) {
@@ -28,21 +29,22 @@ if ( isset($_REQUEST['id']) ) {
 
 $loan->get_payments_array();
 
-// It's okay if the paid array previously existed, that will give us an 
+// It's okay if the paid array previously existed, that will give us an
 // accurate payments array, which is what we need.
 if ($loan->payments[0]['unpaid_balance'] > 0)
 	$loan->unpaid_balance = $loan->payments[0]['unpaid_balance'];
-else 
+else
 	$loan->unpaid_balance = 0.00;
+
 if ($loan->payments[0]['unpaid_interest'] > 0)
 	$loan->unpaid_interest = $loan->payments[0]['unpaid_interest'];
-else 
+else
 	$loan->unpaid_interest = 0.00;
 
 $past_due = $loan->payments[0]['past_due'] - ($loan->payments[0]['unpaid_balance_not_past_due'] + $loan->payments[0]['unpaid_interest_not_past_due']);
 if ($past_due > 0)
 	$loan->past_due = $past_due;
-else 
+else
 	$loan->past_due = 0.00;
 
 $num = count($loan->paid) - 1;
@@ -55,3 +57,4 @@ if ($loan->paid[$num]['payment_status'] == 'partial_not_due') {
 
 $loan->save();
 $loan->makepayment_form();
+?>

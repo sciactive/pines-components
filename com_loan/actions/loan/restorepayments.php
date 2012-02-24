@@ -25,34 +25,34 @@ if ( isset($_REQUEST['id']) ) {
 if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 	// The paid array exists and/or edit-delete history exists
 	// ..so create a backup of currently existing data.
-	
+
 	$restore_point_value = $_REQUEST['delete_restore_point'];
 	// Get variables
-	if (empty($restore_point_value)) 
+	if (empty($restore_point_value))
 		$restore_point_value = $_REQUEST['restore_point'];
 	$restore_name = $_REQUEST['restore_name'][$restore_point_value];
-	
+
 	// Check if entity exists.
 	if (!isset($loan->guid)) {
 		pines_notice('The given ID could not be found.');
 		pines_redirect(pines_url('com_loan', 'loan/list'));
 		return;
 	}
-	
+
 	// Create all payments history if it doesn't exist yet.
 	if (!$loan->history->all_payments) {
 		$loan->history->all_payments = array();
 	}
-	
+
 	foreach ($loan->history->all_payments as $all_pay) {
 		// Find Auto-saves.
 		if (preg_match('/^Auto-save/', $all_pay['all_delete']['delete_name'])) {
 			$count += 1;
 		}
 	}
-	
+
 	$new_auto_save = $count + 1;
-	
+
 	// Create delete info
 	$delete_info = array();
 	$delete_info['delete_date'] = strtotime('now');
@@ -61,7 +61,7 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 	$delete_info['delete_user'] = $_SESSION['user']->username;
 	$delete_info['delete_guid'] = $_SESSION['user_id'];
 	$delete_info['delete_remaining_balance'] = $loan->payments[0]['remaining_balance'];
-	
+
 	// Create the record, using a temp array.
 	$delete_all = array();
 	$delete_all['pay_by_date'] = $loan->pay_by_date;
@@ -69,19 +69,19 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 	$delete_all['all_paid'] = $loan->paid;
 	$delete_all['all_edit_payment_history'] = $loan->history->edit_payments;
 	$delete_all['all_delete'] = $delete_info;
-	
+
 	$loan->history->all_payments[] = $delete_all;
-	
+
 	// Now unset everything and save it.
 	$loan->paid = null;
 	$loan->history->edit_payments = null;
-	
+
 	// Then continue below...
-	
-} 
+
+}
 
 // Get variables
-if (!isset($restore_point_value)) 
+if (!isset($restore_point_value))
 	$restore_point_value = $_REQUEST['restore_point'];
 
 $restore_name = $_REQUEST['restore_name'][$restore_point_value];
@@ -140,3 +140,5 @@ $loan->save();
 //var_dump($loan->paid);
 //exit;
 pines_redirect(pines_url('com_loan', 'loan/editpayments', array('id' => $loan->guid)));
+
+?>

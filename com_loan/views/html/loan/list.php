@@ -26,7 +26,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_loan/newloan')) { ?>
 //				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true},
-//				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true},			
+//				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true},
 //				{type: 'separator'},
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_loan', 'loan/edit')); ?>},
 				<?php } if (gatekeeper('com_loan/editloan')) { ?>
@@ -34,13 +34,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'separator'},
 				<?php } if (gatekeeper('com_loan/makepayment')) { ?>
 				{type: 'button', text: 'Make Payment', extra_class: 'picon picon-wallet-open', click: function(e, row){
-					loan_grid.makepayment_form($(row).attr("title")); 
+					loan_grid.makepayment_form($(row).attr("title"));
 				}},
 				<?php } if (gatekeeper('com_loan/editloan')) {
 							if (gatekeeper('com_loan/editpayments')) {
 							?>
-							{type: 'button', text: 'Edit Payments', extra_class: 'picon picon-accessories-calculator', url: <?php echo json_encode(pines_url('com_loan', 'loan/editpayments', array('id' => '__title__'))); ?>},	
-							<?php	
+							{type: 'button', text: 'Edit Payments', extra_class: 'picon picon-accessories-calculator', url: <?php echo json_encode(pines_url('com_loan', 'loan/editpayments', array('id' => '__title__'))); ?>},
+							<?php
 							}
 				?>
 				{type: 'separator'},
@@ -52,20 +52,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					if (gatekeeper('com_loan/payoffloan')) {
 				?>
 				{type: 'button', text: 'Pay Off', extra_class: 'picon picon-wallet-open', click: function(e, row){
-					loan_grid.payoff_form($(row).attr("title")); 
+					loan_grid.payoff_form($(row).attr("title"));
 				}},
-				<?php } 
+				<?php }
 					if (gatekeeper('com_loan/writeoffloan')) {
 				?>
 //				{type: 'button', text: 'Write Off', extra_class: 'picon picon-document-close', click: function(e, row){
-//					loan_grid.write_off($(row).attr("title")); 
+//					loan_grid.write_off($(row).attr("title"));
 //				}},
 				<?php
 					}
 					if (gatekeeper('com_loan/cancelloan')) {
 				?>
 				{type: 'button', text: 'Cancel', extra_class: 'picon picon-dialog-cancel', click: function(e, row){
-					loan_grid.cancel_loan($(row).attr("title")); 
+					loan_grid.cancel_loan($(row).attr("title"));
 				}},
 				<?php
 					}
@@ -97,15 +97,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		var loan_grid = $("#p_muid_grid").pgrid(cur_options);
-		
-		
+
+
 //		loan_grid.write_off = function(loan_id){
 //			if (!confirm("You are about to write off this loan as noncollectable and accept all unpaid amount as a non-taxable loss. \n\nAre you sure you want to do this? ")) {
 //				e.preventDefault();
 //				return false;
 //			}
 //		};
-		
+
 		loan_grid.cancel_loan = function(loan_id){
 			if (!confirm("You are about to cancel this loan, which can't be undone. \n\nAre you sure you want to do this? ")) {
 				return false;
@@ -114,10 +114,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					"id": loan_id
 				});
 			}
-	
+
 		};
-		
-		
+
+
 		loan_grid.makepayment_form = function(loan_id){
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_loan', 'forms/makepayment')); ?>,
@@ -168,8 +168,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			});
 		};
-		
-		
+
+
 		loan_grid.payoff_form = function(loan_id){
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_loan', 'forms/payoff')); ?>,

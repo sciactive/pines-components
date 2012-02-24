@@ -43,7 +43,7 @@ if (!preg_match('/^\$?[0-9]*\.?[0-9]*$/', $payment_amount)) {
 // Remove possible dollar sign from price.
 $payment_amount = str_replace('$', '', $payment_amount);
 
-	
+
 $payment_amount = $pines->com_sales->round((float)$payment_amount);
 
 // Use this to reset the paid array. Make sure not to save at the bottom of this file, if doing that.
@@ -66,7 +66,7 @@ if($remaining_balance < .01) {
 $loan->get_payments_array();
 
 // Get paid array variables we will need.
-// The date expected variable below will only be used for updating if not using a 
+// The date expected variable below will only be used for updating if not using a
 // if $loan->pay_by_date array exists, then missed_first_payment won't matter.
 if ($loan->missed_first_payment == true) {
 	$date_expected = $loan->payments[0]['first_payment_missed'];
@@ -80,7 +80,7 @@ if (!$date_received)
 	$date_received = strtotime($_REQUEST['payment_date_input']);
 $date_recorded = strtotime('now');
 
-// Check for valid date 
+// Check for valid date
 if(strtotime($date_received) === 0){
 	pines_notice('A valid date for receiving payment is required.');
 	pines_redirect(pines_url('com_loan', 'loan/list'));
@@ -129,7 +129,7 @@ $loan->save();
 // Redirect to overview.
 if ($_REQUEST['edit'])
 	pines_redirect(pines_url('com_loan', 'loan/editpayments', array('id' => $loan->guid)));
-else 
+else
 	pines_redirect(pines_url('com_loan', 'loan/overview', array('id' => $loan->guid)));
 
 ?>

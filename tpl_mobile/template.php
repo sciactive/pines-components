@@ -92,7 +92,7 @@ $menu = $pines->page->render_modules('main_menu', 'module_head');
 <?php if (!empty($menu)) { ?>
 <div id="menu" style="display: none;">
 	<div><button id="menu_back" type="button" class="btn btn-primary">Return to Page</button></div>
-	<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
+	<?php echo $menu; ?>
 </div>
 <?php } ?>
 </body>

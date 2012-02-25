@@ -123,7 +123,7 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		if ($highest_primary_parent > 0) {
 			$highest_primary_parent = group::factory($highest_primary_parent);
 			if (isset($highest_primary_parent->guid))
-				$primary_groups = $highest_primary_parent->get_descendents();
+				$primary_groups = $highest_primary_parent->get_descendants();
 		}
 	}
 	if ($highest_secondary_parent == 0) {
@@ -132,7 +132,7 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		if ($highest_secondary_parent > 0) {
 			$highest_secondary_parent = group::factory($highest_secondary_parent);
 			if (isset($highest_secondary_parent->guid))
-				$secondary_groups = $highest_secondary_parent->get_descendents();
+				$secondary_groups = $highest_secondary_parent->get_descendants();
 		}
 	}
 	$group = group::factory((int) $_REQUEST['group']);

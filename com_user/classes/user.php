@@ -119,7 +119,7 @@ class user extends able_object implements user_interface {
 			if (!isset($highest_parent->guid)) {
 				$module->group_array_primary = array();
 			} else {
-				$module->group_array_primary = $highest_parent->get_descendents();
+				$module->group_array_primary = $highest_parent->get_descendants();
 			}
 		}
 		$highest_parent = $pines->config->com_user->highest_secondary;
@@ -132,7 +132,7 @@ class user extends able_object implements user_interface {
 			if (!isset($highest_parent->guid)) {
 				$module->group_array_secondary = array();
 			} else {
-				$module->group_array_secondary = $highest_parent->get_descendents();
+				$module->group_array_secondary = $highest_parent->get_descendants();
 			}
 		}
 		foreach ($pines->components as $cur_component) {
@@ -237,19 +237,23 @@ class user extends able_object implements user_interface {
 		return ($group->in_array((array) $this->groups) || $group->is($this->group));
 	}
 
-	public function is_descendent($group = null) {
+	public function is_descendant($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
 		if (!isset($group->guid))
 			return false;
-		// Check to see if the user is in a descendent group of the given group.
-		if (isset($this->group->guid) && $this->group->is_descendent($group))
+		// Check to see if the user is in a descendant group of the given group.
+		if (isset($this->group->guid) && $this->group->is_descendant($group))
 			return true;
 		foreach ((array) $this->groups as $cur_group) {
-			if ($cur_group->is_descendent($group))
+			if ($cur_group->is_descendant($group))
 				return true;
 		}
 		return false;
+	}
+
+	public function is_descendent($group = null) {
+		return $this->is_descendant($group);
 	}
 
 	public function password($password) {

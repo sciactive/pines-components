@@ -79,7 +79,7 @@ class com_user extends component implements user_manager_interface {
 
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
-		if (is_callable(array($entity->group, 'is')) && ($entity->group->is($_SESSION['user']->group) || $entity->group->in_array($_SESSION['user']->groups) || $entity->group->in_array($_SESSION['descendents'])) )
+		if (is_callable(array($entity->group, 'is')) && ($entity->group->is($_SESSION['user']->group) || $entity->group->in_array($_SESSION['user']->groups) || $entity->group->in_array($_SESSION['descendants'])) )
 			return ($ac->group >= $type);
 		return ($ac->other >= $type);
 	}
@@ -108,9 +108,9 @@ class com_user extends component implements user_manager_interface {
 		$_SESSION['user_timezone'] = $tmp_user->get_timezone();
 		date_default_timezone_set($_SESSION['user_timezone']);
 		if (isset($tmp_user->group))
-			$_SESSION['descendents'] = (array) $tmp_user->group->get_descendents();
+			$_SESSION['descendants'] = (array) $tmp_user->group->get_descendants();
 		foreach ($tmp_user->groups as $cur_group) {
-			$_SESSION['descendents'] = array_merge((array) $_SESSION['descendents'], (array) $cur_group->get_descendents());
+			$_SESSION['descendants'] = array_merge((array) $_SESSION['descendants'], (array) $cur_group->get_descendants());
 		}
 		if ($tmp_user->inherit_abilities) {
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;

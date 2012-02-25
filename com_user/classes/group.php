@@ -70,19 +70,23 @@ class group extends able_object implements group_interface {
 		return $entity;
 	}
 
-	public function is_descendent($group = null) {
+	public function is_descendant($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
 		if (!isset($group->guid))
 			return false;
-		// Check to see if the group is a descendent of the given group.
+		// Check to see if the group is a descendant of the given group.
 		if (!isset($this->parent))
 			return false;
 		if ($this->parent->is($group))
 			return true;
-		if ($this->parent->is_descendent($group))
+		if ($this->parent->is_descendant($group))
 			return true;
 		return false;
+	}
+
+	public function is_descendent($group = null) {
+		return $this->is_descendant($group);
 	}
 
 	public function delete() {
@@ -130,7 +134,7 @@ class group extends able_object implements group_interface {
 		return $return;
 	}
 
-	public function get_descendents($and_self = false) {
+	public function get_descendants($and_self = false) {
 		global $pines;
 		$return = array();
 		$entities = $pines->entity_manager->get_entities(
@@ -141,7 +145,7 @@ class group extends able_object implements group_interface {
 				)
 			);
 		foreach ($entities as $entity) {
-			$child_array = $entity->get_descendents(true);
+			$child_array = $entity->get_descendants(true);
 			$return = array_merge($return, $child_array);
 		}
 		$hooked = $this;
@@ -150,6 +154,10 @@ class group extends able_object implements group_interface {
 		if ($and_self)
 			$return[] = $hooked;
 		return $return;
+	}
+
+	public function get_descendents($and_self = false) {
+		return $this->get_descendants($and_self);
 	}
 
 	public function get_level() {
@@ -171,10 +179,10 @@ class group extends able_object implements group_interface {
 		return ($full ? $pines->config->full_location : $pines->config->location)."{$pines->config->upload_location}logos/default_logo.png";
 	}
 
-	public function get_users($descendents = false) {
+	public function get_users($descendants = false) {
 		global $pines;
-		if ($descendents) {
-			$groups = $this->get_descendents();
+		if ($descendants) {
+			$groups = $this->get_descendants();
 		} else {
 			$groups = array();
 		}

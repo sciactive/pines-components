@@ -80,8 +80,8 @@ if ( $_REQUEST['parent'] == 'none' ) {
 	unset($group->parent);
 } else {
 	$parent = group::factory((int) $_REQUEST['parent']);
-	// Check if the selected parent is a descendent of this group.
-	if (!$group->is($parent) && !$parent->is_descendent($group))
+	// Check if the selected parent is a descendant of this group.
+	if (!$group->is($parent) && !$parent->is_descendant($group))
 		$group->parent = $parent;
 }
 

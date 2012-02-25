@@ -61,9 +61,9 @@ $pines->com_customer->load_customer_select();
 				var orig_apr_value = apr_inp.val();
 			}
 			<?php if(isset($this->entity->apr_correct) && !$this->entity->apr_correct) { ?>
-					apr_inp.after(' <label id="is_this_correct" style="font-size:.9em;">is this correct? <input type="checkbox" name="apr_correct" value="ON" <?php echo $this->entity->apr_correct ? ' checked="checked"' : ''; ?> /></label>');
+					apr_inp.after(' <label id="is_this_correct" style="font-size:.9em;">is this correct? <input type="checkbox" name="apr_correct" value="ON" <?php echo ($this->entity->apr_correct) ? ' checked="checked"' : ''; ?> /></label>');
 				<?php } elseif(isset($this->entity->apr_correct) && $this->entity->apr_correct) { ?>
-					apr_inp.after(' <label id="is_this_correct"><input type="hidden" name="apr_correct" value="ON" <?php echo $this->entity->apr_correct ? ' checked="checked"' : ''; ?> /></label>');
+					apr_inp.after(' <label id="is_this_correct"><input type="hidden" name="apr_correct" value="ON" <?php echo ($this->entity->apr_correct) ? ' checked="checked"' : ''; ?> /></label>');
 				<?php } ?>
 			apr_inp.change(function() {
 				var apr_value = apr_inp.val();

@@ -21,7 +21,6 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 }
-
 $loan->get_payoff();
 $loan->payoff_form();
 ?>

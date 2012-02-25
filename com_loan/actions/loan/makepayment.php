@@ -91,13 +91,13 @@ if(strtotime($date_received) === 0){
 $payment_id = uniqid();
 
 // Singular Payment By Date record.
-$pbd = array();
-$pbd['date_received'] = $date_received;
-$pbd['date_recorded'] = $date_recorded;
-$pbd['date_created'] = $date_recorded;
-$pbd['payment_amount'] = $payment_amount;
-$pbd['payment_id'] = $payment_id;
-
+$pbd = array(
+	'date_received' => $date_received,
+	'date_recorded' => $date_recorded,
+	'date_created' => $date_recorded,
+	'payment_amount' => $payment_amount,
+	'payment_id' => $payment_id,
+);
 
 // Insert new $pay_by_date record.
 if ($loan->pay_by_date != null) {

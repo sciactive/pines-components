@@ -893,29 +893,32 @@ class com_loan_loan extends entity {
 		}
 
 		// Create delete info
-		$delete_info = array();
-		$delete_info['delete_date'] = strtotime('now');
-		$delete_info['delete_name'] = $delete_all_payments_name;
-		$delete_info['delete_reason'] = $delete_all_payments_reason;
-		$delete_info['delete_user'] = $_SESSION['user']->username;
-		$delete_info['delete_guid'] = $_SESSION['user_id'];
-		$delete_info['delete_remaining_balance'] = $this->payments[0]['remaining_balance'];
-
+		$delete_info = array(
+			'delete_date' => strtotime('now'),
+			'delete_name' => $delete_all_payments_name,
+			'delete_reason' => $delete_all_payments_reason,
+			'delete_user' => $_SESSION['user']->username,
+			'delete_guid' => $_SESSION['user_id'],
+			'delete_remaining_balance' => $this->payments[0]['remaining_balance'],
+		);
+		
 		// Create Balance info.
-		$all_balance_info = array();
-		$all_balance_info['balance'] = $this->balance;
-		$all_balance_info['unpaid_balance'] = $this->unpaid_balance;
-		$all_balance_info['unpaid_interest'] = $this->unpaid_interest;
-		$all_balance_info['past_due'] = $this->past_due;
-
+		$all_balance_info = array(
+			'balance' => $this->balance,
+			'unpaid_balance' => $this->unpaid_balance,
+			'unpaid_interest' => $this->unpaid_interest,
+			'past_due' => $this->past_due,
+		);
+		
 		// Create the record, using a temp array.
-		$delete_all = array();
-		$delete_all['pay_by_date'] = $this->pay_by_date;
-		$delete_all['all_payments'] = $this->payments;
-		$delete_all['all_paid'] = $this->paid;
-		$delete_all['all_balance_info'] = $all_balance_info;
-		$delete_all['all_edit_payment_history'] = $this->history->edit_payments;
-		$delete_all['all_delete'] = $delete_info;
+		$delete_all = array(
+			'pay_by_date' => $this->pay_by_date,
+			'all_payments' => $this->payments,
+			'all_paid' => $this->paid,
+			'all_balance_info' => $all_balance_info,
+			'all_edit_payment_history' => $this->history->edit_payments,
+			'all_delete' => $delete_info,
+		);
 
 		$this->history->all_payments[] = $delete_all;
 
@@ -931,6 +934,9 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Matches a payment ID to a payment in the PAID array.
+	 * 
+	 * @param string $edit_payment_id The payment id being edited.
+	 * @param array $use_paid_array The paid array to search through.
 	 * @return array Match info array.
 	 */
 	public function match_paid_id($edit_payment_id, $use_paid_array = null) {
@@ -985,15 +991,20 @@ class com_loan_loan extends entity {
 		}
 		if ($real_paid)
 			$this->paid = $real_paid;
-		$this->match_info = array();
-		$this->match_info['match'] = $match;
-		$this->match_info['parent'] = $parent;
-		$this->match_info['num'] = $num;
+		$this->match_info = array(
+			'match' => $match,
+			'parent' => $parent,
+			'num' => $num,
+		);
 		return $this->match_info;
 	}
 
 	/**
 	 * Matches a payment ID to a payment in the PAYMENT array.
+	 * 
+	 * @param boolean $parent True if the paid match is a top level payment.
+	 * @param string $edit_payment_id The payment id being edited.
+	 * @param array $use_payments_array The payment array to search through.
 	 * @return array One payment history array.
 	 */
 	public function match_payment_id($parent, $edit_payment_id, $use_payments_array = null) {
@@ -1033,6 +1044,7 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Gets edit results of payments after all payments have been processed.
+	 * @param array $get_edit_results Contains info about payments that need results in history.
 	 * @return array Payment edit history.
 	 */
 	public function get_edit_results($get_edit_results) {
@@ -1089,6 +1101,7 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Gets delete results of payments after all payments have been processed.
+	 * @param array $get_delete_results Contains info about payments that need results in history.
 	 * @return array Payment edit history.
 	 */
 	public function get_delete_results($get_delete_results) {
@@ -1122,6 +1135,18 @@ class com_loan_loan extends entity {
 
 	/**
 	 * The process for editing a payment is completed here.
+	 * 
+	 * @param int $date_received Date the edit payment was received.
+	 * @param int $date_expected_orig Date the edit payment was originally expected.
+	 * @param int $date_receive_old Date the edit payment was originally received.
+	 * @param int $date_record_old Date the edit payment was previously recorded.
+	 * @param int $date_recorded Date the edit payment was recorded.
+	 * @param string $payment_id The payment id of the edit payment.
+	 * @param float $payment_amount The payment amount of the edit payment.
+	 * @param string $error_type The reason or error type of the edit payment.
+	 * @param float $payment_interest The interest payment of the edit payment.
+	 * @param float $payment_principal The principal payment of the edit payment.
+	 * @param float $payment_additional The additional payment of the edit payment.
 	 */
 	public function edit_payment($date_received, $date_expected_orig, $date_receive_old, $date_record_old, $date_recorded, $payment_id, $payment_amount, $error_type, $payment_interest, $payment_principal, $payment_additional) {
 		global $pines;
@@ -1154,12 +1179,13 @@ class com_loan_loan extends entity {
 		$this->unset = null;
 
 		if ($unset) {
-			$insert_pbd = array();
-			$insert_pbd['date_received'] = (int) $date_received;
-			$insert_pbd['date_recorded'] = (int) $date_recorded;
-			$insert_pbd['date_created'] = (int) $date_created;
-			$insert_pbd['payment_amount'] = $pines->com_sales->round($payment_amount);
-			$insert_pbd['payment_id'] = $payment_id;
+			$insert_pbd = array(
+				'date_received' => (int) $date_received,
+				'date_recorded' => (int) $date_recorded,
+				'date_created' => (int) $date_created,
+				'payment_amount' => $pines->com_sales->round($payment_amount),
+				'payment_id' => $payment_id,
+			);
 		} elseif (!$unset) {
 			// We know the payment id was found in the paid array, so it's not bad.
 			// We just can't find it in the PBD, so we'll create it.
@@ -1189,12 +1215,13 @@ class com_loan_loan extends entity {
 			unset($pbd_change);
 
 			if ($changed_parent == true) {
-				$insert_pbd = array();
-				$insert_pbd['date_received'] = (int) $date_received;
-				$insert_pbd['date_recorded'] = (int) $date_recorded;
-				$insert_pbd['date_created'] = (int) $date_created;
-				$insert_pbd['payment_amount'] = $payment_amount;
-				$insert_pbd['payment_id'] = $payment_id;
+				$insert_pbd = array(
+					'date_received' => (int) $date_received,
+					'date_recorded' => (int) $date_recorded,
+					'date_created' => (int) $date_created,
+					'payment_amount' => $pines->com_sales->round($payment_amount),
+					'payment_id' => $payment_id,
+				);
 
 				// We need to insert this now.
 
@@ -1203,12 +1230,13 @@ class com_loan_loan extends entity {
 				// if it was deleted (when deleting any payment is available)
 				// So if it has no match for its payment id, we can just create it (no subtracting necessary).
 
-				$insert_pbd = array();
-				$insert_pbd['date_received'] = (int) $date_received;
-				$insert_pbd['date_recorded'] = (int) $date_recorded;
-				$insert_pbd['date_created'] = (int) $date_created;
-				$insert_pbd['payment_amount'] = $pines->com_sales->round($payment_amount);
-				$insert_pbd['payment_id'] = $payment_id;
+				$insert_pbd = array(
+					'date_received' => (int) $date_received,
+					'date_recorded' => (int) $date_recorded,
+					'date_created' => (int) $date_created,
+					'payment_amount' => $pines->com_sales->round($payment_amount),
+					'payment_id' => $payment_id,
+				);
 			}
 		}
 
@@ -1220,29 +1248,31 @@ class com_loan_loan extends entity {
 		$this->run_make_payments();
 
 		// Save history of deletes.
-		$edit_payment = array();
-		$edit_payment['edit_date_recorded'] = (int) $date_recorded;
-		$edit_payment['edit_date_expected'] = (int) $date_expected_orig;
-		$edit_payment['edit_date_received'] = (int) $date_received;
-		$edit_payment['edit_date_received_orig'] = (int) $date_receive_old;
-		$edit_payment['edit_date_recorded_orig'] = (int) $date_record_old;
-		$edit_payment['edit_payment_id'] = $payment_id;
-		$edit_payment['edit_user'] = $_SESSION['user']->username;
-		$edit_payment['edit_user_guid'] = $_SESSION['user_id'];
-		$edit_payment['edit_reason'] = $error_type;
-		$edit_payment['edit_payment'] = $pines->com_sales->round($edit_payment_amount);
-
+		$edit_payment = array(
+			'edit_date_recorded' => (int) $date_recorded,
+			'edit_date_expected' => (int) $date_expected_orig,
+			'edit_date_received' => (int) $date_received,
+			'edit_date_received_orig' => (int) $date_receive_old,
+			'edit_date_recorded_orig' => (int) $date_record_old,
+			'edit_payment_id' => $payment_id,
+			'edit_user' => $_SESSION['user']->username,
+			'edit_user_guid' => $_SESSION['user_id'],
+			'edit_reason' => $error_type,
+			'edit_payment' => $pines->com_sales->round($edit_payment_amount),
+		);
+		
 		$n = count($this->history->edit_payments) - 1;
 		$this->history->edit_payments[$n]['edit_info'] = $edit_payment;
 		if ($skip_logging)
 			unset($this->history->edit_payments[$n]);
 
 		// Create array to be used for getting edit results of all payments.
-		$make_result_info = array();
-		$make_result_info['n'] = $n;
-		$make_result_info['payment_id'] = $payment_id;
-		$make_result_info['skip_logging'] = $skip_logging;
-
+		$make_result_info = array(
+			'n' => $n,
+			'payment_id' => $payment_id,
+			'skip_logging' => $skip_logging,
+		);
+		
 		if (!$this->get_edit_results)
 			$this->get_edit_results = array();
 		$this->get_edit_results[] = $make_result_info;
@@ -1253,6 +1283,16 @@ class com_loan_loan extends entity {
 
 	/**
 	 * The process for deleting a payment is completed here.
+	 * 
+	 * @param int $date_received The date the delete payment was received.
+	 * @param int $date_expected_orig The date the delete payment was originally expected.
+	 * @param int $date_recorded The date the delete payment was recorded.
+	 * @param string $payment_id The payment id of the deleted payment.
+	 * @param float $payment_amount The payment amount of the deleted payment.
+	 * @param string $error_type The reason or error type of the deleted payment.
+	 * @param float $payment_interest The interest payment of the deleted payment.
+	 * @param float $payment_principal The principal payment of the deleted payment.
+	 * @param float $payment_additional The additional payment of the deleted payment.
 	 */
 	public function delete_payment($date_received, $date_expected_orig, $date_recorded, $payment_id, $payment_amount, $error_type, $payment_interest, $payment_principal, $payment_additional) {
 		global $pines;
@@ -1353,21 +1393,23 @@ class com_loan_loan extends entity {
 		if (!empty($not_found)) {
 			// Iterates through $not_found and inserts pbd.
 			foreach ($not_found as $missing) {
-				$insert_pbd = array();
-				$insert_pbd['date_received'] = $missing['payment_date_received'];
-				$insert_pbd['date_recorded'] = $missing['payment_date_recorded'];
-				$insert_pbd['date_created'] = $missing['payment_date_recorded'];
-				$insert_pbd['payment_amount'] = $pines->com_sales->round($missing['payment_interest_paid'] + $missing['payment_principal_paid'] + $missing['payment_additional']);
-				$insert_pbd['payment_id'] = $missing['payment_id'];
+				$insert_pbd = array(
+					'date_received' => $missing['payment_date_received'],
+					'date_recorded' => $missing['payment_date_recorded'],
+					'date_created' => $missing['payment_date_recorded'],
+					'payment_amount' => $pines->com_sales->round($missing['payment_interest_paid'] + $missing['payment_principal_paid'] + $missing['payment_additional']),
+					'payment_id' => $missing['payment_id'],
+				);
 				$this->insert_pbd($insert_pbd);
 
 				// Remember (this missing payment was created from past due additional amounts.)
 				// Get information ready to subtract amount from its parent.
 				if (!$subtract_these)
 					$subtract_these = array();
-				$subtract_info = array();
-				$subtract_info['parent_payment_id'] = $missing['parent_payment_id'];
-				$subtract_info['payment_amount'] = $insert_pbd['payment_amount'];
+				$subtract_info = array(
+					'parent_payment_id' => $missing['parent_payment_id'],
+					'payment_amount' => $insert_pbd['payment_amount'],
+				);
 				$subtract_these[] = $subtract_info;
 			}
 			foreach ($this->pay_by_date as &$pbd) {
@@ -1389,6 +1431,8 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Deletes a payment from the PBD array.
+	 * 
+	 * @param string $edit_payment_id The payment id of the edit payment.
 	 */
 	public function delete_pbd($edit_payment_id) {
 		$r = 0;
@@ -1436,6 +1480,8 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Inserts a payment into the PBD array.
+	 * 
+	 * @param array The pay by date payment to be inserted.
 	 */
 	public function insert_pbd($insert_pbd) {
 		$temp_pay_by_date = $this->pay_by_date;
@@ -1483,6 +1529,12 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Makes a payment and adds it to the paid array with information passed to it from pay_by_date array.
+	 * 
+	 * @param float $payment_amount The payment amount to be made.
+	 * @param int $date_expected The date expected of the payment to be made.
+	 * @param int $date_received The date received of the payment to be made.
+	 * @param int $date_recorded The date recorded of the payment to be made.
+	 * @param string $payment_id The payment id of the payment to be made.
 	 */
 	public function make_payment($payment_amount, $date_expected, $date_received, $date_recorded, $payment_id) {
 		global $pines;
@@ -1902,6 +1954,8 @@ class com_loan_loan extends entity {
 
 	/**
 	 * Reset array values recursively.
+	 * 
+	 * @param array $arr The array to be numerically reordered.
 	 * @return array The array.
 	 */
 	public function array_values_recursive($arr) {

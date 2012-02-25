@@ -223,8 +223,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 									<script type="text/javascript">
 										pines(function(){
 											$("#p_muid_next_payment").popover({
-												title: 'Next Payment Due: <span style="float:right;">$<?php echo (htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)) + htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true)))?></span>',
-												content: '<?php echo 'Past Due: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true)).'</span><br/>'.$payment_frequency.' Payment: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?> </span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
+												title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true) + $pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span>',
+												content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span><br/>'+<?php echo json_encode($payment_frequency); ?>+' Payment: <span style="float:right;">$'+<?php json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
 												placement: 'right'
 											});
 										});
@@ -381,8 +381,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 								<script type="text/javascript">
 									pines(function(){
 										$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq2); ?>").popover({
-											title: 'Unpaid Interest: <?php echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid'], true)); ?>',
-											content: '<?php echo 'Expected Interest: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_expected'], true)).'</span><br/>Interest Paid: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true)); ?> </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
+											title: 'Unpaid Interest: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_unpaid'], true)); ?>,
+											content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_expected'], true)); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_paid'], true)); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
 											placement: "right"
 										});
 									});
@@ -430,8 +430,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 								<script type="text/javascript">
 									pines(function(){
 										$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq); ?>").popover({
-											title: 'Unpaid Balance: <?php echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_balance_unpaid'], true)); ?>',
-											content: '<?php echo 'Previous Remaining Balance: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true)).'</span><br/>Expected Balance: <span style="float:right;">$'.htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true)); ?> </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
+											title: 'Unpaid Balance: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_balance_unpaid'], true)); ?>,
+											content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['remaining_balance'], true)); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['scheduled_balance'], true)); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
 											placement: "right"
 										});
 									});

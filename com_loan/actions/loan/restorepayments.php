@@ -21,7 +21,6 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 }
-
 if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 	// The paid array exists and/or edit-delete history exists
 	// ..so create a backup of currently existing data.
@@ -38,38 +37,35 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 		pines_redirect(pines_url('com_loan', 'loan/list'));
 		return;
 	}
-
 	// Create all payments history if it doesn't exist yet.
 	if (!$loan->history->all_payments) {
 		$loan->history->all_payments = array();
 	}
-
 	foreach ($loan->history->all_payments as $all_pay) {
 		// Find Auto-saves.
 		if (preg_match('/^Auto-save/', $all_pay['all_delete']['delete_name'])) {
 			$count += 1;
 		}
 	}
-
 	$new_auto_save = $count + 1;
 
 	// Create delete info
-	$delete_info = array();
-	$delete_info['delete_date'] = strtotime('now');
-	$delete_info['delete_name'] = 'Auto-save ID: '.$new_auto_save;
-	$delete_info['delete_reason'] = 'Replaced by '.$restore_name;
-	$delete_info['delete_user'] = $_SESSION['user']->username;
-	$delete_info['delete_guid'] = $_SESSION['user_id'];
-	$delete_info['delete_remaining_balance'] = $loan->payments[0]['remaining_balance'];
-
+	$delete_info = array(
+		'delete_date' => strtotime('now'),
+		'delete_name' => 'Auto-save ID: '.$new_auto_save,
+		'delete_reason' => 'Replaced by '.$restore_name,
+		'delete_user' => $_SESSION['user']->username,
+		'delete_guid' => $_SESSION['user_id'],
+		'delete_remaining_balance' => $loan->payments[0]['remaining_balance'],
+	);
 	// Create the record, using a temp array.
-	$delete_all = array();
-	$delete_all['pay_by_date'] = $loan->pay_by_date;
-	$delete_all['all_payments'] = $loan->payments;
-	$delete_all['all_paid'] = $loan->paid;
-	$delete_all['all_edit_payment_history'] = $loan->history->edit_payments;
-	$delete_all['all_delete'] = $delete_info;
-
+	$delete_all = array(
+		'pay_by_date' => $loan->pay_by_date,
+		'all_payments' => $loan->payments,
+		'all_paid' => $loan->paid,
+		'all_edit_payment_history' => $loan->history->edit_payments,
+		'all_delete' => $delete_info,
+	);
 	$loan->history->all_payments[] = $delete_all;
 
 	// Now unset everything and save it.
@@ -77,7 +73,6 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 	$loan->history->edit_payments = null;
 
 	// Then continue below...
-
 }
 
 // Get variables
@@ -93,7 +88,7 @@ if (!preg_match('/^[0-9]*$/', $restore_point_value)) {
 	return;
 }
 
- $count_restores = count($loan->history->all_payments) - 1;
+$count_restores = count($loan->history->all_payments) - 1;
 
 // Check that the restore point is possible.
 if ($restore_point_value > $count_restores) {
@@ -140,5 +135,4 @@ $loan->save();
 //var_dump($loan->paid);
 //exit;
 pines_redirect(pines_url('com_loan', 'loan/editpayments', array('id' => $loan->guid)));
-
 ?>

@@ -223,6 +223,11 @@ $loan->est_interest_savings = $loan->total_interest_sum_original - $loan->total_
 $loan->status = "current";
 // If process type is empty, the loan has not been verified.
 if(empty($loan->loan_process_type)){
+	if ($loan->schedule[$loan->number_payments - 1]['scheduled_balance'] >= .01) {
+		$loan->print_form();
+		pines_notice('The terms of this loan were not possible. Please make changes.');
+		return;
+	}
 	$loan->verify_loan();
 	pines_notice('Please verify this loan.');
 	return;
@@ -232,6 +237,8 @@ if(empty($loan->loan_process_type)){
 if($loan->loan_process_type == "submit"){
 	if ($loan->save()) {
 		pines_notice('Saved loan '.$loan->id.' for customer '.$loan->customer->name.'.');
+		// Run the get payments array function to update the grid with possible past due values.
+		$loan->get_payments_array();
 	} else {
 		pines_error('Error saving loan. Do you have permission?');
 	}

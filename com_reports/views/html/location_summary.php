@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = 'Location Summary ['.htmlspecialchars($this->location->name).']';
-if ($this->descendents)
+if ($this->descendants)
 	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
 $pines->com_jstree->load();
@@ -46,7 +46,7 @@ $pines->com_pgrid->load();
 			// Submit the form with all of the fields.
 			pines.get(<?php echo json_encode(pines_url('com_reports', 'locationsummary')); ?>, {
 				"location": location,
-				"descendents": descendents,
+				"descendants": descendants,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -59,7 +59,7 @@ $pines->com_pgrid->load();
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var locations_grid = $("#p_muid_grid").pgrid({
 			pgrid_toolbar: true,
@@ -125,7 +125,7 @@ $pines->com_pgrid->load();
 				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -143,10 +143,10 @@ $pines->com_pgrid->load();
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								search_locations();
 							}

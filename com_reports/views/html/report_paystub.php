@@ -17,7 +17,7 @@ if (isset($this->location))
 	$this->title .= ' ['.htmlspecialchars($this->location->name).']';
 $this->title .= ' ('.htmlspecialchars(format_date($this->entity->start, 'date_short')).' - '.htmlspecialchars(format_date($this->entity->end, 'date_short')).')';
 
-if ($this->descendents)
+if ($this->descendants)
 	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
 $pines->com_jstree->load();
@@ -51,14 +51,14 @@ $pines->com_pgrid->load();
 			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayroll')); ?>, {
 				"id": paystub,
 				"location": location,
-				"descendents": descendents
+				"descendants": descendants
 			});
 		};
 
 		// Payroll report settings
 		var paystub = '<?php echo (int) $this->entity->guid ?>';
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var employees_grid = $("#p_muid_grid").pgrid({
 			pgrid_toolbar: true,
@@ -88,7 +88,7 @@ $pines->com_pgrid->load();
 				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -106,10 +106,10 @@ $pines->com_pgrid->load();
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								search_employees();
 							}

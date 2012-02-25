@@ -52,11 +52,11 @@ if (!empty($_REQUEST['location'])) {
 } else {
 	$location = null;
 }
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
 $view->start_date = $start_date;
 $view->end_date = $end_date;
 $view->location = $location;
-$view->descendents = $descendents;
+$view->descendants = $descendants;
 
 ?>

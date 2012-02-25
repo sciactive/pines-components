@@ -41,7 +41,7 @@ if (gatekeeper('com_sales/receivelocation') && isset($_REQUEST['location'])) {
 		pines_notice('Specified location not found.');
 		return;
 	}
-	if (!$location->is($_SESSION['user']->group) && !$location->in_array($_SESSION['user']->group->get_descendents())) {
+	if (!$location->is($_SESSION['user']->group) && !$location->in_array($_SESSION['user']->group->get_descendants())) {
 		pines_notice('Specified location is not under yours.');
 		return;
 	}

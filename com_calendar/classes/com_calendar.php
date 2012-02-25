@@ -71,10 +71,10 @@ class com_calendar extends component {
 	 * Print a form to select a company location.
 	 *
 	 * @param int $location The current location.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location = null, $descendents = false) {
+	public function location_select_form($location = null, $descendants = false) {
 		global $pines;
 		$pines->page->override = true;
 
@@ -82,7 +82,7 @@ class com_calendar extends component {
 			$location = $_SESSION['user']->group->guid;
 		$module = new module('com_calendar', 'form_location');
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		$pines->page->override_doc($module->render());
 		return $module;
@@ -108,10 +108,10 @@ class com_calendar extends component {
 	 * @param string $timezone The timezone the calendar is to use.
 	 * @param group $location The desired location to view the schedule for.
 	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @param string $filter Which type of events to show.
 	 */
-	public function show_calendar($view_type, $start, $end, $timezone, $location = null, $employee = null, $descendents = false, $filter = 'all') {
+	public function show_calendar($view_type, $start, $end, $timezone, $location = null, $employee = null, $descendants = false, $filter = 'all') {
 		global $pines;
 
 		// Make all calculations in the correct timezone.
@@ -144,8 +144,8 @@ class com_calendar extends component {
 		} elseif ($filter == 'appointments') {
 			$selector['isset'] = array('appointment');
 		}
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$ancestors = array();
@@ -153,12 +153,12 @@ class com_calendar extends component {
 			$or = array('|', 'isset' => array('group'));
 			$selector['ref'] = array('employee', $employee);
 			$form->employee = $calendar->employee = $employee;
-			$ancestors = $location->get_descendents(true);
+			$ancestors = $location->get_descendants(true);
 		}
 
 		$form->employees = $pines->com_hrm->get_employees();
 		$calendar->location = $form->location = $location;
-		$calendar->descendents = $form->descendents = $descendents;
+		$calendar->descendants = $form->descendants = $descendants;
 		$calendar->filter = $form->filter = $filter;
 		//Retrieve all private events
 		if ($filter == 'events') {

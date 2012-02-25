@@ -37,7 +37,7 @@ if ($_REQUEST['all_time'] == 'true') {
 }
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
 if (!empty($_REQUEST['types'])) {
 	foreach (explode(',', $_REQUEST['types']) as $cur_type) {
@@ -45,5 +45,5 @@ if (!empty($_REQUEST['types'])) {
 	}
 }
 
-$pines->com_reports->report_product_details($start_date, $end_date, $location, $descendents, $types);
+$pines->com_reports->report_product_details($start_date, $end_date, $location, $descendants, $types);
 ?>

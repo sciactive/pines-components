@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->removed ? 'Completed ' : 'Pending ').'Shipments';
 if (isset($this->location))
 	$this->title .= htmlspecialchars(" at {$this->location->name} [{$this->location->groupname}]");
-$this->note = $this->descendents ? 'Including Descendent Locations' : '';
+$this->note = $this->descendants ? 'Including Descendant Locations' : '';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/stock/shipments']);
@@ -28,13 +28,13 @@ $pines->com_jstree->load();
 			// Submit the form with all of the fields.
 			pines.get(submit_url, {
 				"location": location,
-				"descendents": descendents
+				"descendants": descendants
 			});
 		};
 
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -81,7 +81,7 @@ $pines->com_jstree->load();
 				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -99,10 +99,10 @@ $pines->com_jstree->load();
 						buttons: {
 							"Update": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								submit_search();
 							}

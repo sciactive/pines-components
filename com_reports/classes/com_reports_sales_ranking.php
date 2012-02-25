@@ -96,7 +96,7 @@ class com_reports_sales_ranking extends entity {
 
 		// Get employees and locations.
 		$group = $this->top_location;
-		$locations = (array) $group->get_descendents();
+		$locations = (array) $group->get_descendants();
 		$users = (array) $group->get_users(true);
 		$employees = array();
 		foreach ($users as $cur_user) {
@@ -201,7 +201,7 @@ class com_reports_sales_ranking extends entity {
 		foreach ($locations as $cur_location) {
 			// Get all apps for the location.
 			if ($module->mifi_checks) {
-				$groups = $cur_location->get_descendents(true);
+				$groups = $cur_location->get_descendants(true);
 				$current_apps = $pines->entity_manager->get_entities(
 						array('class' => com_mifi_application, 'skip_ac' => true),
 						array('&',

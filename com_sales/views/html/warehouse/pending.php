@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->ordered ? 'Ordered' : 'New').' Pending Warehouse Orders';
 if (isset($this->location)) {
 	$this->title .= htmlspecialchars(" at {$this->location->name} [{$this->location->groupname}]");
-	if ($this->descendents)
+	if ($this->descendants)
 		$this->title .= ' and Below';
 }
 if ($this->all_time) {
@@ -42,7 +42,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			// Submit the form with all of the fields.
 			pines.get(submit_url, {
 				"location": location,
-				"descendents": descendents,
+				"descendants": descendants,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -55,7 +55,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -110,9 +110,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (!$this->ordered) { ?>
-				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true', 'location' => $this->location->guid, 'descendents' => ($this->descendents ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? format_date($this->start_date, 'date_sort') : ''), 'end_date' => ($this->end_date ? format_date($this->end_date - 1, 'date_sort') : '')))); ?>},
+				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true', 'location' => $this->location->guid, 'descendants' => ($this->descendants ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? format_date($this->start_date, 'date_sort') : ''), 'end_date' => ($this->end_date ? format_date($this->end_date - 1, 'date_sort') : '')))); ?>},
 				<?php } else { ?>
-				{type: 'button', text: 'New Orders', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/pending', array('location' => $this->location->guid, 'descendents' => ($this->descendents ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? format_date($this->start_date, 'date_sort') : ''), 'end_date' => ($this->end_date ? format_date($this->end_date - 1, 'date_sort') : '')))); ?>},
+				{type: 'button', text: 'New Orders', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/pending', array('location' => $this->location->guid, 'descendants' => ($this->descendants ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? format_date($this->start_date, 'date_sort') : ''), 'end_date' => ($this->end_date ? format_date($this->end_date - 1, 'date_sort') : '')))); ?>},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -180,7 +180,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -198,10 +198,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						buttons: {
 							"Update": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								submit_search();
 							}

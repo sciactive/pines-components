@@ -79,7 +79,7 @@ if ($pines->config->com_calendar->com_customer)
 					"end": <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
 					"location": <?php echo json_encode((string) $this->location->guid); ?>,
 					"employee": $(this).val(),
-					"descendents": <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+					"descendants": <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
 					"filter": <?php echo json_encode($this->filter); ?>
 				});
 			change_counter++;
@@ -109,7 +109,7 @@ if ($pines->config->com_calendar->com_customer)
 				end: <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
 				location: <?php echo json_encode((string) $this->location->guid); ?>,
 				employee: <?php echo json_encode((string) $this->employee->guid); ?>,
-				descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+				descendants: <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
 				filter: $(this).attr("data-value")
 			});
 		});
@@ -128,14 +128,14 @@ if ($pines->config->com_calendar->com_customer)
 
 	// Change the location / division within the company.
 	pines.com_calendar_select_location = function(){
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 		$.ajax({
 			url: <?php echo json_encode(pines_url('com_calendar', 'locationselect')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {
 				"location": <?php echo json_encode((string) $this->location->guid); ?>,
-				"descendents": descendents ? "true" : "false"
+				"descendants": descendants ? "true" : "false"
 			},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the company schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
@@ -155,13 +155,13 @@ if ($pines->config->com_calendar->com_customer)
 						"View Schedule": function(){
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
-							descendents = form.find(":input[name=descendents]").attr('checked');
+							descendants = form.find(":input[name=descendants]").attr('checked');
 							pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 								"view_type": <?php echo json_encode($this->view_type); ?>,
 								"start": <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
 								"end": <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
 								"location": schedule_location,
-								"descendents": descendents ? "true" : "false",
+								"descendants": descendants ? "true" : "false",
 								"filter": <?php echo json_encode($this->filter); ?>
 							});
 						}
@@ -213,7 +213,7 @@ if ($pines->config->com_calendar->com_customer)
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
-								descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+								descendants: <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
 								employee_view: <?php echo isset($this->employee) ? '"true"' : '"false"'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
 								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
@@ -270,7 +270,7 @@ if ($pines->config->com_calendar->com_customer)
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
-								descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+								descendants: <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
 								employee_view: <?php echo isset($this->employee) ? '"true"' : '"false"'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
 								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
@@ -575,7 +575,7 @@ if ($pines->config->com_calendar->com_customer)
 			if (!isset($cur_employee->group))
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
-			if ( $this->location->guid == $cur_employee->group->guid || ($this->descendents && $cur_employee->is_descendent($this->location)) )
+			if ( $this->location->guid == $cur_employee->group->guid || ($this->descendants && $cur_employee->is_descendant($this->location)) )
 				echo '<option value="'.((int) $cur_employee->guid).'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
@@ -642,7 +642,7 @@ if ($pines->config->com_calendar->com_customer)
 				<select name="employee">
 				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
-					if ($cur_employee->in_group($this->location) || ($this->descendents && $cur_employee->is_descendent($this->location)))
+					if ($cur_employee->in_group($this->location) || ($this->descendants && $cur_employee->is_descendant($this->location)))
 						echo '<option value="'.((int) $cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 				} ?>
 			</select></label>

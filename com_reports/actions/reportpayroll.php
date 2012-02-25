@@ -19,13 +19,13 @@ $entire_company = ($_REQUEST['entire_company'] == 'true');
 
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
 $paystub = com_reports_paystub::factory((int) $_REQUEST['id']);
 if (isset($paystub->guid)) {
-	$paystub->show($entire_company, $location, $descendents);
+	$paystub->show($entire_company, $location, $descendants);
 } else {
-	$pines->com_reports->report_payroll($entire_company, $location, $descendents);
+	$pines->com_reports->report_payroll($entire_company, $location, $descendants);
 }
 
 ?>

@@ -40,7 +40,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			// Submit the form with all of the fields.
 			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportissues')); ?>, {
 				"location": location,
-				"descendents": descendents,
+				"descendants": descendants,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -53,7 +53,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -131,7 +131,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -149,10 +149,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								pines.search_issues();
 							}

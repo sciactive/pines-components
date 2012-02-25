@@ -22,7 +22,7 @@ $group = group::factory((int) $_REQUEST['id']);
 if (!isset($group->guid))
 	return;
 
-$descendents = (array) $group->get_descendents();
+$descendants = (array) $group->get_descendants();
 
 $users = (array) $group->get_users(true);
 
@@ -31,12 +31,12 @@ $json_data = array(
 		'guid' => $group->guid,
 		'type' => 'location',
 		'name' => $group->name,
-		'parent' => ($descendents || $users)
+		'parent' => ($descendants || $users)
 	)
 );
 
 // Add all the groups.
-foreach ($descendents as $cur_group) {
+foreach ($descendants as $cur_group) {
 	$json_data[$cur_group->guid] = array(
 		'guid' => $cur_group->guid,
 		'type' => 'location',
@@ -48,7 +48,7 @@ foreach ($descendents as $cur_group) {
 }
 
 // Mark all the parents.
-foreach ($descendents as $cur_group) {
+foreach ($descendants as $cur_group) {
 	if (isset($cur_group->parent->guid) && isset($json_data[$cur_group->parent->guid]))
 		$json_data[$cur_group->parent->guid]['parent'] = true;
 }
@@ -56,7 +56,7 @@ foreach ($descendents as $cur_group) {
 // Add all the users.
 foreach ($users as $cur_user) {
 	// Skip users who only have secondary groups.
-	if (!isset($cur_user->group->guid) || !($cur_user->group->is($group) || $cur_user->group->in_array($descendents)))
+	if (!isset($cur_user->group->guid) || !($cur_user->group->is($group) || $cur_user->group->in_array($descendants)))
 		continue;
 	// Skip users who aren't employees.
 	if (!$cur_user->employee)

@@ -17,7 +17,7 @@ header('Content-Type: application/json');
 
 if (isset($_SESSION['user']->group)) {
 	$my_group = clone $_SESSION['user']->group;
-	$locations = $my_group->get_descendents();
+	$locations = $my_group->get_descendants();
 	$my_group->parent = null;
 	$locations[] = $my_group;
 } else {

@@ -357,7 +357,7 @@ if ($pines->config->com_sales->com_storefront) {
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Products</span>
-					<span class="pf-note">Show products when browsing this category. This includes products from all descendent categories.</span>
+					<span class="pf-note">Show products when browsing this category. This includes products from all descendant categories.</span>
 					<input class="pf-field" type="checkbox" name="show_products" value="ON"<?php echo $this->entity->show_products ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">

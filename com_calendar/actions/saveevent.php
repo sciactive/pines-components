@@ -106,7 +106,7 @@ pines_redirect(pines_url('com_calendar', 'editcalendar', array(
 	'end' => $_REQUEST['calendar_end'],
 	'location' => $location->guid,
 	'employee' => $employee->guid,
-	'descendents' => $_REQUEST['descendents'])
+	'descendants' => $_REQUEST['descendants'])
 ));
 
 ?>

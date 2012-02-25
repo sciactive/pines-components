@@ -37,7 +37,7 @@ if ($_REQUEST['all_time'] == 'true') {
 }
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
-$pines->com_reports->report_warehouse($start_date, $end_date, $location, $descendents);
+$pines->com_reports->report_warehouse($start_date, $end_date, $location, $descendants);
 ?>

@@ -25,8 +25,8 @@ if (!empty($_REQUEST['date'])) {
 }
 
 $location = empty($_REQUEST['location']) ? null : group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
-$pines->com_reports->daily_attendance($date, $location, $descendents);
+$pines->com_reports->daily_attendance($date, $location, $descendants);
 
 ?>

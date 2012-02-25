@@ -37,7 +37,7 @@ if ($_REQUEST['all_time'] == 'true') {
 }
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
 $ids = (array) explode(';', $_REQUEST['id']);
 $hours_array = (array) explode(';', $_REQUEST['hours']);

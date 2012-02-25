@@ -196,7 +196,7 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						location: "<?php echo (int) $this->location->guid ?>",
 						employee: "<?php echo (int) $this->employee->guid ?>",
-						descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
+						descendants: <?php echo $this->descendants ? 'true' : 'false'; ?>,
 						filter: <?php echo json_encode($this->filter); ?>
 					});
 				}
@@ -222,7 +222,7 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 					'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
 					'location' => $this->location->guid,
 					'employee' => $this->employee->guid,
-					'descendents' => $this->descendents,
+					'descendants' => $this->descendants,
 					'filter' => $this->filter
 				))); ?>);
 			}
@@ -272,7 +272,7 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 						'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
 						'location' => $this->location->guid,
 						'employee' => $this->employee->guid,
-						'descendents' => $this->descendents,
+						'descendants' => $this->descendants,
 						'filter' => $this->filter
 					))); ?>);
 				}

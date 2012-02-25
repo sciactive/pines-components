@@ -16,7 +16,7 @@ if ($this->removed) {
 } else {
 	if (!empty($this->stock)) {
 		$this->title = htmlspecialchars("Stock at {$this->location->name} [{$this->location->groupname}]");
-		if ($this->descendents)
+		if ($this->descendants)
 			$this->note = htmlspecialchars("Stock for all locations below {$this->location->name} is also included.");
 	} else {
 		$this->title = 'Stock [No Location]';
@@ -37,13 +37,13 @@ $pines->com_jstree->load();
 			// Submit the form with all of the fields.
 			pines.get(submit_url, {
 				"location": location,
-				"descendents": descendents
+				"descendants": descendants
 			});
 		};
 
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -111,7 +111,7 @@ $pines->com_jstree->load();
 				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -129,10 +129,10 @@ $pines->com_jstree->load();
 						buttons: {
 							"Update": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								submit_search();
 							}

@@ -256,7 +256,7 @@ class com_storefront extends component {
 	}
 
 	/**
-	 * Get all products in a category and its descendents.
+	 * Get all products in a category and its descendants.
 	 *
 	 * @param com_sales_category $category The category.
 	 * @return array The array of products.

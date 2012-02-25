@@ -38,8 +38,8 @@ if ($_REQUEST['all_time'] == 'true') {
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 
-$descendents = ($_REQUEST['descendents'] != 'false');
+$descendants = ($_REQUEST['descendants'] != 'false');
 
-$pines->com_sales->warehouse_pending($_REQUEST['ordered'] == 'true', $start_date, $end_date, $location, $descendents);
+$pines->com_sales->warehouse_pending($_REQUEST['ordered'] == 'true', $start_date, $end_date, $location, $descendants);
 
 ?>

@@ -21,7 +21,7 @@ $chat_log = $_SESSION['chats'];
 $users = $pines->com_user->get_users();
 foreach ($users as $key => &$cur_user) {
 	if ( $cur_user->is($_SESSION['user']) ||
-		(!$cur_user->in_group($user_group) && !$cur_user->is_descendent($user_group)) )
+		(!$cur_user->in_group($user_group) && !$cur_user->is_descendant($user_group)) )
 		unset($users[$key]);
 }
 unset($cur_user);

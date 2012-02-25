@@ -45,7 +45,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_calendar', 'editcalendar')); ?>">
-	<label><input type="checkbox" name="descendents" value="ON" <?php echo $this->descendents ? 'checked="checked"' : ''; ?> /> Include Descendents</label>
+	<label><input type="checkbox" name="descendants" value="ON" <?php echo $this->descendants ? 'checked="checked"' : ''; ?> /> Include Descendants</label>
 	<div class="pf-element location_tree" style="width: 100%;"></div>
 	<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
 </form>

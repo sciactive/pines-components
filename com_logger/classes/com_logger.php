@@ -151,10 +151,10 @@ class com_logger extends component implements log_manager_interface {
 	 * Print a form to select a location.
 	 *
 	 * @param int $location The currently set location to search in.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location = null, $descendents = false) {
+	public function location_select_form($location = null, $descendants = false) {
 		global $pines;
 		$pines->page->override = true;
 
@@ -164,7 +164,7 @@ class com_logger extends component implements log_manager_interface {
 		} else {
 			$module->location = $location;
 		}
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		$pines->page->override_doc($module->render());
 		return $module;

@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/managestock') && !gatekeeper('com_sales/seestock') )
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 
-$pines->com_sales->list_stock($_REQUEST['removed'] == 'true', $location, $descendents);
+$pines->com_sales->list_stock($_REQUEST['removed'] == 'true', $location, $descendants);
 ?>

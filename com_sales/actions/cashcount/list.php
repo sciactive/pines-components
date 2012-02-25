@@ -24,8 +24,8 @@ if (!empty($_REQUEST['location'])) {
 	if (!isset($location->guid))
 		$location = null;
 }
-$descendents = ($_REQUEST['descendents'] == 'true');
+$descendants = ($_REQUEST['descendants'] == 'true');
 $finished = ($_REQUEST['finished'] == 'true');
 
-$pines->com_sales->list_cashcounts($start_date, $end_date, $location, $descendents, $finished);
+$pines->com_sales->list_cashcounts($start_date, $end_date, $location, $descendants, $finished);
 ?>

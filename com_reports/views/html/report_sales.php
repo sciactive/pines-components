@@ -107,7 +107,7 @@ if (isset($this->employee->guid))
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						location: <?php echo $this->all ? '"all"' : json_encode($this->location); ?>,
-						descendents: "<?php echo $this->descendents ? 'ON' : 'false'; ?>",
+						descendants: "<?php echo $this->descendants ? 'ON' : 'false'; ?>",
 						employee: "<?php echo (int) $this->employee->guid ?>"
 					});
 				}

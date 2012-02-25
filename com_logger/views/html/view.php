@@ -51,8 +51,8 @@ foreach ($matches as $key => &$cur_match) {
 		unset($matches[$key]);
 		continue;
 	}
-	// Now check if the user belongs to the location we're checking, or, if we're checking descendents too, check if they are a descendent.
-	if (!$user->in_group($this->location) && (!$this->descendents || !$user->is_descendent($this->location))) {
+	// Now check if the user belongs to the location we're checking, or, if we're checking descendants too, check if they are a descendant.
+	if (!$user->in_group($this->location) && (!$this->descendants || !$user->is_descendant($this->location))) {
 		unset($matches[$key]);
 		continue;
 	}
@@ -91,7 +91,7 @@ foreach ($matches as $match) {
 			// Submit the form with all of the fields.
 			pines.get(<?php echo json_encode(pines_url('com_logger', 'view')); ?>, {
 				"location": location,
-				"descendents": descendents,
+				"descendants": descendants,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -103,7 +103,7 @@ foreach ($matches as $match) {
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid; ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 		// Grid
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -200,7 +200,7 @@ foreach ($matches as $match) {
 				url: <?php echo json_encode(pines_url('com_logger', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -218,10 +218,10 @@ foreach ($matches as $match) {
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								search_logs();
 							}

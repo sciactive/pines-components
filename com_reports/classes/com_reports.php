@@ -75,10 +75,10 @@ class com_reports extends component {
 	 * Print a form to select a location.
 	 *
 	 * @param int $location The currently set location to search in.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location = null, $descendents = false) {
+	public function location_select_form($location = null, $descendants = false) {
 		global $pines;
 		$pines->page->override = true;
 
@@ -88,7 +88,7 @@ class com_reports extends component {
 		} else {
 			$module->location = $location;
 		}
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		$pines->page->override_doc($module->render());
 		return $module;
@@ -100,10 +100,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The employee summary module.
 	 */
-	function employee_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function employee_summary($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'employee_summary', 'content');
@@ -120,12 +120,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$selector['tag'] = array('com_sales', 'sale');
 		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
@@ -143,10 +143,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The invoice summary module.
 	 */
-	function invoice_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function invoice_summary($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'invoice_summary', 'content');
@@ -163,12 +163,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$selector['tag'] = array('com_sales', 'sale');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
@@ -184,10 +184,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The location summary module.
 	 */
-	function location_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function location_summary($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'location_summary', 'content');
@@ -204,12 +204,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$selector['tag'] = array('com_sales', 'sale');
 		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
@@ -226,10 +226,10 @@ class com_reports extends component {
 	 *
 	 * @param int $date The date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The attendance report module.
 	 */
-	function daily_attendance($date, $location = null, $descendents = false) {
+	function daily_attendance($date, $location = null, $descendants = false) {
 		global $pines;
 
 		// Location of the report.
@@ -239,14 +239,14 @@ class com_reports extends component {
 		$module = new module('com_reports', 'attendance/daily_attendance', 'content');
 		$module->date = $date;
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$module->attendance = array();
 		// Only one day is in the date range, and it's in the current timezone.
 		$start_date = strtotime('00:00:00', $date);
 		$end_date = strtotime('23:59:59', $date) + 1;
 		$employees = $pines->com_hrm->get_employees(true);
 		foreach ($employees as &$cur_employee) {
-			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+			if (!($cur_employee->in_group($location) || ($descendants && $cur_employee->is_descendant($location))))
 				continue;
 			$cur_array = array(
 				'employee' => $cur_employee,
@@ -336,10 +336,10 @@ class com_reports extends component {
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
 	 * @param int $employee The employee to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The attendance report module.
 	 */
-	function hours_clocked($start_date = null, $end_date = null, $location = null, $employee = null, $descendents = false) {
+	function hours_clocked($start_date = null, $end_date = null, $location = null, $employee = null, $descendants = false) {
 		global $pines;
 
 		// Location of the report.
@@ -351,14 +351,14 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		if (!isset($employee)) {
 			$employees = $pines->com_hrm->get_employees(true);
 			$module->employees = array();
 			$totals = array();
 			$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
 			foreach ($employees as $key => &$cur_employee) {
-				if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+				if (!($cur_employee->in_group($location) || ($descendants && $cur_employee->is_descendant($location))))
 					continue;
 				$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
 				$schedule = $pines->entity_manager->get_entities(
@@ -445,10 +445,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The calendar report module.
 	 */
-	function report_calendar($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_calendar($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_calendar', 'content');
@@ -465,12 +465,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$module->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
 
 		return $module;
@@ -620,10 +620,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The issues report module.
 	 */
-	function report_issues($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_issues($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_issues', 'content');
@@ -640,12 +640,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue), $selector, $or);
 
 		return $module;
@@ -656,10 +656,10 @@ class com_reports extends component {
 	 *
 	 * @param bool $entire_company Whether or not to show the entire company.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The employee payroll module.
 	 */
-	function report_payroll($entire_company = true, $location = null, $descendents = false) {
+	function report_payroll($entire_company = true, $location = null, $descendants = false) {
 		global $pines;
 
 		$pay_start = strtotime($pines->config->com_hrm->pay_start);
@@ -679,7 +679,7 @@ class com_reports extends component {
 				)
 			);
 		if (isset($paystub->guid))
-			return $paystub->show($entire_company, $location, $descendents);
+			return $paystub->show($entire_company, $location, $descendants);
 
 		$module = new module('com_reports', 'report_payroll', 'content');
 		$module->start_date = $start_date;
@@ -691,14 +691,14 @@ class com_reports extends component {
 			// Location of the report.
 			if (!isset($location->guid))
 				$location = $_SESSION['user']->group;
-			if ($descendents)
-				$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			if ($descendants)
+				$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 			else
 				$or = array('|', 'ref' => array('group', $location));
 			$module->location = $location;
-			$module->descendents = $descendents;
+			$module->descendants = $descendants;
 			foreach ($module->employees as $key => &$cur_employee) {
-				if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+				if (!($cur_employee->in_group($location) || ($descendants && $cur_employee->is_descendant($location))))
 					unset($module->employees[$key]);
 			}
 		}
@@ -740,10 +740,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The invoice summary module.
 	 */
-	function report_payroll_hourly($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_payroll_hourly($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_payroll_hourly', 'content');
@@ -764,12 +764,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		$module->sales = $pines->entity_manager->get_entities(
 				array('class' => com_sales_sale),
@@ -790,11 +790,11 @@ class com_reports extends component {
 		}
 		unset($cur_sale);
 
-		// Find employees in the location or its descendents.
+		// Find employees in the location or its descendants.
 		$employees = $pines->com_hrm->get_employees(true);
 		$module->employees = array();
 		foreach ($employees as &$cur_employee) {
-			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+			if (!($cur_employee->in_group($location) || ($descendants && $cur_employee->is_descendant($location))))
 				continue;
 			$module->employees[] = array('entity' => $cur_employee);
 		}
@@ -991,10 +991,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The payroll summary module.
 	 */
-	function report_payroll_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_payroll_summary($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_payroll_summary', 'content');
@@ -1015,12 +1015,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		// Make sure this sale is not attached to any returns.
@@ -1034,11 +1034,11 @@ class com_reports extends component {
 		}
 		unset($cur_sale);
 
-		// Find employees in the location or its descendents.
+		// Find employees in the location or its descendants.
 		$employees = $pines->com_hrm->get_employees(true);
 		$module->employees = array();
 		foreach ($employees as $key => &$cur_employee) {
-			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+			if (!($cur_employee->in_group($location) || ($descendants && $cur_employee->is_descendant($location))))
 				continue;
 			$module->employees[] = array('entity' => $cur_employee);
 		}
@@ -1338,11 +1338,11 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The location to report sales for.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @param bool $types The types of transactions to show.
 	 * @return module The product details report module.
 	 */
-	function report_product_details($start_date = null, $end_date = null, $location = null, $descendents = false, $types = null) {
+	function report_product_details($start_date = null, $end_date = null, $location = null, $descendants = false, $types = null) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_product_details', 'content');
@@ -1370,12 +1370,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 
 		if ($module->types['return']) {
@@ -1394,10 +1394,10 @@ class com_reports extends component {
 	 * @param int $end The end date of the report.
 	 * @param group $location The location to report sales for.
 	 * @param employee $employee The employee to report sales for.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The sales report module.
 	 */
-	function report_sales($start, $end, $location = null, $employee = null, $descendents = false) {
+	function report_sales($start, $end, $location = null, $employee = null, $descendants = false) {
 		global $pines;
 
 		$form = new module('com_reports', 'form_sales', 'right');
@@ -1425,13 +1425,13 @@ class com_reports extends component {
 			$module->all = true;
 			$module->title = 'Sales Report for All Locations';
 		}
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $form->location = $location->guid;
 		$form->employees = $pines->com_hrm->get_employees();
-		$module->descendents = $form->descendents = $descendents;
+		$module->descendants = $form->descendants = $descendants;
 		$selector['tag'] = array('com_sales', 'sale');
 		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
@@ -1508,10 +1508,10 @@ class com_reports extends component {
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The location to report sales for.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The product details report module.
 	 */
-	function report_warehouse($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_warehouse($start_date = null, $end_date = null, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_warehouse', 'content');
@@ -1528,12 +1528,12 @@ class com_reports extends component {
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendants)
+			$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 
 		return $module;

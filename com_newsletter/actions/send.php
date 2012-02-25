@@ -55,7 +55,7 @@ if (isset($location->guid)) {
 	$addresses = array();
 	$group_users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user')));
 	foreach ($group_users as $key => &$cur_user) {
-		if (!($cur_user->in_group($location) || $cur_user->is_descendent($location) || empty($cur_user->email))) {
+		if (!($cur_user->in_group($location) || $cur_user->is_descendant($location) || empty($cur_user->email))) {
 			unset($group_users[$key]);
 		} else {
 			$addresses[$cur_user->guid] = $cur_user->email;

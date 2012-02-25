@@ -83,17 +83,17 @@ class com_reports_paystub extends entity {
 	 *
 	 * @param bool $entire_company Whether or not to show the entire company
 	 * @param group $location The group to report on.
-	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $descendants Whether to show descendant locations.
 	 * @return module The paystub report module.
 	 */
-	function show($entire_company = true, $location = null, $descendents = false) {
+	function show($entire_company = true, $location = null, $descendants = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_paystub', 'content');
 		$module->entity = $this;
 		$module->entire_company = $entire_company;
 		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->descendants = $descendants;
 
 		return $module;
 	}

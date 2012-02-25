@@ -41,7 +41,7 @@ $selector = array('&',
 	'gte' => array('p_cdate', $date_start),
 	'lt' => array('p_cdate', $date_end)
 );
-$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
 
 // Get all transactions.
 $tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx, 'skip_ac' => true),  array('|', 'tag' => array('sale_tx', 'payment_tx')), $selector, $or);

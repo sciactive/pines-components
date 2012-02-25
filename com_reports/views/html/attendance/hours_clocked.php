@@ -33,7 +33,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pines.get(<?php echo json_encode(pines_url('com_reports', 'attendance/hoursclocked')); ?>, {
 				"employee": employee,
 				"location": location,
-				"descendents": descendents,
+				"descendants": descendants,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -47,7 +47,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
-		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -58,7 +58,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){attendance_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: <?php echo json_encode(pines_url('com_reports', 'attendance/hoursclocked', array('employee' => '__title__', 'start_date' => format_date($this->start_date, 'date_sort'), 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'location' => $this->location->guid, 'descendents' => $this->descendents ? 'true' : 'false'), false)); ?>},
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: <?php echo json_encode(pines_url('com_reports', 'attendance/hoursclocked', array('employee' => '__title__', 'start_date' => format_date($this->start_date, 'date_sort'), 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'location' => $this->location->guid, 'descendants' => $this->descendants ? 'true' : 'false'), false)); ?>},
 				{type: 'separator'},
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(){
@@ -131,7 +131,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {"location": location, "descendants": descendants},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
@@ -149,10 +149,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
-								if (form.find(":input[name=descendents]").attr('checked'))
-									descendents = true;
+								if (form.find(":input[name=descendants]").attr('checked'))
+									descendants = true;
 								else
-									descendents = false;
+									descendants = false;
 								form.dialog('close');
 								employee = '';
 								pines.search_attendance();

@@ -26,7 +26,7 @@ if ( isset($_REQUEST['location']) ) {
 	$location = group::factory((int) $_REQUEST['location']);
 	$employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 }
-$descendents = ($_REQUEST['descendents'] == 'ON');
+$descendants = ($_REQUEST['descendants'] == 'ON');
 
-$pines->com_reports->report_sales($start, $end, $location, $employee, $descendents);
+$pines->com_reports->report_sales($start, $end, $location, $employee, $descendants);
 ?>

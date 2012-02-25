@@ -15,6 +15,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper() )
 	punt_user(null, pines_url('com_reports', 'locationselect'));
 
-$pines->com_reports->location_select_form($_REQUEST['location'], ($_REQUEST['descendents'] == 'true'));
+$pines->com_reports->location_select_form($_REQUEST['location'], ($_REQUEST['descendants'] == 'true'));
 
 ?>

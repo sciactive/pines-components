@@ -18,11 +18,7 @@ return array(
 		'cname' => 'Theme',
 		'description' => 'Bootstrap theme. To use your own, put the files in the "custom" folder under com_bootstrap/includes.',
 		'value' => 'normal',
-		'options' => array(
-			'normal',
-			'dark',
-			'custom',
-		),
+		'options' => pines_scandir('components/com_bootstrap/includes/'),
 		'peruser' => true,
 	),
 	array(

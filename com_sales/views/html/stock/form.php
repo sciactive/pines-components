@@ -335,6 +335,6 @@ $pines->com_jstree->load();
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars(implode(',', $guids)); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Submit" />
-		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'stock/list'))); ?>);" value="Cancel" />
 	</div>
 </form>

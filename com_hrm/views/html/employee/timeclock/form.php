@@ -361,7 +361,7 @@ $pines->com_datetimepicker->load();
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->user->guid; ?>" />
 		<div class="pf-element pf-buttons">
 			<input class="pf-button btn btn-primary" id="p_muid_submit" type="submit" value="Submit" />
-			<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
+			<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_hrm', 'employee/timeclock/list'))); ?>);" value="Cancel" />
 		</div>
 	</form>
 </div>

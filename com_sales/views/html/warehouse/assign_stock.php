@@ -290,6 +290,6 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="items" id="p_muid_items" value="[]" />
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
-		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'warehouse/pending'))); ?>);" value="Cancel" />
 	</div>
 </form>

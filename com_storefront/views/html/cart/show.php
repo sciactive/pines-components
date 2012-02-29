@@ -322,7 +322,7 @@ $pines->icons->load();
 		<br style="clear: both; height: 0;" />
 		<?php } ?>
 		<button type="button" class="empty_cart btn btn-danger" title="Empty Cart"><i class="icon-trash icon-white"></i></button>
-		<button type="button" class="checkout btn btn-primary" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');"><i class="icon-ok icon-white"></i> Check-Out</button>
+		<button type="button" class="checkout btn btn-primary" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'checkout/login'))); ?>);"><i class="icon-ok icon-white"></i> Check-Out</button>
 		<br style="clear: both; height: 0;" />
 	</div>
 	<div class="no_items"<?php echo $pines->com_storefront->cart() ? ' style="display: none;"' : ''; ?>>

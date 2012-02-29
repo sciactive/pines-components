@@ -138,6 +138,6 @@ $this->note = 'Count all of the cash currently present in the drawer.';
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->cashcount->guid ?>" />
 		<input class="pf-button btn btn-primary" type="button" value="Finish Audit" onclick="pines.com_sales_verify();" />
-		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'cashcount/list'))); ?>);" value="Cancel" />
 	</div>
 </form>

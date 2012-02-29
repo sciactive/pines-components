@@ -146,7 +146,7 @@ $chat_log = $_SESSION['chats'];
 		// Connect and login to the xmpp server.
 		obj = new Object;
 		// TODO create xmpp users and passwords for users when they are created.
-		obj['user'] = '<?php echo htmlspecialchars($xmpp_user); ?>';
+		obj['user'] = <?php echo json_encode($xmpp_user); ?>;
 		obj['pass'] = 'password';
 
 		jaxl.connect(obj);
@@ -167,7 +167,7 @@ $chat_log = $_SESSION['chats'];
 				if(message.length == 0) return false;
 				$(this).val('');
 
-				var recipient = '<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_support_user); ?>'+'@<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_server); ?>';
+				var recipient = <?php echo json_encode($pines->config->com_messenger->xmpp_support_user); ?>+<?php echo json_encode('@'.$pines->config->com_messenger->xmpp_server); ?>;
 				boshchat.appendMessage(boshchat.prepareMessage(<?php echo json_encode($xmpp_user); ?>, message), true);
 
 				obj = new Object;

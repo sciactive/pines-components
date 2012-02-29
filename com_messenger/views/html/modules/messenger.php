@@ -221,8 +221,8 @@ unset($cur_user);
 
 		// Connect and login to the xmpp server.
 		obj = new Object;
-		// TODO create xmpp users and passwords for users when they are created.
-		obj['user'] = '<?php echo htmlspecialchars($xmpp_user); ?>';
+		// TODO: create xmpp users and passwords for users when they are created.
+		obj['user'] = <?php echo json_encode($xmpp_user); ?>;
 		obj['pass'] = 'password'; //'<?php // echo htmlspecialchars($_SESSION['user']->password); ?>';
 
 		jaxl.connect(obj);

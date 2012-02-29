@@ -48,13 +48,13 @@ if ($pines->config->com_storefront->skip_shipping && $pines->config->com_storefr
 </script>
 <div class="btn-toolbar" style="text-align: center;">
 	<div id="p_muid_buttons" class="btn-group">
-		<button class="step_1 btn btn-large" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/login')); ?>');"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;">1</span> Log-In</button>
+		<button class="step_1 btn btn-large" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'checkout/login'))); ?>);"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;">1</span> Log-In</button>
 		<?php if (!$pines->config->com_storefront->skip_shipping) { ?>
-		<button class="step_2 btn btn-large" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/shipping')); ?>');"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;">2</span> Shipping</button>
+		<button class="step_2 btn btn-large" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'checkout/shipping'))); ?>);"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;">2</span> Shipping</button>
 		<?php } ?>
-		<button class="step_3 btn btn-large" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/payment')); ?>');"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;"><?php echo ($pines->config->com_storefront->skip_shipping ? '2' : '3'); ?></span> Payment</button>
+		<button class="step_3 btn btn-large" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'checkout/payment'))); ?>);"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;"><?php echo ($pines->config->com_storefront->skip_shipping ? '2' : '3'); ?></span> Payment</button>
 		<?php if (!$pines->config->com_storefront->review_in_payment_page) { ?>
-		<button class="step_4 btn btn-large" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/review')); ?>');"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;"><?php echo ($pines->config->com_storefront->skip_shipping ? '3' : '4'); ?></span> Review</button>
+		<button class="step_4 btn btn-large" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'checkout/review'))); ?>);"><span style="font-size: 1.2em; vertical-align: middle; font-weight: bold;"><?php echo ($pines->config->com_storefront->skip_shipping ? '3' : '4'); ?></span> Review</button>
 		<?php } ?>
 	</div>
 </div>

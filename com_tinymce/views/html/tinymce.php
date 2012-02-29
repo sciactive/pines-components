@@ -50,8 +50,8 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 					skin_variant : "black",
 					<?php
 					break;
-			} ?>
-			<?php switch ($pines->config->com_tinymce->features) {
+			}
+			switch ($pines->config->com_tinymce->features) {
 				case 'default':
 				default:
 					?>
@@ -113,7 +113,7 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			relative_urls: false,
 			<?php } ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>",
+			content_css : <?php echo json_encode(implode(',', $content_css)); ?>,
 			preformatted : <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>
 		});
 		$("textarea.peditor-simple").tinymce({
@@ -148,7 +148,7 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 					break;
 			} ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>",
+			content_css : <?php echo json_encode(implode(',', $content_css)); ?>,
 			preformatted : <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>
 		});
 	});

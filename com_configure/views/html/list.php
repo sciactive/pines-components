@@ -88,7 +88,7 @@ $this->title = 'Configure Components';
 					<?php } ?>
 				</optgroup>
 			</select>
-			<button class="btn" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'list')); ?>')">Refresh</button>
+			<button class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'list'))); ?>)">Refresh</button>
 		</div>
 		<?php if (!$pines->config->com_configure->peruser) { ?>
 		<p>
@@ -111,13 +111,13 @@ $this->title = 'Configure Components';
 				</select>
 			</div>
 			<div class="btn-group">
-				<button class="btn" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'list')); ?>')">Refresh</button>
+				<button class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'list'))); ?>)">Refresh</button>
 			</div>
 			&nbsp;&nbsp;&nbsp;
 			<div class="btn-group">
-				<button class="btn btn-success" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'condition/edit')); ?>')">New</button>
-				<button class="btn" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'condition/edit')); ?>')">Edit</button>
-				<button class="btn btn-danger" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'condition/delete')); ?>')">Delete</button>
+				<button class="btn btn-success" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'condition/edit'))); ?>)">New</button>
+				<button class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'condition/edit'))); ?>)">Edit</button>
+				<button class="btn btn-danger" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'condition/delete'))); ?>)">Delete</button>
 			</div>
 		</div>
 		<?php if (!$pines->config->com_configure->percondition) { ?>
@@ -146,14 +146,14 @@ $this->title = 'Configure Components';
 				<div class="accordion-inner">
 					<div class="buttons btn-group">
 						<?php if ($cur_component->is_configurable()) { ?>
-						<input class="btn" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
-						<input class="btn" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
+						<input class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'edit', array('component' => $cur_component->name)))); ?>);" value="Configure" />
+						<input class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'view', array('component' => $cur_component->name)))); ?>);" value="View Config" />
 						<?php } ?>
 						<?php if (!$this->per_user && !$this->per_condition) { ?>
 							<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
-							<input class="btn btn-success" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
+							<input class="btn btn-success" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'enable', array('component' => $cur_component->name)))); ?>);" value="Enable" />
 							<?php } else { ?>
-							<input class="btn btn-danger" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name)))); ?>');" value="Disable" />
+							<input class="btn btn-danger" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'disable', array('component' => $cur_component->name)))); ?>);" value="Disable" />
 							<?php } } ?>
 						<?php } ?>
 					</div>

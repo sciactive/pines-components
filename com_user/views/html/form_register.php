@@ -189,6 +189,6 @@ $this->note = 'Please fill in your account details.';
 		<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
-		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url())); ?>);" value="Cancel" />
 	</div>
 </form>

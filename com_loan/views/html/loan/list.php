@@ -253,7 +253,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars(ucwords($loan->status)); ?></td>
 			<td style="text-align:right;"><?php echo "$".htmlspecialchars($pines->com_sales->round($loan->principal, true)); ?></td>
 			<td style="text-align:right;"><?php echo htmlspecialchars($loan->apr)."%"; ?></td>
-			<td><?php echo htmlspecialchars($loan->term)." ".htmlspecialchars($loan->term_type); ?></td>
+			<td><?php echo htmlspecialchars($loan->term." ".$loan->term_type); ?></td>
 			<td style="text-align:right;"><?php echo !isset($loan->remaining_balance) ? "$".htmlspecialchars($pines->com_sales->round($loan->principal, true)): '$'.htmlspecialchars($pines->com_sales->round($loan->remaining_balance, true)); ?></td>
 			<td style="text-align:right;"><?php echo "$".htmlspecialchars($pines->com_sales->round($loan->frequency_payment, true)); ?></td>
 			<td style="text-align:right;"><?php echo ($loan->payments[0]['past_due'] < .01) ? "$0.00" : '$'.htmlspecialchars($pines->com_sales->round($loan->payments[0]['past_due'], true)); ?></td>

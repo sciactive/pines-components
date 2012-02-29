@@ -123,7 +123,7 @@ $pines->com_customer->load_customer_select();
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Creation Date</span>
-		<input id="p_muid_creation_date" class="pf-field" type="text" name="creation_date" value="<?php echo ((strlen(strtotime($this->entity->creation_date) > 0)) ? htmlspecialchars(format_date(strtotime($this->entity->creation_date), 'date_sort')) : ''); ?>"/>
+		<input id="p_muid_creation_date" class="pf-field" type="text" name="creation_date" value="<?php echo isset($this->entity->creation_date) ? htmlspecialchars(format_date(strtotime($this->entity->creation_date), 'date_sort')) : ''; ?>"/>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Principal Amount</span>
@@ -149,7 +149,7 @@ $pines->com_customer->load_customer_select();
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">First Payment Date</span>
-		<input id="p_muid_first_payment_date" class="pf-field" type="text" name="first_payment_date" value="<?php echo ((strlen(strtotime($this->entity->first_payment_date)) > 0) ? htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), 'date_sort')) : ''); ?>"/>
+		<input id="p_muid_first_payment_date" class="pf-field" type="text" name="first_payment_date" value="<?php echo isset($this->entity->first_payment_date) ? htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), 'date_sort')) : ''; ?>"/>
 	</div>
 	<div class="pf-element">
 		<label>
@@ -197,6 +197,6 @@ $pines->com_customer->load_customer_select();
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
-		<input class="pf-button btn" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_loan', 'loan/list')); ?>');" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_loan', 'loan/list'))); ?>);" value="Cancel" />
 	</div>
 </form>

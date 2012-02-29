@@ -64,47 +64,47 @@ $this->title = 'Loan Overview';
 				?>
 			</span></span><br/>
 			<span>Compound Frequency: <span style="float:right;">
-					<?php
-					switch ($this->entity->compound_frequency) {
-						case "12":
-							echo "Monthly";
-							break;
-						case "1":
-							echo "Annually";
-							break;
-						case "2":
-							echo "Semi-annually";
-							break;
-						case "4":
-							echo "Quarterly";
-							break;
-						case "6":
-							echo "Bi-monthly";
-							break;
-						case "24":
-							echo "Semi-monthly";
-							break;
-						case "26":
-							echo "Bi-weekly";
-							break;
-						case "52":
-							echo "Weekly";
-							break;
-					}
+				<?php
+				switch ($this->entity->compound_frequency) {
+					case "12":
+						echo "Monthly";
+						break;
+					case "1":
+						echo "Annually";
+						break;
+					case "2":
+						echo "Semi-annually";
+						break;
+					case "4":
+						echo "Quarterly";
+						break;
+					case "6":
+						echo "Bi-monthly";
+						break;
+					case "24":
+						echo "Semi-monthly";
+						break;
+					case "26":
+						echo "Bi-weekly";
+						break;
+					case "52":
+						echo "Weekly";
+						break;
+				}
 				?>
-			</span></span><br/>
+				</span></span><br/>
 			<span>Payment Type: <span style="float:right;">
-					<?php
-					switch ($this->entity->payment_type) {
-						case "0":
-							echo "End of Period";
-							break;
-						case "1":
-							echo "Beginning of Period";
-							break;
-					}
+				<?php
+				switch ($this->entity->payment_type) {
+					case "0":
+						echo "End of Period";
+						break;
+					case "1":
+						echo "Beginning of Period";
+						break;
+				}
 				?>
-			</span></span>
+				</span></span>
 			<div style="line-height:0px;border-bottom:1px solid #ddd; margin: 5px 0;">&nbsp;</div>
 		</div>
 		<div class="pf-group" style="width:280px;margin-left:0px !important;float:left;">

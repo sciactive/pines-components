@@ -59,7 +59,7 @@ switch ($this->entity->payment_frequency) {
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element pf-full-width">
 		<div class="pf-label" style="width:100%;">
-			<?php echo (!empty($this->entity->past_due)) ? '<span>Past Due: <span style="float:right;"><span style="color:#B30909;">$'.htmlspecialchars($pines->com_sales->round($this->entity->past_due, true)).'</span></span><br/>' : ''; ?></span></span>
+			<span><?php echo (!empty($this->entity->past_due)) ? 'Past Due: <span style="float:right;"><span style="color:#B30909;">$'.htmlspecialchars($pines->com_sales->round($this->entity->past_due, true)).'</span></span><br/>' : ''; ?></span>
 			<span><?php echo $payment_frequency; ?> Payment: <span style="float:right;"><?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?></span></span><br/>
 			<span>Fees: <span style="float:right;"><?php echo ($this->entity->payment_fees) ? htmlspecialchars($this->entity->payment_fees) : '$0.00'; ?></span></span><br/>
 			<span>Adjustments: <span style="float:right;"><?php echo ($this->entity->payment_adjustments) ? htmlspecialchars($this->entity->payment_adjustments) : '$0.00'; ?></span></span><br/>
@@ -80,7 +80,7 @@ switch ($this->entity->payment_frequency) {
 			<span class="pf-note">Date of payment received.</span>
 		</span>
 		<span class="pf-field">
-			<input value="<?php echo date('Y-m-d'); ?>" id="p_muid_date_input" style="float:right;text-align:right;" class="pf-field" type="text" name="payment_date_input" />
+			<input value="<?php echo htmlspecialchars(date('Y-m-d')); ?>" id="p_muid_date_input" style="float:right;text-align:right;" class="pf-field" type="text" name="payment_date_input" />
 		</span>
 	</div>
 </form>

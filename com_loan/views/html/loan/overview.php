@@ -29,7 +29,7 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 				?>
 				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
 				<span>First Payment Missed: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['first_payment_missed'], "date_short")); ?></span></span><br/>
-				<span>Last Payment Made: <span style="float:right;"><?php echo '<span style="color:#b30909;">'.htmlspecialchars($this->entity->payments[0]['last_payment_made']).'</span>'; ?></span></span><br/>
+				<span>Last Payment Made: <span style="float:right;"><span style="color:#b30909;"><?php echo htmlspecialchars($this->entity->payments[0]['last_payment_made']); ?></span></span></span><br/>
 				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")); ?></span></strong></span><br/>
 				<?php
 			} elseif (!empty($this->entity->paid)) {
@@ -42,7 +42,7 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 			} else {
 				?>
 				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
-				<span>Last Payment Made: <span style="float:right;"><?php echo "n/a" ?></span></span><br/>
+				<span>Last Payment Made: <span style="float:right;">n/a</span></span><br/>
 				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></strong></span><br/>
 				<?php
 			}
@@ -128,9 +128,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 							echo "Beginning of Period";
 							break;
 					}
-				?>
-			</span></span>
-
+					?>
+				</span></span>
 			<div style="line-height:0px;border-bottom:1px solid #ddd; margin: 5px 0;">&nbsp;</div>
 			<span>Rate (Per Period): <span style="float:right;"><?php echo htmlspecialchars(round($this->entity->rate_per_period, 3)).'%'; ?></span></span><br/>
 			<span>Payments Scheduled: <span style="float:right;"><?php echo htmlspecialchars($this->entity->number_payments); ?></span></span><br/>
@@ -218,20 +217,20 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 						Next Payment:
 						<span style="float:right;">
 							<?php
-								if ($this->entity->payments[0]['past_due'] >= 0.01) {
-									?>
-									<script type="text/javascript">
-										pines(function(){
-											$("#p_muid_next_payment").popover({
-												title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true) + $pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span>',
-												content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span><br/>'+<?php echo json_encode($payment_frequency); ?>+' Payment: <span style="float:right;">$'+<?php json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
-												placement: 'right'
-											});
+							if ($this->entity->payments[0]['past_due'] >= 0.01) {
+								?>
+								<script type="text/javascript">
+									pines(function(){
+										$("#p_muid_next_payment").popover({
+											title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true) + $pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span>',
+											content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span><br/>'+<?php echo json_encode($payment_frequency); ?>+' Payment: <span style="float:right;">$'+<?php json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
+											placement: 'right'
 										});
-									</script>
-									<?
-								}
-								echo ($this->entity->payments[0]['past_due'] >= 0.01) ? '<span style="cursor:pointer;" id="p_muid_next_payment">$'.(htmlspecialchars($pines->com_sales->round(($this->entity->payments[0]['next_payment_due_amount'] + $pines->com_sales->round($this->entity->payments[0]['past_due'])), true))).'</span>' : "$".htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true));
+									});
+								</script>
+								<?php
+							}
+							echo ($this->entity->payments[0]['past_due'] >= 0.01) ? '<span style="cursor:pointer;" id="p_muid_next_payment">$'.(htmlspecialchars($pines->com_sales->round(($this->entity->payments[0]['next_payment_due_amount'] + $pines->com_sales->round($this->entity->payments[0]['past_due'])), true))).'</span>' : "$".htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true));
 							?>
 						</span><br/>
 						<span style="float:left;background:none; border:none;font-size:.8em;">Due:</span>
@@ -290,164 +289,160 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 						}
 
 					}
-
 					?>
 					<td>
 						<?php
-							switch ($payment['payment_type']) {
-								case "past_due":
-									echo '<span style="color:#0a2aab;">Past Due</span>';
-									break;
-								case "none":
-									echo '<span style="color:#B30909;">Missed</span>';
-									break;
-								case "":
-									echo '<span>Scheduled</span>';
-									break;
-								default:
-									echo ucwords(htmlspecialchars($payment['payment_type']));
-							}
+						switch ($payment['payment_type']) {
+							case "past_due":
+								echo '<span style="color:#0a2aab;">Past Due</span>';
+								break;
+							case "none":
+								echo '<span style="color:#B30909;">Missed</span>';
+								break;
+							case "":
+								echo '<span>Scheduled</span>';
+								break;
+							default:
+								echo htmlspecialchars(ucwords($payment['payment_type']));
+						}
 						?>
 					</td>
 					<td><?php echo (isset($payment['payment_date_expected'])) ? htmlspecialchars(format_date($payment['payment_date_expected'], "date_short")) : htmlspecialchars(format_date($payment['scheduled_date_expected'], "date_short")); ?></td>
 					<td>
 						<?php
-							if (isset($payment['payment_date_received'])) {
-								if ($payment['extra_payments']) {
-									echo htmlspecialchars(format_date($payment['payment_date_received'], "date_short"));
-									foreach ($payment['extra_payments'] as $extra_payment) {
-										echo "<br/>".htmlspecialchars(format_date($extra_payment['payment_date_received'], "date_short"));
-									}
-								} else
-									echo htmlspecialchars(format_date($payment['payment_date_received'], "date_short"))."<br/>";
+						if (isset($payment['payment_date_received'])) {
+							if ($payment['extra_payments']) {
+								echo htmlspecialchars(format_date($payment['payment_date_received'], "date_short"));
+								foreach ($payment['extra_payments'] as $extra_payment) {
+									echo "<br/>".htmlspecialchars(format_date($extra_payment['payment_date_received'], "date_short"));
+								}
 							} else
-								echo "";
+								echo htmlspecialchars(format_date($payment['payment_date_received'], "date_short"))."<br/>";
+						}
 						?>
 					</td>
 					<td>
 						<?php
-							switch (htmlspecialchars($payment['payment_status'])) {
-								case "not due yet":
-									echo '<span class="picon-view-calendar-day" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Not Due Yet</span>';
-									break;
-								case "paid":
-									echo '<span class="picon-task-complete" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Paid</span>';
-									break;
-								case "paid_late":
-									echo '<span class="picon-task-accepted" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Paid</span><br/><span style="display:inline-block;padding-left:18px;">'.htmlspecialchars($payment['payment_days_late']); echo ($payment['payment_days_late'] > 1) ? " days late" : " day late"."</span>";
-									break;
-								case "partial_not_due":
-									echo '<span class="picon-task-recurring" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Partial Payment</span>';
-									break;
-								case "partial":
-									echo '<span class="picon-task-attempt" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Partial Payment<br/>'; echo htmlspecialchars($payment['payment_days_late']); if(!empty($payment['payment_days_late'])) echo ($payment['payment_days_late'] > 1) ? " days late" : " day late"."</span>";
-									break;
-								case "missed":
-									echo '<span class="picon-task-reject" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Missed Payment<br/> '.htmlspecialchars($payment['payment_days_late']); echo ($payment['payment_days_late'] > 1) ? " days late</span>" : " day late</span>";
-									break;
-							}
+						switch (htmlspecialchars($payment['payment_status'])) {
+							case "not due yet":
+								echo '<span class="picon-view-calendar-day" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Not Due Yet</span>';
+								break;
+							case "paid":
+								echo '<span class="picon-task-complete" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Paid</span>';
+								break;
+							case "paid_late":
+								echo '<span class="picon-task-accepted" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Paid</span><br/><span style="display:inline-block;padding-left:18px;">'.htmlspecialchars($payment['payment_days_late']); echo ($payment['payment_days_late'] > 1 ? " days late" : " day late")."</span>";
+								break;
+							case "partial_not_due":
+								echo '<span class="picon-task-recurring" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Partial Payment</span>';
+								break;
+							case "partial":
+								echo '<span class="picon-task-attempt" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Partial Payment<br/>'.htmlspecialchars($payment['payment_days_late']); if(!empty($payment['payment_days_late'])) echo ($payment['payment_days_late'] > 1 ? " days late" : " day late"); echo "</span>";
+								break;
+							case "missed":
+								echo '<span class="picon-task-reject" style="white-space:nowrap;text-align:right;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">Missed Payment<br/> '.htmlspecialchars($payment['payment_days_late']); echo ($payment['payment_days_late'] > 1 ? " days late" : " day late")."</span>";
+								break;
+						}
 						?>
 					</td>
 					<td style="text-align:right;">
 						<?php
-							if (!empty($payment['extra_payments'])) {
-								echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid_orig'], true));
-								foreach ($payment['extra_payments'] as $extra_payment) {
-									echo "<br/>$".htmlspecialchars($pines->com_sales->round(($extra_payment['payment_interest_paid'] + $extra_payment['payment_principal_paid'] + $extra_payment['payment_additional']), true));
-								}
-							} elseif ($payment['payment_status'] != "not due yet" && $payment['payment_short'] > 0)
-								echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid'], true)).'<span style="padding-left:3px;">*</span>';
-							else
-								echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid'], true));
-						?>
-					</td>
-					<td>
-						<?php
-							if (!empty($payment['extra_payments'])) {
-								echo ($pines->com_sales->round($payment['payment_additional_orig']) > 0) ? "$".htmlspecialchars($pines->com_sales->round($payment['payment_additional_orig'], true)) : "&nbsp;";
-								foreach ($payment['extra_payments'] as $extra_payment) {
-									echo ($pines->com_sales->round($extra_payment['payment_additional']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round(($extra_payment['payment_additional']), true)) : "<br/>&nbsp;";
-								}
-							} elseif ($payment['payment_status'] != "not due yet" && ($payment['payment_principal_expected'] + $payment['payment_interest_expected']) < $pines->com_sales->round($payment['payment_amount_paid']))
-								echo ($pines->com_sales->round($payment['payment_additional']) > 0) ? '$'.htmlspecialchars($pines->com_sales->round($payment['payment_additional'], true)) : "&nbsp;";
-						?>
-					</td>
-					<td>
-						<?php
-							if (($payment['payment_interest_expected'] - $payment['payment_interest_paid']) > 0 && $payment['payment_status'] != 'not due yet' && $payment['payment_status'] != 'partial_not_due') {
-								// I need a tooltip to show unpaid interest and expected interest.
-								$uniq2 = uniqid();
-								?>
-								<script type="text/javascript">
-									pines(function(){
-										$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq2); ?>").popover({
-											title: 'Unpaid Interest: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_unpaid'], true)); ?>,
-											content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_expected'], true)); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_paid'], true)); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
-											placement: "right"
-										});
-									});
-								</script>
-								<?php
-
-								if (!empty($payment['extra_payments'])) {
-									echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq2).'">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid_orig'], true)).'</span>';
-									foreach ($payment['extra_payments'] as $extra_payment) {
-										echo ($pines->com_sales->round($extra_payment['payment_interest_paid']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_interest_paid'], true)) : "<br/>-";
-									}
-								} else
-									echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq2).'">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true)).'</span>';
-							} else {
-								if (!empty($payment['extra_payments'])) {
-									echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid_orig'], true));
-									foreach ($payment['extra_payments'] as $extra_payment) {
-										echo ($pines->com_sales->round($extra_payment['payment_interest_paid']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_interest_paid'], true)) : "<br/>-";
-									}
-								} else
-									echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true));
+						if (!empty($payment['extra_payments'])) {
+							echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid_orig'], true));
+							foreach ($payment['extra_payments'] as $extra_payment) {
+								echo "<br/>$".htmlspecialchars($pines->com_sales->round(($extra_payment['payment_interest_paid'] + $extra_payment['payment_principal_paid'] + $extra_payment['payment_additional']), true));
 							}
+						} elseif ($payment['payment_status'] != "not due yet" && $payment['payment_short'] > 0)
+							echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid'], true)).'<span style="padding-left:3px;">*</span>';
+						else
+							echo "$".htmlspecialchars($pines->com_sales->round($payment['payment_amount_paid'], true));
 						?>
 					</td>
 					<td>
 						<?php
+						if (!empty($payment['extra_payments'])) {
+							echo ($pines->com_sales->round($payment['payment_additional_orig']) > 0) ? "$".htmlspecialchars($pines->com_sales->round($payment['payment_additional_orig'], true)) : "&nbsp;";
+							foreach ($payment['extra_payments'] as $extra_payment) {
+								echo ($pines->com_sales->round($extra_payment['payment_additional']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round(($extra_payment['payment_additional']), true)) : "<br/>&nbsp;";
+							}
+						} elseif ($payment['payment_status'] != "not due yet" && ($payment['payment_principal_expected'] + $payment['payment_interest_expected']) < $pines->com_sales->round($payment['payment_amount_paid']))
+							echo ($pines->com_sales->round($payment['payment_additional']) > 0) ? '$'.htmlspecialchars($pines->com_sales->round($payment['payment_additional'], true)) : "&nbsp;";
+						?>
+					</td>
+					<td>
+						<?php
+						if (($payment['payment_interest_expected'] - $payment['payment_interest_paid']) > 0 && $payment['payment_status'] != 'not due yet' && $payment['payment_status'] != 'partial_not_due') {
+							// I need a tooltip to show unpaid interest and expected interest.
+							$uniq2 = uniqid();
+							?>
+							<script type="text/javascript">
+								pines(function(){
+									$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq2); ?>").popover({
+										title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid'], true))); ?>,
+										content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_expected'], true)); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_paid'], true)); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
+										placement: "right"
+									});
+								});
+							</script>
+							<?php
+
 							if (!empty($payment['extra_payments'])) {
-								echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_principal_paid_orig'], true));
+								echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq2).'">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid_orig'], true)).'</span>';
 								foreach ($payment['extra_payments'] as $extra_payment) {
-									echo "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_principal_paid'], true));
+									echo ($pines->com_sales->round($extra_payment['payment_interest_paid']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_interest_paid'], true)) : "<br/>-";
 								}
 							} else
-								echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_principal_paid'], true));
+								echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq2).'">$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true)).'</span>';
+						} else {
+							if (!empty($payment['extra_payments'])) {
+								echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid_orig'], true));
+								foreach ($payment['extra_payments'] as $extra_payment) {
+									echo ($pines->com_sales->round($extra_payment['payment_interest_paid']) > 0) ? "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_interest_paid'], true)) : "<br/>-";
+								}
+							} else
+								echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true));
+						}
+						?>
+					</td>
+					<td>
+						<?php
+						if (!empty($payment['extra_payments'])) {
+							echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_principal_paid_orig'], true));
+							foreach ($payment['extra_payments'] as $extra_payment) {
+								echo "<br/>$".htmlspecialchars($pines->com_sales->round($extra_payment['payment_principal_paid'], true));
+							}
+						} else
+							echo '$'.htmlspecialchars($pines->com_sales->round($payment['payment_principal_paid'], true));
 						?>
 					</td>
 
 					<?php if (!empty($this->entity->paid) || isset($this->entity->missed_first_payment)) { ?>
 					<td>
 						<?php
-							if ($pines->com_sales->round($payment['payment_balance_unpaid']) >= .01 && $payment['payment_status'] != 'partial_not_due') {
-								// showing tooltip to show unpaid balance specific to this payment.
-								// javascript to control tooltip:
-								$uniq = uniqid();
-								?>
-								<script type="text/javascript">
-									pines(function(){
-										$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq); ?>").popover({
-											title: 'Unpaid Balance: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_balance_unpaid'], true)); ?>,
-											content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['remaining_balance'], true)); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['scheduled_balance'], true)); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
-											placement: "right"
-										});
+						if ($pines->com_sales->round($payment['payment_balance_unpaid']) >= .01 && $payment['payment_status'] != 'partial_not_due') {
+							// showing tooltip to show unpaid balance specific to this payment.
+							// javascript to control tooltip:
+							$uniq = uniqid();
+							?>
+							<script type="text/javascript">
+								pines(function(){
+									$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq); ?>").popover({
+										title: 'Unpaid Balance: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_balance_unpaid'], true)); ?>,
+										content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['remaining_balance'], true)); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['scheduled_balance'], true)); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
+										placement: "right"
 									});
-								</script>
-								<?php
-								echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq).'">$'.htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))."</span>";
-							} elseif (isset($payment['remaining_balance'])) {
-								echo '$'.htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true));
-							} else {
-								echo "";
-							}
+								});
+							</script>
+							<?php
+							echo '<span style="cursor:pointer;color:#b30909" id="p_muid_tooltip_'.htmlspecialchars($uniq).'">$'.htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))."</span>";
+						} elseif (isset($payment['remaining_balance'])) {
+							echo '$'.htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true));
+						}
 						?>
 					</td>
 					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true)); ?></td>
 					<?php } else { ?>
-					<td><?php echo ""; ?></td>
+					<td></td>
 					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true)); ?></td>
 					<?php } ?>
 				</tr>

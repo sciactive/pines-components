@@ -17,5 +17,7 @@ if ( !gatekeeper('com_elfinder/finder') && !gatekeeper('com_elfinder/finderself'
 
 $module = new module('com_elfinderupload', 'result', 'content');
 $module->file = $_REQUEST['file'];
+$module->folder = $_REQUEST['folder'];
+$module->files = explode('//', $_REQUEST['files']);
 
 ?>

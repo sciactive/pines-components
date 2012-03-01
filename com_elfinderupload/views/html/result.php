@@ -11,15 +11,11 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'elFinder Uploader';
+$this->title = 'elFinder Uploader Results';
 ?>
 <div class="pf-form">
 	<div class="pf-element pf-heading">
-		<h3>File Uploading Result</h3>
-	</div>
-	<div class="pf-element">
-		<span class="pf-label">File</span>
-		<span class="pf-field"><?php echo htmlspecialchars($this->file); ?></span>
+		<h4>File: <?php echo htmlspecialchars($this->file); ?></h4>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Check Passed</span>
@@ -41,4 +37,47 @@ $this->title = 'elFinder Uploader';
 		<span class="pf-note">This path can be used for access to the file in email, another server, etc.</span>
 		<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlspecialchars($furl); ?></span>
 	</div>
+	<div class="pf-element pf-heading">
+		<h4>Folder: <?php echo htmlspecialchars($this->folder); ?></h4>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Check Passed</span>
+		<span class="pf-field"><?php echo ($pines->uploader->check($this->folder)) ? 'Yes' : 'No'; ?></span>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Real Path</span>
+		<span class="pf-field"><?php $real = $pines->uploader->real($this->folder); echo htmlspecialchars($real); ?></span>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Relative URL</span>
+		<span class="pf-field"><?php $url = $pines->uploader->url($real); echo htmlspecialchars($url); ?></span>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Full URL</span>
+		<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlspecialchars($furl); ?></span>
+	</div>
+	<fieldset class="pf-group">
+		<legend>Multi-File Uploading Result</legend>
+		<?php foreach ((array) $this->files as $file) { ?>
+		<div class="pf-element pf-heading">
+			<h4>File: <?php echo htmlspecialchars($file); ?></h4>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Check Passed</span>
+			<span class="pf-field"><?php echo ($pines->uploader->check($file)) ? 'Yes' : 'No'; ?></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Real Path</span>
+			<span class="pf-field"><?php $real = $pines->uploader->real($file); echo htmlspecialchars($real); ?></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Relative URL</span>
+			<span class="pf-field"><?php $url = $pines->uploader->url($real); echo htmlspecialchars($url); ?></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Full URL</span>
+			<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlspecialchars($furl); ?></span>
+		</div>
+		<?php } ?>
+	</fieldset>
 </div>

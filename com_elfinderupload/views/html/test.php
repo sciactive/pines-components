@@ -24,6 +24,18 @@ $pines->uploader->load();
 			<input class="pf-field puploader" type="text" name="file" />
 		</label>
 	</div>
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Allow Folders</span>
+			<input class="pf-field puploader puploader-folders" type="text" name="folder" />
+		</label>
+	</div>
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Files</span>
+			<input class="pf-field puploader puploader-multiple" type="text" name="files" />
+		</label>
+	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button btn" type="submit" value="Submit" />
 	</div>

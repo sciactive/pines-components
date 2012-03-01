@@ -31,8 +31,8 @@ $pines->com_elfinder->load();
 			docked: false,
 			height: <?php echo json_encode((int) $pines->config->com_elfinder->default_height); ?>,
 			lang: langCode,
-			editorCallback: function(url) {
-				window.opener.CKEDITOR.tools.callFunction(funcNum, url);
+			getFileCallback: function(file) {
+				window.opener.CKEDITOR.tools.callFunction(funcNum, file.url);
 				window.close();
 			}
 		});

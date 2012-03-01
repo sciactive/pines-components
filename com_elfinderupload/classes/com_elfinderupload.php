@@ -57,7 +57,7 @@ class com_elfinderupload extends component implements uploader_interface {
 		global $pines;
 		$root = $pines->config->com_elfinder->root;
 		$root_url = $pines->config->com_elfinder->root_url;
-		return ($root . substr($url, strlen($root_url)));
+		return $root . join('/', array_map('urldecode', explode('/', substr($url, strlen($root_url)))));
 	}
 
 	public function url($real, $full = false) {
@@ -65,12 +65,11 @@ class com_elfinderupload extends component implements uploader_interface {
 			return '';
 		global $pines;
 		$root = $pines->config->com_elfinder->root;
-		if ($full) {
+		if ($full)
 			$root_url = $pines->config->com_elfinder->full_root_url;
-		} else {
+		else
 			$root_url = $pines->config->com_elfinder->root_url;
-		}
-		return ($root_url . substr($real, strlen($root)));
+		return $root_url . join('/', array_map('urlencode', explode('/', substr($real, strlen($root)))));
 	}
 }
 

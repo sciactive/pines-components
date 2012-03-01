@@ -56,6 +56,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'default_height',
+		'cname' => 'Default Height',
+		'description' => 'The default height of the file manager interface.',
+		'value' => 500,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'disabled',
 		'cname' => 'Disabled Commands',
 		'description' => 'List of not allowed commands.',
@@ -70,13 +77,6 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'dir_size',
-		'cname' => 'Directory Sizes',
-		'description' => 'Count total directories sizes.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
 		'name' => 'file_mode',
 		'cname' => 'New File Mode',
 		'description' => 'The mode to set on new files.',
@@ -88,21 +88,6 @@ return array(
 		'cname' => 'New Directory Mode',
 		'description' => 'The mode to set on new directories.',
 		'value' => 0755,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'mime_detect',
-		'cname' => 'Mime Type Detection',
-		'description' => 'The method to use to detect mime types of files.',
-		'value' => 'auto',
-		'options' => array(
-			'auto',
-			'finfo',
-			'mime_content_type',
-			'linux',
-			'bsd',
-			'internal'
-		),
 		'peruser' => true,
 	),
 	array(
@@ -143,23 +128,10 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'img_lib',
-		'cname' => 'Image Library',
-		'description' => 'The image manipulation library to use.',
-		'value' => 'auto',
-		'options' => array(
-			'auto',
-			'imagick',
-			'mogrify',
-			'gd'
-		),
-		'peruser' => true,
-	),
-	array(
 		'name' => 'tmb_dir',
 		'cname' => 'Thumbnail Directory',
 		'description' => 'The directory for image thumbnails. Leave blank to avoid thumbnails generation. Start with a dot (like ".tmb") to hide it.',
-		'value' => '',
+		'value' => '.thumbs',
 		'peruser' => true,
 	),
 	array(
@@ -170,24 +142,10 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'tmb_at_once',
-		'cname' => 'Thumbnails Per Request',
-		'description' => 'Number of thumbnails to generate per request.',
-		'value' => 5,
-		'peruser' => true,
-	),
-	array(
 		'name' => 'tmb_size',
 		'cname' => 'Thumbnail Size',
 		'description' => 'Image thumbnails size (px).',
 		'value' => 48,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'file_url',
-		'cname' => 'Show File URL',
-		'description' => 'Display file URL in "get info".',
-		'value' => true,
 		'peruser' => true,
 	),
 	array(
@@ -198,10 +156,10 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'default_height',
-		'cname' => 'Default Height',
-		'description' => 'The default height of the file manager interface.',
-		'value' => 500,
+		'name' => 'time_format',
+		'cname' => 'Time Format',
+		'description' => 'File modification time format.',
+		'value' => 'H:i',
 		'peruser' => true,
 	),
 	array(
@@ -215,13 +173,6 @@ return array(
 		'name' => 'default_write',
 		'cname' => 'Default Write Permission',
 		'description' => 'Allow user to write by default.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'default_rm',
-		'cname' => 'Default Remove Permission',
-		'description' => 'Allow user to delete by default.',
 		'value' => true,
 		'peruser' => true,
 	),

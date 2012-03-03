@@ -19,5 +19,6 @@ $module = new module('com_elfinderupload', 'result', 'content');
 $module->file = $_REQUEST['file'];
 $module->folder = $_REQUEST['folder'];
 $module->files = explode('//', $_REQUEST['files']);
+$module->tmpfile = $_REQUEST['tmpfile'];
 
 ?>

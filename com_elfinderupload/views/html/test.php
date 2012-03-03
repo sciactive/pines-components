@@ -26,6 +26,13 @@ $pines->uploader->load();
 	</div>
 	<div class="pf-element">
 		<label>
+			<span class="pf-label">Temp File</span>
+			<span class="pf-note">A temp file uploader only lets you upload to a temporary folder.</span>
+			<input class="pf-field puploader puploader-temp" type="text" name="tmpfile" />
+		</label>
+	</div>
+	<div class="pf-element">
+		<label>
 			<span class="pf-label">Allow Folders</span>
 			<input class="pf-field puploader puploader-folders" type="text" name="folder" />
 		</label>

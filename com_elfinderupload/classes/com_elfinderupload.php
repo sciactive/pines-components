@@ -60,6 +60,16 @@ class com_elfinderupload extends component implements uploader_interface {
 		return $root . join('/', array_map('urldecode', explode('/', substr($url, strlen($root_url)))));
 	}
 
+	public function temp($temp_string) {
+		list($request_id, $temp_name) = explode('/', $temp_string, 2);
+		if (!isset($_SESSION['elfinder_request_id'][$request_id]))
+			return false;
+		$filename = sys_get_temp_dir().'/'.$_SESSION['elfinder_request_id'][$request_id].'/'.clean_filename($temp_name);
+		if (!file_exists($filename))
+			return false;
+		return $filename;
+	}
+
 	public function url($real, $full = false) {
 		if (empty($real))
 			return '';

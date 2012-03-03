@@ -38,6 +38,19 @@ $this->title = 'elFinder Uploader Results';
 		<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlspecialchars($furl); ?></span>
 	</div>
 	<div class="pf-element pf-heading">
+		<h4>Temp File: <?php echo htmlspecialchars($this->tmpfile); ?></h4>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Check Passed</span>
+		<span class="pf-note">The check for temp files is a little different.</span>
+		<span class="pf-field"><?php echo ($pines->uploader->temp($this->tmpfile)) ? 'Yes' : 'No'; ?></span>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Real Path</span>
+		<span class="pf-note">This path can be used in code to manipulate the file.</span>
+		<span class="pf-field"><?php $real = $pines->uploader->temp($this->tmpfile); echo htmlspecialchars($real); ?></span>
+	</div>
+	<div class="pf-element pf-heading">
 		<h4>Folder: <?php echo htmlspecialchars($this->folder); ?></h4>
 	</div>
 	<div class="pf-element">

@@ -1293,7 +1293,7 @@ window.elFinder = function(node, opts) {
 	if (this.transport.upload == 'iframe') {
 		this.transport.upload = $.proxy(this.uploads.iframe, this);
 	} else if (typeof(this.transport.upload) == 'function') {
-		this.dragUpload = !!this.options.dragUpload;
+		this.dragUpload = !!this.options.dragUploadAllow;
 	} else if (this.xhrUpload) {
 		this.transport.upload = $.proxy(this.uploads.xhr, this);
 		this.dragUpload = true;
@@ -1757,8 +1757,8 @@ elFinder.prototype = {
 	
 	uploads : {
 		// upload transport using iframe
-		iframe : function(data) { 
-			var self   = this,
+		iframe : function(data, fm) { 
+			var self   = fm ? fm : this,
 				input  = data.input,
 				dfrd   = $.Deferred()
 					.fail(function(error) {
@@ -1771,8 +1771,8 @@ elFinder.prototype = {
 						data.changed && self.change(data);
 						self.trigger('upload', data);
 					}),
-				name = 'iframe-'+this.namespace+(++this.iframeCnt),
-				form = $('<form action="'+this.options.url+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+name+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),
+				name = 'iframe-'+self.namespace+(++self.iframeCnt),
+				form = $('<form action="'+self.options.url+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+name+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),
 				msie = $.browser.msie,
 				// clear timeouts, close notification dialog, remove form/iframe
 				onload = function() {
@@ -1824,15 +1824,15 @@ elFinder.prototype = {
 			
 			cnt = input.files ? input.files.length : 1;
 			
-			form.append('<input type="hidden" name="'+(this.newAPI ? 'target' : 'current')+'" value="'+this.cwd().hash+'"/>')
+			form.append('<input type="hidden" name="'+(self.newAPI ? 'target' : 'current')+'" value="'+self.cwd().hash+'"/>')
 				.append('<input type="hidden" name="html" value="1"/>')
 				.append($(input).attr('name', 'upload[]'));
 			
-			$.each(this.options.onlyMimes||[], function(i, mime) {
+			$.each(self.options.onlyMimes||[], function(i, mime) {
 				form.append('<input type="hidden" name="mimes[]" value="'+mime+'"/>');
 			});
 			
-			$.each(this.options.customData, function(key, val) {
+			$.each(self.options.customData, function(key, val) {
 				form.append('<input type="hidden" name="'+key+'" value="'+val+'"/>');
 			});
 			
@@ -1842,8 +1842,8 @@ elFinder.prototype = {
 			return dfrd;
 		},
 		// upload transport using XMLHttpRequest
-		xhr : function(data) { 
-			var self   = this,
+		xhr : function(data, fm) { 
+			var self   = fm ? fm : this,
 				dfrd   = $.Deferred()
 					.fail(function(error) {
 						error && self.error(error);
@@ -1930,13 +1930,13 @@ elFinder.prototype = {
 			}, false);
 			
 			
-			xhr.open('POST', this.options.url, true);
+			xhr.open('POST', self.options.url, true);
 			formData.append('cmd', 'upload');
-			formData.append(this.newAPI ? 'target' : 'current', this.cwd().hash);
-			$.each(this.options.customData, function(key, val) {
+			formData.append(self.newAPI ? 'target' : 'current', self.cwd().hash);
+			$.each(self.options.customData, function(key, val) {
 				formData.append(key, val);
 			});
-			$.each(this.options.onlyMimes, function(i, mime) {
+			$.each(self.options.onlyMimes, function(i, mime) {
 				formData.append('mimes['+i+']', mime);
 			});
 			

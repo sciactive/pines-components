@@ -100,15 +100,24 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			<?php if (isset($pines->com_elfinder)) { ?>
 			// Use elFinder as the file browser.
 			file_browser_callback : function(field_name, url, type, win){
-				$("<div></div>").appendTo("body").elfinder({
+				elfdlg = $("<div></div>").appendTo("body").elfinder({
 					url: <?php echo json_encode(pines_url("com_elfinder", "connector")); ?>,
-					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose "+type},
 					height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,
-					closeOnEditorCallback: true,
-					editorCallback: function(url) {
-						$("input[name="+field_name+"]", win.document).val(url);
+					resizable : false,
+					getFileCallback: function(file) {
+						$("input[name="+field_name+"]", win.document).val(file.url);
+						elfdlg.dialog("close");
 					}
 				});
+				elfdlg.css("overflow", "visible").dialog({
+					width: 900,
+					modal: true,
+					zIndex: 400000,
+					title: "Choose "+type,
+					close: function(){
+						elfdlg.elfinder("destroy").dialog("destroy").remove();
+					}
+				}).dialog("widget").css("overflow", "visible");
 			},
 			relative_urls: false,
 			<?php } ?>

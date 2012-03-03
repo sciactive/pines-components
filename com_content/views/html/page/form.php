@@ -222,7 +222,7 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<?php } ?>
 			<div class="pf-element">
-				<label><span class="pf-label">Enabled</span>
+				<label><span class="pf-label">Enabled (Published)</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">

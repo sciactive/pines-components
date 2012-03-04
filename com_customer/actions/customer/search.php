@@ -108,6 +108,7 @@ foreach ($customers as $key => &$cur_customer) {
 	);
 	$cur_customer = $json_struct;
 }
+unset($cur_customer);
 
 if (!$customers)
 	$customers = null;

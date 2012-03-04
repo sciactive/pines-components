@@ -66,6 +66,7 @@ foreach ($companies as $key => &$cur_company) {
 	);
 	$cur_company = $json_struct;
 }
+unset($cur_company);
 
 if (empty($companies))
 	$companies = null;

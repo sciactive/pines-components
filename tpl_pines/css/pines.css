@@ -9,6 +9,10 @@ body {
 hr {
 	margin: .2em 0;
 }
+.nosidegutters .page-width {
+	padding-left: 0;
+	padding-right: 0;
+}
 /* Margins */
 .page-width.centered {
 	margin-left: auto;

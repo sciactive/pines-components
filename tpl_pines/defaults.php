@@ -58,6 +58,7 @@ return array(
 			'Hide non-content positions.' => 'printfix',
 			'Show the page header when non-content positions are hidden.' => 'printheader',
 			'Drop shadows.' => 'shadows',
+			'No gutters on the sides.' => 'nosidegutters',
 		),
 		'peruser' => true,
 	),

@@ -73,7 +73,7 @@ header('Content-Type: text/html');
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<style type="text/css">.page-width {width: auto;<?php echo $pines->config->template->width === 0 ? '' : ' max-width: '.(int) $pines->config->template->width.'px;'; ?>}</style>
 </head>
-<body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; echo in_array('printfix', $pines->config->tpl_pines->fancy_style) ? ' printfix' : ''; echo in_array('printheader', $pines->config->tpl_pines->fancy_style) ? ' printheader' : ''; ?>">
+<body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; echo in_array('printfix', $pines->config->tpl_pines->fancy_style) ? ' printfix' : ''; echo in_array('printheader', $pines->config->tpl_pines->fancy_style) ? ' printheader' : ''; echo in_array('nosidegutters', $pines->config->tpl_pines->fancy_style) ? ' nosidegutters' : ''; ?>">
 	<div id="top"><?php
 		echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();

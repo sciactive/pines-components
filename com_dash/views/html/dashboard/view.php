@@ -151,6 +151,8 @@ $pines->com_bootstrap->load();
 					return;
 				tab.data("tab_loaded", true).data("trigger_link", $(this)).load(tab.attr("data-url"));
 			});
+			var initial_link = $("#p_muid_page_nav li.active a")
+			$(initial_link.attr("href")).data("tab_loaded", true).data("trigger_link", initial_link);
 		});
 	</script>
 	<ul class="nav nav-tabs" style="clear: both;" id="p_muid_page_nav">

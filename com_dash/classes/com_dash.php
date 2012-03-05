@@ -78,16 +78,22 @@ class com_dash extends component {
 	public function show_dash($tab = null) {
 		// TODO: Remove this test code.
 		if ($_REQUEST['reset'] == 'true') {
+			pines_session('write');
 			if (isset($_SESSION['user']->dashboard->guid))
 				$_SESSION['user']->dashboard->delete();
 			unset($_SESSION['user']->dashboard);
 			$_SESSION['user']->save();
+			pines_session('close');
 		}
 		// End remove.
 		if (!isset($_SESSION['user']->dashboard->guid)) {
+			pines_session('write');
 			$_SESSION['user']->dashboard = com_dash_dashboard::factory();
-			if (!$_SESSION['user']->dashboard->save() || !$_SESSION['user']->save())
+			if (!$_SESSION['user']->dashboard->save() || !$_SESSION['user']->save()) {
+				pines_session('close');
 				return false;
+			}
+			pines_session('close');
 		}
 		return $_SESSION['user']->dashboard->print_dashboard($tab);
 	}

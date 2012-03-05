@@ -26,7 +26,8 @@ return array(
 		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),
 	'abilities' => array(
-		array('dash', 'Dashboard', 'User can have a dashboard.')
+		array('dash', 'Dashboard', 'User can have a dashboard.'),
+		//array('editdash', 'Edit Dashboard', 'User can edit their dashboard.')
 	),
 );
 

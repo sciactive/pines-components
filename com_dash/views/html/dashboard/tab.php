@@ -401,7 +401,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 					if (!$pines->depend->check($cur_type, $cur_value))
 						continue 2;
 				} ?>
-			<div class="object well">
+			<div class="object well clearfix">
 				<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_w_key); ?></div>
 				<div class="options" style="display: none;"><?php echo htmlspecialchars(json_encode($cur_widget['options'])); ?></div>
 				<div class="alert-info widget_header clearfix">

@@ -54,6 +54,7 @@ $pines->com_bootstrap->load();
 			padding-right: 0;
 			margin-left: -.1em;
 			margin-right: -.1em;
+			overflow: hidden;
 		}
 		#p_muid_dashboard .buttons .separator span {
 			width: 1px;

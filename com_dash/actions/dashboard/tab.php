@@ -16,7 +16,7 @@ if ( !gatekeeper('com_dash/dash') )
 	punt_user(null, pines_url('com_dash'));
 
 $pines->page->override = true;
-$tab = $pines->com_dash->show_dash_tab($_REQUEST['key']);
+$tab = $pines->com_dash->show_dash_tab($_REQUEST['key'], (gatekeeper('com_dash/editdash') && $_REQUEST['editable'] != 'false'));
 $pines->page->override_doc($tab);
 
 ?>

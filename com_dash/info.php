@@ -27,7 +27,8 @@ return array(
 	),
 	'abilities' => array(
 		array('dash', 'Dashboard', 'User can have a dashboard.'),
-		//array('editdash', 'Edit Dashboard', 'User can edit their dashboard.')
+		array('editdash', 'Edit Dashboard', 'User can edit their dashboard.'),
+		array('manage', 'Manage Dashboards', 'User can manage all dashboards. Including default dashboards.')
 	),
 );
 

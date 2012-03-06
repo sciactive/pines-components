@@ -29,6 +29,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 </style>
 <script type="text/javascript">
 	pines(function(){
+		<?php if ($this->editable) { ?>
 		var allow_update = false;
 		$("#p_muid_tab .column").sortable({
 			tolerance: "pointer",
@@ -79,7 +80,8 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 				});
 			}
 		});
-		$("#p_muid_tab").on("click", ".max_widget", function(){
+		<?php } ?>
+		var tab = $("#p_muid_tab").on("click", ".max_widget", function(){
 			// Maximize widget.
 			$(this).toggleClass("icon-resize-full icon-resize-small").closest(".object").add("#p_muid_tab").toggleClass("maximized");
 		}).on("click", ".min_widget", function(){
@@ -88,10 +90,12 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		}).on("mouseleave", ".object", function(){
 			// Close the edit menu.
 			$(this).find(".controls").removeClass("open");
-		}).on("click", ".edit_widget_menu .widget_refresh", function(){
+		}).on("click", ".widget_refresh", function(){
 			// Refresh widget.
 			reload_widget($(this).closest(".object"));
-		}).on("click", ".edit_widget_menu .widget_options", function(){
+		});
+		<?php if ($this->editable) { ?>
+		tab.on("click", ".edit_widget_menu .widget_options", function(){
 			// Edit widget options with an AJAX form.
 			var widget = $(this).closest(".object");
 			var options = JSON.parse(widget.children(".options").html());
@@ -339,6 +343,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 				}
 			});
 		});
+		<?php } ?>
 
 		var reload_widget = function(widget){
 			$.ajax({
@@ -370,10 +375,11 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 </script>
 <div id="p_muid_tab">
 	<div class="buttons well <?php echo htmlspecialchars($this->tab['buttons_size']); ?>">
+		<?php if ($this->editable) { ?>
 		<div class="controls">
 			<span class="edit_buttons w_icon icon-cog" title="Configure Buttons"></span>
 		</div>
-		<?php foreach ((array) $this->tab['buttons'] as $cur_button) {
+		<?php } foreach ((array) $this->tab['buttons'] as $cur_button) {
 			if ($cur_button == 'separator') { ?>
 		<a class="separator btn"><span>&nbsp;</span></a>
 			<?php } else {
@@ -407,15 +413,21 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 				<div class="alert-info widget_header clearfix">
 					<span class="title">Loading...</span>
 					<div class="controls dropdown clearfix">
+						<?php if ($this->editable) { ?>
 						<span class="edit_widget w_icon icon-cog" title="Edit this Widget" data-toggle="dropdown"></span>
+						<?php } else { ?>
+						<span class="widget_refresh w_icon icon-refresh" title="Refresh this Widget"></span>
+						<?php } ?>
 						<span class="max_widget w_icon icon-resize-full" title="Maximize this Widget"></span>
 						<span class="min_widget w_icon icon-chevron-up" title="Minimize this Widget"></span>
+						<?php if ($this->editable) { ?>
 						<ul class="edit_widget_menu dropdown-menu">
 							<li><a href="javascript:void(0);" class="widget_options">Edit Options</a></li>
 							<li><a href="javascript:void(0);" class="widget_refresh">Refresh Widget</a></li>
 							<li class="divider"></li>
 							<li><a href="javascript:void(0);" class="widget_remove">Remove Widget</a></li>
 						</ul>
+						<?php } ?>
 					</div>
 				</div>
 				<div class="content">
@@ -426,7 +438,9 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		</div>
 		<?php } ?>
 	</div>
+	<?php if ($this->editable) { ?>
 	<div class="add_widget">
 		<button id="p_muid_add_widget" class="btn">Add Widgets</button>
 	</div>
+	<?php } ?>
 </div>

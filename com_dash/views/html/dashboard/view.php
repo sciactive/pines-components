@@ -118,6 +118,7 @@ $pines->com_bootstrap->load();
 	</style>
 	<script type="text/javascript">
 		pines(function(){
+			<?php if ($this->editable) { ?>
 			$("#p_muid_page_nav").sortable({
 				axis: "x",
 				items: "> li:not(.new_tab_button)",
@@ -143,6 +144,7 @@ $pines->com_bootstrap->load();
 					});
 				}
 			});
+			<?php } ?>
 			$("#p_muid_page_nav a").on("click", ".edit_tab", function(e){
 				e.preventDefault();
 				e.stopPropagation();
@@ -160,30 +162,36 @@ $pines->com_bootstrap->load();
 		<?php $first = true; foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
 		<li class="<?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>">
 			<a href="#<?php echo htmlspecialchars($cur_key); ?>" data-toggle="tab">
-				<?php echo htmlspecialchars($cur_tab['name']); ?>
+				<?php echo htmlspecialchars($cur_tab['name']);
+				if ($this->editable) { ?>
 				<span class="edit_tab w_icon icon-cog" title="Edit this Tab" onclick="var link = $(this).closest('a'); $('#<?php echo htmlspecialchars($cur_key); ?>').data('tab_loaded', true).data('trigger_link', link).load(<?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/edittab', array('key' => $cur_key)))); ?>); link.tab('show');"></span>
+				<?php } ?>
 			</a>
 		</li>
-		<?php $first = false; } ?>
+		<?php $first = false; }
+		if ($this->editable) { ?>
 		<li class="new_tab_button"><a href="#p_muid_edit_tab" data-toggle="tab"><span class="icon-plus"></span></a></li>
+		<?php } ?>
 	</ul>
 	<div class="tab-content" id="p_muid_page_tabs">
 		<?php $first = true; foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
-		<div class="tab-pane <?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>" id="<?php echo htmlspecialchars($cur_key); ?>" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key))); ?>">
+		<div class="tab-pane <?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>" id="<?php echo htmlspecialchars($cur_key); ?>" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key, 'editable' => ($this->editable ? 'true' : 'false')))); ?>">
 			<?php if ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) { ?>
 			<script type="text/javascript">
 				pines(function(){
 					$("#<?php echo htmlspecialchars($cur_key); ?>").data("tab_loaded", true);
 				});
 			</script>
-			<?php echo $pines->com_dash->show_dash_tab($cur_key);
+			<?php echo $pines->com_dash->show_dash_tab($cur_key, $this->editable);
 			} else { ?>
 			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
 			<?php } ?>
 		</div>
-		<?php $first = false; } ?>
+		<?php $first = false; }
+		if ($this->editable) { ?>
 		<div class="tab-pane" id="p_muid_edit_tab" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/edittab')); ?>">
 			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
 		</div>
+		<?php } ?>
 	</div>
 </div>

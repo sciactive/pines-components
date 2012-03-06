@@ -141,11 +141,13 @@ class com_dash_dashboard extends entity {
 	/**
 	 * Print the dashboard view.
 	 * @param string $tab The key of the tab to show by default.
+	 * @param bool $editable Whether the user can edit the dash.
 	 * @return module The dashboard's module.
 	 */
-	public function print_dashboard($tab = null) {
+	public function print_dashboard($tab = null, $editable = true) {
 		$module = new module('com_dash', 'dashboard/view', 'content');
 		$module->entity = $this;
+		$module->editable = $editable;
 		if ($tab)
 			$module->selected_tab = $tab;
 
@@ -155,14 +157,16 @@ class com_dash_dashboard extends entity {
 	/**
 	 * Print a dashboard tab.
 	 * @param string $key The key of the tab.
+	 * @param bool $editable Whether the user can edit the tab.
 	 * @return module The tab's module.
 	 */
-	public function print_tab($key) {
+	public function print_tab($key, $editable = true) {
 		if (!isset($this->tabs[$key]))
 			return false;
 		$module = new module('com_dash', 'dashboard/tab', 'content');
 		$module->key = $key;
 		$module->tab = $this->tabs[$key];
+		$module->editable = $editable;
 
 		return $module;
 	}

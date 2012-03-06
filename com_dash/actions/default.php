@@ -23,7 +23,7 @@ if ( !gatekeeper('com_dash/dash') ) {
 		punt_user(null, pines_url('com_dash'));
 }
 
-if (!$pines->com_dash->show_dash($_REQUEST['tab']))
+if (!$pines->com_dash->show_dash($_REQUEST['tab'], gatekeeper('com_dash/editdash')))
 	pines_error('Couldn\'t load your dashboard.');
 
 ?>

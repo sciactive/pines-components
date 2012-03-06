@@ -73,9 +73,10 @@ class com_dash extends component {
 	/**
 	 * Show the user's dashboard.
 	 * @param string $tab The key of the tab to show by default.
+	 * @param bool $editable Whether the user can edit the dash.
 	 * @return module|bool The dashboard module on success, false on failure.
 	 */
-	public function show_dash($tab = null) {
+	public function show_dash($tab = null, $editable = true) {
 		// TODO: Remove this test code.
 		if ($_REQUEST['reset'] == 'true') {
 			pines_session('write');
@@ -95,15 +96,16 @@ class com_dash extends component {
 			}
 			pines_session('close');
 		}
-		return $_SESSION['user']->dashboard->print_dashboard($tab);
+		return $_SESSION['user']->dashboard->print_dashboard($tab, $editable);
 	}
 
 	/**
 	 * Get the code for a dashboard tab.
 	 * @param string $key The key of the tab to show.
+	 * @param bool $editable Whether the user can edit the tab.
 	 */
-	public function show_dash_tab($key) {
-		$module = $_SESSION['user']->dashboard->print_tab($key);
+	public function show_dash_tab($key, $editable = true) {
+		$module = $_SESSION['user']->dashboard->print_tab($key, $editable);
 		$module->detach();
 		return $module->render();
 	}

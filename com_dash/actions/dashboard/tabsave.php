@@ -23,6 +23,10 @@ if (!isset($dashboard->guid)) {
 	header('HTTP/1.0 400 Bad Request');
 	return;
 }
+if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
+	header('HTTP/1.0 403 Forbidden');
+	return;
+}
 
 // Check the requested tab.
 if (!empty($_REQUEST['key']) && !isset($dashboard->tabs[$_REQUEST['key']])) {

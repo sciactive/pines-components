@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Dashboard';
-if (!$_SESSION['user']->is($this->entity->user)) {
+if (!$this->entity->is($_SESSION['user']->dashboard)) {
 	$this->title .= htmlspecialchars(" for {$this->entity->user->name}");
 	$this->note = 'Some widgets will show your user info, which is normal because you\'re the logged in user.';
 }
@@ -209,7 +209,7 @@ $pines->com_bootstrap->load();
 		</div>
 		<?php } ?>
 	</div>
-	<?php if (!$_SESSION['user']->is($this->entity->user) && gatekeeper('com_dash/manage')) { ?>
+	<?php if (!$this->entity->is($_SESSION['user']->dashboard) && gatekeeper('com_dash/manage')) { ?>
 	<div style="margin-top: 1em;">
 		<a class="btn" href="<?php echo htmlspecialchars(pines_url('com_dash', 'manage/list')); ?>">&laquo; Back to Dashboards</a>
 	</div>

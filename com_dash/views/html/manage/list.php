@@ -19,7 +19,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_dash/dashboard/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -27,7 +26,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'Edit Dashboard', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_dash', null, array('id' => '__title__'))); ?>},
-				<?php /* {type: 'button', text: 'Edit Options', extra_class: 'picon picon-view-form', url: <?php echo json_encode(pines_url('com_dash', 'manage/edit', array('id' => '__title__'))); ?>}, */ ?>
+				{type: 'button', text: 'Edit Options', extra_class: 'picon picon-view-form', url: <?php echo json_encode(pines_url('com_dash', 'manage/edit', array('id' => '__title__'))); ?>},
 				{type: 'separator'},
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_dash', 'manage/delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
@@ -59,10 +58,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>GUID</th>
 			<th>User</th>
+			<th>Current <a title="Whether this dashboard is the current dashboard the user sees." href="javascript:void(0);" onclick="alert($(this).attr('title'));">(?)</a></th>
 			<th>Group</th>
 			<th>Created</th>
 			<th>Modified</th>
-			<?php /* <th>Editable</th> */ ?>
+			<th>Locked</th>
 			<th>Tabs</th>
 		</tr>
 	</thead>
@@ -71,10 +71,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo (int) $dashboard->guid ?>">
 			<td><?php echo htmlspecialchars($dashboard->guid); ?></td>
 			<td><?php echo htmlspecialchars("{$dashboard->user->name} [{$dashboard->user->username}]"); ?></td>
+			<td><?php echo $dashboard->is($dashboard->user->dashboard) ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlspecialchars("{$dashboard->group->name} [{$dashboard->group->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars(format_date($dashboard->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($dashboard->p_mdate)); ?></td>
-			<?php /* <td><?php echo $dashboard->editable ? 'Yes' : 'No'; ?></td> */ ?>
+			<td><?php echo $dashboard->locked ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlspecialchars(count($dashboard->tabs)); ?></td>
 		</tr>
 	<?php } ?>

@@ -26,6 +26,10 @@ if (!isset($dashboard->guid)) {
 	header('HTTP/1.0 400 Bad Request');
 	return;
 }
+if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
+	header('HTTP/1.0 403 Forbidden');
+	return;
+}
 
 // Get the widget location.
 $widget_location = $dashboard->widget_location($_REQUEST['key']);

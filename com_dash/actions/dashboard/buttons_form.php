@@ -25,6 +25,10 @@ if (!isset($dashboard->guid)) {
 	header('HTTP/1.0 400 Bad Request');
 	return;
 }
+if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
+	header('HTTP/1.0 403 Forbidden');
+	return;
+}
 
 $module = new module('com_dash', 'dashboard/buttons_form');
 $module->current_buttons = $dashboard->tabs[$_REQUEST['key']]['buttons'];

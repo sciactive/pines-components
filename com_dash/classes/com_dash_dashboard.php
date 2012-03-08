@@ -132,8 +132,13 @@ class com_dash_dashboard extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $pines;
 		$module = new module('com_dash', 'manage/form', 'content');
 		$module->entity = $this;
+		$module->user_array = $pines->user_manager->get_users();
+		usort($module->user_array, array($this, 'sort_users'));
+		$module->group_array = $pines->user_manager->get_groups();
+		$pines->user_manager->group_sort($this->group_array, 'name');
 
 		return $module;
 	}
@@ -219,6 +224,18 @@ class com_dash_dashboard extends entity {
 			}
 		}
 		return array();
+	}
+
+	/**
+	 * Sort users.
+	 * @param group $a User.
+	 * @param group $b User.
+	 * @return bool User order.
+	 */
+	private function sort_users($a, $b) {
+		$aname = empty($a->name) ? $a->username : $a->name;
+		$bname = empty($b->name) ? $b->username : $b->name;
+		return strtolower($aname) > strtolower($bname);
 	}
 }
 

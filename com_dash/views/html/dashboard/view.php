@@ -12,8 +12,10 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Dashboard';
-if (!$_SESSION['user']->is($this->entity->user))
+if (!$_SESSION['user']->is($this->entity->user)) {
 	$this->title .= htmlspecialchars(" for {$this->entity->user->name}");
+	$this->note = 'Some widgets will show your user info, which is normal because you\'re the logged in user.';
+}
 $pines->com_bootstrap->load();
 ?>
 <div id="p_muid_dashboard">

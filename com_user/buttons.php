@@ -23,6 +23,16 @@ return array(
 			'ability' => 'com_user/self',
 		),
 	),
+	'logout' => array(
+		'description' => 'Logout.',
+		'text' => 'Logout',
+		'class' => 'picon-system-log-out',
+		'href' => pines_url('com_user', 'logout'),
+		'default' => true,
+		'depends' => array(
+			'ability' => '',
+		),
+	),
 	'users' => array(
 		'description' => 'User list.',
 		'text' => 'Users',

@@ -229,6 +229,9 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 									if (button.hasClass("separator")) {
 										struct.push("separator");
 										return;
+									} else if (button.hasClass("line_break")) {
+										struct.push("line_break");
+										return;
 									}
 									struct.push({
 										"component": button.find(".component").text(),
@@ -381,7 +384,9 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		</div>
 		<?php } foreach ((array) $this->tab['buttons'] as $cur_button) {
 			if ($cur_button == 'separator') { ?>
-		<a class="separator btn"><span>&nbsp;</span></a>
+		<a class="separator btn disabled"><span>&nbsp;</span></a>
+			<?php } elseif ($cur_button == 'line_break') { ?>
+		<a class="line_break btn disabled"><span>&nbsp;</span></a>
 			<?php } else {
 				$cur_def = $pines->com_dash->get_button_def($cur_button);
 				// Check its conditions.

@@ -44,6 +44,39 @@ $this->title = 'Edit Buttons';
 		}
 		#p_muid_form .button_well .separator {
 			width: 10px;
+			overflow: hidden;
+			position: relative;
+		}
+		#p_muid_form .button_well .separator:before {
+			content: "separator";
+			display: block;
+			font-size: 3px;
+			height: 0;
+			position: absolute;
+			right: 5px;
+			top: 5px;
+			width: 0;
+
+			transform: rotate(90deg);
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+		}
+		#p_muid_form .button_well.small .separator:before {
+			content: "sep";
+		}
+		#p_muid_form .button_well .line_break {
+			display: block;
+			width: auto;
+			clear: both;
+			padding: 10px 0;
+			height: 1px;
+			line-height: 1px;
+		}
+		#p_muid_form .button_well .line_break:before {
+			content: "line break";
+			text-align: center;
 		}
 		#p_muid_add_buttons {
 			border: none !important;
@@ -51,21 +84,23 @@ $this->title = 'Edit Buttons';
 	</style>
 	<script type="text/javascript">
 		pines(function(){
-			$("#p_muid_separator").click(function(){
-				$("#p_muid_cur_buttons").append('<a class="separator btn disabled"><span>&nbsp;</span></a>');
-			});
 			$("#p_muid_cur_buttons").sortable({
-				//tolerance: "pointer",
+				tolerance: "pointer",
 				placeholder: "btn btn-warning placeholder",
-				forcePlaceholderSize: true
+				forcePlaceholderSize: true,
+				start: function(e, ui){
+					if (ui.item.hasClass("line_break"))
+						ui.placeholder.css("width", "32px");
+				}
 			});
-			$("#p_muid_add_buttons .button").draggable({
+			$("#p_muid_add_buttons .btn").draggable({
 				helper: "clone",
 				connectToSortable: "#p_muid_cur_buttons"
 			});
-			$("#p_muid_add_buttons").droppable({
-				accept: "#p_muid_cur_buttons .button, #p_muid_cur_buttons .separator",
+			$("#p_muid_trash").droppable({
+				accept: "#p_muid_cur_buttons .btn",
 				hoverClass: "alert-error",
+				tolerance: 'touch',
 				drop: function(e, ui){
 					ui.draggable.remove();
 				}
@@ -91,6 +126,8 @@ $this->title = 'Edit Buttons';
 			<?php foreach ((array) $this->current_buttons as $cur_button) {
 				if ($cur_button == 'separator') { ?>
 			<a class="separator btn disabled"><span>&nbsp;</span></a>
+				<?php } elseif ($cur_button == 'line_break') { ?>
+			<a class="line_break btn disabled"><span>&nbsp;</span></a>
 				<?php } else {
 					$cur_def = $pines->com_dash->get_button_def($cur_button);
 					// Check its conditions.
@@ -106,11 +143,22 @@ $this->title = 'Edit Buttons';
 			<?php } } ?>
 		</div>
 	</div>
-	<div class="pf-element pf-full-width">
-		<a href="javascript:void(0);" id="p_muid_separator">Add a Separator</a><br />
-		Drag buttons from the following list to add to your dashboard. Drag them back to the list to remove them. You can also reorganize your current buttons.
+	<div class="pf-element pf-full-width clearfix">
+		<div class="ui-widget-content ui-corner-all" id="p_muid_trash" style="float: right; margin-left: .5em; width: 32px; height: 32px; padding: 10px;">
+			<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
+		</div>
+		Drag buttons from the following list to add to your dashboard. Drag to the trash can to remove them. You can also sort your current buttons.
 	</div>
-	<div id="p_muid_add_buttons" style="max-height: 430px; overflow-y: auto; clear: both;">
+	<div id="p_muid_add_buttons" class="well" style="max-height: 430px; overflow-y: auto; clear: both;">
+		<div class="pf-element pf-heading">
+			<h3>Separators</h3>
+		</div>
+		<div class="pf-element pf-full-width">
+			<div class="button_well <?php echo htmlspecialchars($this->buttons_size); ?>">
+				<a class="separator btn disabled"><span>&nbsp;</span></a>
+				<a class="line_break btn disabled"><span>&nbsp;</span></a>
+			</div>
+		</div>
 		<?php foreach ((array) $this->buttons as $cur_component => $cur_button_list) { ?>
 		<div class="pf-element pf-heading">
 			<h3><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h3>

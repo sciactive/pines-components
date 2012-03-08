@@ -47,7 +47,7 @@ $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'] = array();
 $add_buttons = json_decode($_REQUEST['buttons'], true);
 foreach ($add_buttons as $cur_button) {
 	// Check that the button exists and there aren't any weird things in the array.
-	if ($cur_button !== 'separator' && (!isset($buttons[$cur_button['component']][$cur_button['button']]) || count($cur_button) > 2)) {
+	if ($cur_button !== 'separator' && $cur_button !== 'line_break' && (!isset($buttons[$cur_button['component']][$cur_button['button']]) || count($cur_button) > 2)) {
 		$pines->page->override_doc(json_encode(false));
 		return;
 	}

@@ -60,6 +60,14 @@ $pines->com_bootstrap->load();
 			width: 1px;
 			min-width: inherit;
 		}
+		#p_muid_dashboard .buttons .line_break {
+			display: block;
+			width: auto;
+			clear: both;
+			padding: 1px 0;
+			height: 1px;
+			line-height: 1px;
+		}
 		#p_muid_dashboard .column {
 			min-height: 20px;
 			padding-bottom: 20px;

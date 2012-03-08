@@ -17,8 +17,14 @@ if (!$pines->config->com_customer->hide_customers)
 
 /**
  * Add hook to hide customers.
+ *
+ * @param array &$args The arguments.
+ * @param string $name Name of the hook.
  */
-function com_customer__hook_entities() {
+function com_customer__hook_entities(&$args, $name) {
+	// If the request is for all users, don't hide customers.
+	if ($name == '$pines->user_manager->get_users' && $args[0])
+		return;
 	global $pines;
 	$pines->info->com_customer->hook_callbacks = $pines->hook->add_callback('$pines->entity_manager->get_entities', -10, 'com_customer__hide_customers');
 }
@@ -38,5 +44,6 @@ function com_customer__hide_customers(&$args) {
 }
 
 $pines->hook->add_callback('$pines->user_manager->list_users', -10, 'com_customer__hook_entities');
+$pines->hook->add_callback('$pines->user_manager->get_users', -10, 'com_customer__hook_entities');
 
 ?>

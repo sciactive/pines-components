@@ -12,6 +12,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Dashboard';
+if (!$_SESSION['user']->is($this->entity->user))
+	$this->title .= htmlspecialchars(" for {$this->entity->user->name}");
 $pines->com_bootstrap->load();
 ?>
 <div id="p_muid_dashboard">
@@ -136,7 +138,7 @@ $pines->com_bootstrap->load();
 						struct.push($(this).attr("href").replace(/^#/, ""));
 					});
 					$.ajax({
-						url: <?php echo json_encode(pines_url('com_dash', 'dashboard/savetabs_json')); ?>,
+						url: <?php echo json_encode(pines_url('com_dash', 'dashboard/savetabs_json', array('id' => (string) $this->entity->guid))); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {"order": JSON.stringify(struct)},
@@ -172,7 +174,7 @@ $pines->com_bootstrap->load();
 			<a href="#<?php echo htmlspecialchars($cur_key); ?>" data-toggle="tab">
 				<?php echo htmlspecialchars($cur_tab['name']);
 				if ($this->editable) { ?>
-				<span class="edit_tab w_icon icon-cog" title="Edit this Tab" onclick="var link = $(this).closest('a'); $('#<?php echo htmlspecialchars($cur_key); ?>').data('tab_loaded', true).data('trigger_link', link).load(<?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/edittab', array('key' => $cur_key)))); ?>); link.tab('show');"></span>
+				<span class="edit_tab w_icon icon-cog" title="Edit this Tab" onclick="var link = $(this).closest('a'); $('#<?php echo htmlspecialchars($cur_key); ?>').data('tab_loaded', true).data('trigger_link', link).load(<?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'dashboard/edittab', array('id' => (string) $this->entity->guid, 'key' => $cur_key)))); ?>); link.tab('show');"></span>
 				<?php } ?>
 			</a>
 		</li>
@@ -183,23 +185,31 @@ $pines->com_bootstrap->load();
 	</ul>
 	<div class="tab-content" id="p_muid_page_tabs">
 		<?php $first = true; foreach ($this->entity->tabs as $cur_key => $cur_tab) { ?>
-		<div class="tab-pane <?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>" id="<?php echo htmlspecialchars($cur_key); ?>" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('key' => $cur_key, 'editable' => ($this->editable ? 'true' : 'false')))); ?>">
+		<div class="tab-pane <?php echo ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) ? 'active' : ''; ?>" id="<?php echo htmlspecialchars($cur_key); ?>" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tab', array('id' => (string) $this->entity->guid, 'key' => $cur_key, 'editable' => ($this->editable ? 'true' : 'false')))); ?>">
 			<?php if ($cur_key === $this->selected_tab || (!isset($this->selected_tab) && $first)) { ?>
 			<script type="text/javascript">
 				pines(function(){
 					$("#<?php echo htmlspecialchars($cur_key); ?>").data("tab_loaded", true);
 				});
 			</script>
-			<?php echo $pines->com_dash->show_dash_tab($cur_key, $this->editable);
+				<?php
+				$module = $this->entity->print_tab($cur_key, $this->editable);
+				$module->detach();
+				echo $module->render();
 			} else { ?>
 			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
 			<?php } ?>
 		</div>
 		<?php $first = false; }
 		if ($this->editable) { ?>
-		<div class="tab-pane" id="p_muid_edit_tab" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/edittab')); ?>">
+		<div class="tab-pane" id="p_muid_edit_tab" data-url="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/edittab', array('id' => (string) $this->entity->guid))); ?>">
 			<div style="display: block; width: 32px; height: 32px; margin: 0 auto;" class="picon picon-32 picon-throbber"></div>
 		</div>
 		<?php } ?>
 	</div>
+	<?php if (!$_SESSION['user']->is($this->entity->user) && gatekeeper('com_dash/manage')) { ?>
+	<div style="margin-top: 1em;">
+		<a class="btn" href="<?php echo htmlspecialchars(pines_url('com_dash', 'manage/list')); ?>">&laquo; Back to Dashboards</a>
+	</div>
+	<?php } ?>
 </div>

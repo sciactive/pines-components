@@ -15,8 +15,17 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 	punt_user(null, pines_url('com_dash'));
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Check the requested tab.
-if (!empty($_REQUEST['key']) && !isset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']])) {
+if (!empty($_REQUEST['key']) && !isset($dashboard->tabs[$_REQUEST['key']])) {
 	pines_notice('Requested tab is invalid.');
 	return;
 }
@@ -40,7 +49,7 @@ if (empty($_REQUEST['key'])) {
 	// New tab.
 	$tab_key = uniqid();
 	$tab_name = trim($_REQUEST['name']);
-	$_SESSION['user']->dashboard->tabs[$tab_key] = array(
+	$dashboard->tabs[$tab_key] = array(
 		'name' => empty($tab_name) ? 'Untitled Tab' : $tab_name,
 		'buttons' => array(),
 		'buttons_size' => 'large',
@@ -49,9 +58,9 @@ if (empty($_REQUEST['key'])) {
 } else {
 	// Current tab.
 	$tab_key = $_REQUEST['key'];
-	$_SESSION['user']->dashboard->tabs[$tab_key]['name'] = $_REQUEST['name'];
+	$dashboard->tabs[$tab_key]['name'] = $_REQUEST['name'];
 	// Save the old columns.
-	$old_columns = $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'];
+	$old_columns = $dashboard->tabs[$_REQUEST['key']]['columns'];
 	// Now copy widgets to the new columns.
 	foreach ($old_columns as $col_key => $cur_column) {
 		if (isset($columns[$col_key]))
@@ -64,12 +73,12 @@ if (empty($_REQUEST['key'])) {
 		}
 	}
 	// Now put in the new columns.
-	$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'] = $columns;
+	$dashboard->tabs[$_REQUEST['key']]['columns'] = $columns;
 }
 
-if (!$_SESSION['user']->dashboard->save())
+if (!$dashboard->save())
 	pines_error('An error occured while trying to save the tab.');
 
-pines_redirect(pines_url('com_dash', null, array('tab' => $tab_key)));
+pines_redirect(pines_url('com_dash', null, array('id' => (string) $dashboard->guid, 'tab' => $tab_key)));
 
 ?>

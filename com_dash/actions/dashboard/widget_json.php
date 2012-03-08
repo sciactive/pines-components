@@ -18,8 +18,17 @@ if ( !gatekeeper('com_dash/dash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Get the widget entry.
-$widget_entry = $_SESSION['user']->dashboard->widget($_REQUEST['key']);
+$widget_entry = $dashboard->widget($_REQUEST['key']);
 if (!$widget_entry) {
 	header("HTTP/1.0 400 Bad Request");
 	return;

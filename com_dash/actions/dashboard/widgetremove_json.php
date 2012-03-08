@@ -18,16 +18,25 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Get the widget location.
-$widget_location =& $_SESSION['user']->dashboard->widget_location($_REQUEST['key']);
+$widget_location = $dashboard->widget_location($_REQUEST['key']);
 if (!$widget_location) {
 	header("HTTP/1.0 400 Bad Request");
 	return;
 }
 
 // Remove it. Scary isn't it. D:
-unset($_SESSION['user']->dashboard->tabs[$widget_location['tab']]['columns'][$widget_location['column']]['widgets'][$_REQUEST['key']]);
+unset($dashboard->tabs[$widget_location['tab']]['columns'][$widget_location['column']]['widgets'][$_REQUEST['key']]);
 
-$pines->page->override_doc(json_encode($_SESSION['user']->dashboard->save()));
+$pines->page->override_doc(json_encode($dashboard->save()));
 
 ?>

@@ -18,8 +18,17 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Check the requested tab.
-if (!isset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']])) {
+if (!isset($dashboard->tabs[$_REQUEST['key']])) {
 	header("HTTP/1.0 400 Bad Request");
 	return;
 }
@@ -39,9 +48,9 @@ foreach ($buttons as $cur_component => $cur_button_set) {
 }
 
 // Reset the buttons array.
-$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons_size'] = $_REQUEST['buttons_size'];
+$dashboard->tabs[$_REQUEST['key']]['buttons_size'] = $_REQUEST['buttons_size'];
 // Reset the buttons array.
-$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'] = array();
+$dashboard->tabs[$_REQUEST['key']]['buttons'] = array();
 
 // Add all the buttons.
 $add_buttons = json_decode($_REQUEST['buttons'], true);
@@ -51,9 +60,9 @@ foreach ($add_buttons as $cur_button) {
 		$pines->page->override_doc(json_encode(false));
 		return;
 	}
-	$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'][] = $cur_button;
+	$dashboard->tabs[$_REQUEST['key']]['buttons'][] = $cur_button;
 }
 
-$pines->page->override_doc(json_encode($_SESSION['user']->dashboard->save()));
+$pines->page->override_doc(json_encode($dashboard->save()));
 
 ?>

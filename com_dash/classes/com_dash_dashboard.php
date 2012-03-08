@@ -132,7 +132,7 @@ class com_dash_dashboard extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		$module = new module('com_dash', 'dashboard/form', 'content');
+		$module = new module('com_dash', 'manage/form', 'content');
 		$module->entity = $this;
 
 		return $module;
@@ -164,6 +164,7 @@ class com_dash_dashboard extends entity {
 		if (!isset($this->tabs[$key]))
 			return false;
 		$module = new module('com_dash', 'dashboard/tab', 'content');
+		$module->entity = $this;
 		$module->key = $key;
 		$module->tab = $this->tabs[$key];
 		$module->editable = $editable;
@@ -180,6 +181,7 @@ class com_dash_dashboard extends entity {
 		if (!isset($this->tabs[$key]))
 			$key = '';
 		$module = new module('com_dash', 'dashboard/edittab', 'content');
+		$module->entity = $this;
 		$module->key = $key;
 		$module->tab = $this->tabs[$key];
 

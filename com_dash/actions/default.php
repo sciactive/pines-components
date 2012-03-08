@@ -23,7 +23,36 @@ if ( !gatekeeper('com_dash/dash') ) {
 		punt_user(null, pines_url('com_dash'));
 }
 
-if (!$pines->com_dash->show_dash($_REQUEST['tab'], gatekeeper('com_dash/editdash')))
+// TODO: Remove this test code.
+if ($_REQUEST['reset'] == 'true') {
+	pines_session('write');
+	if (isset($_SESSION['user']->dashboard->guid))
+		$_SESSION['user']->dashboard->delete();
+	unset($_SESSION['user']->dashboard);
+	$_SESSION['user']->save();
+	pines_session('close');
+}
+// End remove.
+
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else {
+	if (!isset($_SESSION['user']->dashboard->guid)) {
+		pines_session('write');
+		$_SESSION['user']->dashboard = com_dash_dashboard::factory();
+		if (!$_SESSION['user']->dashboard->save() || !$_SESSION['user']->save()) {
+			pines_session('close');
+			pines_error('Couldn\'t load your dashboard.');
+			return;
+		}
+		pines_session('close');
+	}
+	$dashboard =& $_SESSION['user']->dashboard;
+}
+if (!isset($dashboard->guid))
+	return 'error_404';
+
+if (!$dashboard->print_dashboard($_REQUEST['tab'], gatekeeper('com_dash/editdash')))
 	pines_error('Couldn\'t load your dashboard.');
 
 ?>

@@ -18,6 +18,15 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Get the widget order.
 $struct = json_decode($_REQUEST['order'], true);
 if (!$struct) {
@@ -25,14 +34,14 @@ if (!$struct) {
 	return;
 }
 // Check the requested tab.
-if (!isset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']])) {
+if (!isset($dashboard->tabs[$_REQUEST['key']])) {
 	header("HTTP/1.0 400 Bad Request");
 	return;
 }
 
 // Get all the widgets.
 $widgets = array();
-foreach ($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'] as &$cur_column) {
+foreach ($dashboard->tabs[$_REQUEST['key']]['columns'] as &$cur_column) {
 	$widgets = array_merge($widgets, $cur_column['widgets']);
 	// Now clear the column.
 	$cur_column['widgets'] = array();
@@ -43,18 +52,18 @@ foreach ($struct as $cur_c_key => $cur_w_key_list) {
 	foreach ($cur_w_key_list as $cur_w_key) {
 		if (!isset($widgets[$cur_w_key]))
 			continue;
-		$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'][$cur_c_key]['widgets'][$cur_w_key] = $widgets[$cur_w_key];
+		$dashboard->tabs[$_REQUEST['key']]['columns'][$cur_c_key]['widgets'][$cur_w_key] = $widgets[$cur_w_key];
 		unset($widgets[$cur_w_key]);
 	}
 }
 // If there are any widgets left, throw them into whatever column. This
 // *shouldn't* be necessary, but.. you know, shouldn't =/= isn't.
 if ($widgets) {
-	$key = key($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns']);
+	$key = key($dashboard->tabs[$_REQUEST['key']]['columns']);
 	foreach ($widgets as $wkey => $widget)
-		$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'][$key]['widgets'][$wkey] = $widget;
+		$dashboard->tabs[$_REQUEST['key']]['columns'][$key]['widgets'][$wkey] = $widget;
 }
 
-$pines->page->override_doc(json_encode($_SESSION['user']->dashboard->save()));
+$pines->page->override_doc(json_encode($dashboard->save()));
 
 ?>

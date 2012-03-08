@@ -18,20 +18,29 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Check the requested tab.
-if (!isset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']])) {
+if (!isset($dashboard->tabs[$_REQUEST['key']])) {
 	header("HTTP/1.0 400 Bad Request");
 	return;
 }
 // Check that it's not the last tab.
-if (count($_SESSION['user']->dashboard->tabs) <= 1) {
+if (count($dashboard->tabs) <= 1) {
 	$pines->page->override_doc(json_encode('last'));
 	return;
 }
 
 // Remove it.
-unset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]);
+unset($dashboard->tabs[$_REQUEST['key']]);
 
-$pines->page->override_doc(json_encode($_SESSION['user']->dashboard->save()));
+$pines->page->override_doc(json_encode($dashboard->save()));
 
 ?>

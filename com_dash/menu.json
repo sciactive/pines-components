@@ -1,5 +1,13 @@
 [
 	{
+		"path": "main_menu/system/dashboards",
+		"text": "Dashboards",
+		"href": ["com_dash", "manage/list"],
+		"depend": {
+			"ability": "com_dash/manage"
+		}
+	},
+	{
 		"path": "main_menu/~account/dashboard",
 		"text": "Dashboard",
 		"href": ["com_dash"],

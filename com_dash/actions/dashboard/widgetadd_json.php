@@ -18,8 +18,17 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 // Check the requested tab.
-if (!isset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']])) {
+if (!isset($dashboard->tabs[$_REQUEST['key']])) {
 	header("HTTP/1.0 400 Bad Request");
 	return;
 }
@@ -39,7 +48,7 @@ foreach ($widgets as $cur_component => $cur_widget_set) {
 }
 
 // Reset the column array.
-reset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns']);
+reset($dashboard->tabs[$_REQUEST['key']]['columns']);
 
 // Add all the new widgets.
 $add_widgets = json_decode($_REQUEST['widgets'], true);
@@ -48,16 +57,16 @@ foreach ($add_widgets as $cur_widget) {
 		$pines->page->override_doc(json_encode(false));
 		return;
 	}
-	$key = key($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns']);
-	$_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns'][$key]['widgets'][uniqid()] = array(
+	$key = key($dashboard->tabs[$_REQUEST['key']]['columns']);
+	$dashboard->tabs[$_REQUEST['key']]['columns'][$key]['widgets'][uniqid()] = array(
 		'component' => $cur_widget['component'],
 		'widget' => $cur_widget['widget'],
 		'options' => array()
 	);
-	if (!next($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns']))
-		reset($_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['columns']);
+	if (!next($dashboard->tabs[$_REQUEST['key']]['columns']))
+		reset($dashboard->tabs[$_REQUEST['key']]['columns']);
 }
 
-$pines->page->override_doc(json_encode($_SESSION['user']->dashboard->save()));
+$pines->page->override_doc(json_encode($dashboard->save()));
 
 ?>

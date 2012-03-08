@@ -71,52 +71,24 @@ class com_dash extends component {
 	}
 
 	/**
-	 * Show the user's dashboard.
-	 * @param string $tab The key of the tab to show by default.
-	 * @param bool $editable Whether the user can edit the dash.
-	 * @return module|bool The dashboard module on success, false on failure.
+	 * Show the dashboard manager.
+	 * @return module The module.
 	 */
-	public function show_dash($tab = null, $editable = true) {
-		// TODO: Remove this test code.
-		if ($_REQUEST['reset'] == 'true') {
-			pines_session('write');
-			if (isset($_SESSION['user']->dashboard->guid))
-				$_SESSION['user']->dashboard->delete();
-			unset($_SESSION['user']->dashboard);
-			$_SESSION['user']->save();
-			pines_session('close');
-		}
-		// End remove.
-		if (!isset($_SESSION['user']->dashboard->guid)) {
-			pines_session('write');
-			$_SESSION['user']->dashboard = com_dash_dashboard::factory();
-			if (!$_SESSION['user']->dashboard->save() || !$_SESSION['user']->save()) {
-				pines_session('close');
-				return false;
-			}
-			pines_session('close');
-		}
-		return $_SESSION['user']->dashboard->print_dashboard($tab, $editable);
-	}
+	public function manage() {
+		global $pines;
 
-	/**
-	 * Get the code for a dashboard tab.
-	 * @param string $key The key of the tab to show.
-	 * @param bool $editable Whether the user can edit the tab.
-	 */
-	public function show_dash_tab($key, $editable = true) {
-		$module = $_SESSION['user']->dashboard->print_tab($key, $editable);
-		$module->detach();
-		return $module->render();
-	}
+		$module = new module('com_dash', 'manage/list', 'content');
+		$module->dashboards = $pines->entity_manager->get_entities(
+				array('class' => com_dash_dashboard),
+				array('&',
+					'tag' => array('com_dash', 'dashboard')
+				)
+			);
 
-	/**
-	 * Get the code for a dashboard tab editor.
-	 * @param string $key The key of the tab to edit.
-	 */
-	public function show_dash_tab_edit($key = '') {
-		$module = $_SESSION['user']->dashboard->edit_tab($key);
-		return $module->render();
+		if ( empty($module->dashboards) )
+			pines_notice('No dashboards found.');
+
+		return $module;
 	}
 
 	/**

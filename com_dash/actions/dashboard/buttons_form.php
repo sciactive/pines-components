@@ -17,9 +17,18 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 
 $pines->page->override = true;
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 $module = new module('com_dash', 'dashboard/buttons_form');
-$module->current_buttons = $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons'];
-$module->buttons_size = $_SESSION['user']->dashboard->tabs[$_REQUEST['key']]['buttons_size'];
+$module->current_buttons = $dashboard->tabs[$_REQUEST['key']]['buttons'];
+$module->buttons_size = $dashboard->tabs[$_REQUEST['key']]['buttons_size'];
 $module->buttons = $pines->com_dash->button_types();
 foreach ($module->buttons as $cur_component => $cur_button_set) {
 	foreach ($cur_button_set as $cur_button_name => $cur_button) {

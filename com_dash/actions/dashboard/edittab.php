@@ -15,8 +15,17 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 	punt_user(null, pines_url('com_dash'));
 
+if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
+	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
+else
+	$dashboard =& $_SESSION['user']->dashboard;
+if (!isset($dashboard->guid)) {
+	header('HTTP/1.0 400 Bad Request');
+	return;
+}
+
 $pines->page->override = true;
-$tab = $pines->com_dash->show_dash_tab_edit($_REQUEST['key']);
-$pines->page->override_doc($tab);
+$module = $dashboard->edit_tab($_REQUEST['key']);
+$pines->page->override_doc($module->render());
 
 ?>

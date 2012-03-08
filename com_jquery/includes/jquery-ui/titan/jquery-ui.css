@@ -56,13 +56,14 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget { font-family: Helvetica, Arial, sans-serif; font-size: 1.2em; }
+/*.ui-widget { font-family: Helvetica, Arial, sans-serif; font-size: 1.2em; }
 .ui-widget .ui-widget { font-size: 1em; }
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Helvetica, Arial, sans-serif; font-size: 1em; }
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Helvetica, Arial, sans-serif; font-size: 1em; }*/
 .ui-widget-content { border: 1px solid #4a4a4a; background: #d6d6d6 url(images/ui-bg_inset-soft_100_d6d6d6_1x100.png) 50% bottom repeat-x; color: #000000; }
 /*.ui-widget-content a { color: #000000; }*/
 .ui-widget-header { border: 1px solid #003815; background: #005c1d url(images/ui-bg_glass_70_005c1d_1x400.png) 50% 50% repeat-x; color: #ffffff; font-weight: bold; }
 /*.ui-widget-header a { color: #ffffff; }*/
+/*[*/.ui-widget-header h1, .ui-widget-header h2, .ui-widget-header h3, .ui-widget-header h4, .ui-widget-header h5, .ui-widget-header h6 { color: #ffffff; }/*]*/
 
 /* Interaction states
 ----------------------------------*/

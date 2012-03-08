@@ -72,6 +72,7 @@
 		background: linear-gradient(top, #ededed 0%,#c4c4c4 100%); /* W3C */
 }
 /*.ui-widget-header a { color: #4F4F4F; }*/
+/*[*/.ui-widget-header h1, .ui-widget-header h2, .ui-widget-header h3, .ui-widget-header h4, .ui-widget-header h5, .ui-widget-header h6 { color: #4F4F4F; }/*]*/
 
 /* Interaction states
 ----------------------------------*/

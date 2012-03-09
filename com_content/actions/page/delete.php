@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete an page.
+ * Delete a page.
  *
  * @package Pines
  * @subpackage com_content

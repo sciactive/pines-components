@@ -30,10 +30,12 @@ return array(
 		array('newpage', 'Create Pages', 'User can create new pages.'),
 		array('editpage', 'Edit Pages', 'User can edit current pages.'),
 		array('deletepage', 'Delete Pages', 'User can delete current pages.'),
+		array('pagemodule', 'View Page Module', 'User can see and use the page module/widget.'),
 		array('listcategories', 'List Categories', 'User can see categories. (Not needed to assign categories for pages.)'),
 		array('newcategory', 'Create Categories', 'User can create new categories.'),
 		array('editcategory', 'Edit Categories', 'User can edit current categories.'),
 		array('deletecategory', 'Delete Categories', 'User can delete current categories.'),
+		array('categorymodule', 'View Category Module', 'User can see and use the category module/widget.'),
 		array('editmeta', 'Edit Meta Tags', 'User can edit pages\' and categories\' meta tags.'),
 		array('edithead', 'Edit Custom Head Code', 'User can edit pages\' and categories\' custom head code.')
 	),

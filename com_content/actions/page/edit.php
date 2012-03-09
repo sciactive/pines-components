@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to edit an page.
+ * Provide a form to edit a page.
  *
  * @package Pines
  * @subpackage com_content

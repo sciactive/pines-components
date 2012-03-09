@@ -22,7 +22,7 @@ return array(
 		'widget' => array(
 			'default' => false,
 			'depends' => array(
-				'ability' => 'com_content/listpages',
+				'ability' => 'com_content/pagemodule',
 			),
 		),
 	),
@@ -35,7 +35,7 @@ return array(
 		'widget' => array(
 			'default' => false,
 			'depends' => array(
-				'ability' => 'com_content/listcategories',
+				'ability' => 'com_content/categorymodule',
 			),
 		),
 	),

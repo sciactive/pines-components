@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to an page.
+ * Save changes to a page.
  *
  * @package Pines
  * @subpackage com_content

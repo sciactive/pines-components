@@ -86,11 +86,10 @@ class com_calendar_event extends entity {
 		$pines->page->override = true;
 
 		if (empty($timezone)) {
-			if (isset($this->user->guid)) {
-				$timezone = $this->user->get_timezone;
-			} else {
+			if (isset($this->user->guid))
+				$timezone = $this->user->get_timezone();
+			else
 				$timezone = $_SESSION['user']->get_timezone();
-			}
 		}
 
 		$module = new module('com_calendar', 'form_event', 'content');

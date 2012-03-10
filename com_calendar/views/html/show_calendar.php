@@ -15,19 +15,18 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-if (isset($this->employee->guid)) {
+$this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
+$this->note = 'Timezone: '.htmlspecialchars($this->timezone);
+
+if (isset($this->employee->guid))
 	$subject = $this->employee;
-} else {
+else
 	$subject = $this->location;
-}
+
 if (!isset($subject)) {
 	echo 'No calendar storage available. You must be logged in and able to have a calendar.';
 	return;
 }
-
-$this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
-$this->note = 'Timezone: '.htmlspecialchars($this->timezone);
-
 ?>
 <style type="text/css" >
 	#p_muid_form .helper {
@@ -39,114 +38,56 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 </style>
 <script type='text/javascript'>
 	pines(function(){
-		var view_changes = 0;
 		pines.selected_event = '';
-		var help = $.pnotify({
-			pnotify_title: "Information",
-			pnotify_text: "",
-			pnotify_hide: false,
-			pnotify_closer: false,
-			pnotify_sticker: false,
-			pnotify_history: false,
-			pnotify_animation: "none",
-			pnotify_animate_speed: 0,
-			pnotify_opacity: 1,
-			pnotify_notice_icon: "",
-			// Setting stack to false causes Pines Notify to ignore this notice when positioning.
-			pnotify_stack: false,
-			pnotify_after_init: function(pnotify){
-				// Remove the notice if the user mouses over it.
-				pnotify.mouseout(function(){
-					pnotify.pnotify_remove();
-				});
-			},
-			pnotify_before_open: function(pnotify){
-				// This prevents the notice from displaying when it's created.
-				pnotify.pnotify({
-					pnotify_before_open: null
-				});
-				return false;
-			}
-		});
-
 		// Create the calendar object.
 		$('#p_muid_calendar').fullCalendar({
 			header: {
-				left: 'prev,next today',
+				left: 'prevYear prev,next nextYear today',
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
+			},
+			buttonIcons: {
+				prevYear: 'circle-arrow-w',
+				prev: 'circle-triangle-w',
+				next: 'circle-triangle-e',
+				nextYear: 'circle-arrow-e'
 			},
 			dragOpacity: {
 				agenda: .5,
 				'': 0.85
 			},
 			defaultView: <?php echo json_encode($this->view_type); ?>,
+			weekMode: "liquid",
 			firstDay: 1,
 			selectable: true,
 			theme: true,
 			ignoreTimezone: false,
-			editable: <?php echo json_encode(gatekeeper('com_calendar/managecalendar')); ?>,
-			events: [<?php
-				// Read in all existing events.
-				$event_counter = 0;
-				foreach ($this->events as $cur_event) {
-					if (!gatekeeper('com_calendar/managecalendar') && $cur_event->private) {
-						if (!isset($cur_event->employee->guid) && !$cur_event->group->is($this->location))
-							continue;
-						if (isset($cur_event->employee->guid) && !$cur_event->employee->is($_SESSION['user']))
-							continue;
-					}
-					if (!isset($cur_event->user->guid))
-						continue;
-					if ($event_counter > 0)
-						echo ',';
-					// Get the start hour of the first event.
-					$cur_start = format_date($cur_event->start, 'custom', 'G', $this->timezone);
-					if (!$cur_event->all_day && ($cur_start < $min_start || !isset($min_start)))
-						$min_start = $cur_start;
-					echo '{';
-					if ($cur_event->event_id != 0) {
-						echo 'group: true,';
-						echo 'id: '. json_encode($cur_event->event_id) .', ';
-						echo '_id: '. json_encode($cur_event->event_id) .', ';
-						echo 'guid: '. json_encode($cur_event->guid) .', ';
-					} else {
-						echo 'group: false,';
-						echo 'id: '. json_encode($cur_event->guid) .', ';
-						echo '_id: '. json_encode($cur_event->guid) .', ';
-					}
-					echo 'title: '. json_encode($cur_event->title) .', ';
-					echo 'start: '. json_encode(format_date($cur_event->start, 'custom', 'Y-m-d H:i', $this->timezone)) .', ';
-					echo 'end: '. json_encode(format_date($cur_event->end, 'custom', 'Y-m-d H:i', $this->timezone)) .', ';
-					if ((!gatekeeper('com_calendar/managecalendar') && (!$cur_event->user->is($_SESSION['user']) || $cur_event->appointment)) || $cur_event->time_off) {
-						echo 'editable: false,';
-					} else {
-						echo 'editable: true,';
-					}
-					if (isset($cur_event->appointment->guid)) {
-						echo 'appointment: '.json_encode($cur_event->appointment->guid).',';
-						if ($cur_event->appointment->status == 'open') {
-							if ($cur_event->appointment->action_date < strtotime('-3 days'))
-								echo 'className: \'red\',';
-							elseif ($cur_event->appointment->action_date < strtotime('-1 hour'))
-								echo 'className: \'yellow\',';
-							else
-								echo 'className: \'greenyellow\',';
-						} else {
-							echo 'className: '. json_encode((string) $cur_event->color) .',';
-						}
-					} else {
-						echo 'appointment: \'\',';
-						echo 'className: '. json_encode((string) $cur_event->color) .',';
-					}
-					echo ($cur_event->all_day) ? 'allDay: true,' : 'allDay: false,';
-					echo (!empty($cur_event->information)) ? 'info: '.json_encode($cur_event->information) : 'info: \'\'';
-					echo '}';
-					$event_counter++;
-				} ?>],
 			firstHour: <?php echo isset($min_start) ? $min_start : 8; ?>,
-			select: function(start, end, allDay, jsEvent, view) {
-				pines.com_calendar_new_event(start.toString(), end.toString());
+			editable: <?php echo json_encode(gatekeeper('com_calendar/managecalendar')); ?>,
+			events: {
+				url: <?php echo json_encode(pines_url('com_calendar', 'events_json')); ?>,
+				type: "POST",
+				data: {
+					location: <?php echo json_encode((string) $this->location->guid); ?>,
+					employee: <?php echo json_encode((string) $this->employee->guid); ?>,
+					descendants: <?php echo json_encode($this->descendants ? 'true' : 'false'); ?>,
+					filter: <?php echo json_encode((string) $this->filter); ?>
+				}
+			},
+			eventRender: function(event, element){
+				var header;
+				if (event.allDay)
+					header = "<div><strong>All Day</strong></div>";
+				else
+					header = "<div><strong>Start:</strong> <span>"+pines.safe($.fullCalendar.formatDate(event.start, "ddd MMM dS, yyyy h:mm tt"))+"</span></div><div><strong>End:</strong> <span>"+pines.safe($.fullCalendar.formatDate(event.end, "ddd MMM dS, yyyy h:mm tt"))+"</span></div>";
+				element.popover({
+					title: pines.safe(event.title),
+					content: header+"<p>"+pines.safe(event.info)+"</p>",
+					placement: "top"
+				});
+			},
+			select: function(start, end, allDay) {
+				pines.p_muid_new_event(start.toString(), end.toString(), allDay);
 			},
 			eventClick: function(event,jsEvent,view) {
 				if (event.editable == false && event.appointment == '') {
@@ -154,59 +95,36 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 					return;
 				}
 				if (event.appointment != '')
-					pines.com_calendar_edit_appointment(event.appointment);
+					pines.p_muid_edit_appointment(event.appointment);
 				else
-					pines.com_calendar_edit_event(event.id);
+					pines.p_muid_edit_event(event.id);
 				pines.selected_event = $(this);
 				pines.selected_event.addClass('ui-state-disabled');
-
 			},
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				event.selected = false;
-				$("#p_muid_calendar").fullCalendar('refetchEvents');
-				pines.com_calendar_save_calendar();
+				pines.p_muid_save_calendar([event], false, revertFunc);
+			},
+			eventDragStart: function(event, jsEvent, ui, view) {
+				view.element.find(".fc-event").popover('hide');
 			},
 			eventDragStop: function(event, jsEvent, ui, view) {
 				var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 				$.each(events, function(i, val) {
 					val.selected = false;
 				});
-				$("#p_muid_calendar").fullCalendar('refetchEvents');
 			},
-			eventResize: function(event,dayDelta,minuteDelta,revertFunc,jsEvent,ui,view) {
+			eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
 				event.selected = false;
-				pines.com_calendar_save_calendar();
-			},
-			eventMouseover: function(event,jsEvent,view) {
-				help.pnotify({ pnotify_title: pines.safe(event.title), pnotify_text: pines.safe(event.info) });
-				help.pnotify_display();
-			},
-			eventMouseout: function(event,jsEvent,view) {
-				help.pnotify_remove(); help.pnotify({ pnotify_text: "" });
-			},
-			viewDisplay: function(view) {
-				// The first couple of times this fires it is loading the initial calendar.
-				if (view_changes < 2) {
-					view_changes++;
-				} else {
-					alert('Loading Relevant Events');
-					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
-						view_type: view.name,
-						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						location: "<?php echo (int) $this->location->guid ?>",
-						employee: "<?php echo (int) $this->employee->guid ?>",
-						descendants: <?php echo $this->descendants ? 'true' : 'false'; ?>,
-						filter: <?php echo json_encode($this->filter); ?>
-					});
-				}
+				pines.p_muid_save_calendar([event], false, revertFunc);
 			}
 		});
 		var current_date = $.fullCalendar.parseDate(<?php echo strtotime(format_date((int) $this->date[0], 'custom', 'Y-m-d', $this->timezone)); ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
+
 	// Add new events to the calendar, mostly for duplicating events.
-	pines.com_calendar_add_events = function(events) {
+	pines.p_muid_add_events = function(events){
 		$.ajax({
 			url: <?php echo json_encode(pines_url('com_calendar', 'addevents')); ?>,
 			type: "POST",
@@ -216,198 +134,177 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 				pines.error("An error occured while trying to add events to the calendar.");
 			},
 			success: function(){
-				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar', array(
-					'view_type' => $this->view_type,
-					'start' => format_date($this->date[0], 'date_sort', '', $this->timezone),
-					'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
-					'location' => $this->location->guid,
-					'employee' => $this->employee->guid,
-					'descendants' => $this->descendants,
-					'filter' => $this->filter
-				))); ?>);
+				$('#p_muid_calendar').fullCalendar('refetchEvents');
 			}
 		});
 	};
 
-	// Save all of the calendar events by exporting the data to their entities.
-	pines.com_calendar_save_calendar = function(refresh) {
-		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
-		var events_dump = '';
-		//var events_array = new Array();
-		//var event_count = 0;
-		$.each(events, function(i, val) {
-			if (val.group) {
-				events_dump += val.guid.toString() +'|'+ val.id.toString() +'|';
-				//events_array[0] = val.guid.toString();
-				//events_array[1] = val.id.toString();
+	// Save all of the calendar events (or just the ones specified) by exporting
+	// the data to their entities.
+	pines.p_muid_save_calendar = function(events, refresh, revertFunc){
+		var struct = [];
+		if (!events)
+			events = $("#p_muid_calendar").fullCalendar('clientEvents');
+		$.each(events, function(i, e) {
+			var cur_struct = {};
+			if (e.group) {
+				cur_struct.id = e.guid;
+				cur_struct._id = e.id;
 			} else {
-				events_dump += val.id.toString() + '|0|';
-				//events_array[0] = val.id.toString();
-				//events_array[1] = '0';
+				cur_struct.id = e.id;
+				cur_struct._id = 0;
 			}
-			var event_start = val.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
-			var event_end = val.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
-			events_dump += event_start + '|' + event_end + '|' + val.allDay + ',';
-			//events_array[2] = event_start;
-			//events_array[3] = event_end;
-			//events_array[4] = val.allDay;
-			//events_dump[event_count] = events_array;
-			//event_count++;
+			cur_struct.start = e.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
+			cur_struct.end = e.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
+			cur_struct.all_day = e.allDay;
+			struct.push(cur_struct);
 		});
 		$.ajax({
 			url: <?php echo json_encode(pines_url('com_calendar', 'savecalendar')); ?>,
 			type: "POST",
 			dataType: "html",
-			data: {"events": events_dump, "timezone": <?php echo json_encode($this->timezone); ?>},
+			data: {"events": JSON.stringify(struct), "timezone": <?php echo json_encode($this->timezone); ?>},
 			error: function(){
 				pines.error("An error occured while trying to save the calendar.");
 			},
 			success: function(data){
-				if (data)
+				if (data) {
 					alert(data);
-				if (refresh || data) {
-					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar', array(
-						'view_type' => $this->view_type,
-						'start' => format_date($this->date[0], 'date_sort', '', $this->timezone),
-						'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
-						'location' => $this->location->guid,
-						'employee' => $this->employee->guid,
-						'descendants' => $this->descendants,
-						'filter' => $this->filter
-					))); ?>);
+					if (events.length == 1 && revertFunc)
+						revertFunc();
 				}
+				if (refresh || data)
+					$('#p_muid_calendar').fullCalendar('refetchEvents');
 			}
 		});
 	};
 
 	// Help
-	pines.com_calendar_calendar_help = function(){
+	pines.p_muid_calendar_help = function(){
 		alert('Click on an event to select/deselect it.');
 	};
 
 	// Duplicate Event(s)
-	pines.com_calendar_copy_event = function() {
-		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
-		var copy_events = new Array();
-		var copy_count = 0;
-		// Find the selected event(s).
-		$.each(events, function(i, val) {
-			if (val.selected && val.editable == false) {
-				alert(val.title+' cannot be copied.');
-			} else if (val.selected) {
-				if (val.group)
-					copy_events[copy_count] = val.guid;
-				else
-					copy_events[copy_count] = val.id;
-				copy_count++;
+	pines.p_muid_copy_event = function(){
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents', function(e){
+			if (e.selected && e.editable == false) {
+				alert(e.title+' cannot be copied, because it is not editable.');
+				return false;
 			}
+			return e.selected;
+		}),
+			copy_events = [];
+		// Find the selected event(s).
+		$.each(events, function(i, e) {
+			copy_events.push((e.group) ? e.guid : e.id);
 		});
-		if (copy_count == 0) {
+		if (!copy_events.length)
 			alert('Please select at least one event to duplicate.');
-		} else {
-			pines.com_calendar_add_events(copy_events);
-		}
+		else
+			pines.p_muid_add_events(copy_events);
 	};
 
 	// Delete Event(s)
-	pines.com_calendar_delete_events = function() {
-		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
-		var remove_events = new Array();
-		var event_guids = new Array();
-		var remove_count = 0;
-		// Find the selected event(s).
-		$.each(events, function(i, val) {
-			if (val.selected && val.editable == false) {
-				alert(val.title+' cannot be deleted.');
-			} else if (val.selected && val.group) {
-				if (remove_events[remove_count-1] != val.id &&
-					confirm(val.title + ' is a linked event, deleting it will remove the entire group.')) {
-					event_guids.push(val.guid);
-					remove_events.push(val.id);
+	pines.p_muid_delete_events = function(){
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents', function(e){
+			if (e.selected && !e.editable) {
+				alert(e.title+' cannot be deleted, because it is not editable.');
+				return false;
+			}
+			return e.selected;
+		}),
+			remove_events = [],
+			event_guids = [],
+			remove_count = 0;
+		$.each(events, function(i, e){
+			if (e.group) {
+				if (remove_events[remove_count-1] != e.id && confirm(e.title+' is a linked event, deleting it will remove the entire group. Are you sure you want to delete it?')) {
+					event_guids.push(e.guid);
+					remove_events.push(e.id);
 					remove_count++;
 				}
-			} else if (val.selected && !val.group) {
-				event_guids.push(val.id);
-				remove_events.push(val.id);
+			} else {
+				event_guids.push(e.id);
+				remove_events.push(e.id);
 				remove_count++;
 			}
 		});
 		if (remove_count == 0) {
 			alert('Please select at least one event to delete.');
-		} else {
-			$.ajax({
-				url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
-				type: "POST",
-				dataType: "json",
-				data: {"events": event_guids},
-				error: function(){
-					pines.error("An error occured while trying to delete events from the calendar.");
-				},
-				success: function(data) {
-					$.each(remove_events, function(r, remove_event) {
-						if (data && data.indexOf(remove_event) != -1)
-							return;
-						$("#p_muid_calendar").fullCalendar('removeEvents', remove_event);
-					});
-					if (data)
-						pines.error('Some events could not be deleted.');
-					else
-						alert('Deleted Event(s).');
-				}
-			});
+			return;
 		}
+		$.ajax({
+			url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
+			type: "POST",
+			dataType: "json",
+			data: {"events": event_guids},
+			error: function(){
+				pines.error("An error occured while trying to delete events from the calendar.");
+			},
+			success: function(data) {
+				$.each(remove_events, function(r, remove_event) {
+					if (data && data.indexOf(remove_event) != -1)
+						return;
+					$("#p_muid_calendar").fullCalendar('removeEvents', remove_event);
+				});
+				if (data)
+					pines.error('Some events could not be deleted.');
+				else
+					alert('Deleted Event(s).');
+			}
+		});
 	};
 
 	// Clear Calendar
-	pines.com_calendar_clear_calendar = function() {
-		if (confirm('Clear the entire calendar? This will remove all events for this location/employee.')) {
+	pines.p_muid_clear_calendar = function(){
+		if (!confirm('Clear the entire calendar? This will remove all events for this location/employee.'))
+			return;
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents'),
+			event_guids = [];
+		// Find the event(s)' GUIDs.
+		$.each(events, function(i, e) {
+			if (e.group)
+				event_guids.push(e.guid);
+			else
+				event_guids.push(e.id);
+		});
 
-			var events = $("#p_muid_calendar").fullCalendar('clientEvents');
-			var event_guids = new Array();
-			// Find the selected event(s).
-			$.each(events, function(i, val) {
-				if (val.group)
-					event_guids.push(val.guid);
-				else if (!val.group)
-					event_guids.push(val.id);
-			});
-
-			$.ajax({
-				url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
-				type: "POST",
-				dataType: "json",
-				data: {"events": event_guids},
-				error: function(){
-					pines.error("An error occured while trying to delete events from the calendar.");
-				},
-				success: function(data) {
-					$("#p_muid_calendar").fullCalendar('removeEvents');
-					if (data)
-						pines.error('Some events could not be deleted.');
-					else
-						alert('Cleared the calendar.');
-				}
-			});
-			pines.com_calendar_save_calendar();
-		}
+		$.ajax({
+			url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
+			type: "POST",
+			dataType: "json",
+			data: {"events": event_guids},
+			error: function(){
+				pines.error("An error occured while trying to delete events from the calendar.");
+			},
+			success: function(data) {
+				$('#p_muid_calendar').fullCalendar('refetchEvents');
+				if (data)
+					pines.error('Some events could not be deleted.');
+				else
+					alert('Cleared the calendar.');
+			}
+		});
 	};
 
 	// Unlink Event(s)
-	pines.com_calendar_unlink_events = function() {
-		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
-		var unlink_count = 0;
-		// Find the selected event(s).
-		$.each(events, function(i, val) {
-			if (val.selected == true && val.group) {
-				val.group = false;
-				val.id = val.guid;
-				unlink_count++;
+	pines.p_muid_unlink_events = function(){
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents', function(e){
+			if (e.selected && e.group && !e.editable) {
+				alert(e.title+' cannot be unlinked, because it is not editable.');
+				return false;
 			}
+			return e.selected && e.group;
 		});
-		if (unlink_count == 0)
+		// Unlink the events.
+		$.each(events, function(i, e) {
+			e.group = false;
+			e.id = e.guid;
+		});
+		if (!events.length)
 			alert('Please select at least one bound event to unlink.');
 		else
-			pines.com_calendar_save_calendar(true);
+			pines.p_muid_save_calendar(null, true);
 	};
 </script>
 <div id="p_muid_calendar"></div>

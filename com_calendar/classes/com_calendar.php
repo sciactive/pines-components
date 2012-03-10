@@ -128,16 +128,56 @@ class com_calendar extends component {
 		$calendar = new module('com_calendar', 'show_calendar', 'content');
 		$form = new module('com_calendar', 'form_calendar', 'right');
 
-		$selector = array('&', 'tag' => array('com_calendar', 'event'));
 		// Datespan of the calendar.
 		$date_start = strtotime('00:00:00', $start);
-		$date_end = strtotime('00:00:00', $end) + 1;
-		$selector['lt'] = array('start', $date_end);
-		$selector['gte'] = array('end', $date_start);
+		$date_end = strtotime('11:59:59', $end) + 1;
 		$calendar->view_type = $form->view_type = $view_type;
 		$calendar->timezone = $form->timezone = $timezone;
 		$calendar->date[0] = $form->date[0] = $date_start;
 		$calendar->date[1] = $form->date[1] = $date_end;
+		if (isset($employee->guid))
+			$form->employee = $calendar->employee = $employee;
+
+		$form->employees = $pines->com_hrm->get_employees();
+		$calendar->location = $form->location = $location;
+		$calendar->descendants = $form->descendants = $descendants;
+		$calendar->filter = $form->filter = $filter;
+
+		date_default_timezone_set($cur_timezone);
+
+		// So the form can access the calendar.
+		$form->cal_muid = $calendar->muid;
+	}
+
+	/**
+	 * Get calendar events.
+	 * 
+	 * @param int $start The start date of the events.
+	 * @param int $end The end date of the events.
+	 * @param string $timezone The timezone to use.
+	 * @param group $location The desired location to get events for.
+	 * @param com_hrm_employee $employee The desired employee to get events for.
+	 * @param bool $descendants Whether to use descendant locations.
+	 * @param string $filter Which type of events to get.
+	 * @return array An array of calendar events.
+	 */
+	public function get_events($start, $end, $timezone, $location = null, $employee = null, $descendants = false, $filter = 'all') {
+		global $pines;
+
+		// Make all calculations in the correct timezone.
+		$cur_timezone = date_default_timezone_get();
+		date_default_timezone_set($timezone);
+
+		if (!isset($location) || !isset($location->guid)) {
+			$location = $_SESSION['user']->group;
+			if (!isset($employee->guid))
+				$employee = $_SESSION['user'];
+		}
+
+		$selector = array('&', 'tag' => array('com_calendar', 'event'));
+		// Datespan of the calendar.
+		$selector['lt'] = array('start', $end);
+		$selector['gte'] = array('end', $start);
 		// Filters for the calendar event types.
 		if ($filter == 'shifts') {
 			$selector['isset'] = array('scheduled');
@@ -152,17 +192,12 @@ class com_calendar extends component {
 		if (isset($employee->guid)) {
 			$or = array('|', 'isset' => array('group'));
 			$selector['ref'] = array('employee', $employee);
-			$form->employee = $calendar->employee = $employee;
 			$ancestors = $location->get_descendants(true);
 		}
 
-		$form->employees = $pines->com_hrm->get_employees();
-		$calendar->location = $form->location = $location;
-		$calendar->descendants = $form->descendants = $descendants;
-		$calendar->filter = $form->filter = $filter;
 		//Retrieve all private events
 		if ($filter == 'events') {
-			$calendar->events = $pines->entity_manager->get_entities(
+			$events = $pines->entity_manager->get_entities(
 					array('class' => com_calendar_event),
 					$selector,
 					$or,
@@ -171,7 +206,7 @@ class com_calendar extends component {
 					)
 				);
 		} else {
-			$calendar->events = $pines->entity_manager->get_entities(
+			$events = $pines->entity_manager->get_entities(
 					array('class' => com_calendar_event),
 					$selector,
 					$or
@@ -196,15 +231,14 @@ class com_calendar extends component {
 					)
 				);
 			foreach ($more_events as $cur_more_event) {
-				if (!$cur_more_event->in_array($calendar->events))
-					$calendar->events[] = $cur_more_event;
+				if (!$cur_more_event->in_array($events))
+					$events[] = $cur_more_event;
 			}
 		}
 
 		date_default_timezone_set($cur_timezone);
 
-		// So the form can access the calendar.
-		$form->cal_muid = $calendar->muid;
+		return $events;
 	}
 }
 

@@ -18,13 +18,12 @@ if ( !gatekeeper('com_calendar/editcalendar') && !gatekeeper('com_calendar/manag
 $event = com_calendar_event::factory((int)$_REQUEST['id']);
 
 // Use the correct timezone.
-if (!empty($_REQUEST['timezone'])) {
+if (!empty($_REQUEST['timezone']))
 	$timezone = $_REQUEST['timezone'];
-} elseif (isset($event->user->guid)) {
-	$timezone = $event->user->get_timezone;
-} else {
+elseif (isset($event->user->guid))
+	$timezone = $event->user->get_timezone();
+else
 	$timezone = $_SESSION['user']->get_timezone();
-}
 $cur_timezone = date_default_timezone_get();
 date_default_timezone_set($timezone);
 
@@ -34,12 +33,11 @@ if (!isset($event->guid)) {
 		// Fix the stupid time string that has the wrong timezone on it. I hate JavaScript's Date object.
 		$event->start = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\([^)]+\))?$/', '', $_REQUEST['start']));
 		$event->end = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\([^)]+\))?$/', '', $_REQUEST['end']));
-		if ($event->start == $event->end)
-			$event->all_day = true;
+		$event->all_day = $_REQUEST['all_day'] == 'true';
 	}
 } else {
-	if (!gatekeeper('com_calendar/managecalendar') && !$event->employee->is($_SESSION['user'])) {
-		pines_error('You cannot only edit your own events.');
+	if (!gatekeeper('com_calendar/managecalendar') && !$_SESSION['user']->is($event->employee)) {
+		pines_error('You can only edit your own events.');
 		pines_redirect(pines_url('com_calendar', 'editcalendar'));
 		date_default_timezone_set($cur_timezone);
 		return;

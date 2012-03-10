@@ -109,6 +109,7 @@ if (!isset($subject)) {
 				view.element.find(".fc-event").popover('hide');
 			},
 			eventDragStop: function(event, jsEvent, ui, view) {
+				view.element.find(".fc-event").popover('hide');
 				var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 				$.each(events, function(i, val) {
 					val.selected = false;
@@ -117,6 +118,12 @@ if (!isset($subject)) {
 			eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
 				event.selected = false;
 				pines.p_muid_save_calendar([event], false, revertFunc);
+			},
+			eventResizeStart: function(event, jsEvent, ui, view) {
+				view.element.find(".fc-event").popover('hide');
+			},
+			eventResizeStop: function(event, jsEvent, ui, view) {
+				view.element.find(".fc-event").popover('hide');
 			}
 		});
 		var current_date = $.fullCalendar.parseDate(<?php echo strtotime(format_date((int) $this->date[0], 'custom', 'Y-m-d', $this->timezone)); ?>);

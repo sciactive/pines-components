@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Agenda';
 if (!isset($this->view_type))
 	$this->view_type = 'basicDay';
+$pines->icons->load();
 ?>
 <style type="text/css">
 	#p_muid_calendar .fc-header-title * {
@@ -65,10 +66,18 @@ if (!isset($this->view_type))
 					content: header+"<p>"+pines.safe(event.info)+"</p>",
 					placement: "top"
 				});
+			},
+			loading: function(isLoading){
+				if (isLoading)
+					$("#p_muid_loading").show();
+				else
+					$("#p_muid_loading").hide();
 			}
 		});
 		var current_date = $.fullCalendar.parseDate(<?php echo strtotime(format_date(time(), 'custom', 'Y-m-d')); ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 </script>
-<div id="p_muid_calendar"></div>
+<div id="p_muid_calendar" style="position: relative;">
+	<div id="p_muid_loading" style="position: absolute; right: 0; bottom: 0; height: 32px; width: 32px; background-position: center center; background-repeat: no-repeat;" class="alert alert-info picon-32 picon-throbber"></div>
+</div>

@@ -86,6 +86,12 @@ if (!isset($subject)) {
 					placement: "top"
 				});
 			},
+			loading: function(isLoading){
+				if (isLoading)
+					$("#p_muid_loading").show();
+				else
+					$("#p_muid_loading").hide();
+			},
 			select: function(start, end, allDay) {
 				pines.p_muid_new_event(start.toString(), end.toString(), allDay);
 			},
@@ -314,4 +320,6 @@ if (!isset($subject)) {
 			pines.p_muid_save_calendar(null, true);
 	};
 </script>
-<div id="p_muid_calendar"></div>
+<div id="p_muid_calendar" style="position: relative;">
+	<div id="p_muid_loading" style="position: absolute; right: 0; bottom: 0; height: 32px; width: 32px; background-position: center center; background-repeat: no-repeat;" class="alert alert-info picon-32 picon-throbber"></div>
+</div>

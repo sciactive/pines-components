@@ -16,6 +16,7 @@ return array(
 	'page' => array(
 		'cname' => 'Page Content',
 		'description' => 'Show the content of a page.',
+		'image' => 'includes/page_widget_screen.png',
 		'view' => 'page/page',
 		'form' => 'modules/page_form',
 		'type' => 'module imodule widget',
@@ -29,6 +30,7 @@ return array(
 	'category' => array(
 		'cname' => 'Category Listing',
 		'description' => 'Show a listing of a category.',
+		'image' => 'includes/category_widget_screen.png',
 		'view' => 'category/category',
 		'form' => 'modules/category_form',
 		'type' => 'module imodule widget',

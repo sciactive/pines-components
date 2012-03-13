@@ -37,6 +37,9 @@ $grid_thirds = floor($pines->config->com_bootstrap->grid_columns / 3);
 			var update_count = function(){
 				$("#p_muid_count").text($(".ui-selected", "#p_muid_form").length);
 			};
+			$("#p_muid_form").on("dblclick", ".widget_type", function(){
+				$(this).closest(".ui-dialog-content").dialog("option", "buttons").Done();
+			});
 		});
 	</script>
 	<div class="pf-element pf-full-width">
@@ -58,11 +61,16 @@ $grid_thirds = floor($pines->config->com_bootstrap->grid_columns / 3);
 				<div class="row-fluid">
 					<?php } ?>
 					<div class="span<?php echo $grid_thirds; ?>" style="margin-bottom: .5em;">
-						<div class="ui-widget-content ui-corner-all widget_type" style="padding: .5em; cursor: default;">
+						<div class="ui-widget-content ui-corner-all widget_type" style="padding: .5em; cursor: pointer;">
 							<div class="component" style="display: none;"><?php echo htmlspecialchars($cur_component); ?></div>
 							<div class="widget_name" style="display: none;"><?php echo htmlspecialchars($cur_name); ?></div>
 							<h4 style="margin-top: 0;"><?php echo htmlspecialchars($cur_widget['cname']); ?></h4>
 							<p style="margin-bottom: 0;"><?php echo htmlspecialchars($cur_widget['description']); ?></p>
+							<?php if (isset($cur_widget['image'])) { ?>
+							<div style="text-align: left; margin-top: .5em;">
+								<img class="ui-widget-content ui-corner-all" style="padding: 0;" alt="<?php echo htmlspecialchars($cur_widget['cname']); ?>" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>components/<?php echo htmlspecialchars($cur_component); ?>/<?php echo htmlspecialchars(clean_filename($cur_widget['image'])); ?>" />
+							</div>
+							<?php } ?>
 						</div>
 					</div>
 					<?php

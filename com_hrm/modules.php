@@ -16,6 +16,7 @@ return array(
 	'clockin' => array(
 		'cname' => 'Employee Clockin',
 		'description' => 'Clock in to your timeclock. Requires "com_hrm/clock" ability.',
+		'image' => 'includes/timeclock_widget_screen.png',
 		'view' => 'employee/timeclock/clock',
 		'type' => 'module imodule widget',
 		'widget' => array(

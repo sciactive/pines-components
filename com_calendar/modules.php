@@ -16,6 +16,7 @@ return array(
 	'agenda' => array(
 		'cname' => 'Agenda',
 		'description' => 'Show your agenda.',
+		'image' => 'includes/agenda_screen.png',
 		'view' => 'modules/agenda',
 		'form' => 'modules/agenda_form',
 		'type' => 'module imodule widget',

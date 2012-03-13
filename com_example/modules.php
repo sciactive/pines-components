@@ -16,6 +16,7 @@ return array(
 	'example' => array(
 		'cname' => 'Example Module',
 		'description' => 'This example module works as both a module and a widget.',
+		'image' => 'includes/example_widget_screen.png', // Screenshot to show for this widget.
 		'view' => 'modules/example',
 		// Only work as a regular module and a dashboard widget.
 		'type' => 'module widget',
@@ -43,6 +44,7 @@ return array(
 	'widget' => array(
 		'cname' => 'Example Widget',
 		'description' => 'This dashboard widget can be used to show a foobar\'s description.',
+		'image' => 'includes/foobar_widget_screen.png',
 		'view' => 'modules/widget',
 		'form' => 'modules/widget_form',
 		// Only work as a dashboard widget.

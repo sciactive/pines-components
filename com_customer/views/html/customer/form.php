@@ -847,7 +847,7 @@ $pines->com_customer->load_company_select();
 						<big class="accordion-toggle">Customer Interaction</big>
 					</a>
 					<div class="accordion-body collapse in">
-						<div class="accordion-inner">
+						<div class="accordion-inner clearfix">
 							<table id="p_muid_interactions">
 								<thead>
 									<tr>
@@ -893,7 +893,7 @@ $pines->com_customer->load_company_select();
 							<big class="accordion-toggle">Purchases and Returns</big>
 						</a>
 						<div class="accordion-body collapse in">
-							<div class="accordion-inner">
+							<div class="accordion-inner clearfix">
 								<table id="p_muid_sales">
 									<thead>
 										<tr>

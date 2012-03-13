@@ -143,7 +143,7 @@ $this->title = 'Configure Components';
 				</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<div class="buttons btn-group">
 						<?php if ($cur_component->is_configurable()) { ?>
 						<input class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'edit', array('component' => $cur_component->name)))); ?>);" value="Configure" />

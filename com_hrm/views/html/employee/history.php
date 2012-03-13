@@ -137,7 +137,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Employment History</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_history">
 						<thead>
 							<tr>
@@ -163,7 +163,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Issues/Transgressions</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_issues">
 						<thead>
 							<tr>
@@ -210,7 +210,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Sales History</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_sales">
 						<thead>
 							<tr>
@@ -246,7 +246,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Return History</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_returns">
 						<thead>
 							<tr>
@@ -282,7 +282,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Paystubs</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_paystubs">
 						<thead>
 							<tr>

@@ -115,7 +115,7 @@ $pines->com_jstree->load();
 				<big class="accordion-toggle alert-info">Change Availability</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
 					<div class="pf-element">
 						<label><span class="pf-label">Available</span>
@@ -173,7 +173,7 @@ $pines->com_jstree->load();
 				<big class="accordion-toggle alert-info">Change Serial</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
 					<div class="pf-element">
 						<label><span class="pf-label">Serial</span>
@@ -203,7 +203,7 @@ $pines->com_jstree->load();
 				<big class="accordion-toggle alert-info">Change Location</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
 					<div class="pf-element">
 						<span class="pf-label">Location</span>
@@ -265,7 +265,7 @@ $pines->com_jstree->load();
 				<big class="accordion-toggle alert-info">Change Vendor</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<input class="p_muid_change_this" type="hidden" name="vendor_change" value="" />
 					<div class="pf-element">
 						<label>
@@ -301,7 +301,7 @@ $pines->com_jstree->load();
 				<big class="accordion-toggle alert-info">Change Cost</big>
 			</a>
 			<div class="accordion-body collapse">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
 					<div class="pf-element">
 						<label><span class="pf-label">Cost</span>

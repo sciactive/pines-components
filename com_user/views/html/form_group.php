@@ -502,7 +502,7 @@ $pines->uploader->load();
 						<big class="accordion-toggle"><?php echo ($cur_section == 'system') ? htmlspecialchars($pines->info->name) : htmlspecialchars($pines->info->$cur_section->name); ?> <span class="component"><?php echo htmlspecialchars($cur_section); ?></span></big>
 					</a>
 					<div class="accordion-body collapse">
-						<div class="accordion-inner">
+						<div class="accordion-inner clearfix">
 							<div class="pf-element">
 								<?php foreach ($section_abilities as $cur_ability) { ?>
 								<label>

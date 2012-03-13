@@ -149,7 +149,6 @@ class configurator_component implements configurator_component_interface {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $pines;
 		$module = new module('com_configure', 'edit', 'content');
 		$module->entity = $this;
 
@@ -161,7 +160,6 @@ class configurator_component implements configurator_component_interface {
 	 * @return module The view's module.
 	 */
 	public function print_view() {
-		global $pines;
 		$module = new module('com_configure', 'view', 'content');
 		$module->entity = $this;
 

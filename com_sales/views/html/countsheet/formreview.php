@@ -42,7 +42,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle alert-error">Missing Items</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_missing_table">
 						<thead>
 							<tr>
@@ -78,7 +78,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle alert-success">Matched Items</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_matched_table">
 						<thead>
 							<tr>
@@ -114,7 +114,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle alert-info">Potential Matches</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_potential_table">
 						<thead>
 							<tr>
@@ -173,7 +173,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle alert" style="margin-bottom: 0;">Duplicate Items</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_duplicate_table">
 						<thead>
 							<tr>
@@ -209,7 +209,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle alert" style="margin-bottom: 0;">Past Items</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_history_table">
 						<thead>
 							<tr>
@@ -241,7 +241,7 @@ $pines->com_pgrid->load();
 				<big class="accordion-toggle">Invalid/Unknown Entries</big>
 			</a>
 			<div class="accordion-body collapse in">
-				<div class="accordion-inner">
+				<div class="accordion-inner clearfix">
 					<table id="p_muid_invalid_table">
 						<thead>
 							<tr>

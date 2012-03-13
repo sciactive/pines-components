@@ -1,7 +1,6 @@
 .btn {
   color: @black;
   text-shadow: 0 1px 1px rgba(128,128,128,.75);
-  .buttonBackground(@grayLight, darken(@grayLight, 10%));
 }
 .btn:hover {
   color: @black;
@@ -19,24 +18,6 @@
 .btn-inverse,
 .btn-inverse:hover {
   color: @black;
-}
-.btn-primary {
-  .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
-}
-.btn-warning {
-  .buttonBackground(lighten(@orange, 15%), @orange);
-}
-.btn-danger {
-  .buttonBackground(lighten(@red, 15%), @red);
-}
-.btn-success {
-  .buttonBackground(lighten(@green, 15%), @green);
-}
-.btn-info {
-  .buttonBackground(lighten(@blue, 15%), @blue);
-}
-.btn-inverse {
-  .buttonBackground(lighten(@grayDark, 15%), @grayDark);
 }
 
 
@@ -59,7 +40,6 @@ textarea[disabled],
 input[readonly],
 select[readonly],
 textarea[readonly] {
-  background-color: @grayLighter;
   border-color: @grayLight;
 }
 .control-group.warning {
@@ -84,17 +64,6 @@ textarea[readonly] {
     color: @textColor;
     background-color: @grayLighter;
     border-color: @grayDark;
-  }
-}
-
-
-
-.dropdown-menu {
-  background-color: @grayLight;
-  border-color: @grayLighter;
-
-  a {
-    color: @black;
   }
 }
 
@@ -143,13 +112,6 @@ textarea[readonly] {
 
 
 
-.hero-unit {
-  background-color: @grayLighter;
-}
-
-
-
-
 code,
 pre {
   color: @black;
@@ -164,23 +126,6 @@ pre {
 }
 
 
-
-
-
-.table-striped {
-  tbody {
-    tr:nth-child(odd) td,
-    tr:nth-child(odd) th {
-      background-color: @grayLighter;
-    }
-  }
-}
-.table {
-  tbody tr:hover td,
-  tbody tr:hover th {
-    background-color: @grayLight;
-  }
-}
 
 
 

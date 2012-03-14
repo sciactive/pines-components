@@ -27,23 +27,23 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 
 			<?php if($this->entity->missed_first_payment && !(!empty($this->entity->paid))) {
 				?>
-				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
+				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span></span><br/>
 				<span>First Payment Missed: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['first_payment_missed'], "date_short")); ?></span></span><br/>
 				<span>Last Payment Made: <span style="float:right;"><span style="color:#b30909;"><?php echo htmlspecialchars($this->entity->payments[0]['last_payment_made']); ?></span></span></span><br/>
 				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")); ?></span></strong></span><br/>
 				<?php
 			} elseif (!empty($this->entity->paid)) {
 				?>
-				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
+				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span></span><br/>
 				<span>First Payment Made: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['first_payment_made'], "date_short")); ?></span></span><br/>
 				<span>Last Payment Made: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['last_payment_made'], "date_short")); ?></span></span><br/>
 				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")); ?></span></strong></span><br/>
 				<?php
 			} else {
 				?>
-				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
+				<span>First Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span></span><br/>
 				<span>Last Payment Made: <span style="float:right;">n/a</span></span><br/>
-				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></strong></span><br/>
+				<span><strong>Next Payment Due: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span></strong></span><br/>
 				<?php
 			}
 			?>
@@ -222,8 +222,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 								<script type="text/javascript">
 									pines(function(){
 										$("#p_muid_next_payment").popover({
-											title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true) + $pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span>',
-											content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($this->entity->payments[0]['past_due'], true)); ?>+'</span><br/>'+<?php echo json_encode($payment_frequency); ?>+' Payment: <span style="float:right;">$'+<?php json_encode($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true)); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
+											title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true) + $pines->com_sales->round($this->entity->payments[0]['past_due'], true))); ?>+'</span>',
+											content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true))); ?>+'</span><br/>'+<?php echo json_encode(htmlspecialchars($payment_frequency)); ?>+' Payment: <span style="float:right;">$'+<?php json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true))); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
 											placement: 'right'
 										});
 									});
@@ -234,7 +234,7 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 							?>
 						</span><br/>
 						<span style="float:left;background:none; border:none;font-size:.8em;">Due:</span>
-						<span style="float:right;background:none; border:none;font-size:.8em;"> <?php echo (isset($this->entity->payments[0]['next_payment_due'])) ? htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span>
+						<span style="float:right;background:none; border:none;font-size:.8em;"> <?php echo (isset($this->entity->payments[0]['next_payment_due'])) ? htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span>
 						<span style="clear:both;float:left;background:none; border:none;font-size:.6em;"> <?php echo ($pines->com_sales->round($this->entity->payments[0]['past_due'] >= .01)) ? "Past Due Amount is due immediately." : ""; ?></span>
 					</div>
 				</span>
@@ -282,7 +282,7 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 						}
 					} else {
 						// No payments made or due yet, so highlighted row should be the first one.
-						if ($payment['scheduled_date_expected'] == strtotime($this->entity->first_payment_date)) {
+						if ($payment['scheduled_date_expected'] == $this->entity->first_payment_date) {
 							?><tr class="alert-info"><?php
 						} else {
 							?><tr><?php
@@ -379,7 +379,7 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 								pines(function(){
 									$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq2); ?>").popover({
 										title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid'], true))); ?>,
-										content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_expected'], true)); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['payment_interest_paid'], true)); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
+										content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_expected'], true))); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true))); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
 										placement: "right"
 									});
 								});
@@ -427,8 +427,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 							<script type="text/javascript">
 								pines(function(){
 									$("#p_muid_tooltip_<?php echo htmlspecialchars($uniq); ?>").popover({
-										title: 'Unpaid Balance: $'+<?php echo json_encode($pines->com_sales->round($payment['payment_balance_unpaid'], true)); ?>,
-										content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['remaining_balance'], true)); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode($pines->com_sales->round($payment['scheduled_balance'], true)); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
+										title: 'Unpaid Balance: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_balance_unpaid'], true))); ?>,
+										content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true))); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
 										placement: "right"
 									});
 								});

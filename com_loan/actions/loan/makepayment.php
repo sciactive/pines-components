@@ -68,14 +68,18 @@ $loan->get_payments_array();
 // Get paid array variables we will need.
 // The date expected variable below will only be used for updating if not using a
 // if $loan->pay_by_date array exists, then missed_first_payment won't matter.
-if ($loan->missed_first_payment == true) {
+if ($loan->payments[1]['payment_type'] != "missed")
+	$missed_first_payment = false;
+else
+	$missed_first_payment = true;
+
+if ($missed_first_payment == true) {
 	$date_expected = $loan->payments[0]['first_payment_missed'];
-	$loan->missed_first_payment = false;
-}
-elseif (isset($loan->payments[0]['next_payment_due']))
+	$missed_first_payment = false;
+} elseif (isset($loan->payments[0]['next_payment_due']))
 	$date_expected = $loan->payments[0]['next_payment_due'];
 else
-	$date_expected = strtotime($loan->first_payment_date);
+	$date_expected = $loan->first_payment_date;
 if (!$date_received)
 	$date_received = strtotime($_REQUEST['payment_date_input']);
 $date_recorded = strtotime('now');
@@ -115,7 +119,7 @@ if ($loan->pay_by_date != null) {
 // Run clean up pay by dates after making payments.
 $loan->cleanup_pbds();
 
-//var_dump($loan->missed_first_payment);
+//var_dump($missed_first_payment);
 //var_dump($loan->pay_by_date);
 //var_dump($loan->paid);
 //var_dump($loan->payments);

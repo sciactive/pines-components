@@ -249,7 +249,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($loan->customer->name); ?></td>
 			<td><?php echo htmlspecialchars($loan->user->name); ?></td>
 			<td><?php echo htmlspecialchars($loan->user->group->name); ?></td>
-			<td><?php echo htmlspecialchars(format_date(strtotime($loan->creation_date), "date_short")); ?></td>
+			<td><?php echo htmlspecialchars(format_date($loan->creation_date, "date_short")); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($loan->status)); ?></td>
 			<td style="text-align:right;"><?php echo "$".htmlspecialchars($pines->com_sales->round($loan->principal, true)); ?></td>
 			<td style="text-align:right;"><?php echo htmlspecialchars($loan->apr)."%"; ?></td>

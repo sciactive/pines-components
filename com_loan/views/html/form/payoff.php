@@ -43,7 +43,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Enter Payment Amount
-			<span class="pf-note">Payment Due: <?php echo (isset($this->entity->payments[0]['next_payment_due'])) ? htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span>
+			<span class="pf-note">Payment Due: <?php echo (isset($this->entity->payments[0]['next_payment_due'])) ? htmlspecialchars(format_date($this->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span>
 		</span>
 		<span class="pf-field">
 			<input id="p_muid_payment_amount" style="float:right;text-align:right;" class="pf-field" type="text" name="payment_amount" readonly="readonly" value="<?php echo '$'.htmlspecialchars($pines->com_sales->round($this->entity->payoff_amount, true)); ?>"/>

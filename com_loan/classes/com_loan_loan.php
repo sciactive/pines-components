@@ -157,6 +157,80 @@ class com_loan_loan extends entity {
 	}
 
 	/**
+	 * Calculate the loan schedule.
+	 * @throws com_loan_loan_terms_not_possible_exception If the loan terms are not possible.
+	 */
+	public function calculate_loan() {
+		global $pines;
+		// Calculate rate per period.
+		$base = (1 + ($this->apr / $this->compound_frequency));
+		$pow = ($this->compound_frequency / $this->payment_frequency);
+		$this->rate_per_period = (pow($base, $pow)) - 1;
+
+
+		// Calculate basics of amortization schedule.
+		if ($this->term_type == "years")
+			$nper = $this->payment_frequency * $this->term;
+		elseif ($this->term_type == "months")
+			$nper = $this->payment_frequency * (($this->term) / 12);
+
+		// Calculate the Frequency Payment
+		$frequency_payment = -1*($pines->com_financial->PMT(($this->apr / 100) / $this->payment_frequency, $nper, $this->principal, 0.0, $this->payment_type));
+		$frequency_payment = round($frequency_payment, 2);
+		$this->frequency_payment = $frequency_payment;
+
+		// Create payments array for amortization table.
+		$schedule = array();
+		$sum_int = 0;
+		$sum_prin = 0;
+		$i = 0;
+		// this loop is only for creating the variables for the amortization table.
+		for ($i = 0; $i < $nper; $i++) {
+			$schedule[$i] = array();
+			if ($i == 0) {
+				$schedule[$i]['scheduled_date_expected'] = $this->first_payment_date;
+				$schedule[$i]['scheduled_current_balance'] = $this->principal;
+				$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
+				$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
+				$schedule[$i]['payment_interest_paid'] = 0.00; // no payments made at time of loan creation.
+				$schedule[$i]['payment_principal_paid'] = 0.00; // no payments made at time of loan creation.
+				$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation.
+				$schedule[$i]['scheduled_balance'] = $schedule[$i]['scheduled_current_balance'] - $schedule[$i]['payment_principal_expected'];
+				$schedule[$i]['payment_amount_expected'] = $schedule[$i]['payment_principal_expected'] + $schedule[$i]['payment_interest_expected'];
+				$schedule[$i]['next_payment_due_amount'] = $schedule[$i]['payment_interest_expected'] + $schedule[$i]['payment_principal_expected'];
+			} else {
+				$schedule[$i]['scheduled_date_expected'] = strtotime('+1 month',$schedule[$i-1]['scheduled_date_expected']);
+				$schedule[$i]['scheduled_current_balance'] = $schedule[$i - 1]['scheduled_balance'];
+				$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $this->rate_per_period) / 100 , true);
+				if ($schedule[$i]['scheduled_current_balance'] < $frequency_payment || ($schedule[$i]['scheduled_current_balance'] - $frequency_payment) <= 1) {
+					$schedule[$i]['payment_principal_expected'] = $schedule[$i]['scheduled_current_balance'];
+				} else {
+					$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
+				}
+				$schedule[$i]['payment_amount_expected'] = $schedule[$i]['payment_principal_expected'] + $schedule[$i]['payment_interest_expected'];
+				$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation.
+				$schedule[$i]['scheduled_balance'] = $schedule[$i]['scheduled_current_balance'] - $schedule[$i]['payment_principal_expected'];
+			}
+			$schedule[$i]['additional_payment'] = null;
+			$schedule[$i]['payment_status'] = "not due yet" ;
+			$sum_int = $sum_int + $schedule[$i]['payment_interest_expected'];
+			$sum_prin = $sum_prin + $schedule[$i]['payment_principal_expected'];
+		}
+		$this->schedule = $schedule;
+		// Calculate remaining variables.
+		$this->number_payments = count($this->schedule); // needs to happen after payments array.
+		$this->total_payment_sum = $sum_int + $sum_prin; //sum of all interests and all principals
+		$this->total_interest_sum_original = $sum_int;
+		$this->total_interest_sum = $sum_int;
+		$this->est_interest_savings = $this->total_interest_sum_original - $this->total_interest_sum;
+
+		$this->status = "current";
+
+		if ($this->schedule[$this->number_payments - 1]['scheduled_balance'] >= .01)
+			throw new com_loan_loan_terms_not_possible_exception();
+	}
+
+	/**
 	 * Get pay off Amount.
 	 *
 	 * @return bool True on success, false on failure.
@@ -196,7 +270,7 @@ class com_loan_loan extends entity {
 		$c = 0;
 		for ($c = 0; $c < $this->number_payments; $c++) {
 			if ($c == 0)
-				$scheduled_payment_dates[$c] = strtotime($this->first_payment_date);
+				$scheduled_payment_dates[$c] = $this->first_payment_date;
 			else
 				$scheduled_payment_dates[$c] = strtotime('+1 month', $scheduled_payment_dates[$c-1]);
 		}
@@ -422,8 +496,8 @@ class com_loan_loan extends entity {
 									$temp_payments[$c]['scheduled_current_balance'] = $temp_payments[$c-1]['scheduled_balance'];
 									$temp_payments[$c]['current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 									// Establish expected interest and principal based off of unpaid balance & interest.
-									$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
-									$temp_payments[$c]['payment_principal_expected'] =  $this->frequency_payment - $temp_payments[$c]['payment_interest_expected'];
+									$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round($this->unpaid_interest, true);
+									$temp_payments[$c]['payment_principal_expected'] =  (float) $pines->com_sales->round($this->unpaid_balance, true);
 									// Get unpaid interest and unpaid balance.
 									// Unpaid interest gets paid first.
 									if ($temp_payments[$c]['payment_interest_expected'] >= .01 && $paid_amount >= $temp_payments[$c]['payment_interest_expected']) {
@@ -1465,7 +1539,7 @@ class com_loan_loan extends entity {
 			} elseif (isset($this->payments[0]['next_payment_due']))
 				$date_expected = $this->payments[0]['next_payment_due'];
 			else
-				$date_expected = strtotime($this->first_payment_date);
+				$date_expected = $this->first_payment_date;
 			$payment_amount = $pbd['payment_amount'];
 			$date_received = $pbd['date_received'];
 			$date_recorded = $pbd['date_recorded'];
@@ -1547,10 +1621,19 @@ class com_loan_loan extends entity {
 			$num--;
 		} else
 			$num = 0;
-		$this->past_due = $pines->com_sales->round($this->past_due );
-		if ($date_received < $date_expected)
-			$this->past_due = null;
 
+		$this->past_due = null;
+		// Checks if the payment right before the due one is missed, which means
+		// that we are dealing with a past due payment!
+		$cc = 0;
+		foreach ($this->payments as $payment) {
+			if ($payment['scheduled_date_expected'] == $date_expected) {
+				if ($this->payments[$cc-1]['payment_status'] == "missed") {
+					$this->past_due = $pines->com_sales->round($this->payments[0]['past_due']);
+				}
+			}
+			$cc++;
+		}
 		$make_additional_payment = false;
 		// Create/Append to paid array.
 
@@ -1805,7 +1888,7 @@ class com_loan_loan extends entity {
 			} elseif ($payment_amount == $this->past_due) {
 				// $payment amount is exact.
 				$temp_past_due_paid['payment_type'] = 'past_due';
-				$temp_past_due_paid['payment_date_expected'] = strtotime('+1 day', $date_expected);
+				$temp_past_due_paid['payment_date_expected'] = strtotime('-1 month', $date_expected);
 				$temp_past_due_paid['payment_date_received'] = $date_received;
 				$temp_past_due_paid['payment_date_recorded'] = $date_recorded;
 				$temp_past_due_paid['payment_id'] = $payment_id;
@@ -1967,5 +2050,7 @@ class com_loan_loan extends entity {
 		return $arr;
 	}
 }
+
+class com_loan_loan_terms_not_possible_exception extends Exception {}
 
 ?>

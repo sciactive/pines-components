@@ -32,20 +32,19 @@ if (!isset($loan->customer->guid))
 	$loan->customer = null;
 
 // Get user input variables.
-$loan->loan_process_type = $_REQUEST['loan_process_type'];
-$loan->creation_date = $_REQUEST['creation_date'];
+$loan->creation_date = strtotime($_REQUEST['creation_date']);
 $loan->principal = $_REQUEST['principal'];
 $loan->apr = $_REQUEST['apr'];
 $loan->apr_correct = ($_REQUEST['apr_correct'] == 'ON');
 $loan->term = $_REQUEST['term']; // Could be in years or months.
 $loan->term_type = $_REQUEST['term_type']; // Determines years or months for term.
-$loan->first_payment_date = $_REQUEST['first_payment_date'];
+$loan->first_payment_date = strtotime($_REQUEST['first_payment_date']);
 $loan->payment_frequency = $_REQUEST['payment_frequency']; // per year.
 $loan->compound_frequency = $_REQUEST['compound_frequency'];
 $loan->payment_type = $_REQUEST['payment_type'];
 
 // Check loan process type.
-if($loan->loan_process_type == "go_back"){
+if($_REQUEST['loan_process_type'] == "go_back"){
 	$loan->print_form();
 	pines_notice('Make necessary changes to loan, then verify the loan again.');
 	return;
@@ -57,7 +56,7 @@ if (!isset($loan->customer->guid)) {
 	pines_notice('Please specify a customer.');
 	return;
 }
-if(strtotime($loan->creation_date) == 0){
+if(!$loan->creation_date){
 	$loan->print_form();
 	pines_notice('A creation date is required.');
 	return;
@@ -103,7 +102,7 @@ if(empty($loan->term_type)){
 	pines_notice('A term type for the loan is required.');
 	return;
 }
-if(strtotime($loan->first_payment_date) == 0){
+if(!$loan->first_payment_date) {
 	$loan->print_form();
 	pines_notice('A date for the first payment is required.');
 	return;
@@ -157,91 +156,28 @@ switch ($loan->payment_type) {
 		return;
 }
 
-// Calculate rate per period.
-$base = (1 + ($loan->apr / $loan->compound_frequency));
-$pow = ($loan->compound_frequency / $loan->payment_frequency);
-$loan->rate_per_period = (pow($base, $pow)) - 1;
-
-
-// Calculate basics of amortization schedule.
-if($loan->term_type == "years") {
-	$nper = $loan->payment_frequency * $loan->term;
-} elseif($loan->term_type == "months") {
-	$nper = $loan->payment_frequency * (($loan->term) / 12);
-}
-
-// Calculate the Frequency Payment
-$frequency_payment = -1*($pines->com_financial->PMT(($loan->apr / 100) / $loan->payment_frequency, $nper, $loan->principal, 0.0, $loan->payment_type));
-$frequency_payment = round($frequency_payment, 2);
-$loan->frequency_payment = $frequency_payment;
-
-// Create payments array for amortization table.
-$schedule = array();
-$sum_int = 0;
-$sum_prin = 0;
-$i = 0;
-// this loop is only for creating the variables for the amortization table.
-for ($i = 0; $i < $nper; $i++) {
-	$schedule[$i] = array();
-	if ($i == 0) {
-		$schedule[$i]['scheduled_date_expected'] = strtotime($loan->first_payment_date);
-		$schedule[$i]['scheduled_current_balance'] = $loan->principal;
-		$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $loan->rate_per_period) / 100, true);
-		$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
-		$schedule[$i]['payment_interest_paid'] = 0.00; // no payments made at time of loan creation.
-		$schedule[$i]['payment_principal_paid'] = 0.00; // no payments made at time of loan creation.
-		$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation.
-		$schedule[$i]['scheduled_balance'] = $schedule[$i]['scheduled_current_balance'] - $schedule[$i]['payment_principal_expected'];
-		$schedule[$i]['payment_amount_expected'] = $schedule[$i]['payment_principal_expected'] + $schedule[$i]['payment_interest_expected'];
-		$schedule[$i]['next_payment_due_amount'] = $schedule[$i]['payment_interest_expected'] + $schedule[$i]['payment_principal_expected'];
-	} else {
-		$schedule[$i]['scheduled_date_expected'] = strtotime('+1 month',$schedule[$i-1]['scheduled_date_expected']);
-		$schedule[$i]['scheduled_current_balance'] = $schedule[$i - 1]['scheduled_balance'];
-		$schedule[$i]['payment_interest_expected'] = $pines->com_sales->round(($schedule[$i]['scheduled_current_balance'] * $loan->rate_per_period) / 100 , true);
-		if ($schedule[$i]['scheduled_current_balance'] < $frequency_payment || ($schedule[$i]['scheduled_current_balance'] - $frequency_payment) <= 1) {
-			$schedule[$i]['payment_principal_expected'] = $schedule[$i]['scheduled_current_balance'];
-		} else {
-			$schedule[$i]['payment_principal_expected'] = $frequency_payment - $schedule[$i]['payment_interest_expected'];
-		}
-		$schedule[$i]['payment_amount_expected'] = $schedule[$i]['payment_principal_expected'] + $schedule[$i]['payment_interest_expected'];
-		$schedule[$i]['payment_amount_paid'] = 0.00; // no payments made at time of loan creation.
-		$schedule[$i]['scheduled_balance'] = $schedule[$i]['scheduled_current_balance'] - $schedule[$i]['payment_principal_expected'];
-	}
-	$schedule[$i]['additional_payment'] = null;
-	$schedule[$i]['payment_status'] = "not due yet" ;
-	$sum_int = $sum_int + $schedule[$i]['payment_interest_expected'];
-	$sum_prin = $sum_prin + $schedule[$i]['payment_principal_expected'];
-}
-$loan->schedule = $schedule;
-// Calculate remaining variables.
-$loan->number_payments = count($loan->schedule); // needs to happen after payments array.
-$loan->total_payment_sum = $sum_int + $sum_prin; //sum of all interests and all principals
-$loan->total_interest_sum_original = $sum_int;
-$loan->total_interest_sum = $sum_int;
-$loan->est_interest_savings = $loan->total_interest_sum_original - $loan->total_interest_sum;
-
-$loan->status = "current";
-// If process type is empty, the loan has not been verified.
-if(empty($loan->loan_process_type)){
-	if ($loan->schedule[$loan->number_payments - 1]['scheduled_balance'] >= .01) {
+try {
+	$loan->calculate_loan();
+} catch (com_loan_loan_terms_not_possible_exception $e) {
+	if (empty($_REQUEST['loan_process_type'])) {
 		$loan->print_form();
 		pines_notice('The terms of this loan were not possible. Please make changes.');
 		return;
 	}
-	$loan->verify_loan();
-	pines_notice('Please verify this loan.');
-	return;
 }
 
-// If process type is submit, save the loan and return to the loan list view.
-if($loan->loan_process_type == "submit"){
-	if ($loan->save()) {
+if (empty($_REQUEST['loan_process_type'])){
+	// If process type is empty, the loan has not been verified.
+	$loan->verify_loan();
+	pines_notice('Please verify this loan.');
+} elseif ($_REQUEST['loan_process_type'] == "submit"){
+	// If process type is submit, save the loan and return to the loan list view.
+	// Run the get payments array function to update the grid with possible past due values.
+	$loan->get_payments_array();
+	if ($loan->save())
 		pines_notice('Saved loan '.$loan->id.' for customer '.$loan->customer->name.'.');
-		// Run the get payments array function to update the grid with possible past due values.
-		$loan->get_payments_array();
-	} else {
+	else
 		pines_error('Error saving loan. Do you have permission?');
-	}
 	pines_redirect(pines_url('com_loan', 'loan/list'));
 }
 ?>

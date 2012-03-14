@@ -24,7 +24,7 @@ $this->title = 'Loan Overview';
 			<span style="font-weight:bold;">Term: <span style="float:right;"><?php echo htmlspecialchars($this->entity->term); echo " ".htmlspecialchars($this->entity->term_type); ?></span></span><br/>
 			<div style="line-height:0px;border-bottom:1px solid #ddd; margin: 5px 0;">&nbsp;</div>
 
-			<span>First Payment: <span style="float:right;"><?php echo htmlspecialchars(format_date(strtotime($this->entity->first_payment_date), "date_short")); ?></span></span><br/>
+			<span>First Payment: <span style="float:right;"><?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_short")); ?></span></span><br/>
 			<span>Payment Frequency: <span style="float:right;">
 				<?php
 				switch ($this->entity->payment_frequency) {
@@ -155,13 +155,13 @@ $this->title = 'Loan Overview';
 	<div class="pf-element pf-buttons">
 		<form class="pf-form" method="post" id="p_muid_loan_form" action="<?php echo htmlspecialchars(pines_url('com_loan', 'loan/save')); ?>">
 			<input type="hidden" name="customer" value="<?php echo htmlspecialchars($this->entity->customer->guid); ?>" />
-			<input type="hidden" name="creation_date" value="<?php echo htmlspecialchars($this->entity->creation_date); ?>" />
+			<input type="hidden" name="creation_date" value="<?php echo htmlspecialchars(format_date($this->entity->creation_date, "date_sort")); ?>" />
 			<input type="hidden" name="principal" value="<?php echo htmlspecialchars($this->entity->principal); ?>" />
 			<input type="hidden" name="apr" value="<?php echo htmlspecialchars($this->entity->apr); ?>" />
 			<input type="hidden" name="apr_correct" value="ON" />
 			<input type="hidden" name="term" value="<?php echo htmlspecialchars($this->entity->term); ?>" />
 			<input type="hidden" name="term_type" value="<?php echo htmlspecialchars($this->entity->term_type); ?>" />
-			<input type="hidden" name="first_payment_date" value="<?php echo htmlspecialchars($this->entity->first_payment_date); ?>" />
+			<input type="hidden" name="first_payment_date" value="<?php echo htmlspecialchars(format_date($this->entity->first_payment_date, "date_sort")); ?>" />
 			<input type="hidden" name="payment_frequency" value="<?php echo htmlspecialchars($this->entity->payment_frequency); ?>" />
 			<input type="hidden" name="compound_frequency" value="<?php echo htmlspecialchars($this->entity->compound_frequency); ?>" />
 			<input type="hidden" name="payment_type" value="<?php echo ($this->entity->payment_type == 0) ? 'ending' : 'beginning'; ?>" />

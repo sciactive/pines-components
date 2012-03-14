@@ -12,12 +12,13 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
+global $pines;
 return array(
 	'agenda' => array(
 		'cname' => 'Agenda',
 		'description' => 'Show your agenda.',
 		'image' => 'includes/agenda_screen.png',
-		'view' => 'modules/agenda',
+		'view_callback' => array($pines->com_calendar, 'agenda_widget'),
 		'form' => 'modules/agenda_form',
 		'type' => 'module imodule widget',
 		'widget' => array(

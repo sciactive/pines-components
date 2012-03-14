@@ -12,7 +12,6 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Actions';
-$pines->com_pgrid->load();
 $pines->com_jstree->load();
 $pines->com_ptags->load();
 if ($pines->config->com_calendar->com_customer)
@@ -368,6 +367,8 @@ if ($pines->config->com_calendar->com_customer)
 					}
 				});
 				pines.play();
+				// Have to position again because of datepicker.
+				form.dialog("option", "position", "center");
 			}
 		});
 	};
@@ -399,8 +400,12 @@ if ($pines->config->com_calendar->com_customer)
 							pines.post(<?php echo json_encode(pines_url('com_calendar', 'saveschedule')); ?>, {
 								employee: form.find(":input[name=employee]").val(),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
-								time_start: form.find(":input[name=time_start]").val(),
-								time_end: form.find(":input[name=time_end]").val(),
+								time_start_hour: form.find(":input[name=time_start_hour]").val(),
+								time_start_minute: form.find(":input[name=time_start_minute]").val(),
+								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
+								time_end_hour: form.find(":input[name=time_end_hour]").val(),
+								time_end_minute: form.find(":input[name=time_end_minute]").val(),
+								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
 								dates: form.find(":input[name=dates]").val()
 							});
 						}
@@ -580,21 +585,25 @@ if ($pines->config->com_calendar->com_customer)
 	};
 	<?php } ?>
 </script>
+<?php if (!$this->is_widget) { ?>
 <div id="p_muid_filter" class="btn-group" style="padding: 0; margin: 0;">
 	<button class="btn btn-mini<?php echo ($this->filter == 'all') ? ' active' : ''; ?>" type="button" data-value="all" title="Show all calendar events.">all</button>
 	<button class="btn btn-mini<?php echo ($this->filter == 'shifts') ? ' active' : ''; ?>" type="button" data-value="shifts" title="Show scheduled employee shifts.">shifts</button>
 	<button class="btn btn-mini<?php echo ($this->filter == 'appointments') ? ' active' : ''; ?>" type="button" data-value="appointments" title="Show customer appointments.">appts</button>
 	<button class="btn btn-mini<?php echo ($this->filter == 'events') ? ' active' : ''; ?>" type="button" data-value="events" title="Show calendar events.">events</button>
 </div>
+<?php } if (!$this->is_widget || gatekeeper('com_calendar/managecalendar')) { ?>
 <div style="margin: 0.75em 0;" id="p_muid_actions">
+	<?php if (!$this->is_widget) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
-	<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
+	<?php } if (gatekeeper('com_calendar/managecalendar')) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<?php } ?>
 </div>
+<?php } if (!$this->is_widget) { ?>
 <div>
 	<select id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all"><?php echo htmlspecialchars($this->location->name); ?></option>
@@ -609,7 +618,7 @@ if ($pines->config->com_calendar->com_customer)
 		} ?>
 	</select>
 </div>
-<?php if ($pines->config->com_calendar->com_customer) { ?>
+<?php } if ($pines->config->com_calendar->com_customer) { ?>
 <div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
 	<div class="pf-form">
 		<div class="pf-element">

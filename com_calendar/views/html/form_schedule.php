@@ -12,14 +12,6 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<style type="text/css" >
-	#p_muid_form .form_center {
-		text-align: center;
-	}
-	#p_muid_form .form_input {
-		width: 170px;
-	}
-</style>
 <script type='text/javascript'>
 	pines(function(){
 		$("#p_muid_calendar").datepicker({
@@ -110,7 +102,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element pf-full-width">
 		<span id="p_muid_calendar"></span>
 	</div>
-	<input type="hidden" name="dates" value="" />
+	<div class="pf-element pf-full-width">
+		<input type="hidden" name="dates" value="" />
+	</div>
 	<?php if (isset($this->entity->guid)) { ?>
 	<input type="hidden" name="employee" value="<?php echo (int) $this->entity->guid ?>" />
 	<?php } ?>

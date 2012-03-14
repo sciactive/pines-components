@@ -61,5 +61,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<span id="p_muid_calendar"></span>
 	</div>
 	<input type="hidden" name="location" value="<?php echo (int) $this->location->guid; ?>" />
-	<input type="hidden" name="shifts" value="" />
+	<div class="pf-element pf-full-width">
+		<input type="hidden" name="shifts" value="" />
+	</div>
 </form>

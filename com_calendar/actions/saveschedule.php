@@ -29,25 +29,31 @@ if (isset($_REQUEST['employee'])) {
 		return;
 	}
 	$dates = explode(',', $_REQUEST['dates']);
-	$all_day = ($_REQUEST['all_day'] == 'true');
+	$all_day = ($_REQUEST['all_day'] == 'ON');
+	$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? (int) $_REQUEST['time_start_hour'] : (int) $_REQUEST['time_start_hour'] + 12;
+	$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? (int) $_REQUEST['time_end_hour'] : (int) $_REQUEST['time_end_hour'] + 12;
 	$location = $employee->group;
 	// Enter schedule in employee's timezone.
 	$cur_timezone = date_default_timezone_get();
 	date_default_timezone_set($employee->get_timezone());
 	foreach ($dates as $cur_date) {
+		$cur_timestamp = strtotime($cur_date);
 		$event = com_calendar_event::factory();
 		$event->all_day = $all_day;
 		$event->employee = $employee;
 		$event->title = $employee->name;
 		$event->color = $employee->color;
 		$event->information = 'Scheduled shift';
-		$event_month = date('n', strtotime($cur_date));
-		$event_day = date('j', strtotime($cur_date));
-		$event_year = date('Y', strtotime($cur_date));
-		$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
-		$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
-		$event->start = mktime($event->all_day ? 0 : $start_hour,$_REQUEST['time_start_minute'],0,$event_month,$event_day,$event_year);
-		$event->end = mktime($event->all_day ? 23 : $end_hour,$event->all_day ? 59 : $_REQUEST['time_end_minute'],$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
+		$event_month = date('n', $cur_timestamp);
+		$event_day = date('j', $cur_timestamp);
+		$event_year = date('Y', $cur_timestamp);
+		if ($event->all_day) {
+			$event->start = mktime(0, 0, 0, $event_month, $event_day, $event_year);
+			$event->end = mktime(23, 59, 59, $event_month, $event_day, $event_year);
+		} else {
+			$event->start = mktime($start_hour, (int) $_REQUEST['time_start_minute'], 0, $event_month, $event_day, $event_year);
+			$event->end = mktime($end_hour, (int) $_REQUEST['time_end_minute'], 0, $event_month, $event_day, $event_year);
+		}
 
 		if ($event->all_day) {
 			$days = ceil(($event->end - $event->start) / 86400);
@@ -59,15 +65,15 @@ if (isset($_REQUEST['employee'])) {
 
 		$event->ac->other = 1;
 
-		if (!$event->save()) {
-			$failed_saves .= (empty($failed_saves) ? '' : ', ').$cur_date;
-		} else {
+		if ($event->save()) {
 			if (!isset($first_date) || $event->start < $first_date)
 				$first_date = $event->start;
 			if (!isset($last_date) || $event->end > $last_date)
 				$last_date = $event->end;
 			$event->group = $location;
 			$event->save();
+		} else {
+			$failed_saves .= (empty($failed_saves) ? '' : ', ').$cur_date;
 		}
 	}
 	date_default_timezone_set($cur_timezone);

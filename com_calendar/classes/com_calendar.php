@@ -39,6 +39,22 @@ class com_calendar extends component {
 	}
 
 	/**
+	 * Return the agenda widget.
+	 * @param string $position The module's position.
+	 * @param int $order The module's order.
+	 * @param array $options The module's options.
+	 * @return module The module.
+	 */
+	public function agenda_widget($position = null, $order = null, $options = null) {
+		$module = new module('com_calendar', 'show_calendar', $position, $order);
+		$module->is_widget = true;
+		foreach ($options as $key => $value)
+			$module->$key = $value;
+
+		return $module;
+	}
+
+	/**
 	 * Clears all events from the calendar.
 	 */
 	public function clear_calendar() {

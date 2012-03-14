@@ -1,6 +1,8 @@
 <?php
 /**
  * Lists all calendar events and allows users to manipulate them.
+ * 
+ * Also supplies the agenda widget.
  *
  * Built upon:
  * FullCalendar Created by Adam Shaw
@@ -15,17 +17,25 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
-$this->note = 'Timezone: '.htmlspecialchars($this->timezone);
+if ($this->is_widget) {
+	$this->title = 'Agenda';
+	if (!isset($this->view_type))
+		$this->view_type = 'basicDay';
+	$pines->icons->load();
+	$this->timezone = $_SESSION['user']->get_timezone();
+} else {
+	$this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
+	$this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 
-if (isset($this->employee->guid))
-	$subject = $this->employee;
-else
-	$subject = $this->location;
+	if (isset($this->employee->guid))
+		$subject = $this->employee;
+	else
+		$subject = $this->location;
 
-if (!isset($subject)) {
-	echo 'No calendar storage available. You must be logged in and able to have a calendar.';
-	return;
+	if (!isset($subject)) {
+		echo 'No calendar storage available. You must be logged in and able to have a calendar.';
+		return;
+	}
 }
 ?>
 <style type="text/css" >
@@ -35,12 +45,45 @@ if (!isset($subject)) {
 		padding-left: 16px;
 		display: none;
 	}
+	<?php if ($this->is_widget) { ?>
+	#p_muid_calendar .fc-header-title * {
+		font-size: .5em;
+		line-height: normal;
+	}
+	<?php } ?>
 </style>
 <script type='text/javascript'>
+	<?php if ($this->is_widget) { ?>
+	// Calendar
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/fullcalendar.css");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/customcolors.css");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/<?php echo $pines->config->debug_mode ? 'fullcalendar.js' : 'fullcalendar.min.js'; ?>");
+	<?php } ?>
 	pines(function(){
 		pines.selected_event = '';
 		// Create the calendar object.
 		$('#p_muid_calendar').fullCalendar({
+			<?php if ($this->is_widget) { ?>
+			header: {
+				left: 'title',
+				center: '',
+				right: 'prev,next'
+			},
+			titleFormat: {
+				basicDay: "ddd, MMM d",
+				basicWeek: "MMM d[ yyyy]{'-'[MMM ]d[ yyyy]}"
+			},
+			events: {
+				url: <?php echo json_encode(pines_url('com_calendar', 'events_json')); ?>,
+				type: "POST",
+				data: {
+					location: "",
+					employee: <?php echo json_encode((string) $_SESSION['user']->guid); ?>,
+					descendants: "false",
+					filter: "all"
+				}
+			},
+			<?php } else { ?>
 			header: {
 				left: 'prevYear prev,next nextYear today',
 				center: 'title',
@@ -52,18 +95,7 @@ if (!isset($subject)) {
 				next: 'circle-triangle-e',
 				nextYear: 'circle-arrow-e'
 			},
-			dragOpacity: {
-				agenda: .5,
-				'': 0.85
-			},
-			defaultView: <?php echo json_encode($this->view_type); ?>,
 			weekMode: "liquid",
-			firstDay: 1,
-			selectable: true,
-			theme: true,
-			ignoreTimezone: false,
-			firstHour: <?php echo isset($min_start) ? $min_start : 8; ?>,
-			editable: <?php echo json_encode(gatekeeper('com_calendar/managecalendar')); ?>,
 			events: {
 				url: <?php echo json_encode(pines_url('com_calendar', 'events_json')); ?>,
 				type: "POST",
@@ -74,6 +106,18 @@ if (!isset($subject)) {
 					filter: <?php echo json_encode((string) $this->filter); ?>
 				}
 			},
+			<?php } ?>
+			dragOpacity: {
+				agenda: .5,
+				'': 0.85
+			},
+			defaultView: <?php echo json_encode($this->view_type); ?>,
+			firstDay: 1,
+			selectable: true,
+			theme: true,
+			ignoreTimezone: false,
+			firstHour: <?php echo isset($min_start) ? $min_start : 8; ?>,
+			editable: <?php echo json_encode(gatekeeper('com_calendar/managecalendar')); ?>,
 			eventRender: function(event, element){
 				var header;
 				if (event.allDay)
@@ -132,7 +176,7 @@ if (!isset($subject)) {
 				view.element.find(".fc-event").popover('hide');
 			}
 		});
-		var current_date = $.fullCalendar.parseDate(<?php echo strtotime(format_date((int) $this->date[0], 'custom', 'Y-m-d', $this->timezone)); ?>);
+		var current_date = $.fullCalendar.parseDate(<?php echo strtotime($this->is_widget ? format_date(time(), 'custom', 'Y-m-d') : format_date((int) $this->date[0], 'custom', 'Y-m-d', $this->timezone)); ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 
@@ -190,11 +234,6 @@ if (!isset($subject)) {
 					$('#p_muid_calendar').fullCalendar('refetchEvents');
 			}
 		});
-	};
-
-	// Help
-	pines.p_muid_calendar_help = function(){
-		alert('Click on an event to select/deselect it.');
 	};
 
 	// Duplicate Event(s)
@@ -323,3 +362,37 @@ if (!isset($subject)) {
 <div id="p_muid_calendar" style="position: relative;">
 	<div id="p_muid_loading" style="position: absolute; right: 0; bottom: 0; height: 32px; width: 32px; background-position: center center; background-repeat: no-repeat;" class="alert alert-info picon-32 picon-throbber"></div>
 </div>
+<?php if ($this->is_widget) { ?>
+<div style="float: right;" class="clearfix">
+	<?php
+	$jstree = new module('com_jstree', 'jstree');
+	echo $jstree->render();
+	$ptags = new module('com_ptags', 'ptags');
+	echo $ptags->render();
+	if ($pines->config->com_calendar->com_customer) {
+		$cust_select = new module('com_customer', 'customer/select');
+		echo $cust_select->render();
+	}
+
+	$form = new module('com_calendar', 'form_calendar');
+	$form->is_widget = true;
+
+	// Datespan of the calendar.
+	$date_start = strtotime('00:00:00', time());
+	$date_end = strtotime('11:59:59', time()) + 1;
+	$form->view_type = $view_type;
+	$form->timezone = $this->timezone;
+	$form->date[0] = $date_start;
+	$form->date[1] = $date_end;
+	$form->employee = $_SESSION['user'];
+	$form->employees = $pines->com_hrm->get_employees();
+	$form->location = $_SESSION['user']->group;
+	$form->descendants = false;
+	$form->filter = 'all';
+
+	// So the form can access the calendar.
+	$form->cal_muid = $this->muid;
+	echo $form->render();
+	?>
+</div>
+<?php } ?>

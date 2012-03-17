@@ -22,10 +22,8 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage')) {
 	$dashboard =& $_SESSION['user']->dashboard;
 	$editable = !$dashboard->locked && gatekeeper('com_dash/editdash') && $_REQUEST['editable'] != 'false';
 }
-if (!isset($dashboard->guid)) {
-	header('HTTP/1.0 400 Bad Request');
-	return;
-}
+if (!isset($dashboard->guid))
+	throw new HttpClientException(null, 400);
 
 $pines->page->override = true;
 $module = $dashboard->print_tab($_REQUEST['key'], $editable);

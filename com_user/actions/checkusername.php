@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$pines->config->com_user->check_username)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 $pines->page->override = true;
 header('Content-Type: application/json');

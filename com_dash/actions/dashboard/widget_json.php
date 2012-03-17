@@ -22,35 +22,27 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
 	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
 else
 	$dashboard =& $_SESSION['user']->dashboard;
-if (!isset($dashboard->guid)) {
-	header('HTTP/1.0 400 Bad Request');
-	return;
-}
+if (!isset($dashboard->guid))
+	throw new HttpClientException(null, 400);
 
 // Get the widget entry.
 $widget_entry = $dashboard->widget($_REQUEST['key']);
-if (!$widget_entry) {
-	header("HTTP/1.0 400 Bad Request");
-	return;
-}
+if (!$widget_entry)
+	throw new HttpClientException(null, 400);
 
 // Get the view and make a module.
 $def = $pines->com_dash->get_widget_def($widget_entry);
 $view = $def['view'];
 $view_callback = $def['view_callback'];
-if (!isset($view) && !isset($view_callback)) {
-	header("HTTP/1.0 500 Internal Server Error");
-	return;
-}
+if (!isset($view) && !isset($view_callback))
+	throw new HttpServerException(null, 500);
 
 if (isset($view))
 	$module = new module($widget_entry['component'], $view);
 else {
 	$module = call_user_func($view_callback, null, null, (array) $widget_entry['options']);
-	if (!$module) {
-		header("HTTP/1.0 500 Internal Server Error");
-		return;
-	}
+	if (!$module)
+		throw new HttpServerException(null, 500);
 }
 
 // Include the options.

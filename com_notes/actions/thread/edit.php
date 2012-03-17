@@ -17,7 +17,7 @@ if ( !gatekeeper('com_notes/editthread') )
 
 $entity = com_notes_thread::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid))
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 $entity->print_form();
 
 ?>

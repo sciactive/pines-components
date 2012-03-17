@@ -84,7 +84,7 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage')) {
 	$editable = !$dashboard->locked && gatekeeper('com_dash/editdash');
 }
 if (!isset($dashboard->guid))
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 if (!$dashboard->print_dashboard($_REQUEST['tab'], $editable))
 	pines_error('Couldn\'t load your dashboard.');

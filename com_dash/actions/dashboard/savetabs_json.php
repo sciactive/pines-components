@@ -22,21 +22,15 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
 	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
 else
 	$dashboard =& $_SESSION['user']->dashboard;
-if (!isset($dashboard->guid)) {
-	header('HTTP/1.0 400 Bad Request');
-	return;
-}
-if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
-	header('HTTP/1.0 403 Forbidden');
-	return;
-}
+if (!isset($dashboard->guid))
+	throw new HttpClientException(null, 400);
+if ($dashboard->locked && !gatekeeper('com_dash/manage'))
+	throw new HttpClientException(null, 403);
 
 // Get the widget order.
 $struct = json_decode($_REQUEST['order'], true);
-if (!$struct) {
-	header("HTTP/1.0 400 Bad Request");
-	return;
-}
+if (!$struct)
+	throw new HttpClientException(null, 400);
 
 // Order the tabs correctly.
 $new_tab_array = array();

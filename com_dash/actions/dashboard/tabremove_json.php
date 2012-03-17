@@ -22,20 +22,14 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
 	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
 else
 	$dashboard =& $_SESSION['user']->dashboard;
-if (!isset($dashboard->guid)) {
-	header('HTTP/1.0 400 Bad Request');
-	return;
-}
-if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
-	header('HTTP/1.0 403 Forbidden');
-	return;
-}
+if (!isset($dashboard->guid))
+	throw new HttpClientException(null, 400);
+if ($dashboard->locked && !gatekeeper('com_dash/manage'))
+	throw new HttpClientException(null, 403);
 
 // Check the requested tab.
-if (!isset($dashboard->tabs[$_REQUEST['key']])) {
-	header("HTTP/1.0 400 Bad Request");
-	return;
-}
+if (!isset($dashboard->tabs[$_REQUEST['key']]))
+	throw new HttpClientException(null, 400);
 // Check that it's not the last tab.
 if (count($dashboard->tabs) <= 1) {
 	$pines->page->override_doc(json_encode('last'));

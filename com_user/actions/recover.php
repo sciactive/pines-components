@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$pines->config->com_user->pw_recovery)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 if (empty($_REQUEST['type'])) {
 	$module = new module('com_user', 'recover', 'content');

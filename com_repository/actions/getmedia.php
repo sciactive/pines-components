@@ -24,11 +24,11 @@ if (empty($publisher) || empty($package) || empty($version) || empty($media))
 
 $user = user::factory($publisher);
 if (!isset($user->guid))
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 $file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}/{$version}/_MEDIA/{$media}");
 if (!file_exists($file))
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 $ext = strtolower(end(explode(".", $file)));
 

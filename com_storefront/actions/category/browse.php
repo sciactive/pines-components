@@ -28,7 +28,7 @@ if (!empty($_REQUEST['id'])) {
 }
 
 if (!isset($entity->guid) || !$entity->enabled)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 // Page title.
 if ($entity->title_use_name || !isset($entity->title))

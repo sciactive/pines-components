@@ -19,8 +19,7 @@ $pines->page->override = true;
 
 if (!($module = $_SESSION['user']->dashboard->print_dashboard($_REQUEST['tab'], (!$_SESSION['user']->dashboard->locked && gatekeeper('com_dash/editdash'))))) {
 	pines_error('Couldn\'t load your dashboard.');
-	header("HTTP/1.0 500 Internal Server Error");
-	return;
+	throw new HttpServerException(null, 500);
 }
 
 $pines->page->override_doc($module->render());

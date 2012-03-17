@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $entity = com_raffle_raffle::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid) || !$entity->public)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 if ($entity->complete) {
 	pines_notice('This raffle has been completed.');

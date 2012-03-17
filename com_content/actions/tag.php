@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 // Get all the pages that have the requested tags.
 $tags = explode(',', $_REQUEST['a']);
 if (!$_REQUEST['a'] || !$tags)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 $selector = array('&',
 		'tag' => array('com_content', 'page'),
 		'strict' => array('enabled', true),
@@ -36,7 +36,7 @@ foreach ($entities as $key => $cur_entity) {
 }
 
 if (!$entities)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 // Set the default variant for categories.
 if ($pines->config->com_content->cat_variant && $pines->com_content->is_variant_valid($pines->config->com_content->cat_variant)) {

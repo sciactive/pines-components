@@ -21,21 +21,15 @@ if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
 	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
 else
 	$dashboard =& $_SESSION['user']->dashboard;
-if (!isset($dashboard->guid)) {
-	header('HTTP/1.0 400 Bad Request');
-	return;
-}
-if ($dashboard->locked && !gatekeeper('com_dash/manage')) {
-	header('HTTP/1.0 403 Forbidden');
-	return;
-}
+if (!isset($dashboard->guid))
+	throw new HttpClientException(null, 400);
+if ($dashboard->locked && !gatekeeper('com_dash/manage'))
+	throw new HttpClientException(null, 403);
 
 // Get the widget entry.
 $widget_entry = $dashboard->widget($_REQUEST['key']);
-if (!$widget_entry) {
-	header("HTTP/1.0 400 Bad Request");
-	return;
-}
+if (!$widget_entry)
+	throw new HttpClientException(null, 400);
 
 // Get the view and make a module.
 $def = $pines->com_dash->get_widget_def($widget_entry);

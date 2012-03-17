@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$pines->config->com_user->pw_recovery)
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 $user = user::factory((int) $_REQUEST['id']);
 

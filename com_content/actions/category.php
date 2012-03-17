@@ -25,7 +25,7 @@ if (!empty($_REQUEST['id'])) {
 }
 
 if (!isset($entity->guid) || !$entity->ready())
-	return 'error_404';
+	throw new HttpClientException(null, 404);
 
 // Set the default variant for categories.
 if ($pines->config->com_content->cat_variant && $pines->com_content->is_variant_valid($pines->config->com_content->cat_variant)) {

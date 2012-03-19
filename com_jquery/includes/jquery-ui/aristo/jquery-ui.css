@@ -131,7 +131,8 @@
 .ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
 .ui-state-active .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
 .ui-state-highlight .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon { background: url(images/icon_sprite.png) -16px 0 no-repeat !important; }
+/*.ui-state-error .ui-icon, .ui-state-error-text .ui-icon { background: url(images/icon_sprite.png) -16px 0 no-repeat !important; }*/
+/*[*/.ui-state-error .ui-icon-alert, .ui-state-error-text .ui-icon-alert { background: url(images/icon_sprite.png) -16px 0 no-repeat !important; }/*]*/
 .ui-state-highlight .ui-icon, .ui-state-error .ui-icon { margin-top: -1px; }
 
 /* positioning */

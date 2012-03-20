@@ -65,13 +65,6 @@ hr {
 	font-weight: normal;
 }
 /* Menu */
-#header .menuwrap {
-	clear: both;
-	background: none !important;
-	border-bottom: none !important;
-	border-left: none !important;
-	border-right: none !important;
-}
 #main_menu {
 	margin-left: .4em;
 }

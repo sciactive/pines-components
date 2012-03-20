@@ -118,7 +118,7 @@ header('Content-Type: text/html');
 		</div>
 		<div class="container-fluid page-width centered">
 			<div class="row-fluid">
-				<div class="span12" class="menuwrap ui-widget-content">
+				<div class="span12">
 					<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 				</div>
 			</div>
@@ -132,13 +132,13 @@ header('Content-Type: text/html');
 	<div id="column_container">
 		<div class="container-fluid page-width centered">
 			<div class="row-fluid">
-				<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
+				<?php if (in_array($pines->config->tpl_pines->variant, array('threecol', 'twocol-sideleft'))) { ?>
 				<div id="left" class="span2">
 					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
 					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
 				</div>
 				<?php } ?>
-				<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'span12' : ($pines->config->tpl_pines->variant == 'default' ? 'span8' : 'span10'); ?>">
+				<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'span12' : ($pines->config->tpl_pines->variant == 'threecol' ? 'span8' : 'span10'); ?>">
 					<div id="content_container">
 						<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 						<div class="row-fluid">
@@ -152,7 +152,7 @@ header('Content-Type: text/html');
 						</div>
 					</div>
 				</div>
-				<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
+				<?php if (in_array($pines->config->tpl_pines->variant, array('threecol', 'twocol-sideright'))) { ?>
 				<div id="right" class="span2">
 					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
 					<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;

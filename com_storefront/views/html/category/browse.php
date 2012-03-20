@@ -19,14 +19,7 @@ if ($this->entity->show_title)
 if ($this->entity->show_products)
 	$products = $pines->com_storefront->get_cat_products($this->entity, $this->page, $this->products_per_page, $offset, $count, $pages, $this->sort_var, $this->sort_reverse);
 
-?>
-<style type="text/css">
-	.p_muid_paginate {
-		text-align: center;
-		margin: 1em;
-	}
-</style>
-<?php foreach ((array) $this->show_page_modules as $cur_module) {
+foreach ((array) $this->show_page_modules as $cur_module) {
 	echo $cur_module->render();
 } if ($this->entity->show_children) { ?>
 <div id="p_muid_children" class="com_storefront_children">
@@ -47,41 +40,41 @@ if ($this->entity->show_products)
 </div>
 <?php } else {
 		ob_start(); ?>
-<div class="p_muid_paginate com_storefront_paginate">
+<div class="com_storefront_paginate">
 	<?php if ($pages != 1) { ?>
-	<div style="float: left; margin-right: 1em;">
-		<?php if ($this->page - 1 >= 1) { if ($this->page - 1 != 1) { ?>
-		<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => 1, 'sort' => $this->sort))); ?>">First</a>&nbsp;
-		<?php } ?>
-		<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>">Prev</a>
-		<?php } ?>
-	</div>
-	<div style="float: left; margin-right: 1em;">
-		<?php if ($this->page - 2 >= 1) { ?>
-			<?php if ($this->page - 2 > 1) { ?>...&nbsp;<?php } ?>
-			<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 2, 'sort' => $this->sort))); ?>"><?php echo $this->page - 2; ?></a>&nbsp;
-		<?php } ?>
-		<?php if ($this->page - 1 >= 1) { ?>
-			<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>"><?php echo $this->page - 1; ?></a>&nbsp;
-		<?php } ?>
-		<span class="ui-state-default" style="border: none;"><?php echo htmlspecialchars($this->page); ?></span>
-		<?php if ($this->page + 1 <= $pages) { ?>
-			&nbsp;<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 1, 'sort' => $this->sort))); ?>"><?php echo $this->page + 1; ?></a>
-		<?php } ?>
-		<?php if ($this->page + 2 <= $pages) { ?>
-			&nbsp;<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 2, 'sort' => $this->sort))); ?>"><?php echo $this->page + 2; ?></a>
-			<?php if ($this->page + 2 < $pages) { ?>&nbsp;...<?php } ?>
-		<?php } ?>
-	</div>
-	<div style="float: left; margin-right: 1em;">
-		<?php if ($this->page + 1 <= $pages) { ?>
-		<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 1, 'sort' => $this->sort))); ?>">Next</a>
-		<?php if ($this->page + 1 != $pages) { ?>
-		&nbsp;<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $pages, 'sort' => $this->sort))); ?>">Last</a>
-		<?php } } ?>
+	<div style="float: left; margin: 1em 1em 1em 0;" class="pagination">
+		<ul>
+			<?php if ($this->page - 1 >= 1) { if ($this->page - 1 != 1) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => 1, 'sort' => $this->sort))); ?>">&#8676;</a></li>
+			<?php } ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>">&larr;</a></li>
+			<?php } if ($this->page - 2 >= 1) {
+				if ($this->page - 2 > 1) { ?>
+			<li class="disabled">&hellip;</li>
+				<?php } ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 2, 'sort' => $this->sort))); ?>"><?php echo $this->page - 2; ?></a></li>
+			<?php } if ($this->page - 1 >= 1) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>"><?php echo $this->page - 1; ?></a></li>
+			<?php } ?>
+			<li class="active"><a href="javascript:void(0);"><?php echo htmlspecialchars($this->page); ?></a></li>
+			<?php if ($this->page + 1 <= $pages) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 1, 'sort' => $this->sort))); ?>"><?php echo $this->page + 1; ?></a></li>
+			<?php } ?>
+			<?php if ($this->page + 2 <= $pages) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 2, 'sort' => $this->sort))); ?>"><?php echo $this->page + 2; ?></a></li>
+			<?php if ($this->page + 2 < $pages) { ?>
+			<li class="disabled">&hellip;</li>
+				<?php }
+				} ?>
+			<?php if ($this->page + 1 <= $pages) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 1, 'sort' => $this->sort))); ?>">&rarr;</a></li>
+			<?php if ($this->page + 1 != $pages) { ?>
+			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $pages, 'sort' => $this->sort))); ?>">&#8677;</a></li>
+			<?php } } ?>
+		</ul>
 	</div>
 	<?php } ?>
-	<div style="float: right; margin-left: 1em;">
+	<div style="float: right; margin: 1em 0 1em 1em;">
 		Showing <?php echo $offset + 1; ?>-<?php echo $offset + count($products); ?> of <?php echo (int) $count; ?>.
 		Sorted by <select name="sort" onchange="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page)))); ?>, {sort: $(this).val()})">
 			<option value="name"<?php echo ($this->sort == 'name') ? ' selected="selected"' : '' ?>>Name (A to Z)</option>

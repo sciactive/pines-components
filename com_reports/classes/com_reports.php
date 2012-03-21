@@ -1538,6 +1538,51 @@ class com_reports extends component {
 
 		return $module;
 	}
+
+	/**
+	 * Creates and attaches a module which reports products without categories.
+	 * @return module The report module.
+	 */
+	function products_wo_categories() {
+		global $pines;
+
+		$module = new module('com_reports', 'maintenance/products_wo_categories', 'content');
+		// Count of the erroneous entity references that were fixed on categories.
+		$module->fix_cat_count = 0;
+
+		// Get all categories.
+		$cats = $pines->entity_manager->get_entities(
+				array('class' => com_sales_category, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_sales', 'category'),
+					'script' => array('enabled', true)
+				)
+			);
+		// Get all products.
+		$products = $pines->entity_manager->get_entities(
+				array('class' => com_sales_product),
+				array('&',
+					'tag' => array('com_sales', 'product'),
+					'script' => array('enabled', true)
+				)
+			);
+
+		// Go through each category's products and remove them from the array.
+		foreach ($cats as $cur_cat) {
+			foreach ((array) $cur_cat->products as $cur_key => $cur_product) {
+				if (!isset($cur_product->guid)) {
+					unset($cur_cat->products[$cur_key]);
+					if ($cur_cat->save())
+						$module->fix_cat_count++;
+				} elseif (($key = $cur_product->array_search($products)) !== false) {
+					unset($products[$key]);
+				}
+			}
+		}
+		$module->products = $products;
+
+		return $module;
+	}
 }
 
 ?>

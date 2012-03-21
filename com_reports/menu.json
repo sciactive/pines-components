@@ -170,5 +170,21 @@
 				"depend": {
 					"ability": "com_reports/editwarboard"
 				}
+			},
+		{
+			"path": "main_menu/reports/maintenance",
+			"text": "Maintenance",
+			"depend": {
+				"children": true
+			}
+		},
+			{
+				"path": "main_menu/reports/maintenance/productswocategories",
+				"text": "Products w/o Categories",
+				"href": ["com_reports","maintenance/prodswocats"],
+				"depend": {
+					"ability": "com_sales/editproduct",
+					"component": "com_sales"
+				}
 			}
 ]

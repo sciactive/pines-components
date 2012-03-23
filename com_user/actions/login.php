@@ -40,9 +40,13 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
 	$_SESSION['com_user__tmpreferral_code'] = $_REQUEST['referral_code'];
 	pines_session('close');
-	$reg_module = $user->print_register();
-	if ( !empty($_REQUEST['url']) )
-		$reg_module->url = $_REQUEST['url'];
+	if ($pines->config->com_user->one_step_registration) {
+		$pines->action('com_user', 'registeruser');
+	} else {
+		$reg_module = $user->print_register();
+		if ( !empty($_REQUEST['url']) )
+			$reg_module->url = $_REQUEST['url'];
+	}
 	return;
 }
 

@@ -27,6 +27,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'one_step_registration',
+		'cname' => 'One Step Registration',
+		'description' => 'Allow users to register in one step.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'check_username',
 		'cname' => 'Check Usernames',
 		'description' => 'Notify immediately if a requested username is available. (This can technically be used to determine if a user exists on the system.)',

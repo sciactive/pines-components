@@ -65,7 +65,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 	});
 </script>
 <?php } ?>
-<div id="p_muid_form"<?php echo ($this->style == 'compact') ? ' style="display: none;"' : ''; ?>>
+<div id="p_muid_form" class="clearfix"<?php echo ($this->style == 'compact') ? ' style="display: none; max-height: 500px; overflow-y: auto; overflow-x: hidden;"' : ''; ?>>
 	<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
@@ -201,7 +201,169 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 					<span class="pf-note">Optional</span>
 					<input class="pf-field" type="text" name="referral_code" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
-			<?php } ?>
+			<?php } if ($pines->config->com_user->one_step_registration) { ?>
+			<div class="pf-element">
+				<span class="pf-required">*</span> Required field.
+			</div>
+			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">First Name <span class="pf-required">*</span></span>
+					<input class="pf-field" type="text" name="name_first" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Middle Name</span>
+					<input class="pf-field" type="text" name="name_middle" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Last Name</span>
+					<input class="pf-field" type="text" name="name_last" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<?php } if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Email <span class="pf-required">*</span></span>
+					<input class="pf-field" type="email" name="email" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<?php } if (in_array('phone', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Phone Number</span>
+					<input class="pf-field" type="tel" name="phone" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<?php } if (in_array('fax', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Fax Number</span>
+					<input class="pf-field" type="tel" name="fax" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<?php } if (in_array('timezone', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element<?php echo ($this->style == 'small') ? ' pf-full-width' : ''; ?>">
+				<label><span class="pf-label">Timezone</span>
+					<span class="pf-note">This overrides the primary group's timezone.</span>
+					<?php echo ($this->style == 'compact') ? '<div class="pf-group">' : ''; ?>
+					<select class="pf-field" name="timezone" size="1"<?php echo ($this->style == 'small') ? ' style="max-width: 95%;"' : ''; ?>>
+						<option value="">--Default--</option>
+						<?php $tz = DateTimeZone::listIdentifiers();
+						sort($tz);
+						foreach ($tz as $cur_tz) { ?>
+						<option value="<?php echo htmlspecialchars($cur_tz); ?>"><?php echo htmlspecialchars($cur_tz); ?></option>
+						<?php } ?>
+					</select>
+					<?php echo ($this->style == 'compact') ? '</div>' : ''; ?>
+				</label>
+			</div>
+			<?php } if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
+			<div class="pf-element">
+				<script type="text/javascript">
+					pines(function(){
+						var address_us = $("#p_muid_address_us");
+						var address_international = $("#p_muid_address_international");
+						$("#p_muid_form [name=address_type]").change(function(){
+							var address_type = $(this);
+							if (address_type.is(":checked") && address_type.val() == "us") {
+								address_us.show();
+								address_international.hide();
+							} else if (address_type.is(":checked") && address_type.val() == "international") {
+								address_international.show();
+								address_us.hide();
+							}
+						}).change();
+					});
+				</script>
+				<span class="pf-label">Address Type</span>
+				<label><input class="pf-field" type="radio" name="address_type" value="us" checked="checked" /> US</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="international" /> International</label>
+			</div>
+			<div id="p_muid_address_us" style="display: none;">
+				<div class="pf-element">
+					<label><span class="pf-label">Address 1</span>
+						<input class="pf-field" type="text" name="address_1" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+				</div>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 2</span>
+						<input class="pf-field" type="text" name="address_2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+				</div>
+				<div class="pf-element<?php echo ($this->style == 'small') ? ' pf-full-width' : ''; ?>">
+					<label for="p_muid_city"><span class="pf-label">City, State</span></label>
+					<?php echo ($this->style == 'compact') ? '<div class="pf-group" style="white-space: nowrap; margin-right: 16px;">' : ''; ?>
+					<input class="pf-field" type="text" name="city" id="p_muid_city" size="<?php echo ($this->style == 'small') ? '10' : '15'; ?>" />
+					<select class="pf-field" name="state"<?php echo ($this->style == 'small') ? ' style="max-width: 95%;"' : ''; ?>>
+						<option value="">None</option>
+						<?php foreach (array(
+								'AL' => 'Alabama',
+								'AK' => 'Alaska',
+								'AZ' => 'Arizona',
+								'AR' => 'Arkansas',
+								'CA' => 'California',
+								'CO' => 'Colorado',
+								'CT' => 'Connecticut',
+								'DE' => 'Delaware',
+								'DC' => 'DC',
+								'FL' => 'Florida',
+								'GA' => 'Georgia',
+								'HI' => 'Hawaii',
+								'ID' => 'Idaho',
+								'IL' => 'Illinois',
+								'IN' => 'Indiana',
+								'IA' => 'Iowa',
+								'KS' => 'Kansas',
+								'KY' => 'Kentucky',
+								'LA' => 'Louisiana',
+								'ME' => 'Maine',
+								'MD' => 'Maryland',
+								'MA' => 'Massachusetts',
+								'MI' => 'Michigan',
+								'MN' => 'Minnesota',
+								'MS' => 'Mississippi',
+								'MO' => 'Missouri',
+								'MT' => 'Montana',
+								'NE' => 'Nebraska',
+								'NV' => 'Nevada',
+								'NH' => 'New Hampshire',
+								'NJ' => 'New Jersey',
+								'NM' => 'New Mexico',
+								'NY' => 'New York',
+								'NC' => 'North Carolina',
+								'ND' => 'North Dakota',
+								'OH' => 'Ohio',
+								'OK' => 'Oklahoma',
+								'OR' => 'Oregon',
+								'PA' => 'Pennsylvania',
+								'RI' => 'Rhode Island',
+								'SC' => 'South Carolina',
+								'SD' => 'South Dakota',
+								'TN' => 'Tennessee',
+								'TX' => 'Texas',
+								'UT' => 'Utah',
+								'VT' => 'Vermont',
+								'VA' => 'Virginia',
+								'WA' => 'Washington',
+								'WV' => 'West Virginia',
+								'WI' => 'Wisconsin',
+								'WY' => 'Wyoming',
+								'AA' => 'Armed Forces (AA)',
+								'AE' => 'Armed Forces (AE)',
+								'AP' => 'Armed Forces (AP)'
+							) as $key => $cur_state) { ?>
+						<option value="<?php echo $key; ?>"><?php echo $cur_state; ?></option>
+						<?php } ?>
+					</select>
+					<?php echo ($this->style == 'compact') ? '</div>' : ''; ?>
+				</div>
+				<div class="pf-element">
+					<label><span class="pf-label">Zip</span>
+						<input class="pf-field" type="text" name="zip" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+				</div>
+			</div>
+			<div id="p_muid_address_international" style="display: none;">
+				<div class="pf-element pf-full-width">
+					<label><span class="pf-label">Address</span>
+						<span class="pf-group pf-full-width">
+							<span class="pf-field" style="display: block;">
+								<textarea style="width: 100%;" rows="3" cols="35" name="address_international"></textarea>
+							</span>
+						</span></label>
+				</div>
+			</div>
+			<?php	} 
+			} ?>
 		</div>
 		<?php } if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
 		<div class="pf-element" id="p_muid_recovery">

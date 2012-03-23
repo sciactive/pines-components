@@ -15,6 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Style</span>
+			<div class="pf-note">Use small to put the form in a very narrow column. Use compact to provide a link to bring up the form in a dialog.</div>
 			<select class="pf-field" name="style">
 				<option value="normal">Normal</option>
 				<option value="small">Small</option>

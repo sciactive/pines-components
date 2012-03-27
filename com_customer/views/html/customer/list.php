@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customers';
 $this->note = 'Begin by searching for a customer.';
 $pines->com_pgrid->load();
+$pines->com_jstree->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customer/customer/list']);
 ?>
@@ -48,6 +49,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 </style>
 <script type="text/javascript">
 	pines(function(){
+		// Time and location variables.
+		var all_time = true, start_date = "", end_date = "", location = "", descendants = false;
 		// Customer search function for the pgrid toolbar.
 		var customer_search_box;
 		var submit_search = function(){
@@ -61,7 +64,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: <?php echo json_encode(pines_url('com_customer', 'customer/search')); ?>,
 				type: "POST",
 				dataType: "json",
-				data: {"q": search_string},
+				data: {"q": search_string, "location": location, "descendants": descendants, "all_time": all_time, "start_date": start_date, "end_date": end_date},
 				beforeSend: function(){
 					loader = $.pnotify({
 						pnotify_title: 'Search',
@@ -92,6 +95,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								pines.safe(this.guid),
 								pines.safe(this.username),
 								pines.safe(this.name),
+								pines.safe(this.location),
 								pines.safe(this.email),
 								pines.safe(this.company),
 								pines.safe(this.phone_home),
@@ -180,6 +184,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				{type: 'separator'},
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){customer_grid.location_form();}},
+				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){customer_grid.date_form();}},
+				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/newcustomer')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/edit')); ?>},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
@@ -247,6 +254,78 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				autobox.focus().autocomplete("search", "");
 			});
 		});
+
+		customer_grid.date_form = function(){
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/dateselect')); ?>,
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
+						bgiframe: true,
+						autoOpen: true,
+						modal: true,
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+					pines.play();
+				}
+			});
+		};
+		customer_grid.location_form = function(){
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
+				type: "POST",
+				dataType: "html",
+				data: {"location": location, "descendants": descendants},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
+						bgiframe: true,
+						autoOpen: true,
+						modal: true,
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								location = form.find(":input[name=location]").val();
+								descendants = !!form.find(":input[name=descendants]").attr('checked');
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+					pines.play();
+				}
+			});
+		};
 	});
 </script>
 <table id="p_muid_grid">
@@ -255,6 +334,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>ID</th>
 			<th>Username</th>
 			<th>Name</th>
+			<th>Location</th>
 			<th>Email</th>
 			<th>Company</th>
 			<th>Home Phone</th>
@@ -271,6 +351,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<tr>
+			<td>-</td>
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>

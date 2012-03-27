@@ -18,25 +18,63 @@ if ( !gatekeeper('com_customer/listcustomers') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+// Time span.
+if (!empty($_REQUEST['start_date'])) {
+	$start_date = $_REQUEST['start_date'];
+	if (strpos($start_date, '-') === false)
+		$start_date = format_date($start_date, 'date_sort');
+	$start_date = strtotime($start_date.' 00:00:00');
+}
+if (!empty($_REQUEST['end_date'])) {
+	$end_date = $_REQUEST['end_date'];
+	if (strpos($end_date, '-') === false)
+		$end_date = format_date($end_date, 'date_sort');
+	$end_date = strtotime($end_date.' 23:59:59') + 1;
+}
+if ($_REQUEST['all_time'] == 'true') {
+	$start_date = null;
+	$end_date = null;
+}
+if (!empty($_REQUEST['location']))
+	$location = group::factory((int) $_REQUEST['location']);
+
+$descendants = ($_REQUEST['descendants'] == 'true');
+
 $query = trim($_REQUEST['q']);
+
+// Build the main selector, including location and timespan.
+$selector = array('&', 'tag' => array('com_customer', 'customer'));
+if (isset($start_date))
+	$selector['gte'] = array('p_cdate', (int) $start_date);
+if (isset($end_date))
+	$selector['lt'] = array('p_cdate', (int) $end_date);
+if (isset($location)) {
+	if ($descendants)
+		$or = array('|', 'ref' => array('group', $location->get_descendants(true)));
+	else
+		$or = array('|', 'ref' => array('group', $location));
+}
+
 
 if (empty($query)) {
 	$customers = array();
 } elseif ($query == '*') {
 	if (!gatekeeper('com_customer/listallcustomers'))
 		$customers = array();
-	else
-		$customers = (array) $pines->entity_manager->get_entities(
-				array('class' => com_customer_customer),
-				array('&',
-					'tag' => array('com_customer', 'customer')
-				)
-			);
+	else {
+		$args = array(
+			array('class' => com_customer_customer),
+			$selector
+		);
+		if ($or)
+			$args[] = $or;
+		$customers = (array) call_user_func_array(array($pines->entity_manager, 'get_entities'), $args);
+	}
 } else {
 	$num_query = preg_replace('/\D/', '', $query);
 	$r_query = '/'.str_replace(' ', '.*', preg_quote($query)).'/i';
 	$r_num_query = '/'.preg_quote($num_query).'/';
-	$selector = array('|',
+	$selector2 = array('|',
 		'match' => array(
 			array('name', $r_query),
 			array('username', $r_query),
@@ -45,16 +83,19 @@ if (empty($query)) {
 		)
 	);
 	if ($num_query != '') {
-		$selector['match'][] = array('phone_home', $r_num_query);
-		$selector['match'][] = array('phone_work', $r_num_query);
-		$selector['match'][] = array('phone_cell', $r_num_query);
-		$selector['match'][] = array('fax', $r_num_query);
+		$selector2['match'][] = array('phone_home', $r_num_query);
+		$selector2['match'][] = array('phone_work', $r_num_query);
+		$selector2['match'][] = array('phone_cell', $r_num_query);
+		$selector2['match'][] = array('fax', $r_num_query);
 	}
-	$customers = (array) $pines->entity_manager->get_entities(
+	$args = array(
 			array('class' => com_customer_customer, 'limit' => $pines->config->com_customer->customer_search_limit),
-			array('&', 'tag' => array('com_customer', 'customer')),
-			$selector
+			$selector,
+			$selector2
 		);
+	if ($or)
+		$args[] = $or;
+	$customers = (array) call_user_func_array(array($pines->entity_manager, 'get_entities'), $args);
 	$count_customers = count($customers);
 	// Only bother searching companies if the limit hasn't been reached.
 	if ($pines->config->com_customer->customer_search_limit - $count_customers) {
@@ -86,6 +127,7 @@ foreach ($customers as $key => &$cur_customer) {
 		'guid'			=> (int) $cur_customer->guid,
 		'username'		=> (string) $cur_customer->username,
 		'name'			=> (string) $cur_customer->name,
+		'location'		=> (string) $cur_customer->group->name,
 		'email'			=> (string) $cur_customer->email,
 		'company'		=> $cur_customer->company->name ? $cur_customer->company->name : '',
 		'title'			=> (string) $cur_customer->job_title,

@@ -180,6 +180,50 @@ class com_customer extends component {
 	}
 
 	/**
+	 * Print a form to select date timespan.
+	 *
+	 * @param bool $all_time Currently searching all records or a timespan.
+	 * @param string $start The current starting date of the timespan.
+	 * @param string $end The current ending date of the timespan.
+	 * @return module The form's module.
+	 */
+	public function date_select_form($all_time = false, $start = null, $end = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_customer', 'forms/date_selector', 'content');
+		$module->all_time = $all_time;
+		$module->start_date = $start;
+		$module->end_date = $end;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
+	 * Print a form to select a location.
+	 *
+	 * @param int $location The currently set location to search in.
+	 * @param bool $descendants Whether to show descendant locations.
+	 * @return module The form's module.
+	 */
+	public function location_select_form($location = null, $descendants = false) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_customer', 'forms/location_selector', 'content');
+		if (!isset($location)) {
+			$module->location = $_SESSION['user']->group->guid;
+		} else {
+			$module->location = $location;
+		}
+		$module->descendants = $descendants;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
+	/**
 	 * Transform a string to title case.
 	 *
 	 * @param string $string The string to transform.

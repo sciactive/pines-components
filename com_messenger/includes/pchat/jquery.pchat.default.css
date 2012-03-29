@@ -1,0 +1,78 @@
+/* 
+	Document   : jquery.pchat.default.css
+	Created on : Mar 27, 2012, 5:27:30 PM
+	Author     : Hunter Perrin
+	Version    : 0.10.2dev
+	Link       : http://pinesframework.org/pchat/
+	Description:
+		Default styling for Pines Chat jQuery plugin.
+*/
+.ui-pchat-widget {
+	padding: .5em;
+}
+.ui-pchat-title {
+	padding: .2em .5em;
+	margin-bottom: .5em;
+}
+.ui-pchat-roster {
+	padding: .5em .5em 0;
+	margin-bottom: .5em;
+}
+.ui-pchat-contact {
+	margin-bottom: .5em;
+}
+.ui-pchat-contact-presence {
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: 4px;
+}
+.ui-pchat-contact-name {
+	font-size: 1.3em;
+	line-height: 16px;
+}
+.ui-pchat-contact-status {
+	clear: left;
+	padding-left: 20px;
+	font-size: .6em;
+	opacity: .8;
+}
+.ui-pchat-presence-chooser i {
+	display: block;
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: .4em;
+}
+.ui-pchat-presence-menu {
+	display: block;
+	float: left;
+	margin-right: .4em;
+}
+.ui-pchat-status-container {
+	display: block;
+	float: left;
+	white-space: nowrap;
+	margin-bottom: 0;
+}
+.ui-pchat-status-container input {
+	display: inline;
+	margin-left: .2em;
+}
+.ui-pchat-log {
+	margin-top: 1em;
+	height: 250px;
+	overflow: auto;
+	white-space: pre;
+	font-family: monospace;
+	border: 5px outset #333;
+	background: #000;
+	color: #0f0;
+}
+.ui-pchat-log b {
+	font-size: 20px;
+	line-height: 18px;
+}
+.ui-pchat-log b a, .ui-pchat-log b a:hover {
+	text-decoration: none;
+}

@@ -41,6 +41,7 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 	pines(function(){
 		$("#p_muid_main").pchat({
 			pchat_bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
+			pchat_domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
 			pchat_jid: <?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
 			pchat_password: <?php echo json_encode($xmpp_pass); ?>,
 			pchat_widget_box: false,

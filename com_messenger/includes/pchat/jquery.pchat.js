@@ -105,7 +105,7 @@ if (!window.localStorage) {
 			if (pchat.pchat_title)
 				$('<div class="ui-pchat-title ui-widget-header ui-corner-all"></div>').html(pchat.pchat_title).appendTo(pchat);
 
-			var roster_elem = $('<div class="ui-pchat-roster ui-widget-content ui-corner-all"></div>').appendTo(pchat);
+			var roster_elem = $('<div class="ui-pchat-roster"></div>').appendTo(pchat);
 
 			var presence_text = {
 				"working": '<i class="'+pchat.pchat_presence_icons.working+'"></i>Updating Status...',
@@ -117,11 +117,11 @@ if (!window.localStorage) {
 				"offline": '<i class="'+pchat.pchat_presence_icons.offline+'"></i>Offline',
 				"disconnected": '<i class="'+pchat.pchat_presence_icons.offline+'"></i>Not Connected'
 			};
-			var presence_elem = $('<div class="ui-pchat-presence-chooser ui-helper-clearfix"></div>').appendTo(pchat);
+			var action_bar = $('<div class="ui-pchat-action-bar ui-helper-clearfix"></div>').appendTo(pchat);
 			// Presence state dropdown:
-			presence_elem.append($('<div class="ui-pchat-presence-menu btn-group dropup"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="ui-pchat-presence-current">'+presence_text.disconnected+'</span>&nbsp;<span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
-			var presence_current = presence_elem.find(".ui-pchat-presence-current");
-			var presence_menu = presence_elem.find(".dropdown-menu");
+			action_bar.append($('<div class="ui-pchat-presence-menu btn-group dropup"><a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="ui-pchat-presence-current">'+presence_text.disconnected+'</span>&nbsp;<span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
+			var presence_current = action_bar.find(".ui-pchat-presence-current");
+			var presence_menu = action_bar.find(".ui-pchat-presence-menu .dropdown-menu");
 			var login_button = $('<li><a href="javascript:void(0);">Login</a></li>').on("click", "a", function(){
 				pchat.pchat_connect();
 			});
@@ -151,14 +151,60 @@ if (!window.localStorage) {
 			.append(login_button)
 			.append(logout_button);
 			// Status input:
-			presence_elem.append($('<label class="ui-pchat-status-container">Status:<input type="text" size="15" class="ui-pchat-status" /></label>'));
-			var presence_status = presence_elem.find(".ui-pchat-status");
+			action_bar.append($('<label class="ui-pchat-status-container">Status:<input type="text" size="15" class="ui-pchat-status" /></label>'));
+			var presence_status = action_bar.find(".ui-pchat-status");
 			presence_status.change(function(){
 				pchat.pchat_set_presence(localStorage.getItem("pchat-presence"), presence_status.val());
 			}).keypress(function(e){
 				if (e.keyCode == 13)
 					$(this).change();
 			});
+			// Main menu:
+			action_bar.append($('<div class="ui-pchat-main-menu btn-group dropup pull-right"><a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
+			var main_menu = action_bar.find(".ui-pchat-main-menu .dropdown-menu");
+			main_menu
+			.append($('<li><a href="javascript:void(0);">Add a Contact</a></li>').on("click", "a", function(){
+				var form = $('<div title="Add a Contact"><div class="pf-form"></div></div>').find(".pf-form")
+				.append('<div class="pf-element"><label><span class="pf-label">Username</span><input class="pf-field" type="text" name="username" /></label></div>')
+				.find('input[name=username]').change(function(){
+					var field = $(this);
+					var cur_val = field.val();
+					if (!cur_val.match(/@.*$/))
+						field.val(cur_val+"@"+pchat.pchat_domain);
+				}).end()
+				.append('<div class="pf-element"><label><span class="pf-label">Alias (Optional)</span><input class="pf-field" type="text" name="alias" /></label></div>')
+				//.append('<div class="pf-element"><label><span class="pf-label">Message (Optional)</span><span class="pf-note">Your contact will see this when they receive your request.</span><input class="pf-field" type="text" name="message" /></label></div>')
+				.end().append('<br/>')
+				.dialog({
+					modal: true,
+					autoOpen: true,
+					width: 500,
+					close: function(){
+						$(this).dialog("destroy").remove();
+					},
+					buttons: {
+						"Cancel": function(){
+							$(this).dialog("close");
+						},
+						"Send Request": function(){
+							// Get the new contact details.
+							var jid = form.find('input[name=username]').val();
+							var alias = form.find('input[name=alias]').val();
+							//var message = form.find('input[name=message]').val();
+							// Verify them.
+							jid = Strophe.getBareJidFromJid(jid);
+							var node = Strophe.getNodeFromJid(jid);
+							var domain = Strophe.getDomainFromJid(jid);
+							if (!node || node == "" || !domain || domain == "") {
+								alert("Please provide a valid contact username.");
+								return;
+							}
+							pchat.pchat_add_contact(jid, alias);
+							$(this).dialog("close");
+						}
+					}
+				});
+			}));
 			// The log function only does anything if the log is enabled.
 			var log;
 			if (pchat.pchat_show_log) {
@@ -276,14 +322,37 @@ if (!window.localStorage) {
 					console.log("Presence Element:");
 					console.log(item);
 					$.each(roster, function(i, contact){
-						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]").empty();
-						if (!contact_elem.length)
-							contact_elem = $("<div class=\"ui-pchat-contact\"></div>").attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
+						// Remove a contact from the roster when they are deleted.
+						if (contact.subscription === "remove") {
+							if (contact_elem.length)
+								contact_elem.remove();
+							return;
+						}
+						var contact_display, contact_nav;
+						if (contact_elem.length) {
+							contact_display = contact_elem.find(".brand").empty();
+							contact_nav = contact_elem.find(".nav-collapse").empty();
+						} else {
+							contact_elem = $('<div class="ui-pchat-contact navbar"><div class="navbar-inner"><div class="container"><a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a></div></div></div>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+							contact_display = $('<a class="brand" href="javascript:void(0);"></a>').appendTo(contact_elem.find(".container"));
+							contact_nav = $('<div class="nav-collapse"></div>').appendTo(contact_elem.find(".container"));
+						}
+						// Remember that this contact was added by us, so we can automatically authorize them.
+						if (contact.ask == "subscribe")
+							contact_elem.attr("data-authorize", "true");
+						var contact_main_bar = $('<ul class="nav"></ul>').appendTo(contact_nav);
+						var contact_right = $('<ul class="nav pull-right"><li class="divider-vertical"></li><li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0);">Edit <b class="caret"></b></a><ul class="dropdown-menu"></ul></li></ul>').appendTo(contact_nav);
+						var contact_menu = contact_right.find(".dropdown-menu");
 						var presence = {show: "offline"};
 						// Get the highest priority or most important presence.
-						var resource_arr = $.map(contact.resources, function(e){return e;});
+						var resource_arr = $.map(contact.resources, function(e, i){if (i==null || i=="null") return false; return e;});
 						if (resource_arr.length)
 							presence = resource_arr.sort(function(a, b){
+								if (!a)
+									return 1;
+								if (!b)
+									return -1;
 								if ((a.priority && a.priority != "") || (b.priority && b.priority != ""))
 									return Number(b.priority) - Number(a.priority);
 								if (a.show == "chat")
@@ -308,28 +377,85 @@ if (!window.localStorage) {
 									return 1;
 								return 0;
 							})[0];
-						var icon_class = pchat.pchat_presence_icons.offline;
-						switch (presence.show) {
-							case "":
-							case "chat":
-								icon_class = pchat.pchat_presence_icons.available;
-								break;
-							case "dnd":
-								icon_class = pchat.pchat_presence_icons.busy;
-								break;
-							case "away":
-								icon_class = pchat.pchat_presence_icons.away;
-								break;
-							case "xa":
-								icon_class = pchat.pchat_presence_icons.away_extended;
-								break;
-						}
-						contact_elem.append($("<div class=\"ui-pchat-contact-presence\"></div>").addClass(icon_class));
-						contact_elem.append($("<div class=\"ui-pchat-contact-name\"></div>").text((contact.name && contact.name != "") ? contact.name : contact.jid));
-						if (presence.status && presence.status !== "")
-							contact_elem.append($("<div class=\"ui-pchat-contact-status\"></div>").html(Strophe.xmlescape(presence.status).replace(/&amp;([a-z]+);/g, "&$1;")));
-						console.log("Computed Presence:");
+						console.log("Calculated Presence:");
 						console.log(presence);
+						var icon_class = pchat.pchat_presence_icons.offline;
+						if (contact.subscription == "to" || contact.subscription == "both") {
+							switch (presence.show) {
+								case "":
+								case "chat":
+									icon_class = pchat.pchat_presence_icons.available;
+									break;
+								case "dnd":
+									icon_class = pchat.pchat_presence_icons.busy;
+									break;
+								case "away":
+									icon_class = pchat.pchat_presence_icons.away;
+									break;
+								case "xa":
+									icon_class = pchat.pchat_presence_icons.away_extended;
+									break;
+							}
+						}
+						// Name, presence, status.
+						contact_display.append($('<span class="ui-pchat-contact-presence">&nbsp;</span>').addClass(icon_class))
+						.append($('<span class="ui-pchat-contact-name"></span>').text((contact.name && contact.name != "") ? contact.name : contact.jid));
+						if (contact.subscription == "to" || contact.subscription == "both") {
+							if (presence.status && presence.status !== "")
+								contact_main_bar.append($('<li class="ui-pchat-contact-status"><a href="javascript:void(0);"></a></li>').children().html(Strophe.xmlescape(presence.status).replace(/&amp;([a-z]+);/g, "&$1;")).end());
+						} else if (contact.ask == "subscribe")
+							contact_right.prepend($('<li class="ui-pchat-contact-status"><a href="javascript:void(0);">Awaiting Approval</a></li>'));
+						else
+							contact_right.prepend($('<li class="ui-pchat-contact-status"><a href="javascript:void(0);">Not Authorized</a></li>'));
+						// Menu items.
+						contact_menu.append($('<li><a href="javascript:void(0);">Alias</a></li>').on("click", "a", function(){
+							var name_box = contact_display.find(".ui-pchat-contact-name");
+							var cur_content = name_box.html();
+							name_box.empty();
+							var save = function(name){
+								name_box.html("Saving...");
+								connection.roster.update(contact.jid, name, contact.groups);
+							};
+							$('<input type="text" />').val(contact.name).keypress(function(e){
+								if (e.keyCode == 13)
+									save($(this).val());
+								else if (e.keyCode == 27) {
+									$(this).remove();
+									name_box.html(cur_content);
+								}
+							}).blur(function(){
+								save($(this).val());
+							}).appendTo(name_box).focus().select();
+						}));
+						// If they have granted access to us.
+						if (contact.subscription == "to" || contact.subscription == "both")
+							contact_menu.append($('<li><a href="javascript:void(0);" title="No longer receive their status.">Unsubscribe</a></li>').on("click", "a", function(){
+								connection.roster.unsubscribe(contact.jid);
+							}));
+						// If we have granted access to them.
+						if (contact.subscription == "from" || contact.subscription == "both")
+							contact_menu.append($('<li><a href="javascript:void(0);" title="Disallow them from seeing your status.">Unauthorize</a></li>').on("click", "a", function(){
+								connection.roster.unauthorize(contact.jid);
+							}));
+						// If they haven't granted access to us.
+						if (contact.subscription == "from" || contact.subscription == "none")
+							contact_menu.append($('<li><a href="javascript:void(0);" title="Ask contact for permission to see their status.">Request Authorization</a></li>').on("click", "a", function(){
+								connection.roster.subscribe(contact.jid);
+							}));
+						// If we haven't granted access to them.
+						if (contact.subscription == "to" || contact.subscription == "none")
+							contact_menu.append($('<li><a href="javascript:void(0);" title="Give contact permission to see your status.">Grant Authorization</a></li>').on("click", "a", function(){
+								connection.roster.authorize(contact.jid);
+							}));
+						contact_menu.append($('<li class="divider"></li>'))
+						.append($('<li><a href="javascript:void(0);">Block</a></li>').on("click", "a", function(){
+							// TODO: Implement Block User.
+						}))
+						.append($('<li><a href="javascript:void(0);" title="Unsubscribe from this contact and remove them from your roster.">Remove</a></li>').on("click", "a", function(){
+							if (!confirm('Are you sure you want to remove the contact '+contact.jid+' ('+contact.name+') from your contact list?'))
+								return;
+							pchat.pchat_remove_contact(contact.jid);
+						}));
 					});
 					return true;
 				},
@@ -357,29 +483,55 @@ if (!window.localStorage) {
 					// Attaching worked!
 					attaching_from_storage = false;
 					// Check for our own presence and update the current presence display.
-					if (presence.getAttribute('from') != connection.jid)
-						return true;
-					var jpres = $(presence);
-					// Find the presence state.
-					var type = presence.getAttribute('type');
-					if (type == "unavailable") {
-						localStorage.setItem("pchat-presence", "offline");
-						presence_current.html(presence_text.offline);
-					} else {
-						var show = jpres.children("show");
-						if (show.length) {
-							show = show.text();
-							localStorage.setItem("pchat-presence", show);
-							presence_current.html(presence_text[show]);
+					if (presence.getAttribute('from') == connection.jid) {
+						var jpres = $(presence);
+						// Find the presence state.
+						var type = presence.getAttribute('type');
+						if (type == "unavailable") {
+							localStorage.setItem("pchat-presence", "offline");
+							presence_current.html(presence_text.offline);
 						} else {
-							localStorage.setItem("pchat-presence", "available");
-							presence_current.html(presence_text.available);
+							var show = jpres.children("show");
+							if (show.length) {
+								show = show.text();
+								localStorage.setItem("pchat-presence", show);
+								presence_current.html(presence_text[show]);
+							} else {
+								localStorage.setItem("pchat-presence", "available");
+								presence_current.html(presence_text.available);
+							}
+						}
+						// And the status.
+						var status = jpres.children("status").eq(0);
+						if (status.length)
+							presence_status.val(status.text());
+					} else {
+						// Approve subscription requests from contacts we've added.
+						var jid = Strophe.getBareJidFromJid(presence.getAttribute('from'));
+						var roster_entry = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(jid)+"\"]");
+						if (presence.getAttribute('type') == "subscribe") {
+							if (roster_entry.attr("data-authorize") == "true") {
+								connection.roster.authorize(jid);
+								roster_entry.removeAttr("data-authorize");
+							} else {
+								$('<div class="alert alert-info"></div>')
+								.html("The user <strong>"+Strophe.xmlescape(jid)+"</strong> would like to add you as a contact. Would you like to allow them to see when you are online and contact you?<br/><br/>")
+								.append($('<button class="btn">Send a Message</button>').click(function(){
+									// TODO: Send a message to the requesting user.
+								})).append("&nbsp;")
+								.append($('<button class="btn">Deny Request</button>').click(function(){
+									connection.roster.unauthorize(jid);
+									$(this).closest(".alert").remove();
+								})).append("&nbsp;")
+								.append($('<button class="btn btn-primary">Approve Request</button>').click(function(){
+									connection.roster.authorize(jid);
+									connection.roster.subscribe(jid);
+									$(this).closest(".alert").remove();
+								}))
+								.prependTo(action_bar);
+							}
 						}
 					}
-					// And the status.
-					var status = jpres.children("status").eq(0);
-					if (status.length)
-						presence_status.val(status.text());
 					return true;
 				},
 				onIQ: function(iq){
@@ -533,7 +685,26 @@ if (!window.localStorage) {
 				}
 				if (status && status !== "")
 					elem.c("status").t(status).up();
+				localStorage.setItem("pchat-presence-status", status);
 				connection.send(elem.tree());
+			};
+			/**
+			 * Add a contact to the user's roster.
+			 * @param jid The JID of the contact to add.
+			 * @param alias The alias to use in the roster.
+			 */
+			pchat.pchat_add_contact = function(jid, alias){
+				connection.sendIQ($iq({type: 'set'}).c('query', {xmlns: Strophe.NS.ROSTER}).c('item', {jid: jid, name: (alias != '' ? alias : jid), subscription: 'from'}).tree());
+				connection.roster.subscribe(jid);
+				// According to the spec, we're not supposed to do this unless the server supports it... oh well.
+				connection.roster.authorize(jid);
+			};
+			/**
+			 * Remove a contact from the user's roster.
+			 * @param jid The JID of the contact to remove.
+			 */
+			pchat.pchat_remove_contact = function(jid){
+				connection.sendIQ($iq({type: 'set'}).c('query', {xmlns: Strophe.NS.ROSTER}).c('item', {jid: jid, subscription: 'remove'}).tree());
 			};
 			if (pchat.pchat_auto_login)
 				pchat.pchat_connect();
@@ -548,6 +719,8 @@ if (!window.localStorage) {
 	$.fn.pchat.defaults = {
 		// The BOSH URL to connect to.
 		pchat_bosh_url: "",
+		// The domain for XMPP users.
+		pchat_domain: "example.com",
 		// The JID to use to login.
 		pchat_jid: "user@example.com",
 		// The password to use to login.

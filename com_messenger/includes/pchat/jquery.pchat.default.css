@@ -14,30 +14,21 @@
 	padding: .2em .5em;
 	margin-bottom: .5em;
 }
-.ui-pchat-roster {
-	padding: .5em .5em 0;
-	margin-bottom: .5em;
-}
 .ui-pchat-contact {
 	margin-bottom: .5em;
 }
 .ui-pchat-contact-presence {
-	height: 16px;
-	width: 16px;
-	float: left;
-	margin-right: 4px;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
 }
-.ui-pchat-contact-name {
-	font-size: 1.3em;
-	line-height: 16px;
+.ui-pchat-contact-status a {
+	cursor: default;
 }
-.ui-pchat-contact-status {
-	clear: left;
-	padding-left: 20px;
-	font-size: .6em;
-	opacity: .8;
+.ui-pchat-contact-status a:hover {
+	color: inherit !important;
 }
-.ui-pchat-presence-chooser i {
+.ui-pchat-action-bar i {
 	display: block;
 	height: 16px;
 	width: 16px;

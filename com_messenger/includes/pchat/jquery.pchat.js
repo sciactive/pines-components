@@ -126,26 +126,27 @@ if (!window.localStorage) {
 				pchat.pchat_connect();
 			});
 			var logout_button = $('<li><a href="javascript:void(0);">Logout</a></li>').on("click", "a", function(){
+				attaching_from_storage = false;
 				pchat.pchat_disconnect();
 			});
 			presence_menu
 			.append($('<li><a href="javascript:void(0);">'+presence_text.available+'</a></li>').on("click", "a", function(){
-				pchat.pchat_set_presence("available", presence_status.val());
+				pchat.pchat_set_presence("available", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.chat+'</a></li>').on("click", "a", function(){
-				pchat.pchat_set_presence("chat", presence_status.val());
+				pchat.pchat_set_presence("chat", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.away+'</a></li>').on("click", "a", function(){
-				pchat.pchat_set_presence("away", presence_status.val());
+				pchat.pchat_set_presence("away", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.xa+'</a></li>').on("click", "a", function(){
-				pchat.pchat_set_presence("xa", presence_status.val());
+				pchat.pchat_set_presence("xa", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.dnd+'</li>').on("click", "a", function(){
-				pchat.pchat_set_presence("dnd", presence_status.val());
+				pchat.pchat_set_presence("dnd", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.offline+'</a></li>').on("click", "a", function(){
-				pchat.pchat_set_presence("offline", presence_status.val());
+				pchat.pchat_set_presence("offline", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li class="divider"></li>'))
 			.append(login_button)
@@ -163,7 +164,7 @@ if (!window.localStorage) {
 			action_bar.append($('<div class="ui-pchat-main-menu btn-group dropup pull-right"><a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
 			var main_menu = action_bar.find(".ui-pchat-main-menu .dropdown-menu");
 			main_menu
-			.append($('<li><a href="javascript:void(0);">Add a Contact</a></li>').on("click", "a", function(){
+			.append($('<li><a href="javascript:void(0);"><i class="icon-plus"></i>Add a Contact</a></li>').on("click", "a", function(){
 				var form = $('<div title="Add a Contact"><div class="pf-form"></div></div>').find(".pf-form")
 				.append('<div class="pf-element"><label><span class="pf-label">Username</span><input class="pf-field" type="text" name="username" /></label></div>')
 				.find('input[name=username]').change(function(){
@@ -205,6 +206,35 @@ if (!window.localStorage) {
 					}
 				});
 			}));
+			if (pchat.pchat_sounds) {
+				if (!soundManager) {
+					pchat.pchat_sound = false;
+					if (pchat.pchat_sound)
+						log("ERROR: Sound is enabled, but the soundManager library was not found!");
+				} else {
+					pchat.SMSounds = {};
+					soundManager.onready(function(){
+						$.each(pchat.pchat_sounds, function(sound, files){
+							pchat.SMSounds[sound] = soundManager.createSound({
+								id: 'pchat-'+sound,
+								url: files
+							});
+						});
+					});
+				}
+				// Remember a saved sound preference.
+				var prev_sound_setting = localStorage.getItem("pchat-sounds");
+				if (prev_sound_setting === "true")
+					pchat.pchat_sound = true;
+				if (prev_sound_setting === "false")
+					pchat.pchat_sound = false;
+				// A button to disable/enable sounds.
+				main_menu.append($('<li><a href="javascript:void(0);">'+(pchat.pchat_sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute')+'</a></li>').on("click", "a", function(){
+					pchat.pchat_sound = !pchat.pchat_sound;
+					$(this).html(pchat.pchat_sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute');
+					localStorage.setItem("pchat-sounds", pchat.pchat_sound ? "true" : "false");
+				}));
+			}
 			// The log function only does anything if the log is enabled.
 			var log;
 			if (pchat.pchat_show_log) {
@@ -310,6 +340,7 @@ if (!window.localStorage) {
 									pchat.pchat_connect();
 								}
 							}
+							roster_elem.empty();
 							break;
 					}
 				},
@@ -346,7 +377,7 @@ if (!window.localStorage) {
 						var contact_menu = contact_right.find(".dropdown-menu");
 						var presence = {show: "offline"};
 						// Get the highest priority or most important presence.
-						var resource_arr = $.map(contact.resources, function(e, i){if (i==null || i=="null") return false; return e;});
+						var resource_arr = $.map(contact.resources, function(e){return e;});
 						if (resource_arr.length)
 							presence = resource_arr.sort(function(a, b){
 								if (!a)
@@ -380,27 +411,37 @@ if (!window.localStorage) {
 						console.log("Calculated Presence:");
 						console.log(presence);
 						var icon_class = pchat.pchat_presence_icons.offline;
+						var cur_status = "offline";
 						if (contact.subscription == "to" || contact.subscription == "both") {
 							switch (presence.show) {
 								case "":
 								case "chat":
 									icon_class = pchat.pchat_presence_icons.available;
+									cur_status = "online";
 									break;
 								case "dnd":
 									icon_class = pchat.pchat_presence_icons.busy;
+									cur_status = "online";
 									break;
 								case "away":
 									icon_class = pchat.pchat_presence_icons.away;
+									cur_status = "online";
 									break;
 								case "xa":
 									icon_class = pchat.pchat_presence_icons.away_extended;
+									cur_status = "online";
 									break;
 							}
 						}
+						// Play a sound when a contact changes online state.
+						var prev_status = contact_elem.attr("data-prev-status");
+						if ((prev_status == "offline" && cur_status == "online") || (prev_status == "online" && cur_status == "offline"))
+							pchat.pchat_play_sound(cur_status);
+						contact_elem.attr("data-prev-status", cur_status);
 						// Name, presence, status.
 						contact_display.append($('<span class="ui-pchat-contact-presence">&nbsp;</span>').addClass(icon_class))
 						.append($('<span class="ui-pchat-contact-name"></span>').text((contact.name && contact.name != "") ? contact.name : contact.jid));
-						if (contact.subscription == "to" || contact.subscription == "both") {
+						if (contact.subscription == "both") {
 							if (presence.status && presence.status !== "")
 								contact_main_bar.append($('<li class="ui-pchat-contact-status"><a href="javascript:void(0);"></a></li>').children().html(Strophe.xmlescape(presence.status).replace(/&amp;([a-z]+);/g, "&$1;")).end());
 						} else if (contact.ask == "subscribe")
@@ -482,9 +523,17 @@ if (!window.localStorage) {
 				onPresence: function(presence){
 					// Attaching worked!
 					attaching_from_storage = false;
+					var jpres = $(presence);
+					if (presence.getAttribute('type') == 'error') {
+						if (jpres.children("error").attr("type") == "cancel") {
+							var from = Strophe.getBareJidFromJid(presence.getAttribute('from'));
+							var roster_entry = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(from)+"\"]");
+							if (roster_entry.length)
+								alert("An error occured trying to contact "+from+". Error: "+jpres.children("error").children().prop("tagName"));
+						}
+					}
 					// Check for our own presence and update the current presence display.
 					if (presence.getAttribute('from') == connection.jid) {
-						var jpres = $(presence);
 						// Find the presence state.
 						var type = presence.getAttribute('type');
 						if (type == "unavailable") {
@@ -652,6 +701,7 @@ if (!window.localStorage) {
 			 * Logout and disconnect.
 			 */
 			pchat.pchat_disconnect = function(){
+				pchat.pchat_set_presence("offline", localStorage.getItem("pchat-presence-status"));
 				connection.disconnect();
 			};
 			/**
@@ -706,6 +756,15 @@ if (!window.localStorage) {
 			pchat.pchat_remove_contact = function(jid){
 				connection.sendIQ($iq({type: 'set'}).c('query', {xmlns: Strophe.NS.ROSTER}).c('item', {jid: jid, subscription: 'remove'}).tree());
 			};
+			/**
+			 * Play a sound.
+			 * @param sound The sound to play.
+			 */
+			pchat.pchat_play_sound = function(sound){
+				if (!pchat.pchat_sound || !pchat.SMSounds[sound])
+					return;
+				pchat.SMSounds[sound].play();
+			};
 			if (pchat.pchat_auto_login)
 				pchat.pchat_connect();
 
@@ -732,6 +791,14 @@ if (!window.localStorage) {
 		pchat_rid: false,
 		// Automatically log in.
 		pchat_auto_login: true,
+		// Whether to play sounds on events. The user can still enable this feature unless pchat_sounds is set to false as well.
+		pchat_sound: false,
+		// The location of the sounds to play. Each entry should be an array of URL(s). The first one determined to be playable will be used.
+		pchat_sounds: {
+			offline: ["sounds/offline.ogg", "sounds/offline.mp3"],
+			online: ["sounds/online.ogg", "sounds/online.mp3"],
+			received: ["sounds/received.ogg", "sounds/received.mp3"]
+		},
 		// Whether to wrap the main interface in a widget box (with border and padding).
 		pchat_widget_box: true,
 		// The title to show. If set to false, no title will be shown.

@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&icons',
-		'component' => 'com_jquery&com_bootstrap&com_pform',
+		'component' => 'com_jquery&com_bootstrap&com_pform&com_soundmanager',
 	),
 );
 

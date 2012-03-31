@@ -21,6 +21,7 @@ if (!isset($_SESSION['user']->guid)) {
 }
 
 $pines->icons->load();
+$pines->com_soundmanager->load();
 
 $xmpp_user = $_SESSION['user']->username;
 $xmpp_pass = $pines->com_messenger->get_temp_secret();
@@ -44,6 +45,12 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 			pchat_domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
 			pchat_jid: <?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
 			pchat_password: <?php echo json_encode($xmpp_pass); ?>,
+			pchat_sound: true,
+			pchat_sounds: {
+				offline: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/offline.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/offline.mp3"],
+				online: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.mp3"],
+				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
+			},
 			pchat_widget_box: false,
 			//pchat_title: pines.safe("Pines Chat ("+<?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>+")"),
 			pchat_show_log: true

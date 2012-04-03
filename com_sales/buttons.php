@@ -16,7 +16,7 @@ return array(
 	'sales' => array(
 		'description' => 'Sale list.',
 		'text' => 'Sales',
-		'class' => 'picon-view-barcode',
+		'class' => 'picon-document-multiple',
 		'href' => pines_url('com_sales', 'sale/list'),
 		'default' => true,
 		'depends' => array(
@@ -26,7 +26,7 @@ return array(
 	'sale_new' => array(
 		'description' => 'New sale.',
 		'text' => 'Sale',
-		'class' => 'picon-view-barcode-add',
+		'class' => 'picon-document-new',
 		'href' => pines_url('com_sales', 'sale/edit'),
 		'default' => true,
 		'depends' => array(
@@ -73,6 +73,16 @@ return array(
 			'ability' => 'com_sales/newcountsheet',
 		),
 	),
+	'producttracking' => array(
+		'description' => 'Product tracking.',
+		'text' => 'Track Prod',
+		'class' => 'picon-edit-find-project',
+		'href' => pines_url('com_sales', 'product/track'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_sales/trackproducts',
+		),
+	),
 	'receive' => array(
 		'description' => 'Receive inventory.',
 		'text' => 'Receive',
@@ -81,6 +91,16 @@ return array(
 		'default' => true,
 		'depends' => array(
 			'ability' => 'com_sales/receive',
+		),
+	),
+	'transfers' => array(
+		'description' => 'Transfer list.',
+		'text' => 'Transfers',
+		'class' => 'picon-resource-calendar-child',
+		'href' => pines_url('com_sales', 'transfer/list'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_sales/managestock|com_sales/shipstock',
 		),
 	),
 	'pos' => array(
@@ -121,6 +141,26 @@ return array(
 		'default' => false,
 		'depends' => array(
 			'ability' => 'com_sales/warehouse',
+		),
+	),
+	'products' => array(
+		'description' => 'Product list.',
+		'text' => 'Products',
+		'class' => 'picon-view-barcode',
+		'href' => pines_url('com_sales', 'product/list'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_sales/listproducts',
+		),
+	),
+	'product_new' => array(
+		'description' => 'New product.',
+		'text' => 'Product',
+		'class' => 'picon-view-barcode-add',
+		'href' => pines_url('com_sales', 'product/edit'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_sales/newproduct',
 		),
 	),
 );

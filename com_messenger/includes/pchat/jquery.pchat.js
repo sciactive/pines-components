@@ -96,6 +96,8 @@ if (!window.localStorage) {
 			pchat.addClass("ui-pchat");
 			// Import the options.
 			pchat.extend(pchat, opts);
+			// An object for open conversation windows.
+			pchat.pchat_conversations = {};
 
 			// Add widget classes.
 			if (pchat.pchat_widget_box)
@@ -254,6 +256,16 @@ if (!window.localStorage) {
 				localStorage.setItem("pchat-rid", connection.rid);
 				return true;
 			};
+			var save_state = function(){
+				log('Saved state.');
+				// Save the state of the session.
+				// Save the roster.
+				localStorage.setItem("pchat-roster", JSON.stringify(connection.roster.items));
+				localStorage.setItem("pchat-rosterver", JSON.stringify(connection.roster.ver));
+				// Save conversations.
+				localStorage.setItem("pchat-conversations", JSON.stringify(pchat.pchat_conversations));
+				return true;
+			};
 			// Save the RID when the page is unloading.
 			window.onunload = save_rid;
 			var handlers = {
@@ -302,6 +314,7 @@ if (!window.localStorage) {
 								var ver = localStorage.getItem("pchat-rosterver");
 								var presence = localStorage.getItem("pchat-presence");
 								var pres_stat = localStorage.getItem("pchat-presence-status");
+								var conversations = localStorage.getItem("pchat-conversations");
 								presence_current.html(presence_text[presence]);
 								presence_status.val(pres_stat);
 								if (roster) {
@@ -317,6 +330,21 @@ if (!window.localStorage) {
 								// Get roster changes, if supported.
 								if (connection.roster.supportVersioning())
 									connection.roster.get(null, ver, roster);
+								// Rebuild conversations.
+								if (conversations) {
+									log("Loading Saved Conversations: "+conversations);
+									conversations = JSON.parse(conversations);
+									$.each(conversations, function(i, convo){
+										var new_convo = get_conv(i);
+										if (convo.minimized)
+											new_convo.element.find(".ui-pchat-controls .ui-icon-circle-minus").click();
+										$.each(convo.messages, function(i, msg){
+											pchat.pchat_display_message(msg, true);
+										});
+										new_convo.element.find(".ui-pchat-messages").scrollTop(999999);
+										save_state();
+									});
+								}
 							}
 							break;
 						case Strophe.Status.DISCONNECTING:
@@ -334,6 +362,7 @@ if (!window.localStorage) {
 								localStorage.removeItem("pchat-rid");
 								localStorage.removeItem("pchat-roster");
 								localStorage.removeItem("pchat-rosterver");
+								localStorage.removeItem("pchat-conversations");
 								// If we tried to attach from localStorage and failed, try starting a new connection.
 								if (attaching_from_storage) {
 									attaching_from_storage = false;
@@ -346,8 +375,7 @@ if (!window.localStorage) {
 				},
 				onRoster: function(roster, item){
 					// Save the roster.
-					localStorage.setItem("pchat-roster", JSON.stringify(connection.roster.items));
-					localStorage.setItem("pchat-rosterver", JSON.stringify(connection.roster.ver));
+					save_state();
 					console.log("Roster Element:");
 					console.log(roster);
 					console.log("Presence Element:");
@@ -366,7 +394,10 @@ if (!window.localStorage) {
 							contact_nav = contact_elem.find(".nav-collapse").empty();
 						} else {
 							contact_elem = $('<div class="ui-pchat-contact navbar"><div class="navbar-inner"><div class="container"><a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a></div></div></div>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
-							contact_display = $('<a class="brand" href="javascript:void(0);"></a>').appendTo(contact_elem.find(".container"));
+							contact_display = $('<a class="brand" href="javascript:void(0);"></a>').appendTo(contact_elem.find(".container")).click(function(){
+								var cw = get_conv(contact.jid);
+								cw.element.find("textarea").focus().select();
+							});
 							contact_nav = $('<div class="nav-collapse"></div>').appendTo(contact_elem.find(".container"));
 						}
 						// Remember that this contact was added by us, so we can automatically authorize them.
@@ -497,6 +528,18 @@ if (!window.localStorage) {
 								return;
 							pchat.pchat_remove_contact(contact.jid);
 						}));
+						// Now update any open chat windows.
+						if (pchat.pchat_conversations[contact.jid] && pchat.pchat_conversations[contact.jid].element) {
+							pchat.pchat_conversations[contact.jid].element.find(".ui-pchat-header .ui-pchat-title").html(contact_display.html());
+							if (prev_status == "online" && cur_status == "offline")
+								pchat.pchat_display_notice({
+									jid: contact.jid,
+									classes: "status-offline",
+									content: Strophe.xmlescape(contact.jid)+" has gone offline. You can still send messages, but they might not be delivered."
+								});
+							else if (cur_status != "offline")
+								pchat.pchat_conversations[contact.jid].element.find(".ui-pchat-messages .ui-pchat-notice.status-offline").remove();
+						}
 					});
 					return true;
 				},
@@ -508,13 +551,26 @@ if (!window.localStorage) {
 
 					if (type == "chat" && elems.length > 0) {
 						var body = elems[0];
+						var from_alias = connection.roster.findItem(Strophe.getBareJidFromJid(from));
+						if (from_alias)
+							from_alias = (from_alias.name && from_alias.name != "") ? from_alias.name : from_alias.jid;
+						else
+							from_alias = Strophe.getBareJidFromJid(from);
+						pchat.pchat_display_message({
+							from_jid: from,
+							from_alias: from_alias,
+							to_jid: to,
+							to_alias: "Me",
+							date: new Date().getTime(),
+							content: $(body).text()
+						});
 
-						log('ECHOBOT: I got a message from ' + from + ': ' + Strophe.getText(body));
-
-						var reply = $msg({to: from, from: to, type: 'chat'}).cnode(Strophe.copyElement(body));
-						connection.send(reply.tree());
-
-						log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
+//						log('ECHOBOT: I got a message from ' + from + ': ' + Strophe.getText(body));
+//
+//						var reply = $msg({to: from, from: to, type: 'chat'}).cnode(Strophe.copyElement(body));
+//						connection.send(reply.tree());
+//
+//						log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
 					}
 
 					// Handlers always must return true to stay active.
@@ -765,6 +821,142 @@ if (!window.localStorage) {
 					return;
 				pchat.SMSounds[sound].play();
 			};
+			var get_conv = function(contact_jid){
+				var bare_jid = Strophe.getBareJidFromJid(contact_jid);
+				//if (pchat.pchat_conversations[bare_jid] && pchat.pchat_conversations[bare_jid].element.length && pchat.pchat_conversations[bare_jid].element.closest("body").length)
+				//	return pchat.pchat_conversations[bare_jid].element;
+				if (pchat.pchat_conversations[bare_jid])
+					return pchat.pchat_conversations[bare_jid];
+				else {
+					var convo = {
+						messages: [],
+						minimized: false,
+						element: get_conv_window(bare_jid)
+					};
+					pchat.pchat_conversations[bare_jid] = convo;
+					return convo;
+				}
+			};
+			var get_conv_window = function(contact_jid){
+				var convo_window = $('<div class="ui-pchat-conversation ui-widget-content"></div>').attr("data-jid", Strophe.getBareJidFromJid(contact_jid)).appendTo(pchat.pchat_conversation_container.call(pchat, contact_jid));
+				// Get the contact text.
+				var roster_lookup = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(Strophe.getBareJidFromJid(contact_jid))+"\"] .brand");
+				if (!roster_lookup.length) {
+					var to_alias = connection.roster.findItem(Strophe.getBareJidFromJid(contact_jid));
+					if (to_alias)
+						to_alias = (to_alias.name && to_alias.name != "") ? to_alias.name : to_alias.jid;
+					else
+						to_alias = Strophe.getBareJidFromJid(contact_jid);
+				}
+				var header = $('<div class="ui-pchat-header ui-widget-header"></div>')
+				.append($('<span class="ui-pchat-title"></span>').append(roster_lookup.length ? roster_lookup.html() : $('<span class="ui-pchat-contact-name"></span>').text(to_alias)))
+				.append($('<span class="ui-pchat-controls"><i class="ui-icon ui-icon-circle-minus"></i><i class="ui-icon ui-icon-circle-close"></i></span>'))
+				.on("click", ".ui-icon-circle-minus", function(){
+					var c = $(this).closest(".ui-pchat-conversation");
+					var bare_jid = c.attr("data-jid");
+					pchat.pchat_conversations[bare_jid].minimized = true;
+					$(this).toggleClass("ui-icon-circle-minus ui-icon-circle-plus").closest(".ui-pchat-conversation").children(":not(.ui-pchat-header)").hide();
+					save_state();
+				}).on("click", ".ui-icon-circle-plus", function(){
+					var c = $(this).closest(".ui-pchat-conversation");
+					var bare_jid = c.attr("data-jid");
+					pchat.pchat_conversations[bare_jid].minimized = false;
+					$(this).toggleClass("ui-icon-circle-minus ui-icon-circle-plus").closest(".ui-pchat-conversation").children(":not(.ui-pchat-header)").show();
+					save_state();
+				}).on("click", ".ui-icon-circle-close", function(){
+					var c = $(this).closest(".ui-pchat-conversation");
+					var bare_jid = c.attr("data-jid");
+					delete pchat.pchat_conversations[bare_jid];
+					c.remove();
+					save_state();
+				});
+
+				convo_window
+				.append(header)
+				.append($('<div class="ui-pchat-messages"></div>'));
+				// Set up the message window.
+				var controls = $('<div class="ui-pchat-conversation-controls"></div>')
+				.append('<textarea class="ui-widget-content" rows="3" cols="5"></textarea>').on("keydown keyup change", "textarea", function(){
+					var box = $(this);
+					if (box.prop("scrollHeight")) {
+						box.css("overflow", "hidden").height(1);
+						var sa = box.prop("scrollHeight");
+						if (sa < 40)
+							sa = 40;
+						if (sa > 200)
+							sa = 200;
+						box.height(sa);
+					}
+				}).on("keypress", "textarea", function(e){
+					if (e.keyCode == 13 && !e.shiftKey) {
+						var box = $(this),
+							content = box.val();
+						if (content == "")
+							return;
+						// Get the contact alias.
+						var to_alias = connection.roster.findItem(Strophe.getBareJidFromJid(contact_jid));
+						if (to_alias)
+							to_alias = (to_alias.name && to_alias.name != "") ? to_alias.name : to_alias.jid;
+						else
+							to_alias = Strophe.getBareJidFromJid(contact_jid);
+						pchat.pchat_send_message({
+							from_jid: connection.jid,
+							from_alias: "Me",
+							to_jid: Strophe.getBareJidFromJid(contact_jid),
+							to_alias: to_alias,
+							date: new Date().getTime(),
+							content: content
+						});
+						box.val("");
+						e.preventDefault();
+					}
+				}).appendTo(convo_window);
+				controls.find("textarea").change();
+				return convo_window;
+			};
+			/**
+			 * Display a message.
+			 * @param message The message to display.
+			 * @param noui Don't update the UI. (For recovering saved messages.)
+			 */
+			pchat.pchat_display_message = function(message, noui){
+				console.log("Message:");
+				console.log(message);
+				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid);
+				var bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid);
+				var convo = get_conv(bare_jid);
+				convo.messages.push(message);
+				var message_container = convo.element.find(".ui-pchat-messages");
+				message_container
+				.append($('<div class="ui-pchat-message ui-widget-content"></div>').addClass(incoming ? 'ui-pchat-incoming' : 'ui-pchat-outgoing').append($('<div class="ui-pchat-name"></div>').text(message.from_alias)).append($('<div class="ui-pchat-time"></div>').text(pchat.pchat_format_date(new Date(message.date)))).append($('<div class="ui-pchat-content"></div>').text(message.content)));
+				if (!noui) {
+					message_container.scrollTop(999999);
+					pchat.pchat_play_sound("received");
+					save_state();
+				}
+			};
+			/**
+			 * Display a notice.
+			 * @param notice The notice to display.
+			 */
+			pchat.pchat_display_notice = function(notice){
+				console.log("Notice:");
+				console.log(notice);
+				var bare_jid = Strophe.getBareJidFromJid(notice.jid);
+				var convo = get_conv(bare_jid);
+				convo.element.find(".ui-pchat-messages")
+				.append($('<div class="ui-pchat-notice ui-widget-content"></div>').addClass(notice.classes ? notice.classes : "").append($('<div class="ui-pchat-content ui-state-highlight"></div>').text(notice.content)))
+				.scrollTop(999999);
+			};
+			/**
+			 * Send a message.
+			 * @param message The message to send.
+			 */
+			pchat.pchat_send_message = function(message){
+				var msg = $msg({to: message.to_jid, from: message.from_jid, type: 'chat'}).c('body').t(message.content).up();
+				connection.send(msg.tree());
+				pchat.pchat_display_message(message);
+			};
 			if (pchat.pchat_auto_login)
 				pchat.pchat_connect();
 
@@ -811,6 +1003,26 @@ if (!window.localStorage) {
 			busy: "picon-user-busy",
 			away: "picon-user-away",
 			away_extended: "picon-user-away-extended"
+		},
+		// Where to put new conversation windows. Can be a selector or a function which takes the (full) JID of the contact and "this" refers to the pchat element.
+		pchat_conversation_container: function(){
+			if (this.convo_container)
+				return this.convo_container;
+			this.convo_container = $('<div class="ui-pchat-conversations"></div>').appendTo("body");
+			return this.convo_container;
+		},
+		// Format a date/time into a string.
+		pchat_format_date: function(timestamp){
+			var month = timestamp.getMonth(),
+				date = timestamp.getDate(),
+				hours = timestamp.getHours() == 0 ? 12 : (timestamp.getHours() % 12),
+				minutes = timestamp.getMinutes(),
+				ap = timestamp.getHours() < 12 ? 'am' : 'pm';
+			var now = new Date();
+			if (month == now.getMonth() && date == now.getDate())
+				return (hours+":"+(minutes < 10 ? '0'+minutes : minutes)+ap);
+			else
+				return (month+"/"+date+" "+hours+":"+(minutes < 10 ? '0'+minutes : minutes)+ap);
 		},
 		// Whether to show the debug log.
 		pchat_show_log: false

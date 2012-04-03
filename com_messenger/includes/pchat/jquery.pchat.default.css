@@ -50,6 +50,78 @@
 	display: inline;
 	margin-left: .2em;
 }
+
+.ui-pchat-conversations {
+	position: fixed;
+	right: 15px;
+	bottom: 0;
+	z-index: 10000;
+}
+.ui-pchat-conversations .ui-pchat-conversation {
+	float: right;
+	width: 200px;
+}
+.ui-pchat-header {
+	border-left: none;
+	border-top: none;
+	border-right: none;
+	padding: .5em;
+}
+.ui-pchat-header .ui-pchat-controls {
+	float: right;
+}
+.ui-pchat-header .ui-pchat-controls .ui-icon {
+	float: left;
+}
+.ui-pchat-messages {
+	padding: .5em;
+	max-height: 200px;
+	overflow: auto;
+}
+.ui-pchat-message, .ui-pchat-notice {
+	border-left: none;
+	border-top: none;
+	border-right: none;
+	padding: .5em .1em .1em;
+	overflow: auto;
+}
+.ui-pchat-notice {
+	border-bottom: none;
+	font-size: .7em;
+	padding: .5em;
+}
+.ui-pchat-message .ui-pchat-name {
+	font-weight: bold;
+	float: left;
+	font-size: .8em;
+}
+.ui-pchat-message .ui-pchat-time {
+	font-style: italic;
+	float: right;
+	font-size: .7em;
+}
+.ui-pchat-message .ui-pchat-content, .ui-pchat-notice .ui-pchat-content {
+	padding-left: .5em;
+	padding-right: .5em;
+	clear: both;
+	white-space: pre-wrap;
+}
+.ui-pchat-notice .ui-pchat-content {
+	padding: .5em;
+}
+.ui-pchat-conversation-controls {
+	padding: .5em;
+}
+.ui-pchat-conversation-controls textarea {
+	padding: 0;
+	width: 100%;
+	resize: none;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	-o-border-radius: 0;
+}
+
 .ui-pchat-log {
 	margin-top: 1em;
 	height: 250px;

@@ -56,16 +56,30 @@
 	right: 15px;
 	bottom: 0;
 	z-index: 10000;
+	display: table;
 }
 .ui-pchat-conversations .ui-pchat-conversation {
-	float: right;
+	display: table-cell;
+	vertical-align: bottom;
+}
+.ui-pchat-conversations .ui-pchat-window {
+	margin-left: 1em;
 	width: 200px;
+	-webkit-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
+	-moz-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
+	box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
 }
 .ui-pchat-header {
-	border-left: none;
-	border-top: none;
-	border-right: none;
+	border-left: none !important;
+	border-top: none !important;
+	border-right: none !important;
 	padding: .5em;
+}
+.ui-pchat-header .ui-pchat-conversation-title {
+	display: block;
+	float: left;
+	width: 130px;
+	overflow: hidden;
 }
 .ui-pchat-header .ui-pchat-controls {
 	float: right;

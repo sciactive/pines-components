@@ -23,6 +23,26 @@ return array(
 			'ability' => 'com_reports/viewsalesranking',
 		),
 	),
+	'invoice_summary' => array(
+		'description' => 'Shows a list of all sales, returns and voids.',
+		'text' => 'Invoices',
+		'class' => 'picon-view-list-text',
+		'href' => pines_url('com_reports', 'invoicesummary'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_reports/summarizeinvoices',
+		),
+	),
+	'sales_totals' => array(
+		'description' => 'Lists all sales for a given timeframe.',
+		'text' => 'Sales Totals',
+		'class' => 'picon-view-calendar-timeline',
+		'href' => pines_url('com_reports', 'reportsales'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_reports/reportsales',
+		),
+	),
 );
 
 ?>

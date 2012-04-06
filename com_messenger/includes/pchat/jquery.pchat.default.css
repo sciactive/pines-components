@@ -1,0 +1,155 @@
+/* 
+	Document   : jquery.pchat.default.css
+	Created on : Mar 27, 2012, 5:27:30 PM
+	Author     : Hunter Perrin
+	Version    : 0.10.2dev
+	Link       : http://pinesframework.org/pchat/
+	Description:
+		Default styling for Pines Chat jQuery plugin.
+*/
+.ui-pchat-widget {
+	padding: .5em;
+}
+.ui-pchat-title {
+	padding: .2em .5em;
+	margin-bottom: .5em;
+}
+.ui-pchat-contact {
+	margin-bottom: .5em;
+}
+.ui-pchat-contact-presence {
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
+.ui-pchat-contact-status a {
+	cursor: default;
+}
+.ui-pchat-contact-status a:hover {
+	color: inherit !important;
+}
+.ui-pchat-action-bar i {
+	display: block;
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: .4em;
+}
+.ui-pchat-presence-menu {
+	display: block;
+	float: left;
+	margin-right: .4em;
+}
+.ui-pchat-status-container {
+	display: block;
+	float: left;
+	white-space: nowrap;
+	margin-bottom: 0;
+}
+.ui-pchat-status-container input {
+	display: inline;
+	margin-left: .2em;
+}
+
+.ui-pchat-conversations {
+	position: fixed;
+	right: 15px;
+	bottom: 0;
+	z-index: 10000;
+	display: table;
+}
+.ui-pchat-conversations .ui-pchat-conversation {
+	display: table-cell;
+	vertical-align: bottom;
+}
+.ui-pchat-conversations .ui-pchat-window {
+	margin-left: 1em;
+	width: 200px;
+	-webkit-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
+	-moz-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
+	box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
+}
+.ui-pchat-header {
+	border-left: none !important;
+	border-top: none !important;
+	border-right: none !important;
+	padding: .5em;
+}
+.ui-pchat-header .ui-pchat-conversation-title {
+	display: block;
+	float: left;
+	width: 130px;
+	overflow: hidden;
+}
+.ui-pchat-header .ui-pchat-controls {
+	float: right;
+}
+.ui-pchat-header .ui-pchat-controls .ui-icon {
+	float: left;
+}
+.ui-pchat-messages {
+	padding: .5em;
+	max-height: 200px;
+	overflow: auto;
+}
+.ui-pchat-message, .ui-pchat-notice {
+	border-left: none;
+	border-top: none;
+	border-right: none;
+	padding: .5em .1em .1em;
+	overflow: auto;
+}
+.ui-pchat-notice {
+	border-bottom: none;
+	font-size: .7em;
+	padding: .5em;
+}
+.ui-pchat-message .ui-pchat-name {
+	font-weight: bold;
+	float: left;
+	font-size: .8em;
+}
+.ui-pchat-message .ui-pchat-time {
+	font-style: italic;
+	float: right;
+	font-size: .7em;
+}
+.ui-pchat-message .ui-pchat-content, .ui-pchat-notice .ui-pchat-content {
+	padding-left: .5em;
+	padding-right: .5em;
+	clear: both;
+	white-space: pre-wrap;
+}
+.ui-pchat-notice .ui-pchat-content {
+	padding: .5em;
+}
+.ui-pchat-conversation-controls {
+	padding: .5em;
+}
+.ui-pchat-conversation-controls textarea {
+	padding: 0;
+	width: 100%;
+	resize: none;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	-o-border-radius: 0;
+}
+
+.ui-pchat-log {
+	margin-top: 1em;
+	height: 250px;
+	overflow: auto;
+	white-space: pre;
+	font-family: monospace;
+	border: 5px outset #333;
+	background: #000;
+	color: #0f0;
+}
+.ui-pchat-log b {
+	font-size: 20px;
+	line-height: 18px;
+}
+.ui-pchat-log b a, .ui-pchat-log b a:hover {
+	text-decoration: none;
+}

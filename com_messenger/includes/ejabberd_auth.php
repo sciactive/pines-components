@@ -3,8 +3,7 @@
 /*
  * I tinkered with this file and made it much more gooder by giving it that same
  * Pines power I give all my code. (Plus some Mrs. Dash.)
- * 
- *  -Hunter
+ *   -Hunter
  * 
  * - Instructions -
  * To use this script for ejabberd authentication, thus giving Pines users
@@ -13,12 +12,15 @@
  * and the program to this script, like so:
  *  {auth_method, external}.
  *  {extauth_program, "/path/to/pines/components/com_messenger/includes/ejabberd_auth.php"}.
+ *  {extauth_cache, false}.
+ * 
+ * Note that the 3rd line turns caching off. This is necessary if you use the
+ * web messaging clients in Pines.
  * 
  * - Permissions - (Read if you have errors.)
  * I'm assuming this file is owned by your web server user (probably www-data).
- * It needs to be executable by ejabberd and still have the privileges of the
- * web server user though. If you experience errors, you can try using the
- * setuid bit:
+ * It needs to be executable by ejabberd. Setting the executable flag is usually
+ * sufficient. If you experience errors, you can try using the setuid bit:
  * 1. Make this file executable by its user only, and have setuid bit.
  *     $ chmod 4744 ejabberd_auth.php
  * 2. If you choose, you can set this file's group to ejabberd, which is safest.
@@ -215,8 +217,33 @@ class JabberAuth {
 		 * $this->jabber_pass
 		 * $this->jabber_server
 		 */
+
+		// Use this simple script to run a listening notifier and display it
+		// when EjabberD authenticates using this script.
+		// -- BEGIN SCRIPT --
+		//	#! /bin/bash
+		//	while true; do
+		//		data="$(nc -l 1337)"
+		//		subject="$(echo $data | sed s/\|.*//)"
+		//		body="$(echo $data | sed s/.*\|//)"
+		//		notify-send -u critical -i dialog-information "$subject" "$body"
+		//	done
+		// -- END SCRIPT --
+
+		// Uncomment the following line to start using the notifier above.
+		//`echo "EjabberD Auth|User: {$this->jabber_user} --- Passord: {$this->jabber_pass}" | nc localhost 1337`;
+
 		$user = user::factory($this->jabber_user);
-		return (isset($user->guid) && $user->has_tag('enabled') && $user->check_password($this->jabber_pass));
+		if (!isset($user->guid) || !$user->has_tag('enabled'))
+			return false;
+		if (strpos($this->jabber_pass, 'xmpp_secret_') === 0) {
+			$result = ($user->xmpp_secret === $this->jabber_pass && time() < $user->xmpp_secret_expire);
+			unset($user->xmpp_secret);
+			unset($user->xmpp_secret_expire);
+			$user->save();
+			return $result;
+		} else
+			return $user->check_password($this->jabber_pass);
 	}
 
 	function checkuser() {

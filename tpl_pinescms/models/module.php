@@ -27,4 +27,3 @@ defined('P_RUN') or die('Direct access prohibited');
 		<?php echo $this->content; ?>
 	</div>
 </div>
-<div style="font-size: 0px; height: 0; clear: both;">&nbsp;</div>

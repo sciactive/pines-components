@@ -3,8 +3,9 @@
 body {
 	background: #b4b4b4 url('../images/body-bg.png') repeat-x;
 	margin:0;
-	font-family: 'Droid Sans', sans-serif;
+	/*font-family: 'Droid Sans', sans-serif;*/
 	color: #3a3a3a;
+	line-height: normal;
 }
 body, body .ui-widget {
 	font-size: 17px;
@@ -12,8 +13,8 @@ body, body .ui-widget {
 h1, h2, h3 {
 	font-family: "EB Garamond","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 	font-weight: normal;
-	color: #868686;
-	margin: 1em 0 .4em;
+	color: #777;
+	margin: .6em 0 .2em;
 }
 a,a:link,a:visited {
 	color:#0462a5 !important;
@@ -26,24 +27,93 @@ a:hover {
 a:visited {
 	opacity: .8;
 }
+.module {
+	margin-bottom: .5em;
+	clear: both;
+}
 
 /* Navigation set up */
-.background_shadow {
-	margin: 0 auto;
-	background:url('../images/shadow-full.png') repeat-y;
-	width:920px;
+#shadow_container {
+	position: relative;
+	overflow: visible;
+	background-color: #fff;
 }
-#pines_navigation {
-	width:894px;
-	height:33px;
-	background:#fff;
-	margin:0 auto;
+#shadow_box:before {
+	content: " ";
+	display: block;
+	position: absolute;
+	background: url("../images/left-shadow.png") repeat-y 0 0;
+	left: -24px;
+	top: 0;
+	width: 24px;
+	bottom: 0;
+}
+#shadow_box:after {
+	content: " ";
+	display: block;
+	position: absolute;
+	background: url("../images/right-shadow.png") repeat-y 0 0;
+	right: -24px;
+	top: 0;
+	width: 24px;
+	bottom: 0;
+}
+#footer-line-left {
+	position: relative;
+	overflow: visible;
+}
+#footer-line-right:before {
+	content: " ";
+	display: block;
+	position: absolute;
+	background: url("../images/left-line.png") no-repeat 0 0;
+	left: -24px;
+	top: 0;
+	width: 24px;
+	bottom: 0;
+}
+#footer-line-right:after {
+	content: " ";
+	display: block;
+	position: absolute;
+	background: url("../images/right-line.png") no-repeat 0 0;
+	right: -24px;
+	top: 0;
+	width: 24px;
+	bottom: 0;
+}
+#footer-line {
+	background: url('../images/line.png') repeat-x;
+	height:2px;
+	line-height:0;
+}
+@media (max-width: 767px) {
+	#shadow_box:before, #footer-line-right:before {
+		background-position-x: -4px;
+		left: -20px;
+		width: 20px;
+	}
+	#shadow_box:after, #footer-line-right:after {
+		right: -20px;
+		width: 20px;
+	}
+}
+@media (max-width: 480px) {
+	body {
+		padding: 0;
+	}
+	#shadow_container {
+		margin: 0;
+		width: 100%
+	}
+	#shadow_box:before, #footer-line-right:before, #shadow_box:after, #footer-line-right:after {
+		display: none;
+	}
 }
 #pines_navlist_container {
 	float:right;
 	margin-right:13px;
 	background:#fff;
-	height:33px;
 }
 
 /* Navigation tweaks */
@@ -145,19 +215,25 @@ ul.main_menu li ul li > a.dir:hover {
 
 /* Header Section */
 #pines_header {
-	background:#fff url('../images/header-bg.png') repeat;
-	width:894px;
-	margin: 0 auto;
-	border-top: #ddd solid 1px;
-	border-bottom: #ddd solid 1px;
+	background:#fff url('../images/pines-header.png') repeat-x left bottom;
+	min-height:115px;
+}
+#header {
+	float: left;
+	clear: left;
+}
+#header-right {
+	float: right;
+	clear: right;
 }
 
 /* Logo Section */
 #logo {
+	margin-left: 13px;
 	text-decoration: none;
+	float: left;
 }
 #logo img {
-	margin: -30px 0 0 10px;
 	border:none;
 }
 #header_right {
@@ -170,53 +246,36 @@ ul.main_menu li ul li > a.dir:hover {
 }
 
 /* Before and after content */
-#breadcrumbs, #pines_pre_content, #pines_post_content {
-	background: #fff;
-	width:894px;
-	margin: 0 auto;
-}
 #breadcrumbs .module {
 	padding: 8px 16px 0;
+	margin: 0;
 	font-size: .7em;
 }
 
 /* Content */
 #pines_content {
-	background: #fff;
-	width:894px;
-	margin: 0 auto;
 	padding-bottom:25px;
 }
 #pines_content .modules {
 	padding: 1px 20px;
 }
+#pines_content h1, #pines_content h2, #pines_content h3 {
+	margin: 1em 0 .4em;
+}
 div.textured_block {
 	background: url('../images/section-bg.png') no-repeat;
-	width:823px;
 	height:148px;
 	margin: 0 auto;
 	padding:10px;
 }
 div.headline {
 	text-align:center;
-	width:894px;
 	padding:25px 0;
-}
-#project_content {
-	text-align:center;
-}
-#project_list {
-	border:none;
-	width:793px;
-	height:140px;
-	margin-top: 5px;
 }
 
 /* Footer */
 #pines_footer {
 	background: #d8d8d8 url('../images/footer-bg.png') repeat-x left bottom;
-	width:894px;
-	margin: 0 auto;
 }
 #pines_footer .modules {
 	padding: 14px 20px 0;
@@ -227,14 +286,6 @@ div.headline {
 	text-align:center;
 	height:46px;
 	margin: 0;
-	width:894px;
-}
-#footer-line {
-	background: url('../images/footer-line.png') no-repeat;
-	width:967px;
-	height:2px;
-	line-height:0;
-	margin: 0 auto 4px;
 }
 
 /* Inputs */
@@ -252,4 +303,13 @@ textarea.ui-widget-content {
 /* Pines Form */
 .pf-form div.pf-element.pf-full-width .pf-full-width {
 	padding-right: 1.6em; /* Keep padded inputs from pushing out of their box. */
+}
+
+/* Modifies Bootstrap */
+.container-fluid {
+	padding: 0;
+}
+
+.container-fluid #shadow_box:after, #footer-line-right:after {
+	width:0;
 }

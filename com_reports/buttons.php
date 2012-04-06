@@ -43,6 +43,16 @@ return array(
 			'ability' => 'com_reports/reportsales',
 		),
 	),
+	'warboard' => array(
+		'description' => 'Show the company warboard.',
+		'text' => 'Warboard',
+		'class' => 'picon-view-list-details',
+		'href' => pines_url('com_reports', 'warboard', array('template' => 'tpl_print')),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_reports/warboard',
+		),
+	),
 );
 
 ?>

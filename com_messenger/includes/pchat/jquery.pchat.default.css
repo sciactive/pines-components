@@ -8,14 +8,25 @@
 		Default styling for Pines Chat jQuery plugin.
 */
 .ui-pchat-widget {
+/*	padding: .5em;*/
+}
+.ui-pchat-widget .ui-pchat-header {
+	padding: .2em .5em;
+}
+.ui-pchat-roster, .ui-pchat-action-bar {
+	padding: 0 .5em .5em;
+}
+.ui-pchat-header {
+	border-left: none !important;
+	border-top: none !important;
+	border-right: none !important;
 	padding: .5em;
 }
-.ui-pchat-title {
-	padding: .2em .5em;
-	margin-bottom: .5em;
+.ui-pchat-widget .nav-pills > li.pull-right {
+	float: right;
 }
 .ui-pchat-contact {
-	margin-bottom: .5em;
+	margin: .5em 0 0;
 }
 .ui-pchat-contact-presence {
 	background-position: left center;
@@ -58,34 +69,44 @@
 	z-index: 10000;
 	display: table;
 }
-.ui-pchat-conversations .ui-pchat-conversation {
+.ui-pchat-conversations .ui-pchat-conversation, .ui-pchat-conversations .ui-pchat-main-container {
 	display: table-cell;
 	vertical-align: bottom;
 }
-.ui-pchat-conversations .ui-pchat-window {
+.ui-pchat-conversations .ui-pchat-window, .ui-pchat-conversations .ui-pchat-widget {
 	margin-left: 1em;
 	width: 200px;
 	-webkit-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
 	-moz-box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
 	box-shadow: 0px 4px 9px rgba(50, 50, 50, 0.47);
 }
-.ui-pchat-header {
-	border-left: none !important;
-	border-top: none !important;
-	border-right: none !important;
-	padding: .5em;
+.ui-pchat-conversations .ui-pchat-widget {
+	width: auto;
 }
-.ui-pchat-header .ui-pchat-conversation-title {
+.ui-pchat-conversations .ui-pchat-status-container input, .ui-pchat-conversations .ui-pchat-contact .ui-pchat-contact-name input { /* Input size fix */
+	width: 80px;
+}
+.ui-pchat-conversations .ui-pchat-action-bar label, .ui-pchat-conversations .ui-pchat-action-bar a {
+	font-size: .9em;
+}
+.ui-pchat-conversations .ui-pchat-header .ui-pchat-conversation-title, .ui-pchat-conversations .ui-pchat-header .ui-pchat-main-title {
 	display: block;
 	float: left;
 	width: 130px;
 	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.ui-pchat-conversations .ui-pchat-header .ui-pchat-main-title {
+	width: auto;
 }
 .ui-pchat-header .ui-pchat-controls {
 	float: right;
+	margin-left: .5em;
 }
 .ui-pchat-header .ui-pchat-controls .ui-icon {
 	float: left;
+	cursor: pointer;
 }
 .ui-pchat-messages {
 	padding: .5em;
@@ -142,9 +163,13 @@
 	overflow: auto;
 	white-space: pre;
 	font-family: monospace;
-	border: 5px outset #333;
+	border: 2px outset #333;
 	background: #000;
 	color: #0f0;
+}
+.ui-pchat-conversations .ui-pchat-log {
+	width: 100%;
+	max-width: 300px;
 }
 .ui-pchat-log b {
 	font-size: 20px;

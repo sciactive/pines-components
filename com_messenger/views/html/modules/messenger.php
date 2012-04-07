@@ -12,9 +12,6 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!isset($this->title))
-	$this->title = 'Chat';
-
 if (!isset($_SESSION['user']->guid)) {
 	echo 'Please log in to chat.';
 	return;
@@ -51,9 +48,9 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 				online: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.mp3"],
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
-			pchat_widget_box: false,
-			//pchat_title: pines.safe("Pines Chat ("+<?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>+")"),
-			pchat_show_log: true
+			//pchat_show_log: false,
+			pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
+			pchat_status_input: false
 		});
 	});
 </script>

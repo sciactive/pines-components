@@ -7,14 +7,13 @@
 	Description:
 		Default styling for Pines Chat jQuery plugin.
 */
-.ui-pchat-widget {
-/*	padding: .5em;*/
-}
 .ui-pchat-widget .ui-pchat-header {
 	padding: .2em .5em;
 }
 .ui-pchat-roster, .ui-pchat-action-bar {
-	padding: 0 .5em .5em;
+	clear: both;
+	padding: 0 .5em;
+	margin-bottom: .5em;
 }
 .ui-pchat-header {
 	border-left: none !important;
@@ -33,10 +32,21 @@
 	background-repeat: no-repeat;
 	padding-left: 16px;
 }
+.ui-pchat-contact-status {
+	float: left;
+	clear: both;
+	padding-left: 20px;
+}
 .ui-pchat-contact-status a {
 	cursor: default;
+	font-size: .8em;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	margin-top: 0 !important;
+	color: inherit !important;
 }
 .ui-pchat-contact-status a:hover {
+	background-color: inherit !important;
 	color: inherit !important;
 }
 .ui-pchat-action-bar i {
@@ -56,6 +66,7 @@
 	float: left;
 	white-space: nowrap;
 	margin-bottom: 0;
+	margin-right: 0.4em;
 }
 .ui-pchat-status-container input {
 	display: inline;
@@ -66,7 +77,7 @@
 	position: fixed;
 	right: 15px;
 	bottom: 0;
-	z-index: 10000;
+	z-index: 1000;
 	display: table;
 }
 .ui-pchat-conversations .ui-pchat-conversation, .ui-pchat-conversations .ui-pchat-main-container {
@@ -82,6 +93,13 @@
 }
 .ui-pchat-conversations .ui-pchat-widget {
 	width: auto;
+}
+.ui-pchat-conversations .ui-pchat-roster {
+	max-height: 400px;
+	overflow-y: scroll;
+}
+.ui-pchat-conversations .ui-pchat-roster .dropdown {
+	position: static;
 }
 .ui-pchat-conversations .ui-pchat-status-container input, .ui-pchat-conversations .ui-pchat-contact .ui-pchat-contact-name input { /* Input size fix */
 	width: 80px;

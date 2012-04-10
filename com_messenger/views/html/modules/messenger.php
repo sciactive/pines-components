@@ -50,7 +50,7 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 			},
 			//pchat_show_log: false,
 			pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
-			pchat_status_input: false
+			pchat_status_input: true
 		});
 	});
 </script>

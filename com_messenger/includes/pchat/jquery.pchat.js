@@ -129,7 +129,22 @@ if (!window.localStorage) {
 					break;
 			}
 
-			var roster_elem = $('<div class="ui-pchat-roster"></div>').appendTo(pchat);
+			var roster_elem = $('<div class="ui-pchat-roster"></div>').appendTo(pchat).on('click.dropdown', '.dropdown', function(e){
+				// This function is needed so the menus don't get clipped by the roster div.
+				// It positions the menu correctly, since the dropdown element has to be positioned as static.
+				var dropdown = $(this);
+				if (dropdown.css("position") != "static")
+					return; // Never mind, the overflow styles aren't applied.
+				var pos = dropdown.position(),
+					menu = dropdown.find(".dropdown-menu");
+				// Position the menu above and to the left of the button.
+				menu.css({
+					top: (pos.top - menu.height() - 10)+"px",
+					left: (pos.left - menu.width() + dropdown.width() - 4)+"px",
+					bottom: "auto",
+					right: "auto"
+				});
+			});
 
 			var presence_text = {
 				"working": '<i class="'+pchat.pchat_presence_icons.working+'"></i>Updating...',
@@ -429,13 +444,13 @@ if (!window.localStorage) {
 						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
 						var contact_display, contact_menu, contact_status;
 						if (contact_elem.length) {
-							contact_display = contact_elem.children(".active").children("a").empty();
+							contact_display = contact_elem.children(".ui-pchat-contact-display").children("a").empty();
 							contact_menu = contact_elem.find(".dropdown-menu").empty();
 							// Remove old contact info.
 							contact_elem.children(".ui-pchat-contact-status").remove();
 						} else {
-							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="active"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
-							contact_display = $('<a href="javascript:void(0);"></a>').appendTo(contact_elem.children(".active")).click(function(e){
+							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-display"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+							contact_display = $('<a href="javascript:void(0);"></a>').appendTo(contact_elem.children(".ui-pchat-contact-display")).click(function(e){
 								if ($(e.target).is("input"))
 									return;
 								var cw = get_conv(contact.jid);
@@ -521,15 +536,26 @@ if (!window.localStorage) {
 							pchat.pchat_play_sound(cur_status);
 						contact_elem.attr("data-prev-status", cur_status);
 						// Name, presence, status.
+						var name = (contact.name && contact.name != "") ? contact.name : contact.jid;
+						var sname = name.replace(/^(.{0,25}).*$/, '$1');
+						if (name != sname)
+							sname += '\u2026';
 						contact_display.append($('<span class="ui-pchat-contact-presence">&nbsp;</span>').addClass(icon_class))
-						.append($('<span class="ui-pchat-contact-name"></span>').text((contact.name && contact.name != "") ? contact.name : contact.jid));
+						.append($('<span class="ui-pchat-contact-name"></span>').text(sname))
+						.attr('title', name);
 						if (contact.subscription == "both") {
-							if (presence.status && presence.status !== "")
-								contact_status.children('a').html(Strophe.xmlescape(presence.status).replace(/&amp;([a-z]+);/g, "&$1;")).end().appendTo(contact_elem);
+							if (presence.status && presence.status !== "") {
+								var st = Strophe.xmlescape(presence.status).replace(/&amp;([a-z0-9]{1,6});/g, "&$1;"),
+									ust = $('<div/>').html(st).text(),
+									sst = ust.replace(/^(.{0,20}).*$/, '$1');
+								if (sst != ust)
+									sst += '&hellip;';
+								contact_status.children('a').html('<span>'+sst+'</span>').attr('title', ust).end().appendTo(contact_elem);
+							}
 						} else if (contact.ask == "subscribe")
-							contact_status.children('a').html('Awaiting Approval').end().appendTo(contact_elem);
+							contact_status.children('a').html('<em>Awaiting Approval</em>').end().appendTo(contact_elem);
 						else
-							contact_status.children('a').html('Not Authorized').end().appendTo(contact_elem);
+							contact_status.children('a').html('<em>Not Authorized</em>').end().appendTo(contact_elem);
 						// Menu items.
 						contact_menu.append($('<li><a href="javascript:void(0);">Alias</a></li>').on("click", "a", function(){
 							var name_box = contact_display.find(".ui-pchat-contact-name");

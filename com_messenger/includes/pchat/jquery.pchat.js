@@ -251,6 +251,14 @@ if (!window.localStorage) {
 						}
 					}
 				});
+			}))
+			.append($('<li><a href="javascript:void(0);"><i class="icon-ban-circle"></i>Manage Block List</a></li>').on("click", "a", function(){
+				if (connection.blocking.blocking_support === null)
+					alert("Blocking support for the connected account has not been verified yet. Please wait a moment and try again.");
+				else if (connection.blocking.blocking_support === false)
+					alert("The connected server does not support the Simple Communications Blocking protocol.");
+				else
+					blocked_user_dialog.dialog("show");
 			}));
 			if (pchat.pchat_sounds) {
 				if (!soundManager) {
@@ -281,6 +289,12 @@ if (!window.localStorage) {
 					localStorage.setItem("pchat-sounds", pchat.pchat_sound ? "true" : "false");
 				}));
 			}
+			// Blocked users dialog.
+			var blocked_user_dialog = $('<div class="Blocked Users"></div>').dialog({
+				modal: true,
+				autoOpen: false
+			});
+
 			// The log function only does anything if the log is enabled.
 			var log;
 			if (pchat.pchat_show_log) {
@@ -310,6 +324,8 @@ if (!window.localStorage) {
 				// Save the roster.
 				localStorage.setItem("pchat-roster", JSON.stringify(connection.roster.items));
 				localStorage.setItem("pchat-rosterver", JSON.stringify(connection.roster.ver));
+				// Save the blocklist.
+				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
 				// Save conversations.
 				localStorage.setItem("pchat-conversations", JSON.stringify(pchat.pchat_conversations));
 				return true;
@@ -352,10 +368,13 @@ if (!window.localStorage) {
 							connection.addHandler(save_rid);
 							connection.addHandler(handlers.onMessage, null, 'message');
 							connection.addHandler(handlers.onPresence, null, 'presence');
+							connection.addHandler(handlers.onDiscoInfoRequest, Strophe.NS.DISCO_INFO, 'iq', 'get');
+							connection.addHandler(handlers.onDiscoInfoResult, Strophe.NS.DISCO_INFO, 'iq', 'result');
 							// TODO: Is this handler needed?
 							//connection.addHandler(handlers.onIQ, null, 'iq');
 
 							connection.roster.registerCallback(handlers.onRoster);
+							connection.blocking.registerCallback(handlers.onBlocklist);
 							// This handler isn't needed now with the roster plugin.
 							//connection.addHandler(handlers.onIQRoster, Strophe.NS.ROSTER, 'iq');
 							connection.addHandler(handlers.onIQVersion, Strophe.NS.VERSION, 'iq');
@@ -368,28 +387,17 @@ if (!window.localStorage) {
 									connection.send($pres().tree());
 									presence_current.html(presence_text.available);
 								});
+								connection.blocking.get();
 							} else {
 								// This is an attached session, so request roster changes using the stored roster.
 								var roster = localStorage.getItem("pchat-roster"),
 									ver = localStorage.getItem("pchat-rosterver"),
+									blocklist = localStorage.getItem("pchat-blocklist"),
 									presence = localStorage.getItem("pchat-presence"),
 									pres_stat = localStorage.getItem("pchat-presence-status"),
 									conversations = localStorage.getItem("pchat-conversations");
 								presence_current.html(presence_text[presence]);
 								presence_status.val(pres_stat);
-								if (roster) {
-									log("Loading Saved Roster: "+roster);
-									roster = JSON.parse(roster);
-									ver = JSON.parse(ver);
-									// Put the recovered roster back into the roster plugin.
-									connection.roster.items = roster;
-									connection.roster.ver = ver;
-									// Call the roster handler.
-									handlers.onRoster(roster);
-								}
-								// Get roster changes, if supported.
-								if (connection.roster.supportVersioning())
-									connection.roster.get(null, ver, roster);
 								// Rebuild conversations.
 								if (conversations) {
 									log("Loading Saved Conversations: "+conversations);
@@ -402,9 +410,32 @@ if (!window.localStorage) {
 											pchat.pchat_display_message(msg, true);
 										});
 										new_convo.element.find(".ui-pchat-messages").scrollTop(999999);
-										save_state();
 									});
 								}
+								// Rebuild the roster.
+								if (roster) {
+									log("Loading Saved Roster: "+roster);
+									roster = JSON.parse(roster);
+									ver = JSON.parse(ver);
+									// Put the recovered roster back into the roster plugin.
+									connection.roster.items = roster;
+									connection.roster.ver = ver;
+									// Call the roster handler.
+									handlers.onRoster(roster);
+								}
+								// Rebuild the blocklist.
+								if (blocklist) {
+									log("Loading Saved Blocklist: "+blocklist);
+									blocklist = JSON.parse(blocklist);
+									// Put the recovered blocklist back into the blocking plugin.
+									connection.blocking.blocklist = blocklist;
+									// Call the blocklist handler.
+									handlers.onBlocklist(blocklist);
+								}
+								// Get roster changes, if supported.
+								if (connection.roster.supportVersioning())
+									connection.roster.get(null, ver, roster);
+								save_state();
 							}
 							break;
 						case Strophe.Status.DISCONNECTING:
@@ -422,6 +453,7 @@ if (!window.localStorage) {
 								localStorage.removeItem("pchat-rid");
 								localStorage.removeItem("pchat-roster");
 								localStorage.removeItem("pchat-rosterver");
+								localStorage.removeItem("pchat-blocklist");
 								localStorage.removeItem("pchat-conversations");
 								// If we tried to attach from localStorage and failed, try starting a new connection.
 								if (attaching_from_storage) {
@@ -442,20 +474,22 @@ if (!window.localStorage) {
 					console.log(item);
 					$.each(roster, function(i, contact){
 						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
-						var contact_display, contact_menu, contact_status;
+						var contact_display, contact_menu, contact_status, contact_features;
 						if (contact_elem.length) {
 							contact_display = contact_elem.children(".ui-pchat-contact-display").children("a").empty();
+							contact_features = contact_elem.children(".ui-pchat-contact-features").children("a").empty().hide();
 							contact_menu = contact_elem.find(".dropdown-menu").empty();
 							// Remove old contact info.
 							contact_elem.children(".ui-pchat-contact-status").remove();
 						} else {
-							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-display"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-features pull-right"><a href="javascript:void(0);"></a></li><li class="ui-pchat-contact-display"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
 							contact_display = $('<a href="javascript:void(0);"></a>').appendTo(contact_elem.children(".ui-pchat-contact-display")).click(function(e){
 								if ($(e.target).is("input"))
 									return;
 								var cw = get_conv(contact.jid);
 								cw.element.find("textarea").focus().select();
 							});
+							contact_features = contact_elem.children(".ui-pchat-contact-features").children("a").hide();
 							contact_menu = contact_elem.find(".dropdown-menu");
 						}
 						contact_status = $('<li class="ui-pchat-contact-status"><a href="javascript:void(0);"></a></li>');
@@ -474,7 +508,14 @@ if (!window.localStorage) {
 						}
 						var presence = {show: "offline"};
 						// Get the highest priority or most important presence.
-						var resource_arr = $.map(contact.resources, function(e){return e;});
+						var resource_arr = $.map(contact.resources, function(e, r){
+							// Take this chance to discover info about the resources.
+							if (!e.identity || !e.features) {
+								var request = $iq({type: 'get', to: contact.jid+"/"+r, from: connection.jid}).c('query', {xmlns: Strophe.NS.DISCO_INFO});
+								connection.sendIQ(request.tree());
+							}
+							return e;
+						});
 						if (resource_arr.length)
 							presence = resource_arr.sort(function(a, b){
 								if (!a)
@@ -556,6 +597,50 @@ if (!window.localStorage) {
 							contact_status.children('a').html('<em>Awaiting Approval</em>').end().appendTo(contact_elem);
 						else
 							contact_status.children('a').html('<em>Not Authorized</em>').end().appendTo(contact_elem);
+						// Display contact features. (And info about their client.)
+						if (presence.identity) {
+							var client_icon = pchat.pchat_client_icons.unknown,
+								client_desc = "The client this contact is using can't be interpreted.";
+							if (presence.identity.category == "client") {
+								switch (presence.identity.type) {
+									case "bot":
+										client_icon = pchat.pchat_client_icons.bot;
+										client_desc = "Contact appears to be an automated client.";
+										break;
+									case "console":
+										client_icon = pchat.pchat_client_icons.console;
+										client_desc = "Contact appears to be using a text-mode client.";
+										break;
+									case "game":
+										client_icon = pchat.pchat_client_icons.game;
+										client_desc = "Contact appears to be using a gaming console.";
+										break;
+									case "handheld":
+										client_icon = pchat.pchat_client_icons.handheld;
+										client_desc = "Contact appears to be using a PDA or other handheld.";
+										break;
+									case "pc":
+										client_icon = pchat.pchat_client_icons.pc;
+										client_desc = "Contact appears to be using a regular desktop client.";
+										break;
+									case "phone":
+										client_icon = pchat.pchat_client_icons.phone;
+										client_desc = "Contact appears to be using a mobile phone.";
+										break;
+									case "sms":
+										client_icon = pchat.pchat_client_icons.sms;
+										client_desc = "Contact appears to be using an SMS service. Messages sent to this contact will be delivered as text messages.";
+										break;
+									case "web":
+										client_icon = pchat.pchat_client_icons.web;
+										client_desc = "Contact appears to be using a web-based client.";
+										break;
+								}
+							}
+							if (presence.identity.name && presence.identity.name != "")
+								client_desc += " ("+presence.identity.name+")";
+							contact_features.show().append($('<span>&#8203;</span>').addClass(client_icon).attr('title', client_desc));
+						}
 						// Menu items.
 						contact_menu.append($('<li><a href="javascript:void(0);">Alias</a></li>').on("click", "a", function(){
 							var name_box = contact_display.find(".ui-pchat-contact-name");
@@ -596,11 +681,19 @@ if (!window.localStorage) {
 							contact_menu.append($('<li><a href="javascript:void(0);" title="Give contact permission to see your status.">Grant Authorization</a></li>').on("click", "a", function(){
 								connection.roster.authorize(contact.jid);
 							}));
-						contact_menu.append($('<li class="divider"></li>'))
-						.append($('<li><a href="javascript:void(0);">Block</a></li>').on("click", "a", function(){
-							// TODO: Implement Block User.
-						}))
-						.append($('<li><a href="javascript:void(0);" title="Unsubscribe from this contact and remove them from your roster.">Remove</a></li>').on("click", "a", function(){
+						contact_menu.append($('<li class="divider"></li>'));
+						if (connection.blocking.blocking_support) {
+							if (connection.blocking.isBlocked(contact.jid)) {
+								contact_menu.append($('<li><a href="javascript:void(0);">Unblock</a></li>').on("click", "a", function(){
+									connection.blocking.unblock(contact.jid);
+								}));
+							} else {
+								contact_menu.append($('<li><a href="javascript:void(0);">Block</a></li>').on("click", "a", function(){
+									connection.blocking.block(contact.jid);
+								}));
+							}
+						}
+						contact_menu.append($('<li><a href="javascript:void(0);" title="Unsubscribe from this contact and remove them from your roster.">Remove</a></li>').on("click", "a", function(){
 							if (!confirm('Are you sure you want to remove the contact '+contact.jid+' ('+contact.name+') from your contact list?'))
 								return;
 							pchat.pchat_remove_contact(contact.jid);
@@ -619,6 +712,23 @@ if (!window.localStorage) {
 						}
 					});
 					return true;
+				},
+				onBlocklist: function(blocklist){
+					blocked_user_dialog.empty();
+					$.each(blocklist, function(cur_block){
+						var cur_elem = $('<div><span></span><button style="display: none; float: right;" class="button">Unblock</button></div>')
+						.children('span').text(cur_block).end()
+						.on('mouseenter', function(){
+							$(this).children('button').show();
+						}).on('mouseleave', function(){
+							$(this).children('button').hide();
+						}).on('click', 'button', function(){
+							connection.blocking.unblock($(this).prev('span').text());
+						});
+						blocked_user_dialog.append(cur_elem);
+					});
+					// Now rerun the roster to put block links in.
+					handlers.onRoster(connection.roster.items);
 				},
 				onMessage: function(msg){
 					var to = msg.getAttribute('to');
@@ -736,9 +846,11 @@ if (!window.localStorage) {
 					type = iq.getAttribute('type');
 					id = iq.getAttribute('id');
 
-					// FIXME: Clients SHOULD send the content of the original stanza back for analysis
-					reply = $iq({to: from, from: to, id: id, type: 'error'}).c('error', {type: 'cancel'}).c('feature-not-implemented', {xmlns: Strophe.NS.STANZAS});
-					connection.send(reply.tree());
+					if (type == "get" || type == "set") {
+						// TODO: An IQ stanza of type "error" SHOULD include the child element contained in the associated "get" or "set".
+						reply = $iq({to: from, from: to, id: id, type: 'error'}).c('error', {type: 'cancel'}).c('feature-not-implemented', {xmlns: Strophe.NS.STANZAS});
+						connection.send(reply.tree());
+					}
 
 					return true;
 				},
@@ -780,10 +892,60 @@ if (!window.localStorage) {
 					offsetMin = (offsetMin < 0) ? (-1)*offsetMin : offsetMin;
 					offsetMin = (offsetMin < 10) ? '0' + offsetMin : offsetMin;
 
-					reply = $iq({type: 'result', from: to, to: from, id: id}).c('time', {xmlns: Strophe.NS.TIME}).c('utc').t(year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + 'Z').up().c('tzo').t( ((offsetHour >= 0) ? '+':'') + offsetHour + ':' + offsetMin);
+					reply = $iq({type: 'result', from: to, to: from, id: id}).c('time', {xmlns: Strophe.NS.TIME}).c('utc').t(year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + 'Z').up().c('tzo').t( ((offsetHour >= 0) ? '+':'-') + offsetHour + ':' + offsetMin);
 
 					connection.send(reply.tree());
 
+					return true;
+				},
+				onDiscoInfoRequest: function(iq){
+					var to, from, id, reply;
+					to = iq.getAttribute('to');
+					from = iq.getAttribute('from');
+					id = iq.getAttribute('id');
+
+					if (Strophe.getBareJidFromJid(to) != Strophe.getBareJidFromJid(connection.jid))
+						return true;
+
+					reply = $iq({type: 'result', to: from, from: connection.jid, id: id}).c('query', {xmlns: Strophe.NS.DISCO_INFO})
+					.c('identity', {category: 'client', type: 'web', name: 'Pines Chat'}).up()
+					.c('feature', {'var': 'http://jabber.org/protocol/disco#info'}).up() // XEP-0030: Disco Info
+					.c('feature', {'var': 'urn:xmpp:time'}).up() // XEP-0202: Entity Time
+					.c('feature', {'var': 'jabber:iq:version'}).up(); // XEP-0092: Software Version
+					connection.send(reply.tree());
+
+					return true;
+				},
+				onDiscoInfoResult: function(iq){
+					var from = iq.getAttribute('from'),
+						bare_jid = Strophe.getBareJidFromJid(from),
+						resource_id = Strophe.getResourceFromJid(from),
+						roster_item = connection.roster.findItem(bare_jid);
+					if (!roster_item)
+						return true;
+
+					var resource = roster_item.resources[resource_id];
+					if (!resource)
+						return true;
+
+					var jiq = $(iq);
+					// Try to get the identity marked as "client".
+					var identity = jiq.find('query[xmlns="http://jabber.org/protocol/disco#info"] identity[category=client]').eq(0);
+					if (!identity)
+						identity = jiq.find('query[xmlns="http://jabber.org/protocol/disco#info"] identity').eq(0);
+					if (identity)
+						resource.identity = {
+							category: identity.attr("category"),
+							type: identity.attr("type"),
+							name: identity.attr("name")
+						};
+					resource.features = [];
+					jiq.find('query[xmlns="http://jabber.org/protocol/disco#info"] feature[var]').each(function(){
+						resource.features.push($(this).attr("var"));
+					});
+
+					// Update the roster.
+					handlers.onRoster(connection.roster.items);
 					return true;
 				}
 			};
@@ -915,7 +1077,7 @@ if (!window.localStorage) {
 					return pchat.pchat_conversations[bare_jid];
 				else {
 					var convo = {
-						contact_jid: bare_jid,
+						contact_jid: contact_jid,
 						contact_alias: pchat.pchat_get_contact_alias(bare_jid),
 						messages: [],
 						minimized: false,
@@ -989,10 +1151,12 @@ if (!window.localStorage) {
 							return;
 						// Get the contact alias.
 						var to_alias = pchat.pchat_get_contact_alias(contact_jid);
+						// And the conversation.
+						var conv = get_conv(contact_jid);
 						pchat.pchat_send_message({
 							from_jid: connection.jid,
 							from_alias: "Me",
-							to_jid: Strophe.getBareJidFromJid(contact_jid),
+							to_jid: conv.contact_jid,
 							to_alias: to_alias,
 							date: new Date().getTime(),
 							content: content
@@ -1016,6 +1180,8 @@ if (!window.localStorage) {
 				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid);
 				var bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid);
 				var convo = get_conv(bare_jid);
+				if (incoming)
+					convo.contact_jid = message.from_jid;
 				convo.messages.push(message);
 				var message_container = convo.element.find(".ui-pchat-messages");
 				message_container
@@ -1120,6 +1286,18 @@ if (!window.localStorage) {
 		pchat_widget_box: true,
 		// The title to show. If set to false, no title will be shown.
 		pchat_title: "Chat",
+		// Icons for showing the type of client a contact is using.
+		pchat_client_icons: {
+			unknown: "picon-im-user",
+			bot: "picon-application-x-executable",
+			console: "picon-utilities-terminal",
+			game: "picon-input-gaming",
+			handheld: "picon-pda",
+			pc: "picon-computer",
+			phone: "picon-phone",
+			sms: "picon-mail-forwarded",
+			web: "picon-internet-web-browser"
+		},
 		// Icons for showing a contact's presence.
 		pchat_presence_icons: {
 			working: "picon-throbber",

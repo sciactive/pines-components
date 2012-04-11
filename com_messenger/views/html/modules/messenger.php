@@ -34,6 +34,7 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.flxhr.js");
 	<?php } ?>
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.roster.js");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.blocking.js");
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/jquery.pchat.js");
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/jquery.pchat.default.css");
 	pines(function(){
@@ -48,7 +49,7 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 				online: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.mp3"],
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
-			//pchat_show_log: false,
+			//pchat_show_log: true,
 			pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
 			pchat_status_input: true
 		});

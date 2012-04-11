@@ -49,6 +49,14 @@
 	background-color: inherit !important;
 	color: inherit !important;
 }
+.ui-pchat-contact-features a {
+	cursor: default;
+}
+.ui-pchat-contact-features span {
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
 .ui-pchat-action-bar i {
 	display: block;
 	height: 16px;

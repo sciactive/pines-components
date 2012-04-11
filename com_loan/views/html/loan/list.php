@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Loans';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_loan/list_loans']);
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_loan/loan/list']);
 
 ?>
 <script type="text/javascript">
@@ -92,7 +92,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_loan/list_loans", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_loan/loan/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

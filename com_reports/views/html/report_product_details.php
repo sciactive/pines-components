@@ -60,6 +60,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
+		var state_xhr;
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -79,9 +81,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			],
 			pgrid_sortable: true,
 			pgrid_sort_col: 2,
-			pgrid_sort_ord: "desc"
+			pgrid_sort_ord: "desc",
+			pgrid_state_change: function(state) {
+				if (typeof state_xhr == "object")
+					state_xhr.abort();
+				cur_state = JSON.stringify(state);
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_reports/report_product_details", state: cur_state});
+			}
 		};
-		var cur_options = $.extend(cur_defaults);
+		var cur_options = $.extend(cur_defaults, cur_state);
+		cur_options.pgrid_sort_col = false;
 		var details_grid = $("#p_muid_grid").pgrid(cur_options);
 
 		details_grid.date_form = function(){

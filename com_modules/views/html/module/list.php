@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Modules';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_modules/list_modules']);
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_modules/module/list']);
 
 $module_types = $pines->com_modules->module_types();
 ?>
@@ -53,7 +53,7 @@ $module_types = $pines->com_modules->module_types();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_modules/list_modules", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_modules/module/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

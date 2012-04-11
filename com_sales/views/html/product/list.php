@@ -82,6 +82,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			<th>Shown in Storefront</th>
 			<th>Featured</th>
+			<th>Created</th>
+			<th>Modified</th>
 			<?php } ?>
 		</tr>
 	</thead>
@@ -145,6 +147,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			<td><?php echo ($product->show_in_storefront ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->featured ? 'Yes' : 'No'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($product->p_cdate, "date_short")); ?></td>
+			<td><?php echo htmlspecialchars(format_date($product->p_mdate, "date_short")); ?></td>
 			<?php } ?>
 		</tr>
 	<?php } ?>

@@ -84,6 +84,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Featured</th>
 			<th>Created</th>
 			<th>Modified</th>
+			<th>Link</th>
 			<?php } ?>
 		</tr>
 	</thead>
@@ -149,6 +150,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo ($product->featured ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars(format_date($product->p_cdate, "date_short")); ?></td>
 			<td><?php echo htmlspecialchars(format_date($product->p_mdate, "date_short")); ?></td>
+			<td>
+			<?php 
+			$links = array();
+			if (is_array($product->vendors)) {
+				foreach ($product->vendors as $vendor) {
+					if (!empty($vendor['link']))
+						$links[] = '<a href="'.htmlspecialchars($vendor['link']).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($vendor['link']).'</a>';
+				}
+				echo implode(", ", $links);
+			} else 
+				echo (!empty($product->vendors[0]['link'])) ?  '<a href="'.htmlspecialchars($product->vendors[0]['link']).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($product->vendors[0]['link']).'</a>' : 'none';
+			?>
+			</td>
 			<?php } ?>
 		</tr>
 	<?php } ?>

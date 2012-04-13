@@ -5,7 +5,7 @@
  * @package Pines
  * @subpackage com_sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
+ * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
@@ -18,84 +18,137 @@ if ( !gatekeeper('com_sales/searchproducts'))
 $pines->page->override = true;
 header('Content-Type: application/json');
 
-$code = $_REQUEST['code'];
+$query = trim($_REQUEST['q']);
+$r_query = '/'.str_replace(' ', '.*', preg_quote($query)).'/i';
 
-if (empty($code)) {
-	$product = null;
-} elseif(!$_REQUEST['useguid']) {
-	$product = $pines->com_sales->get_product_by_code($code);
-	if (!$product->enabled)
-		$product = null;
+// Get Product Entities.
+if ($query == '*') {
+	$products = $pines->entity_manager->get_entities(
+			array('class' => com_sales_product),
+			array('&',
+				'tag' => array('com_sales', 'product'),
+				'strict' => array('enabled', $_REQUEST['enabled'] == 'true')
+			)
+		);
 } else {
-	$product = com_sales_product::factory((int) $code);
-	if (!isset($product->guid) || !$product->enabled)
-		$product = null;
-}
+	$products = $pines->entity_manager->get_entities(
+			array('class' => com_sales_product),
+			array('&',
+				'tag' => array('com_sales', 'product'),
+				'strict' => array('enabled', $_REQUEST['enabled'] == 'true')
+			),
+			array('|',
+				'match' => array(
+					array('name', $r_query), 
+					array('sku', $r_query)
+				)
+			)
+		);
 
-if (isset($product)) {
-	$fees_percent = array();
-	$fees_flat = array();
-	foreach ($product->additional_tax_fees as $cur_tax_fee) {
-		if (!$cur_tax_fee->enabled)
-			continue;
-		if ($cur_tax_fee->type == 'percentage') {
-			$fees_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
-		} elseif ($cur_tax_fee->type == 'flat_rate') {
-			$fees_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+	// Also check categories
+	$categories = $pines->entity_manager->get_entities(
+			array('class' => com_sales_category),
+			array('&',
+				'tag' => array('com_sales', 'category'),
+				'strict' => array('enabled', true),
+				'match' => array('name', $r_query)
+			)
+		);
+	foreach ($categories as $cur_category) {
+		foreach ($cur_category->products as $cur_product) {
+			if ($cur_product && $cur_product->enabled == ($_REQUEST['enabled'] == 'true') && !$cur_product->in_array($products))
+				$products[] = $cur_product;
 		}
 	}
+}
 
+foreach ($products as $key => &$product) {
+	$vendors = array();
+	foreach((array) $product->vendors as $cur_vendor) {
+		$vendors[] = (object) array(
+			'guid' => (int) $cur_vendor['entity']->guid,
+			'name' => (string) $cur_vendor['entity']->name,
+			'cost' => '$'.$pines->com_sales->round($cur_vendor['cost'], true),
+			'link' => $cur_vendor['link']
+		);
+	}
+	switch ($product->stock_type) {
+		case 'non_stocked':
+			$stock_type = 'Non Stocked';
+			break;
+		case 'stock_optional':
+			$stock_type = 'Stock Optional';
+			break;
+		case 'regular_stock':
+			$stock_type = 'Regular Stock';
+			break;
+		default:
+			$stock_type = 'Unrecognized';
+			break;
+	} 
+	$additional_barcodes = implode(', ', $product->additional_barcodes);
+	$serialized = (bool) $product->serialized;
+	$discountable = (bool) $product->discountable;
+	$show_in_storefront = (bool) $product->show_in_storefront;
+	$featured = (bool) $product->featured;
+	$custom_item = (bool) $product->custom_item;
+	$receipt_description = (!empty($product->receipt_description) ? $product->receipt_description : '');
+	
+	$images = array();
+	if (isset($product->thumbnail)) {
+		if (file_exists($pines->uploader->real($product->thumbnail)))
+			$images[] = 'Thumbnail';
+		else
+			$images[] = 'Thumbnail - Broken';
+	}
+	$image_desc = array();
+	foreach ((array) $product->images as $cur_image) {
+		$image_desc[0] = 'Images';
+		if (empty($cur_image['alt']))
+			$image_desc[1] = 'Missing Desc';
+		if (!file_exists($pines->uploader->real($cur_image['file'])))
+			$image_desc[2] = 'Broken';
+	}
+	if ($image_desc)
+		$images[] = implode(' - ', $image_desc);
+	if ($images)
+		$product_images = implode(', ', $images);
+	else
+		$product_images = 'None';
+	
+	$created = format_date($product->p_cdate, 'date_short');
+	$modified = format_date($product->p_mdate, 'date_short');
+	$expiration = (!empty($product->product_exp)) ? format_date($product->product_exp, 'date_short') : '';
+	
 	$json_struct = (object) array(
 		'guid' => $product->guid,
-		'name' => $product->name,
 		'sku' => $product->sku,
-		'stock_type' => $product->stock_type,
-		'pricing_method' => $product->pricing_method,
-		'unit_price' => $product->unit_price,
-		'margin' => $product->margin,
-		'floor' => $product->floor,
-		'ceiling' => $product->ceiling,
-		'tax_exempt' => $product->tax_exempt,
-		'return_checklists' => array(),
-		'serialized' => $product->serialized,
-		'discountable' => $product->discountable,
-		'require_customer' => $product->require_customer,
-		'one_per_ticket' => $product->one_per_ticket,
-		'non_refundable' => $product->non_refundable,
-		'fees_percent' => $fees_percent,
-		'fees_flat' => $fees_flat,
-		'serials' => array()
+		'name' => $product->name,
+		'price' => $pines->com_sales->round($product->unit_price, true),
+		'vendors' => $vendors,
+		'manufacturer_guid' => $product->manufacturer->guid,
+		'manufacturer_name' => $product->manufacturer->name,
+		'manufacturer_sku' => $product->manufacturer_sku,
+		'stock_type' => $stock_type,
+		'custom_item' => $custom_item,
+		'serialized' => $serialized,
+		'discountable' => $discountable,
+		'additional_barcodes' => $additional_barcodes,
+		'images' => $product_images,
+		'receipt_description' => $receipt_description,
+		'storefront' => $show_in_storefront,
+		'featured' => $featured,
+		'created' => $created,
+		'modified' => $modified,
+		'expiration' => $expiration,
 	);
-
-	foreach ((array) $product->return_checklists as $cur_return_checklist) {
-		if (!$cur_return_checklist->enabled)
-			continue;
-		$json_struct->return_checklists[] = array('guid' => $cur_return_checklist->guid, 'label' => $cur_return_checklist->label, 'conditions' => (array) $cur_return_checklist->conditions);
-	}
-
-	// Look up serials in the user's current location to allow them to choose.
-	if ($product->serialized && $pines->config->com_sales->add_product_show_serials) {
-		$selector = array('&',
-				'tag' => array('com_sales', 'stock'),
-				'data' => array('available', true),
-				'ref' => array(
-					array('product', $product)
-				)
-			);
-		if (isset($_SESSION['user']->group->guid))
-			$selector['ref'][] = array('location', $_SESSION['user']->group);
-		$stock_entries = $pines->entity_manager->get_entities(
-				array('class' => com_sales_stock, 'limit' => $pines->config->com_sales->add_product_show_serials),
-				$selector
-			);
-		foreach ($stock_entries as $cur_stock) {
-			$json_struct->serials[] = $cur_stock->serial;
-		}
-	}
-
 	$product = $json_struct;
 }
+unset($product);
 
-$pines->page->override_doc(json_encode($product));
+if (!$products)
+	$products = null;
+
+$pines->page->override_doc(json_encode($products));
 
 ?>

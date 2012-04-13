@@ -54,6 +54,7 @@ if (!$pines->uploader->check($product->thumbnail))
 
 // Purchasing
 $product->stock_type = $_REQUEST['stock_type'];
+$product->custom_item = ($_REQUEST['custom_item'] == 'ON');
 $product->vendors = (array) json_decode($_REQUEST['vendors']);
 foreach ($product->vendors as &$cur_vendor) {
 	$cur_vendor = array(
@@ -69,6 +70,7 @@ unset($cur_vendor);
 
 // Pricing
 $product->pricing_method = $_REQUEST['pricing_method'];
+$product->product_exp = strtotime($_REQUEST['product_exp']);
 $product->unit_price = (float) $_REQUEST['unit_price'];
 $product->margin = (float) $_REQUEST['margin'];
 $product->floor = (float) $_REQUEST['floor'];
@@ -199,6 +201,18 @@ $test = $pines->entity_manager->get_entity(array('class' => com_sales_product, '
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	pines_notice('There is already a product with that name. Please choose a different name.');
+	return;
+}
+
+if ($product->show_in_storefront && $product->custom_item) {
+	$product->print_form();
+	pines_notice('Custom items cannot be displayed in the storefront. Select only one of these options.');
+	return;
+}
+
+if ($pines->config->com_sales->require_expiration && empty($product->product_exp)) {
+	$product->print_form();
+	pines_notice('You must provide a Product Expiration Date.');
 	return;
 }
 

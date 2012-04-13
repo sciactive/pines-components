@@ -55,7 +55,7 @@ if ($this->entity->final)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+									url: <?php echo json_encode(pines_url('com_sales', 'product/codesearch')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},

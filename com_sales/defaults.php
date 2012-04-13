@@ -99,6 +99,13 @@ return array(
 		'value' => 'corporate',
 	),
 	array(
+		'name' => 'require_expiration',
+		'cname' => 'Require Expiration Date on Products',
+		'description' => 'When a new product is made, require that it has an expiration date. Expiration dates are only informational and don\'t affect availability.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'autocomplete_product',
 		'cname' => 'Autocomplete Product',
 		'description' => 'Use a product autocomplete selector on sales and returns.',

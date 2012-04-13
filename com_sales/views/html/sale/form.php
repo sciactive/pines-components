@@ -263,7 +263,7 @@ if ($pines->config->com_sales->com_esp) {
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+									url: <?php echo json_encode(pines_url('com_sales', 'product/codesearch')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -947,7 +947,7 @@ if ($pines->config->com_sales->com_esp) {
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+					url: <?php echo json_encode(pines_url('com_sales', 'product/codesearch')); ?>,
 					type: "POST",
 					async: false,
 					dataType: "json",

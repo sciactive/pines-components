@@ -336,6 +336,32 @@ $pines->com_ptags->load();
 						<?php } ?>
 					</select></label>
 			</div>
+			<div class="pf-element">
+				<script type="text/javascript">
+					pines(function(){
+						$("#p_muid_form").on("change", "input[name=custom_item], input[name=show_in_storefront]", function(){
+							var custom_item = $("#p_muid_form input[name=custom_item]"),
+								show_in_storefront = $("#p_muid_form input[name=show_in_storefront]");
+							if (custom_item.is(":checked") && show_in_storefront.is(":checked")) {
+								$(this).removeAttr("checked");
+								var notice = $.pnotify('The product cannot be both a custom item and shown in the storefront.<br/><br/><button class="btn" type="button">Swap Options</button>').on("click", "button", function(){
+									custom_item.add(show_in_storefront).each(function(){
+										var cur_box = $(this);
+										if (cur_box.is(":checked"))
+											cur_box.removeAttr("checked");
+										else
+											cur_box.attr("checked", "checked");
+									});
+									notice.pnotify_remove();
+								});
+							}
+						});
+					});
+				</script>
+				<label><span class="pf-label">Custom Item</span>
+					<span class="pf-note">Custom items aren't shown in the storefront.</span>
+					<input class="pf-field" type="checkbox" name="custom_item" value="ON"<?php echo $this->entity->custom_item ? ' checked="checked"' : ''; ?> /></label>
+			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Vendors</span>
 				<div id="p_muid_vendors_field" class="pf-group">
@@ -431,6 +457,25 @@ $pines->com_ptags->load();
 						<option value="variable" title="An employee can increase/decrease the price."<?php echo $this->entity->pricing_method == 'variable' ? ' selected="selected"' : ''; ?>>Variable Pricing</option>
 						<option value="margin" title="The price is based on the cost of the item."<?php echo $this->entity->pricing_method == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
 					</select></label>
+			</div>
+			<div class="pf-element">
+				<script type="text/javascript">
+					pines(function(){
+						$("#p_muid_product_exp").datepicker({
+							dateFormat: "yy-mm-dd",
+							showOtherMonths: true,
+							selectOtherMonths: true,
+							minDate: '0'
+						});
+					});
+				</script>
+				<label><span class="pf-label">Product Expiration Date
+						<?php if ($pines->config->com_sales->require_expiration) { ?>
+						<span class="pf-required">*</span>
+						<?php } ?>
+					</span>
+					<span class="pf-note">Only informational. Doesn't affect product availability.</span>
+					<input class="pf-field" type="text" id="p_muid_product_exp" name="product_exp" size="24" value="<?php echo ($this->entity->product_exp ? htmlspecialchars(format_date($this->entity->product_exp, 'date_sort')) : ''); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
 				<h3>Defaults</h3>

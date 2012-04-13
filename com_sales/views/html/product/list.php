@@ -19,11 +19,111 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 
 	pines(function(){
+		// Product search function for the pgrid toolbar.
+		var product_search_box;
+		var submit_search = function(){
+			var search_string = product_search_box.val();
+			if (search_string == "") {
+				alert("Please enter a search string.");
+				return;
+			}
+			var loader;
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+				type: "POST",
+				dataType: "json",
+				data: {"q": search_string, "enabled": <?php echo json_encode($this->enabled ? 'true' : 'false'); ?>},
+				beforeSend: function(){
+					loader = $.pnotify({
+						pnotify_title: 'Search',
+						pnotify_text: 'Searching the database...',
+						pnotify_notice_icon: 'picon picon-throbber',
+						pnotify_nonblock: true,
+						pnotify_hide: false,
+						pnotify_history: false
+					});
+				},
+				complete: function(){
+					loader.pnotify_remove();
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (!data) {
+						product_grid.pgrid_get_all_rows().pgrid_delete();
+						alert("No products were found that matched the query.");
+						return;
+					}
+					var struct = [];
+					$.each(data, function(){
+						if (typeof this.manufacturer_name != "undefined" && this.manufacturer_name !== null) {
+							var manufacturer_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'manufacturer/edit', array('id' => '__id__')))); ?>;
+							this.manufacturer = '<a href="'+manufacturer_link.replace('__id__', pines.safe(this.manufacturer_guid))+'" onclick="window.open(this.href);return false;">'+pines.safe(this.manufacturer_name)+'</a>';
+						} else
+							this.manufacturer = '';
+						var vendors = [],
+							links = [],
+							costs = [],
+							vendors_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => '__id__')))); ?>;
+						$.each(this.vendors, function(i, vendor){
+							vendors.push('<a href="'+vendors_link.replace('__id__', pines.safe(vendor.guid))+'" onclick="window.open(this.href);return false;">'+pines.safe(vendor.name)+'</a>');
+							costs.push(vendor.cost);
+							if (typeof vendor.link != "undefined" && vendor.link !== null && vendor.link !== "")
+								links.push('<a href="'+pines.safe(vendor.link)+'" onclick="window.open(this.href);return false;">'+pines.safe(vendor.link)+'</a>');
+						});
+						struct.push({
+							"key": this.guid,
+							"values": [
+								pines.safe(this.sku),
+								pines.safe(this.name),
+								pines.safe('$'+this.price),
+								pines.safe(costs.join(', ')),
+								vendors.join(', '),
+								this.manufacturer,
+								pines.safe(this.manufacturer_sku),
+								pines.safe(this.stock_type),
+								this.custom_item ? 'Yes' : 'No',
+								this.serialized ? 'Yes' : 'No',
+								this.discountable ? 'Yes' : 'No',
+								pines.safe(this.additional_barcodes),
+								pines.safe(this.images),
+								pines.safe(this.receipt_description),
+								pines.safe(this.created),
+								pines.safe(this.modified),
+								pines.safe(this.expiration),
+								links.join(', ')
+								<?php if ($pines->config->com_sales->com_storefront) { ?>,
+								this.storefront ? 'Yes' : 'No',
+								this.featured ? 'Yes' : 'No'
+								<?php } ?>
+							]
+						});
+					});
+					product_grid.pgrid_get_all_rows().pgrid_delete();
+					product_grid.pgrid_add(struct);
+				}
+			});
+		}
+		
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'text', load: function(textbox){
+					// Display the current product being searched for.
+					textbox.keydown(function(e){
+						if (e.keyCode == 13)
+							submit_search();
+					});
+					product_search_box = textbox;
+					<?php if (!empty($this->show)) { ?>
+					product_search_box.val(<?php echo json_encode((string) $this->show); ?>);
+					submit_search();
+					<?php } ?>
+				}},
+				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				<?php if (gatekeeper('com_sales/newproduct')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/edit')); ?>},
 				<?php } if (gatekeeper('com_sales/editproduct')) { ?>
@@ -60,7 +160,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#p_muid_grid").pgrid(cur_options);
+		var product_grid = $("#p_muid_grid").pgrid(cur_options);
+		product_grid.pgrid_get_all_rows().pgrid_delete();
+		cur_options.pgrid_state_change(product_grid.pgrid_export_state());
 	});
 </script>
 <table id="p_muid_grid">
@@ -74,97 +176,46 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Manufacturer</th>
 			<th>Manufacturer SKU</th>
 			<th>Stock Type</th>
+			<th>Custom Item</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
 			<th>Additional Barcodes</th>
 			<th>Images</th>
 			<th>Receipt Description</th>
+			<th>Created</th>
+			<th>Modified</th>
+			<th>Expiration</th>
+			<th>Link</th>
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			<th>Shown in Storefront</th>
 			<th>Featured</th>
-			<th>Created</th>
-			<th>Modified</th>
-			<th>Link</th>
 			<?php } ?>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->products as $product) {
-		$costs = $vendors = array();
-		foreach($product->vendors as $cur_vendor) {
-			$vendors[] = '<a href="'.htmlspecialchars(pines_url('com_sales','vendor/edit',array('id'=> $cur_vendor['entity']->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_vendor['entity']->name).'</a>';
-			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
-		}
-	?>
-		<tr title="<?php echo (int) $product->guid ?>">
-			<td><?php echo htmlspecialchars($product->sku); ?></td>
-			<td><?php echo htmlspecialchars($product->name); ?></td>
-			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>
-			<td style="text-align: right;"><?php echo htmlspecialchars(implode(', ', $costs)); ?></td>
-			<td><?php echo implode(', ', $vendors); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'manufacturer/edit', array('id' => $product->manufacturer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($product->manufacturer->name); ?></a></td>
-			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
-			<td><?php switch ($product->stock_type) {
-				case 'non_stocked':
-					echo 'Non Stocked';
-					break;
-				case 'stock_optional':
-					echo 'Stock Optional';
-					break;
-				case 'regular_stock':
-					echo 'Regular Stock';
-					break;
-				default:
-					echo 'Unrecognized';
-					break;
-			} ?></td>
-			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
-			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlspecialchars(implode(', ', $product->additional_barcodes)); ?></td>
-			<td><?php
-			$images = array();
-			if (isset($product->thumbnail)) {
-				if (file_exists($pines->uploader->real($product->thumbnail)))
-					$images[] = 'Thumbnail';
-				else
-					$images[] = 'Thumbnail - Broken';
-			}
-			$image_desc = array();
-			foreach ((array) $product->images as $cur_image) {
-				$image_desc[0] = 'Images';
-				if (empty($cur_image['alt']))
-					$image_desc[1] = 'Missing Desc';
-				if (!file_exists($pines->uploader->real($cur_image['file'])))
-					$image_desc[2] = 'Broken';
-			}
-			if ($image_desc)
-				$images[] = implode(' - ', $image_desc);
-			if ($images)
-				echo implode(', ', $images);
-			else
-				echo 'None';
-			?></td>
-			<td><?php echo htmlspecialchars($product->receipt_description); ?></td>
+		<tr>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
-			<td><?php echo ($product->show_in_storefront ? 'Yes' : 'No'); ?></td>
-			<td><?php echo ($product->featured ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlspecialchars(format_date($product->p_cdate, "date_short")); ?></td>
-			<td><?php echo htmlspecialchars(format_date($product->p_mdate, "date_short")); ?></td>
-			<td>
-			<?php 
-			$links = array();
-			if (is_array($product->vendors)) {
-				foreach ($product->vendors as $vendor) {
-					if (!empty($vendor['link']))
-						$links[] = '<a href="'.htmlspecialchars($vendor['link']).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($vendor['link']).'</a>';
-				}
-				echo implode(", ", $links);
-			} else 
-				echo (!empty($product->vendors[0]['link'])) ?  '<a href="'.htmlspecialchars($product->vendors[0]['link']).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($product->vendors[0]['link']).'</a>' : 'none';
-			?>
-			</td>
+			<td>-</td>
+			<td>-</td>
 			<?php } ?>
 		</tr>
-	<?php } ?>
 	</tbody>
 </table>

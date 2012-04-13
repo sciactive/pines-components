@@ -76,7 +76,7 @@ $pines->com_pgrid->load();
 					click: function(e, rows){
 						var loader;
 						$.ajax({
-							url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+							url: <?php echo json_encode(pines_url('com_sales', 'product/codesearch')); ?>,
 							type: "POST",
 							dataType: "json",
 							data: {"code": rows.pgrid_get_value(1)},

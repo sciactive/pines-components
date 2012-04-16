@@ -468,10 +468,6 @@ if (!window.localStorage) {
 				onRoster: function(roster, item){
 					// Save the roster.
 					save_state();
-					console.log("Roster Element:");
-					console.log(roster);
-					console.log("Presence Element:");
-					console.log(item);
 					$.each(roster, function(i, contact){
 						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
 						var contact_display, contact_menu, contact_status, contact_features;
@@ -546,8 +542,6 @@ if (!window.localStorage) {
 									return 1;
 								return 0;
 							})[0];
-						console.log("Calculated Presence:");
-						console.log(presence);
 						var icon_class = pchat.pchat_presence_icons.offline;
 						var cur_status = "offline";
 						if (contact.subscription == "to" || contact.subscription == "both") {
@@ -892,7 +886,7 @@ if (!window.localStorage) {
 					offsetMin = (offsetMin < 0) ? (-1)*offsetMin : offsetMin;
 					offsetMin = (offsetMin < 10) ? '0' + offsetMin : offsetMin;
 
-					reply = $iq({type: 'result', from: to, to: from, id: id}).c('time', {xmlns: Strophe.NS.TIME}).c('utc').t(year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + 'Z').up().c('tzo').t( ((offsetHour >= 0) ? '+':'-') + offsetHour + ':' + offsetMin);
+					reply = $iq({type: 'result', to: from, from: to, id: id}).c('time', {xmlns: Strophe.NS.TIME}).c('utc').t(year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + 'Z').up().c('tzo').t( ((offsetHour >= 0) ? '+':'-') + offsetHour + ':' + offsetMin);
 
 					connection.send(reply.tree());
 
@@ -904,10 +898,11 @@ if (!window.localStorage) {
 					from = iq.getAttribute('from');
 					id = iq.getAttribute('id');
 
+					// Is this request for us?
 					if (Strophe.getBareJidFromJid(to) != Strophe.getBareJidFromJid(connection.jid))
 						return true;
 
-					reply = $iq({type: 'result', to: from, from: connection.jid, id: id}).c('query', {xmlns: Strophe.NS.DISCO_INFO})
+					reply = $iq({type: 'result', to: from, from: to, id: id}).c('query', {xmlns: Strophe.NS.DISCO_INFO})
 					.c('identity', {category: 'client', type: 'web', name: 'Pines Chat'}).up()
 					.c('feature', {'var': 'http://jabber.org/protocol/disco#info'}).up() // XEP-0030: Disco Info
 					.c('feature', {'var': 'urn:xmpp:time'}).up() // XEP-0202: Entity Time
@@ -1004,7 +999,6 @@ if (!window.localStorage) {
 			 * @param status The current status. If an empty string is given, no status will be sent.
 			 */
 			pchat.pchat_set_presence = function(presence, status){
-				console.log(connection);
 				var elem = $pres();
 				presence_current.html(presence_text.working);
 				switch (presence) {
@@ -1175,8 +1169,6 @@ if (!window.localStorage) {
 			 * @param noui Don't update the UI. (For recovering saved messages.)
 			 */
 			pchat.pchat_display_message = function(message, noui){
-				console.log("Message:");
-				console.log(message);
 				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid);
 				var bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid);
 				var convo = get_conv(bare_jid);
@@ -1199,8 +1191,6 @@ if (!window.localStorage) {
 			 * @param notice The notice to display.
 			 */
 			pchat.pchat_display_notice = function(notice){
-				console.log("Notice:");
-				console.log(notice);
 				var bare_jid = Strophe.getBareJidFromJid(notice.jid);
 				var convo = get_conv(bare_jid);
 				convo.element.find(".ui-pchat-messages")

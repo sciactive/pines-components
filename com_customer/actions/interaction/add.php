@@ -36,13 +36,17 @@ if (!isset($employee)) {
 $interaction = com_customer_interaction::factory();
 $interaction->customer = $customer;
 $interaction->employee = $employee;
-// Change the timezone to enter the event with the supplied timezone or user's timezone.
-$cur_timezone = date_default_timezone_get();
-if (!empty($_REQUEST['timezone']))
-	date_default_timezone_set($_REQUEST['timezone']);
-else
-	date_default_timezone_set($_SESSION['user']->get_timezone());
-$interaction->action_date = strtotime($_REQUEST['date'].$_REQUEST['time']);
+if (!empty($_REQUEST['date']) || !empty($_REQUEST['time'])) {
+	// Change the timezone to enter the event with the supplied timezone or user's timezone.
+	$cur_timezone = date_default_timezone_get();
+	if (!empty($_REQUEST['timezone']))
+		date_default_timezone_set($_REQUEST['timezone']);
+	else
+		date_default_timezone_set($_SESSION['user']->get_timezone());
+	$interaction->action_date = strtotime($_REQUEST['date'].$_REQUEST['time']);
+} else {
+	$interaction->action_date = time();
+}
 $interaction->type = $_REQUEST['type'];
 $interaction->status = $_REQUEST['status'];
 $interaction->comments = $_REQUEST['comments'];

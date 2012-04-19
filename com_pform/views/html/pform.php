@@ -11,15 +11,6 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-/*
-<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform.css" media="all" rel="stylesheet" type="text/css" />
-<!--[if lt IE 8]>
-<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
-<![endif]-->
-<!--[if lt IE 6]>
-<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-6.css" media="all" rel="stylesheet" type="text/css" />
-<![endif]-->
-*/
 ?>
 <script type="text/javascript">
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform.css");
@@ -34,3 +25,17 @@ pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>componen
 <script type="text/javascript">
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-ie-lt-6.css");</script>
 <![endif]-->
+<style type="text/css">
+.pf-form .pf-element .pf-label, .pf-form .pf-element .pf-note {
+width: 180px;
+}
+.pf-form .pf-element .pf-group {
+margin-left: 180px;
+}
+.pf-form .pf-element .pf-field.pf-full-width {
+margin-left: 185px;
+}
+.pf-form .pf-buttons {
+padding-left: 165px;
+}
+</style>

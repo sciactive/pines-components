@@ -45,7 +45,7 @@ link: http://pinesframework.org/pform/
 	margin-bottom: 10px;
 }
 .pf-form .pf-element .pf-label, .pf-form .pf-element .pf-note {
-	width: 180px; /* Width of labels. */
+	width: 230px; /* Width of labels. */
 	float: left;
 }
 .pf-form.pf-labels-right .pf-label, .pf-form .pf-labels-right .pf-label, .pf-form .pf-labels-right.pf-label, .pf-form.pf-labels-right .pf-note, .pf-form .pf-labels-right .pf-note, .pf-form .pf-labels-right.pf-note {
@@ -64,7 +64,7 @@ link: http://pinesframework.org/pform/
 	color: #f00;
 }
 .pf-form .pf-element .pf-group {
-	margin-left: 180px; /* Same as width of labels. */
+	margin-left: 230px; /* Same as width of labels. */
 	display: block;
 }
 .pf-form .pf-element .pf-field, .pf-form .pf-buttons .pf-button {
@@ -73,12 +73,12 @@ link: http://pinesframework.org/pform/
 }
 .pf-form .pf-element .pf-field.pf-full-width {
 	display: block;
-	margin-left: 185px; /* Width of labels + margin between inputs and labels. */
+	margin-left: 235px; /* Width of labels + margin between inputs and labels. */
 }
 .pf-form .pf-buttons {
 	clear: both;
 	padding-bottom: 0;
-	padding-left: 165px; /* Width of labels + margin to inputs - button spacing. */
+	padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
 }
 .pf-form .pf-buttons.pf-centered {
 	width: 100%;

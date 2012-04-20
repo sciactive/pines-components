@@ -33,4 +33,4 @@ if (isset($this->title))
 	echo ' title="'.htmlspecialchars((string) $this->title, ENT_COMPAT, '', false).'"';
 if (isset($this->xml_lang))
 	echo ' xml:lang="'.htmlspecialchars((string) $this->xml_lang, ENT_COMPAT, '', false).'"';
-?>><?php echo $this->icontent; ?></style>
+?>><?php echo ($this->preserve_tags === 'true') ? $this->icontent : strip_tags($this->icontent); ?></style>

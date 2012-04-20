@@ -575,7 +575,12 @@ $pines->com_ptags->load();
 					<input class="pf-field" type="text" name="additional_barcodes" size="24" value="<?php echo htmlspecialchars(implode(',', $this->entity->additional_barcodes)); ?>" />
 					<script type="text/javascript">
 						pines(function(){
-							$("#p_muid_form [name=additional_barcodes]").ptags();
+							$("#p_muid_form [name=additional_barcodes]").ptags({
+								ptags_sortable: {
+									tolerance: 'pointer',
+									handle: '.ui-ptags-tag-text'
+								}
+							});
 						});
 					</script>
 				</div>

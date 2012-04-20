@@ -21,6 +21,7 @@ return array(
 	'services' => array('template'),
 	'positions' => array(
 		'top',
+		'search',
 		'header',
 		'header_right',
 		'pre_content',

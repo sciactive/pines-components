@@ -17,7 +17,7 @@ return array(
 		'name' => 'variant',
 		'cname' => 'Page Variant/Layout',
 		'description' => 'The layout of the page.',
-		'value' => 'fluid-sideright',
+		'value' => 'fixed-sideright',
 		'options' => array(
 			'fixed-sideleft (Fixed width, left sidebar.)' => 'fixed-sideleft',
 			'fixed-sideright (Fixed width, right sidebar.)' => 'fixed-sideright',
@@ -40,6 +40,13 @@ return array(
 		'cname' => 'Header Image',
 		'description' => 'The header image to use.',
 		'value' => $pines->config->rela_location.'templates/tpl_pinescms/images/default_logo.png',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'show_recycled_bits',
+		'cname' => 'Show Recycled Bits',
+		'description' => 'Show recycled bits in footer.',
+		'value' => true,
 		'peruser' => true,
 	),
 );

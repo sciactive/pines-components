@@ -15,11 +15,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 header('Content-Type: text/html');
 
-if (preg_match ('/^fluid/', $pines->config->tpl_pinescms->variant))
+if (preg_match('/^fluid/', $pines->config->tpl_pinescms->variant))
 	$layout_type = 'fluid';
-if (preg_match ('/left$/', $pines->config->tpl_pinescms->variant))
+if (preg_match('/left$/', $pines->config->tpl_pinescms->variant))
 	$sidebar = 'left';
-elseif (preg_match ('/right$/', $pines->config->tpl_pinescms->variant))
+elseif (preg_match('/right$/', $pines->config->tpl_pinescms->variant))
 	$sidebar = 'right';
 ?>
 <!DOCTYPE html>
@@ -74,6 +74,7 @@ elseif (preg_match ('/right$/', $pines->config->tpl_pinescms->variant))
 					<?php } ?>
 				</a>
 				<div id="pines_navlist_container"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+				<div id="header_search"><?php echo $pines->page->render_modules('search', 'module_head'); ?></div>
 				<div id="header">
 					<?php echo $pines->page->render_modules('header'); ?>
 				</div>
@@ -81,9 +82,8 @@ elseif (preg_match ('/right$/', $pines->config->tpl_pinescms->variant))
 					<?php echo $pines->page->render_modules('header_right'); ?>
 				</div>
 			</div>
-			<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_simple'); ?></div>
-
 			<div id="pines_pre_content"><?php echo $pines->page->render_modules('pre_content'); ?></div>
+			<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_simple'); ?></div>
 			<div id="pines_content">
 				<div class="modules">
 					<?php 
@@ -91,24 +91,32 @@ elseif (preg_match ('/right$/', $pines->config->tpl_pinescms->variant))
 							if ($sidebar == 'left') {
 							?>
 							<div class="row<?php echo ($layout_type) ? '-fluid': ''; ?>">
-								<div class="span3">
+								<div id="sidebar" class="span3">
+									<div class="content_padding">
 									<?php echo $pines->page->render_modules('left', 'module_right'); ?>
 									<?php echo $pines->page->render_modules('right', 'module_right'); ?>
+									</div>
 								</div>
-								<div class="span9">
+								<div id="main_content" class="span9">
+									<div class="content_padding">
 									<?php echo $pines->page->render_modules('content', 'module_content'); ?>
+									</div>
 								</div>
 							</div>
 							<?php
 							} elseif ($sidebar == 'right') {
 							?>
 							<div class="row<?php echo ($layout_type) ? '-fluid': ''; ?>">
-								<div class="span9">
+								<div id="main_content" class="span9">
+									<div class="content_padding">
 									<?php echo $pines->page->render_modules('content', 'module_content'); ?>
+									</div>
 								</div>
-								<div class="span3">
+								<div id="sidebar" class="span3">
+									<div class="content_padding">
 									<?php echo $pines->page->render_modules('left', 'module_right'); ?>
 									<?php echo $pines->page->render_modules('right', 'module_right'); ?>
+									</div>
 								</div>
 							</div>
 							<?php
@@ -123,16 +131,22 @@ elseif (preg_match ('/right$/', $pines->config->tpl_pinescms->variant))
 				</div>
 			</div>
 			<div id="pines_post_content"><?php echo $pines->page->render_modules('post_content'); ?></div>
-
+			<div id="pines_footer_shadow"></div>
 			<div id="pines_footer">
 				<div class="modules"><?php echo $pines->page->render_modules('footer'); ?></div>
-				<p class="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+			</div>
+			<div id="pines_copyright">
+				<?php if ($pines->config->tpl_pinescms->show_recycled_bits) { ?>
+				<div id="recycled_bits"></div>
+				<?php } ?>
+				<p><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+				
 			</div>
 		</div>
 	</div>
-	<div id="footer-line-left" class="container<?php echo ($layout_type) ? '-fluid': ''; ?>">
-		<div id="footer-line-right">
-			<div id="footer-line">&nbsp;</div>
+	<div id="copyright-line-left" class="container<?php echo ($layout_type) ? '-fluid': ''; ?>">
+		<div id="copyright-line-right">
+			<div id="copyright-line">&nbsp;</div>
 		</div>
 	</div>
 	<div id="bottom"><?php echo $pines->page->render_modules('bottom'); ?></div>

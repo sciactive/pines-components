@@ -239,7 +239,12 @@ $pines->com_menueditor->load_editor();
 					<input class="pf-field" type="text" name="content_tags" size="24" value="<?php echo htmlspecialchars(implode(',', $this->entity->content_tags)); ?>" />
 					<script type="text/javascript">
 						pines(function(){
-							$("#p_muid_form [name=content_tags]").ptags();
+							$("#p_muid_form [name=content_tags]").ptags({
+								ptags_sortable: {
+									tolerance: 'pointer',
+									handle: '.ui-ptags-tag-text'
+								}
+							});
 						});
 					</script>
 				</div>

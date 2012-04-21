@@ -29,6 +29,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'display_header',
+		'cname' => 'Display Header',
+		'description' => 'Display the top page header. (May be reduntant if using navigation logo.)',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'use_header_image',
 		'cname' => 'Use Header Image',
 		'description' => 'Show a header image (instead of just text) at the top of the page.',
@@ -47,6 +54,38 @@ return array(
 		'cname' => 'Show Recycled Bits',
 		'description' => 'Show recycled bits in footer.',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'navigation_orientation',
+		'cname' => 'Navigation Orientation',
+		'description' => 'Navigation to the left or the right.',
+		'value' => 'nav-right',
+		'options' => array(
+			'left (Navigation left justified)' => 'nav-left',
+			'right (Navigation right justified.)' => 'nav-right',
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'navigation_fixed',
+		'cname' => 'Navigation Fixed',
+		'description' => 'Navigation Bar is Fixed to the top.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'use_nav_logo',
+		'cname' => 'Use Nav Logo',
+		'description' => 'Use a logo in the navigation bar.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'nav_logo_image',
+		'cname' => 'Nav Logo Image',
+		'description' => 'The navigation logo image to use.',
+		'value' => $pines->config->rela_location.'templates/tpl_pinescms/images/default_nav_logo.png',
 		'peruser' => true,
 	),
 );

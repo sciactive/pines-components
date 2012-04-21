@@ -63,8 +63,19 @@ elseif (preg_match('/right$/', $pines->config->tpl_pinescms->variant))
 		<?php
 		}
 	?></div>
-	<div id="shadow_container" class="container<?php echo ($layout_type) ? '-fluid': ''; ?>">
+	<div class="navbar navbar-fixed-top <?php echo ($pines->config->tpl_pinescms->navigation_fixed) ? '': 'nav_not_fixed' ;?>">
+		<div class="navbar-inner">
+			<div <?php echo ($pines->config->tpl_pinescms->navigation_orientation == "nav-right") ? 'id="nav-right"' : '';?> class="container">
+				<?php if ($pines->config->tpl_pinescms->use_nav_logo) { ?>
+				<a href="<?php echo htmlspecialchars(pines_url()); ?>"><img id="nav-logo" class="<?php echo htmlspecialchars($pines->config->tpl_pinescms->navigation_orientation) ?>" src="<?php echo htmlspecialchars($pines->config->tpl_pinescms->nav_logo_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>"/></a>
+				<?php } ?>
+				<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
+			</div>
+		</div>
+	</div>
+	<div id="shadow_container" class="container<?php echo ($layout_type) ? '-fluid': ''; ?> <?php echo ($pines->config->tpl_pinescms->navigation_fixed) ? 'fixed_nav': '' ;?>">
 		<div id="shadow_box">
+			<?php if ($pines->config->tpl_pinescms->display_header) { ?>
 			<div id="pines_header" class="clearfix">
 				<a id="logo" href="<?php echo htmlspecialchars(pines_url()); ?>">
 					<?php if ($pines->config->tpl_pinescms->use_header_image) { ?>
@@ -73,7 +84,7 @@ elseif (preg_match('/right$/', $pines->config->tpl_pinescms->variant))
 					<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
 					<?php } ?>
 				</a>
-				<div id="pines_navlist_container"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+				<div id="pines_navlist_container"></div>
 				<div id="header_search"><?php echo $pines->page->render_modules('search', 'module_head'); ?></div>
 				<div id="header">
 					<?php echo $pines->page->render_modules('header'); ?>
@@ -82,6 +93,7 @@ elseif (preg_match('/right$/', $pines->config->tpl_pinescms->variant))
 					<?php echo $pines->page->render_modules('header_right'); ?>
 				</div>
 			</div>
+			<?php } ?>
 			<div id="pines_pre_content"><?php echo $pines->page->render_modules('pre_content'); ?></div>
 			<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_simple'); ?></div>
 			<div id="pines_content">

@@ -16,10 +16,7 @@ h1, h2, h3 {
 	color: #777;
 	margin: .6em 0 .2em;
 }
-a,a:link,a:visited {
-	color:#0462a5 !important;
-	text-decoration: none;
-}
+
 a:hover {
 	/*color:#27af1e !important;*/
 	text-decoration: underline;
@@ -32,11 +29,15 @@ a:visited {
 	clear: both;
 }
 
-/* Navigation set up */
+/* Shadow and Copyright Containers */
 #shadow_container {
 	position: relative;
 	overflow: visible;
 	background-color: #fff;
+}
+
+#shadow_container.fixed_nav {
+	margin-top: 33px;
 }
 #shadow_box:before {
 	content: " ";
@@ -115,12 +116,81 @@ a:visited {
 		display: none;
 	}
 }
-#pines_navlist_container {
-	float:right;
-	background:#fff;
-}
 
 /* Navigation tweaks */
+#nav-right > ul {
+	float:right;
+}
+
+#nav-logo {
+	float:right;
+	width: 48px;
+	height:17px;
+	margin: 7px 15px 0 0;
+	border:none;
+}
+
+#nav-logo.nav-right {
+	float:left;
+	margin: 7px 0 0 15px;
+}
+
+.navbar-inner {
+	background: url('../images/pines-navbar-bg.png') repeat-x;
+}
+.navbar-inner a,.navbar-inner a:link,.navbar-inner a:visited {
+	color:#103101 !important;
+	text-decoration: none;
+	text-rendering: optimizelegibility;
+	text-shadow: 1px 0.1em #A5CD60;
+}
+
+.navbar-fixed-top.nav_not_fixed {
+	position:relative;
+}
+
+
+/* Affects all dropdown background colors */
+ul.dropdown a, ul.dropdown ul {
+	background: #60ac45;
+}
+
+
+ul.dropdown ul {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+}
+
+ul.dropdown a, ul.dropdown ul li{
+	border: 1px solid #3b8527;
+}
+
+/* affects padding left indent on hovered over directories. */
+ul.dropdown ul li:hover > .dir, ul.dropdown-vertical li:hover > .dir {
+    padding-left: 8px;
+}
+
+/* This ensures that all hovered A tags take these properties */
+ul.dropdown li.current_page > a, ul.dropdown li.current_page > .dir,
+ul.dropdown a:hover, ul.dropdown .dir:hover {
+	background: transparent;
+	border-bottom: none !important;
+	color:#ffffff !important;
+	text-decoration: none;
+	text-rendering: optimizelegibility;
+	text-shadow: 1px 0.1em #66921d;
+}
+
+ul.dropdown ul a:hover, ul.dropdown ul .dir:hover {
+	background: #80bf4c !important;
+}
+
+/* affects  top level menu's background. */
+ul.main_menu > li.hover, ul.main_menu > li:hover {
+    background: transparent !important;
+}
+
+
+
 /* affects  main menu ul only */
 ul.main_menu {
 	margin: 0 0 0;
@@ -128,7 +198,7 @@ ul.main_menu {
 }
 /* affects lis that arent in main menu dirs and search bar - nonhover */
 ul.main_menu > li > a, #mts-nav-search {
-	background:#fff !important;
+	background:transparent !important;
 	border:none !important;
 }
 /* affects lis that arent dirs in main menu - non-hover */
@@ -163,22 +233,16 @@ ul.main_menu, ul.main_menu > li {
 ul.dropdown ul > li {
     border-top:none!important;
 	border-bottom:none !important;
-	line-height:11px;
+	line-height:normal;
 }
 /* This ensures that all non-hovered A tags take these properties */
-ul.dropdown a, ul.dropdown span, ul.dropdown .dir {
+ul.dropdown a, ul.dropdown .dir {
     display: block;
 	border:none !important;
 	border-left:none !important;
-	background: #fff !important;
+	background: transparent !important;
 }
-/* This ensures that all hovered A tags take these properties */
-ul.dropdown li.current_page > a, ul.dropdown li.current_page > span, ul.dropdown li.current_page > .dir,
-ul.dropdown a:hover, ul.dropdown span:hover, ul.dropdown .dir:hover {
-	background: #0462a5 !important;
-	border-bottom: none !important;
-	color: #fff !important;
-}
+
 /* When a dir in the submenu is highlighted (not hovered) it has a weird border unless you do this */
 ul.dropdown li ul li a.dir {
 	border-bottom-color:transparent !important;
@@ -186,6 +250,10 @@ ul.dropdown li ul li a.dir {
 /* shifts all submenus to line up with the main menu */
 ul.dropdown ul {
 	margin-left:-1px;
+}
+/* Affects bg color of top level menu */
+ul.dropdown li {
+	background: transparent;
 }
 /* This affects all sub sub menus ul tags so that they are aligned next to their parent */
 ul.main_menu li > ul > li > ul {
@@ -198,7 +266,7 @@ ul.main_menu li > ul > li > ul > li {
 }
 /* This affects all LIS non-hover */
 ul.main_menu li ul > li {
-	background: #fff !important;
+	background: transparent !important;
 }
 /* This affects all DIRs giving them a bullet that are in the submenu non-hover */
 ul.main_menu li ul li > a.dir {
@@ -207,21 +275,24 @@ ul.main_menu li ul li > a.dir {
 /* This affects all LIS submenu hover */
 ul.main_menu li ul > li.current_page,
 ul.main_menu li ul > li:hover {
-	background: #fff repeat-x !important;
+	background: transparent !important;
 	
 }
 /* This affects all DIRs giving them a bullet that are in the submenu HOVER */
 ul.main_menu li ul li.current_page > a.dir,
 ul.main_menu li ul li > a.dir:hover {
-	background:#0462a5 url('../images/nav-bullet.png') no-repeat 90% 50% !important;
+	background-image: url('../images/nav-bullet.png') !important;
+	background-repeat: no-repeat !important;
+	background-position: 90% 50% !important;
 	border-bottom:none !important;
 }
 
 /* Header Section */
 #pines_header {
-	background:#fff url('../images/pines-header.png') repeat-x left bottom;
-	min-height:115px;
+	background:#fff url('../images/pines-header-bg.png') repeat-x left bottom;
+	min-height:135px;
 }
+
 #header {
 	float: left;
 	clear: left;
@@ -278,6 +349,7 @@ ul.main_menu li ul li > a.dir:hover {
 	color:#525552 !important;
 	font-family: "droid sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 15px !important;
+	margin-top:-16px;
 }
 
 #pines_pre_content p {

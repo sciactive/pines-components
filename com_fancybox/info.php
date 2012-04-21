@@ -13,13 +13,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'jQuery.fancybox',
+	'name' => 'fancyBox',
 	'author' => 'SciActive (Component), Janis Skarnelis (JavaScript)',
-	'version' => '1.0.1dev',
+	'version' => '2.0.6-2.0.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
-	'short_description' => 'jQuery.fancybox jQuery plugin',
-	'description' => 'A JavaScript image gallery jQuery component.',
+	'short_description' => 'fancyBox jQuery plugin.',
+	'description' => 'A JavaScript lightbox alternative jQuery component.',
 	'depend' => array(
 		'pines' => '<2',
 		'component' => 'com_jquery'

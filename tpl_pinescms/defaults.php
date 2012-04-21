@@ -32,7 +32,7 @@ return array(
 		'name' => 'display_header',
 		'cname' => 'Display Header',
 		'description' => 'Display the top page header. (May be reduntant if using navigation logo.)',
-		'value' => false,
+		'value' => true,
 		'peruser' => true,
 	),
 	array(
@@ -47,13 +47,6 @@ return array(
 		'cname' => 'Header Image',
 		'description' => 'The header image to use.',
 		'value' => $pines->config->rela_location.'templates/tpl_pinescms/images/default_logo.png',
-		'peruser' => true,
-	),
-	array(
-		'name' => 'show_recycled_bits',
-		'cname' => 'Show Recycled Bits',
-		'description' => 'Show recycled bits in footer.',
-		'value' => true,
 		'peruser' => true,
 	),
 	array(
@@ -86,6 +79,13 @@ return array(
 		'cname' => 'Nav Logo Image',
 		'description' => 'The navigation logo image to use.',
 		'value' => $pines->config->rela_location.'templates/tpl_pinescms/images/default_nav_logo.png',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'show_recycled_bits',
+		'cname' => 'Show Recycled Bits',
+		'description' => 'Show recycled bits in footer.',
+		'value' => true,
 		'peruser' => true,
 	),
 );

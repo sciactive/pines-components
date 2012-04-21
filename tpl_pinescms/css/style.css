@@ -3,7 +3,7 @@
 body {
 	background: #b4b4b4 url('../images/body-bg.png') repeat-x;
 	margin:0;
-	/*font-family: 'Droid Sans', sans-serif;*/
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #3a3a3a;
 	line-height: normal;
 }
@@ -18,7 +18,6 @@ h1, h2, h3 {
 }
 
 a:hover {
-	/*color:#27af1e !important;*/
 	text-decoration: underline;
 }
 a:visited {
@@ -39,6 +38,15 @@ a:visited {
 #shadow_container.fixed_nav {
 	margin-top: 33px;
 }
+@media (max-width: 979px) {
+	.navbar-fixed-top {
+		margin-bottom: 0;
+	}
+	#shadow_container.fixed_nav {
+		margin-top: 0;
+	}
+}
+
 #shadow_box:before {
 	content: " ";
 	display: block;
@@ -59,11 +67,11 @@ a:visited {
 	width: 24px;
 	bottom: 0;
 }
-#copyright-line-left {
+#copyright-line-container {
 	position: relative;
 	overflow: visible;
 }
-#copyright-line-right:before {
+#copyright-line-edges:before {
 	content: " ";
 	display: block;
 	position: absolute;
@@ -73,7 +81,7 @@ a:visited {
 	width: 24px;
 	bottom: 0;
 }
-#copyright-line-right:after {
+#copyright-line-edges:after {
 	content: " ";
 	display: block;
 	position: absolute;
@@ -89,12 +97,12 @@ a:visited {
 	line-height:0;
 }
 @media (max-width: 767px) {
-	#shadow_box:before, #copyright-line-right:before {
+	#shadow_box:before, #copyright-line-edges:before {
 		background-position-x: -4px;
 		left: -20px;
 		width: 20px;
 	}
-	#shadow_box:after, #copyright-line-right:after {
+	#shadow_box:after, #copyright-line-edges:after {
 		right: -20px;
 		width: 20px;
 	}
@@ -112,7 +120,7 @@ a:visited {
 		margin: 0;
 		width: 100%
 	}
-	#shadow_box:before, #copyright-line-right:before, #shadow_box:after, #copyright-line-right:after {
+	#shadow_box:before, #copyright-line-edges:before, #shadow_box:after, #copyright-line-edges:after {
 		display: none;
 	}
 }
@@ -120,6 +128,19 @@ a:visited {
 /* Navigation tweaks */
 #nav-right > ul {
 	float:right;
+}
+#nav-right ul.dropdown > li > ul {
+	left: auto;
+	right: 0;
+}
+#nav-right ul.dropdown li li ul {
+	left: auto;
+	right: 100%;
+}
+#nav-right ul.main_menu li ul li.current_page > a.dir,
+#nav-right ul.main_menu li ul li > a.dir,
+#nav-right ul.main_menu li ul li > a.dir:hover {
+	background-image: url('../images/nav-bullet-flipped.png') !important;
 }
 
 #nav-logo {
@@ -149,144 +170,6 @@ a:visited {
 	position:relative;
 }
 
-
-/* Affects all dropdown background colors */
-ul.dropdown a, ul.dropdown ul {
-	background: #60ac45;
-}
-
-
-ul.dropdown ul {
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
-}
-
-ul.dropdown a, ul.dropdown ul li{
-	border: 1px solid #3b8527;
-}
-
-/* affects padding left indent on hovered over directories. */
-ul.dropdown ul li:hover > .dir, ul.dropdown-vertical li:hover > .dir {
-    padding-left: 8px;
-}
-
-/* This ensures that all hovered A tags take these properties */
-ul.dropdown li.current_page > a, ul.dropdown li.current_page > .dir,
-ul.dropdown a:hover, ul.dropdown .dir:hover {
-	background: transparent;
-	border-bottom: none !important;
-	color:#ffffff !important;
-	text-decoration: none;
-	text-rendering: optimizelegibility;
-	text-shadow: 1px 0.1em #66921d;
-}
-
-ul.dropdown ul a:hover, ul.dropdown ul .dir:hover {
-	background: #80bf4c !important;
-}
-
-/* affects  top level menu's background. */
-ul.main_menu > li.hover, ul.main_menu > li:hover {
-    background: transparent !important;
-}
-
-
-
-/* affects  main menu ul only */
-ul.main_menu {
-	margin: 0 0 0;
-	padding:0;
-}
-/* affects lis that arent in main menu dirs and search bar - nonhover */
-ul.main_menu > li > a, #mts-nav-search {
-	background:transparent !important;
-	border:none !important;
-}
-/* affects lis that arent dirs in main menu - non-hover */
-ul.main_menu > li > a {
-	margin: 0 !important;
-	padding: 8px 15px 0 !important;
-	height:25px !important;
-	float:left !important;
-	
-}
-/* affects lis that arent dirs in main menu - hover */
-ul.main_menu > li > a:hover {
-	/* background:#fff !important; */
-	border-top-color:none !important;
-	border-left:none !important;
-	cursor:pointer !important;
-	padding-left: 15px !important;
-}
-/* affects all link colors other than hover */
-ul.dropdown a:link, ul.dropdown li a:visited, ul.dropdown li a:active, ul.dropdown a:hover {
-	
-	font-weight:normal;
-}
-/* affects lis that are in the main menu only non hover */
-ul.main_menu, ul.main_menu > li {
-	list-style-type:none; 
-	display:inline-block;
-	font-size:14px; 
-	color:#0462a5 !important;
-}
-/* Affects ALL LIs */
-ul.dropdown ul > li {
-    border-top:none!important;
-	border-bottom:none !important;
-	line-height:normal;
-}
-/* This ensures that all non-hovered A tags take these properties */
-ul.dropdown a, ul.dropdown .dir {
-    display: block;
-	border:none !important;
-	border-left:none !important;
-	background: transparent !important;
-}
-
-/* When a dir in the submenu is highlighted (not hovered) it has a weird border unless you do this */
-ul.dropdown li ul li a.dir {
-	border-bottom-color:transparent !important;
-}
-/* shifts all submenus to line up with the main menu */
-ul.dropdown ul {
-	margin-left:-1px;
-}
-/* Affects bg color of top level menu */
-ul.dropdown li {
-	background: transparent;
-}
-/* This affects all sub sub menus ul tags so that they are aligned next to their parent */
-ul.main_menu li > ul > li > ul {
-	margin-top:-1px;
-	margin-left:1px;
-}
-/* This affects all sub sub menus non-hover */
-ul.main_menu li > ul > li > ul > li {
-	border-left:none !important;
-}
-/* This affects all LIS non-hover */
-ul.main_menu li ul > li {
-	background: transparent !important;
-}
-/* This affects all DIRs giving them a bullet that are in the submenu non-hover */
-ul.main_menu li ul li > a.dir {
-	background:url('../images/nav-bullet.png') no-repeat 90% 50% !important;
-}
-/* This affects all LIS submenu hover */
-ul.main_menu li ul > li.current_page,
-ul.main_menu li ul > li:hover {
-	background: transparent !important;
-	
-}
-/* This affects all DIRs giving them a bullet that are in the submenu HOVER */
-ul.main_menu li ul li.current_page > a.dir,
-ul.main_menu li ul li > a.dir:hover {
-	background-image: url('../images/nav-bullet.png') !important;
-	background-repeat: no-repeat !important;
-	background-position: 90% 50% !important;
-	border-bottom:none !important;
-}
-
 /* Header Section */
 #pines_header {
 	background:#fff url('../images/pines-header-bg.png') repeat-x left bottom;
@@ -303,7 +186,7 @@ ul.main_menu li ul li > a.dir:hover {
 }
 
 #header_search {
-	margin: 30px 20px 0 0;
+	margin: 30px 15px 0 0;
 	clear:right;
 	float:right;
 }
@@ -313,6 +196,10 @@ ul.main_menu li ul li > a.dir:hover {
 	margin: 20px 0 0 15px;
 	text-decoration: none;
 	float: left;
+	color: #3A3A3A;
+	font-size: 60px;
+	line-height: 45px;
+	font-family: "EB Garamond","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 }
 #logo img {
 	border:none;
@@ -346,15 +233,10 @@ ul.main_menu li ul li > a.dir:hover {
 #pines_pre_content {
 	background: url('../images/pre-content-bg.png') repeat;
 	border-top: 1px solid #ffffff;
-	color:#525552 !important;
-	font-family: "droid sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-size: 15px !important;
 	margin-top:-16px;
 }
-
-#pines_pre_content p {
+#pines_pre_content, #pines_pre_content p {
 	color:#525552;
-	font-family: "droid sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
 }
 
@@ -392,24 +274,8 @@ ul.main_menu li ul li > a.dir:hover {
 #pines_content .content_padding {
 	padding: 0 15px;
 }
-#pines_content .row {
-	margin-left: -20px;
-}
-#pines_content #main_content, #pines_content #sidebar {
-	margin-left: 20px;
-}
 #pines_content h1, #pines_content h2, #pines_content h3 {
 	margin: 1em 0 .4em;
-}
-div.textured_block {
-	background: url('../images/section-bg.png') no-repeat;
-	height:148px;
-	margin: 0 auto;
-	padding:10px;
-}
-div.headline {
-	text-align:center;
-	padding:25px 0;
 }
 
 /* Footer & Copyright */
@@ -421,13 +287,11 @@ div.headline {
 
 #pines_footer {
 	background: #d8d8d8 url('../images/footer-bg.png') repeat-x left bottom;
+	padding: 5px 15px;
 }
 
 #pines_copyright {
 	background: #bcbcbc url('../images/copyright-bg.png') repeat-x left bottom;
-}
-#pines_footer .modules {
-	padding: 5px 20px;
 }
 #pines_copyright p {
 	color:#666666;
@@ -441,7 +305,7 @@ div.headline {
 	width:128px;
 	background: url('../images/recycled-bits') no-repeat right bottom transparent;
 	position:absolute;
-	right:20px;
+	right:15px;
 	bottom:15px;
 }
 
@@ -463,12 +327,10 @@ textarea.ui-widget-content {
 }
 
 /* Modifies Bootstrap */
-.container-fluid {
+#shadow_container.container-fluid, #copyright-line-container.container-fluid {
 	padding: 0;
 }
-
-/* Wherefore this style?
-
-.container-fluid #shadow_box:after, #copyright-line-right:after {
+/* Hide shadow edges on fluid layout. */
+.container-fluid #shadow_box:after, .container-fluid #copyright-line-edges:after {
 	width:0;
-}*/
+}

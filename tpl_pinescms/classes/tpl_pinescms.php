@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * tpl_pinescms main class.
  *
- * A nice looking, fluid width template based on jQuery UI.
+ * A nice default template for websites.
  *
  * @package Pines
  * @subpackage tpl_pinescms
@@ -30,11 +30,11 @@ class tpl_pinescms extends template {
 	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css
 	 */
-	public $editor_css = 'templates/tpl_pinescms/css/style.css';
+	public $editor_css = 'templates/tpl_pinescms/css/editor.css';
 
 	/**
 	 * Format a menu in HTML.
-	 * 
+	 *
 	 * @param array $menu The menu.
 	 * @return string The menu's HTML.
 	 */
@@ -69,7 +69,7 @@ class tpl_pinescms extends template {
 
 	/**
 	 * Format a sub menu in HTML.
-	 * 
+	 *
 	 * @param array &$menu The menu.
 	 * @return string The menu's HTML.
 	 */

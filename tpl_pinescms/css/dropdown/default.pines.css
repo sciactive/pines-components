@@ -1,0 +1,183 @@
+@charset "UTF-8";
+/** 
+ * Default Pines CSS Drop-Down Menu Theme
+ *
+ * @file		default.pines.css
+ * @name		Default Pines
+ * @version		0.1
+ *
+ */
+
+/*-------------------------------------------------/
+ * @section		Base Style Extension
+ */
+
+ul.dropdown a,
+ul.dropdown span {
+	display: block;
+	padding: 7px 10px;
+}
+
+/*-------------------------------------------------/
+ * @section		Base Style Override
+ */
+ul.dropdown li {
+	padding: 0;
+	border: none;
+}
+
+ul.dropdown ul a,
+ul.dropdown ul span {
+	padding: 8px;
+}
+
+/*-------------------------------------------------/
+ * @section		Base Style Reinitiate: post-override activities
+ */
+
+
+/*-------------------------------------------------/
+ *	@section	Custom Styles
+ */
+ul.dropdown li.hover,
+ul.dropdown li:hover {
+	color: #000;
+}
+
+/* Non-first level */
+ul.dropdown ul {
+	margin-top: 0;
+}
+
+/* Mixed */
+ul.dropdown li a,
+ul.dropdown *.dir {
+    display: block;
+	border:none;
+	border-left:none;
+	background: transparent;
+}
+
+/* CSS2 clone */
+
+/* affects padding left indent on hovered over directories. */
+ul.dropdown ul li:hover > *.dir,
+ul.dropdown-vertical li:hover > *.dir {
+    padding-left: 8px;
+}
+
+ul.dropdown-vertical-rtl li:hover > *.dir {
+	padding-right: 15px;
+	border-left: none;
+}
+
+ul.dropdown-upward li:hover > *.dir {
+	border-top-color: #fff;
+}
+
+ul.dropdown-upward ul li:hover > *.dir {
+	border-bottom-color: #d9d9d9;
+}
+
+
+
+/* Affects all dropdown background colors */
+ul.dropdown a, ul.dropdown ul {
+	background: #60ac45;
+}
+ul.dropdown ul {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+}
+ul.dropdown a, ul.dropdown ul li{
+	border: 1px solid #3b8527;
+}
+
+/* This ensures that all hovered A tags take these properties */
+ul.dropdown li.current_page > a, ul.dropdown li.current_page > *.dir,
+ul.dropdown li:hover > a, ul.dropdown *.dir:hover {
+	background: transparent;
+	border-bottom: none !important;
+	color:#ffffff !important;
+	text-decoration: none;
+	text-rendering: optimizelegibility;
+	text-shadow: 1px 0.1em #66921d;
+}
+ul.dropdown ul li:hover > a, ul.dropdown ul *.dir:hover {
+	background: #80bf4c !important;
+}
+/* affects  top level menu's background. */
+ul.main_menu > li.hover, ul.main_menu > li:hover {
+    background: transparent !important;
+}
+
+
+
+/* affects lis that arent in main menu dirs and search bar - nonhover */
+ul.main_menu > li > a, #mts-nav-search {
+	background:transparent !important;
+	border:none !important;
+}
+/* affects lis that arent dirs in main menu - non-hover */
+ul.main_menu > li > a {
+	margin: 0 !important;
+	padding: 8px 15px 0 !important;
+	height:25px !important;
+	float:left !important;
+}
+/* affects lis that arent dirs in main menu - hover */
+ul.main_menu > li:hover > a {
+	/* background:#fff !important; */
+	border-top-color:none !important;
+	border-left:none !important;
+	cursor:pointer !important;
+	padding-left: 15px !important;
+}
+/* affects all link colors other than hover */
+ul.dropdown a:link, ul.dropdown li a:visited, ul.dropdown li a:active, ul.dropdown a:hover {
+	font-weight:normal;
+}
+/* affects lis that are in the main menu only non hover */
+ul.main_menu, ul.main_menu > li {
+	display:inline-block;
+	font-size:14px;
+}
+/* Affects non-top level LIs */
+ul.dropdown ul > li {
+    border-top:none!important;
+	border-bottom:none !important;
+	line-height:normal;
+}
+
+/* shifts all submenus to line up with the main menu */
+ul.dropdown ul {
+	margin-left:-1px;
+}
+/* Affects bg color of top level menu */
+ul.dropdown li {
+	background: transparent;
+}
+/* This affects all sub sub menus ul tags so that they are aligned next to their parent */
+ul.main_menu li > ul > li > ul {
+	margin-top:-1px;
+	margin-left:1px;
+}
+/* This affects all sub sub menus non-hover */
+ul.main_menu li > ul > li > ul > li {
+	border-left:none !important;
+}
+/* This affects all LIS non-hover */
+ul.main_menu li ul > li {
+	background: transparent !important;
+}
+/* This affects all LIS submenu hover */
+ul.main_menu li ul > li.current_page {
+	background: transparent !important;
+}
+/* This affects all DIRs giving them a bullet that are in the submenu */
+ul.main_menu li ul li.current_page > a.dir,
+ul.main_menu li ul li > a.dir,
+ul.main_menu li ul li > a.dir:hover {
+	background-image: url('../../images/nav-bullet.png') !important;
+	background-repeat: no-repeat !important;
+	background-position: 90% 50% !important;
+}

@@ -158,6 +158,7 @@ a:visited {
 
 .navbar-inner {
 	background: url('../images/pines-navbar-bg.png') repeat-x;
+	min-height: 33px;
 }
 .navbar-inner a,.navbar-inner a:link,.navbar-inner a:visited {
 	color:#103101 !important;

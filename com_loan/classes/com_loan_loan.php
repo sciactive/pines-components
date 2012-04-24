@@ -2051,6 +2051,12 @@ class com_loan_loan extends entity {
 	}
 }
 
+/**
+ * Loan terms not possible exception.
+ *
+ * @package Pines
+ * @subpackage com_loan
+ */
 class com_loan_loan_terms_not_possible_exception extends Exception {}
 
 ?>

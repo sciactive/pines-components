@@ -74,6 +74,7 @@ class com_sales_manufacturer extends entity {
 
 	/**
 	 * Get the location of the company logo.
+	 * @param bool $full Whether to return a full URL (as opposed to relative).
 	 * @return string The location of the company logo.
 	 */
 	public function get_logo($full = false) {

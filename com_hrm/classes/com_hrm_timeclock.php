@@ -53,6 +53,14 @@ class com_hrm_timeclock extends entity {
 		return $entity;
 	}
 
+	/**
+	 * Add a time entry.
+	 * @param int $time_in The time in.
+	 * @param int $time_out The time out.
+	 * @param string $comment An optional comment.
+	 * @param array $extras Any extra values to store.
+	 * @return bool True on success, false on failure.
+	 */
 	public function add($time_in, $time_out, $comment = '', $extras = array()) {
 		global $pines;
 		// Check that this time doesn't conflict with any other times.
@@ -78,7 +86,11 @@ class com_hrm_timeclock extends entity {
 		$entity->group = $this->group;
 		return $entity->save();
 	}
-	
+
+	/**
+	 * Clock the user in.
+	 * @return bool True on success, false on failure.
+	 */
 	public function clock_in() {
 		if (isset($this->time_in))
 			return false;
@@ -87,7 +99,12 @@ class com_hrm_timeclock extends entity {
 		$this->ua_in = $_SERVER['HTTP_USER_AGENT'];
 		return $this->save();
 	}
-	
+
+	/**
+	 * Clock the user out.
+	 * @param string $comment An optional comment.
+	 * @return bool True on success, false on failure.
+	 */
 	public function clock_out($comment = '') {
 		if (!isset($this->time_in))
 			return false;
@@ -106,7 +123,14 @@ class com_hrm_timeclock extends entity {
 		} else
 			return false;
 	}
-	
+
+	/**
+	 * Get the time the user clocked in.
+	 * 
+	 * Returns null if the user is not clocked in.
+	 * 
+	 * @return int The clock in time.
+	 */
 	public function clocked_in_time() {
 		return $this->time_in;
 	}

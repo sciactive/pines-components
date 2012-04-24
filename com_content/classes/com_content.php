@@ -30,7 +30,7 @@ class com_content extends component {
 
 	/**
 	 * Get an array of custom CSS files to use.
-	 * @return type 
+	 * @return string[] An array of CSS file names.
 	 */
 	public function get_custom_css() {
 		if (!isset($this->custom_css)) {

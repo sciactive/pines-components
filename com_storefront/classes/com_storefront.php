@@ -224,6 +224,7 @@ class com_storefront extends component {
 	 * @param mixed &$count This variable will receive the total number of products.
 	 * @param mixed &$pages This variable will receive the total number of pages.
 	 * @param string|null $sort_var The variable by which the products should be sorted. If null, no sorting.
+	 * @param bool $sort_reverse Whether to reverse sort order.
 	 * @return array The array of products.
 	 */
 	public function get_cat_products($category, $page, $products_per_page, &$offset, &$count, &$pages, $sort_var = null, $sort_reverse = false) {

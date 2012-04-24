@@ -47,7 +47,7 @@ if ($this->is_widget) {
 	}
 	<?php if ($this->is_widget) { ?>
 	#p_muid_calendar .fc-header-title * {
-		font-size: .5em;
+		font-size: 1.2em;
 		line-height: normal;
 	}
 	<?php } ?>

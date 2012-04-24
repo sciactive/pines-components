@@ -1041,6 +1041,7 @@ class com_sales extends component {
 	 * @param int $end_date The ending date to search for products within.
 	 * @param group $location The location to search for products in.
 	 * @param bool $descendants Whether to show descendant locations.
+	 * @param array $types The types of product events to show.
 	 * @return module The module.
 	 */
 	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null, $descendants = false, $types = null) {

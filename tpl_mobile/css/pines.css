@@ -7,6 +7,14 @@ html {
 	font-family: Verdana,Arial,sans-serif;
 	font-size: 11px;
 }
+body {
+	padding: 0;
+}
+#page {
+	position: relative;
+	padding-left: 5px;
+	padding-right: 5px;
+}
 ul, ol {
 	margin: 11px 0;
 	padding-left: 40px;
@@ -27,35 +35,42 @@ img {
 	border-top: 0 !important;
 	border-left: 0 !important;
 	border-right: 0 !important;
-	background-position: left top !important;
 }
-#page_title {
-	margin: 0 10px;
-	padding: 0;
-	font-size: 1.3em;
+#navbar .brand-image {
+	padding-top: 0;
+	padding-bottom: 0;
 }
-#page_title a {
-	text-decoration: none;
-}
-#page_title img {
+#navbar .brand-image img {
 	margin: 0;
 	padding: 0;
 	border: none 0;
-	vertical-align: middle;
-}
-#page_title span {
-	padding: 14px 0;
-	display: block;
+	height: 40px;
+	width: auto;
 }
 #header .module .module_content, #footer .module .module_content {
 	font-weight: normal;
 }
 /* Menu styles */
-#menu_link, #menu_back {
-	width: 100%;
-	margin: 0 !important;
+.navbar-fixed-top {
+    margin-left: 0;
+    margin-right: 0;
 }
-#menu_link, #menu_back, ul.menu li a {
+#wrapper {
+	width: 100%;
+}
+#wrapper.menu_open {
+	overflow: hidden;
+}
+#menu {
+	background: #222;
+	position: absolute;
+	top: 50px;
+	right: 100%;
+	left: -85%;
+	min-height: 100%;
+	padding: 1em;
+}
+ul.menu li a {
 	padding: 1em;
 	font-size: 18px;
 	line-height: 18px;
@@ -66,7 +81,12 @@ ul.menu {
 	width: 100%;
 	list-style: none outside none;
 }
+ul.menu ul {
+	padding: 0;
+	margin: 0 0 15px;
+}
 ul.menu li {
+	position: relative;
 	width: 100%;
 	display: block;
 	vertical-align: middle;
@@ -74,7 +94,7 @@ ul.menu li {
 }
 ul.menu li ul {
 	display: none;
-	padding-left: .4em;
+	padding-left: .8em;
 }
 ul.menu li a {
 	display: block;
@@ -83,23 +103,35 @@ ul.menu li a {
 	text-align: left;
 }
 ul.menu li a.expander {
-	width: 15%;
-	float: right;
-	clear: right;
+	width: 45px;
+	padding-left: 0;
+	padding-right: 0;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
 	max-height: 18px;
 	overflow: hidden;
 	text-align: center;
+	z-index: 50;
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0;
+	-moz-border-radius-topleft: 0;
+	-moz-border-radius-bottomleft: 0;
+	-webkit-border-top-left-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-o-border-top-left-radius: 0;
+	-o-border-bottom-left-radius: 0;
 }
 ul.menu li a.expander + a {
 	margin-right: 15%;
 }
 /* Footer styles */
 #footer {
+	margin-top: 1em;
+	border-bottom: 0 !important;
 	border-left: 0 !important;
 	border-right: 0 !important;
-	border-top-width: 3px !important;
-	border-bottom-width: 3px !important;
-	background-image: none !important;
 }
 #copyright {
 	text-align: center;
@@ -107,56 +139,31 @@ ul.menu li a.expander + a {
 	margin: 0;
 }
 /* Content styles */
-#content_container {
-	padding: 0 .4em;
-}
 .module {
 	padding: .4em 0;
 }
-.module.ui-widget-content {
-	border-left: none;
-	border-right: none;
-}
-.module .module_title {
-	padding: .2em .4em;
-}
-.module .module_title h2 {
-	margin: 0;
-	font-size: 1.3em;
-}
-.module .module_title p {
-	margin: 0;
-	font-size: .9em;
-	font-weight: normal;
-}
-.module .module_content {
-	padding: .2em 0 0;
-}
-#content .module {
-	margin: .4em 0 .6em;
-}
-#content .module .module_title {
-	margin-bottom: .5em;
+.page-header h2 {
+	line-height: 1;
 }
 /* ----------- Pines Form ----------- */
 .pf-form div.pf-element.pf-full-width .pf-full-width {
 	padding-right: .2em; /* Keep padded inputs from pushing out of their box. */
 }
 .pf-form div.pf-element .pf-label, .pf-form div.pf-element .pf-note {
-	float: none !important;
-	width: auto !important;
-	display: block !important;
-	margin-bottom: .1em !important;
+	float: none;
+	width: auto;
+	display: block;
+	margin-bottom: .1em;
 }
 .pf-form div.pf-element .pf-group {
-	margin-left: 0 !important;
+	margin-left: 0;
 	display: block;
 }
 .pf-form div.pf-element .pf-field.pf-full-width {
-	margin-left: 0 !important;
+	margin-left: 0;
 }
 .pf-form div.pf-buttons {
-	padding-left: 0 !important;
+	padding-left: 0;
 }
 /* ----------- jQuery UI ----------- */
 .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-content {

@@ -14,13 +14,13 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <div class="module <?php echo htmlspecialchars($this->classes); ?>">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
-	<div class="module_title ui-widget-header">
-		<?php if (!empty($this->title)) { ?>
-			<h2><?php echo $this->title; ?></h2>
-		<?php } ?>
-		<?php if (!empty($this->note)) { ?>
-			<p><?php echo $this->note; ?></p>
-		<?php } ?>
+	<div class="module_title page-header">
+		<h2>
+			<?php echo $this->title;
+			if (!empty($this->note)) { ?>
+				<small><?php echo $this->note; ?></small>
+			<?php } ?>
+		</h2>
 	</div>
 	<?php } ?>
 	<div class="module_content ui-helper-reset ui-helper-clearfix">

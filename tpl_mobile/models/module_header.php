@@ -17,8 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="module_title">
 		<?php if (!empty($this->title)) { ?>
 			<h2><?php echo $this->title; ?></h2>
-		<?php } ?>
-		<?php if (!empty($this->note)) { ?>
+		<?php } if (!empty($this->note)) { ?>
 			<p><?php echo $this->note; ?></p>
 		<?php } ?>
 	</div>

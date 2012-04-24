@@ -12,9 +12,20 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
-
 return array(
+	array(
+		'name' => 'variant',
+		'cname' => 'Page Variant/Layout',
+		'description' => 'The layout of the page.',
+		'value' => 'full',
+		'options' => array(
+			'full (Show content, left, and right modules.)' => 'full',
+			'left (Show content and left modules.)' => 'left',
+			'right (Show content and right modules.)' => 'right',
+			'content (Show content modules.)' => 'content',
+		),
+		'peruser' => true,
+	),
 	array(
 		'name' => 'use_header_image',
 		'cname' => 'Use Header Image',
@@ -25,8 +36,8 @@ return array(
 	array(
 		'name' => 'header_image',
 		'cname' => 'Header Image',
-		'description' => 'The header image to use.',
-		'value' => (isset($_SESSION['user']->group) && is_callable(array($_SESSION['user']->group, 'get_logo'))) ? $_SESSION['user']->group->get_logo() : $pines->config->location.$pines->config->upload_location.'logos/default_logo.png',
+		'description' => 'The header image to use. Should be 40 pixels tall.',
+		'value' => $pines->config->rela_location.'templates/tpl_mobile/images/default_logo.png',
 		'peruser' => true,
 	),
 );

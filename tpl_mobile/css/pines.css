@@ -36,6 +36,9 @@ img {
 	border-left: 0 !important;
 	border-right: 0 !important;
 }
+#navbar {
+    margin-bottom: 0;
+}
 #navbar .brand-image {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -56,6 +59,7 @@ img {
     margin-right: 0;
 }
 #wrapper {
+	position: relative;
 	width: 100%;
 }
 #wrapper.menu_open {
@@ -64,7 +68,7 @@ img {
 #menu {
 	background: #222;
 	position: absolute;
-	top: 50px;
+	top: 0;
 	right: 100%;
 	left: -85%;
 	min-height: 100%;

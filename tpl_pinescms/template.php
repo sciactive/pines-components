@@ -38,7 +38,7 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 	<script type="text/javascript">pines(function(){ if ($.pnotify) {
 		$.pnotify.defaults.pnotify_opacity = .9;
 		$.pnotify.defaults.pnotify_delay = 15000;
-		$.pnotify.defaults.pnotify_nonblock = false;
+		pines.pnotify_notice_defaults.pnotify_nonblock = false;
 	}});</script>
 </head>
 <body>

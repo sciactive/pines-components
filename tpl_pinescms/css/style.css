@@ -129,6 +129,9 @@ a:visited {
 #nav-right > ul {
 	float:right;
 }
+.navbar-fixed-top { /* Put menu in front of notices */
+	z-index: 10000;
+}
 #nav-right ul.dropdown > li > ul {
 	left: auto;
 	right: 0;
@@ -334,4 +337,11 @@ textarea.ui-widget-content {
 /* Hide shadow edges on fluid layout. */
 .container-fluid #shadow_box:after, .container-fluid #copyright-line-edges:after {
 	width:0;
+}
+/* pnotify */
+.ui-pnotify {
+	top: 51px;
+}
+.ui-pnotify-history-container {
+	right: 0;
 }

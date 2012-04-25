@@ -35,6 +35,11 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">pines(function(){ if ($.pnotify) {
+		$.pnotify.defaults.pnotify_opacity = .9;
+		$.pnotify.defaults.pnotify_delay = 15000;
+		$.pnotify.defaults.pnotify_nonblock = false;
+	}});</script>
 </head>
 <body>
 	<div id="top"><?php

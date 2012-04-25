@@ -2,8 +2,8 @@
 /**
  * com_elfinder class.
  *
- * @package Pines
- * @subpackage com_elfinder
+ * @package Components
+ * @subpackage elfinder
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -19,8 +19,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Thanks to Studio 42, the authors of elFinder, for their fantastic work.
  *
- * @package Pines
- * @subpackage com_elfinder
+ * @package Components
+ * @subpackage elfinder
  */
 class com_elfinder extends component {
 	/**

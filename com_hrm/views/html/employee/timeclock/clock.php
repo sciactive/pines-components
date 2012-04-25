@@ -2,8 +2,8 @@
 /**
  * Allows the user to clock in and out of the timeclock.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

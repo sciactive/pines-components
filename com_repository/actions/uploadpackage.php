@@ -2,8 +2,8 @@
 /**
  * Upload a package to the repository.
  *
- * @package Pines
- * @subpackage com_repository
+ * @package Components
+ * @subpackage repository
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

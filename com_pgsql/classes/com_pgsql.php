@@ -2,8 +2,8 @@
 /**
  * com_pgsql class.
  *
- * @package Pines
- * @subpackage com_pgsql
+ * @package Components
+ * @subpackage pgsql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Connect to and disconnect from a PostgreSQL database.
  *
- * @package Pines
- * @subpackage com_pgsql
+ * @package Components
+ * @subpackage pgsql
  */
 class com_pgsql extends component {
 	/**

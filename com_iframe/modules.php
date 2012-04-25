@@ -2,8 +2,8 @@
 /**
  * com_iframe's modules.
  *
- * @package Pines
- * @subpackage com_iframe
+ * @package Components
+ * @subpackage iframe
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

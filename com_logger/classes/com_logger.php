@@ -2,8 +2,8 @@
 /**
  * com_logger class.
  *
- * @package Pines
- * @subpackage com_logger
+ * @package Components
+ * @subpackage logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Logs activity to a file.
  *
- * @package Pines
- * @subpackage com_logger
+ * @package Components
+ * @subpackage logger
  */
 class com_logger extends component implements log_manager_interface {
 	/**

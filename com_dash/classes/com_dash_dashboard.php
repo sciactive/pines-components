@@ -2,8 +2,8 @@
 /**
  * com_dash_dashboard class.
  *
- * @package Pines
- * @subpackage com_dash
+ * @package Components
+ * @subpackage dash
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A dashboard.
  *
- * @package Pines
- * @subpackage com_dash
+ * @package Components
+ * @subpackage dash
  */
 class com_dash_dashboard extends entity {
 	/**

@@ -2,8 +2,8 @@
 /**
  * Add customer interaction.
  *
- * @package Pines
- * @subpackage com_customer
+ * @package Components
+ * @subpackage customer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

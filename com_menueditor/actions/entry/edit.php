@@ -2,8 +2,8 @@
 /**
  * Provide a form to edit an entry.
  *
- * @package Pines
- * @subpackage com_menueditor
+ * @package Components
+ * @subpackage menueditor
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

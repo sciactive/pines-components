@@ -2,8 +2,8 @@
 /**
  * com_storefront class.
  *
- * @package Pines
- * @subpackage com_storefront
+ * @package Components
+ * @subpackage storefront
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_storefront main class.
  *
- * @package Pines
- * @subpackage com_storefront
+ * @package Components
+ * @subpackage storefront
  */
 class com_storefront extends component {
 	/**

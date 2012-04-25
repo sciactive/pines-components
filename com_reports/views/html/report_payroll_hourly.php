@@ -6,8 +6,8 @@
  * draw. Employees commissions are totaled but not added to their pay. That's
  * left for a different report.
  *
- * @package Pines
- * @subpackage com_reports
+ * @package Components
+ * @subpackage reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Kirk Johnson <kirk@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,8 @@
 /**
  * com_configure_condition class.
  *
- * @package Pines
- * @subpackage com_configure
+ * @package Components
+ * @subpackage configure
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A conditional configuration.
  *
- * @package Pines
- * @subpackage com_configure
+ * @package Components
+ * @subpackage configure
  */
 class com_configure_condition extends entity {
 	/**

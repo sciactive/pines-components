@@ -2,8 +2,8 @@
 /**
  * Perform actions on groups, returning JSON.
  *
- * @package Pines
- * @subpackage com_jstree
+ * @package Components
+ * @subpackage jstree
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

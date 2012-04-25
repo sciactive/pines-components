@@ -4,8 +4,8 @@
  *
  * The page which is output to the user is built using this file.
  *
- * @package Pines
- * @subpackage tpl_pinescms
+ * @package Templates
+ * @subpackage pinescms
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

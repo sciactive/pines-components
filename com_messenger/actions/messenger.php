@@ -2,8 +2,8 @@
 /**
  * Handle messages and messaging events.
  *
- * @package Pines
- * @subpackage com_messenger
+ * @package Components
+ * @subpackage messenger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

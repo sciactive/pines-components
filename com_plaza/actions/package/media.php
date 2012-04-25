@@ -2,8 +2,8 @@
 /**
  * Return a package's media file.
  *
- * @package Pines
- * @subpackage com_plaza
+ * @package Components
+ * @subpackage plaza
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

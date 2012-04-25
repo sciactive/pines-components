@@ -2,8 +2,8 @@
 /**
  * com_bootstrap's information.
  *
- * @package Pines
- * @subpackage com_bootstrap
+ * @package Components
+ * @subpackage bootstrap
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

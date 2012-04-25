@@ -2,8 +2,8 @@
 /**
  * tpl_pines class.
  *
- * @package Pines
- * @subpackage tpl_pines
+ * @package Templates
+ * @subpackage pines
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A nice looking, fluid width template based on jQuery UI.
  *
- * @package Pines
- * @subpackage tpl_pines
+ * @package Templates
+ * @subpackage pines
  */
 class tpl_pines extends template {
 	/**

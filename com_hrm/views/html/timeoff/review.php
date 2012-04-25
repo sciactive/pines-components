@@ -2,8 +2,8 @@
 /**
  * Display a form to review time off requests.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

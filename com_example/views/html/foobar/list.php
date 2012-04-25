@@ -2,8 +2,8 @@
 /**
  * Lists foobars and provides functions to manipulate them.
  *
- * @package Pines
- * @subpackage com_example
+ * @package Components
+ * @subpackage example
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,8 @@
 /**
  * com_authorizenet class.
  *
- * @package Pines
- * @subpackage com_authorizenet
+ * @package Components
+ * @subpackage authorizenet
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Process sales through Authorize.Net.
  *
- * @package Pines
- * @subpackage com_authorizenet
+ * @package Components
+ * @subpackage authorizenet
  */
 class com_authorizenet extends component {
 	/**

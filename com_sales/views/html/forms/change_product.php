@@ -2,8 +2,8 @@
 /**
  * Display a form to change product on a sale.
  * 
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

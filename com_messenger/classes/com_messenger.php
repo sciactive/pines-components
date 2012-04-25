@@ -2,8 +2,8 @@
 /**
  * com_messenger class.
  *
- * @package Pines
- * @subpackage com_messenger
+ * @package Components
+ * @subpackage messenger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_messenger main class.
  *
- * @package Pines
- * @subpackage com_messenger
+ * @package Components
+ * @subpackage messenger
  */
 class com_messenger extends component {
 	/**

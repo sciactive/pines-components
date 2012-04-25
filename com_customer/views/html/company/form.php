@@ -2,8 +2,8 @@
 /**
  * Provides a form for the user to edit a company.
  *
- * @package Pines
- * @subpackage com_customer
+ * @package Components
+ * @subpackage customer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

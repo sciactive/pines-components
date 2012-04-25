@@ -2,8 +2,8 @@
 /**
  * com_notes_thread class.
  *
- * @package Pines
- * @subpackage com_notes
+ * @package Components
+ * @subpackage notes
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A thread.
  *
- * @package Pines
- * @subpackage com_notes
+ * @package Components
+ * @subpackage notes
  */
 class com_notes_thread extends entity {
 	/**

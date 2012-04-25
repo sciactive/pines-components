@@ -2,8 +2,8 @@
 /**
  * com_customertimer's information.
  *
- * @package Pines
- * @subpackage com_customertimer
+ * @package Components
+ * @subpackage customertimer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

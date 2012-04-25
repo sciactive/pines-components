@@ -2,8 +2,8 @@
 /**
  * slim class.
  *
- * @package Pines
- * @subpackage com_slim
+ * @package Components
+ * @subpackage slim
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -19,8 +19,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * designed for PHP, but Slim can be easily implemented in most programming
  * languages.
  *
- * @package Pines
- * @subpackage com_slim
+ * @package Components
+ * @subpackage slim
  */
 class slim {
 	/**

@@ -2,8 +2,8 @@
 /**
  * A view to load SoundManager 2.
  *
- * @package Pines
- * @subpackage com_soundmanager
+ * @package Components
+ * @subpackage soundmanager
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

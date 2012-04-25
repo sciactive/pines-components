@@ -2,8 +2,8 @@
 /**
  * com_popeye class.
  *
- * @package Pines
- * @subpackage com_popeye
+ * @package Components
+ * @subpackage popeye
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A JavaScript image slideshow widget.
  *
- * @package Pines
- * @subpackage com_popeye
+ * @package Components
+ * @subpackage popeye
  */
 class com_popeye extends component {
 	/**

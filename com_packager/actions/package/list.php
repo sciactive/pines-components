@@ -2,8 +2,8 @@
 /**
  * List packages.
  *
- * @package Pines
- * @subpackage com_packager
+ * @package Components
+ * @subpackage packager
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

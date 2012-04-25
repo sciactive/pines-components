@@ -2,8 +2,8 @@
 /**
  * tpl_mobile's configuration.
  *
- * @package Pines
- * @subpackage tpl_mobile
+ * @package Templates
+ * @subpackage mobile
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

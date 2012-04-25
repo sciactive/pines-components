@@ -2,8 +2,8 @@
 /**
  * com_hrm_timeclock_entry class.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A timeclock entry. The employee should be the user of this entity.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  * @property int $in In time.
  * @property int $out Out time.
  * @property string $comment An optional comment.

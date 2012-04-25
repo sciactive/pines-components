@@ -2,8 +2,8 @@
 /**
  * com_soundmanager class.
  *
- * @package Pines
- * @subpackage com_soundmanager
+ * @package Components
+ * @subpackage soundmanager
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A sound management JavaScript library.
  *
- * @package Pines
- * @subpackage com_soundmanager
+ * @package Components
+ * @subpackage soundmanager
  */
 class com_soundmanager extends component {
 	/**

@@ -2,8 +2,8 @@
 /**
  * com_newsletter class.
  *
- * @package Pines
- * @subpackage com_newsletter
+ * @package Components
+ * @subpackage newsletter
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Manages newsletters to send out to users.
  *
- * @package Pines
- * @subpackage com_newsletter
+ * @package Components
+ * @subpackage newsletter
  */
 class com_newsletter extends component {
 	/**

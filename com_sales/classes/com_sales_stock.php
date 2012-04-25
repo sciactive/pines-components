@@ -2,8 +2,8 @@
 /**
  * com_sales_stock class.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * An entry of a product into stock.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  */
 class com_sales_stock extends entity {
 	/**

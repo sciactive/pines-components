@@ -2,8 +2,8 @@
 /**
  * com_hrm_bonus class.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A bonus for an employee.
  *
- * @package Pines
- * @subpackage com_hrm
+ * @package Components
+ * @subpackage hrm
  */
 class com_hrm_adjustment extends entity {
 	/**

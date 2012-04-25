@@ -2,8 +2,8 @@
 /**
  * Verify a newly registered user's e-mail address.
  *
- * @package Pines
- * @subpackage com_user
+ * @package Components
+ * @subpackage user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

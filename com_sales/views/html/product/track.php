@@ -2,8 +2,8 @@
 /**
  * Provides a report of a product's history.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

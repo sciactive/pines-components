@@ -2,8 +2,8 @@
 /**
  * com_contact's modules.
  *
- * @package Pines
- * @subpackage com_contact
+ * @package Components
+ * @subpackage contact
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

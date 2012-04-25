@@ -2,8 +2,8 @@
 /**
  * com_bootstrap class.
  *
- * @package Pines
- * @subpackage com_bootstrap
+ * @package Components
+ * @subpackage bootstrap
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_bootstrap main class.
  *
- * @package Pines
- * @subpackage com_bootstrap
+ * @package Components
+ * @subpackage bootstrap
  */
 class com_bootstrap extends component {
 	/**

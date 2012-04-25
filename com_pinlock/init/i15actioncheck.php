@@ -2,8 +2,8 @@
 /**
  * Check and protect actions.
  *
- * @package Pines
- * @subpackage com_pinlock
+ * @package Components
+ * @subpackage pinlock
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

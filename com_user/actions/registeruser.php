@@ -2,8 +2,8 @@
 /**
  * Save changes to a new user registration.
  *
- * @package Pines
- * @subpackage com_user
+ * @package Components
+ * @subpackage user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

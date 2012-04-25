@@ -2,8 +2,8 @@
 /**
  * Display the raw log.
  *
- * @package Pines
- * @subpackage com_logger
+ * @package Components
+ * @subpackage logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

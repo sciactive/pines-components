@@ -2,8 +2,8 @@
 /**
  * Print a public raffle form.
  *
- * @package Pines
- * @subpackage com_raffle
+ * @package Components
+ * @subpackage raffle
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

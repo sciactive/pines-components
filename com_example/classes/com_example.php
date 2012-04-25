@@ -2,8 +2,8 @@
 /**
  * com_example class.
  *
- * @package Pines
- * @subpackage com_example
+ * @package Components
+ * @subpackage example
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_example main class.
  *
- * @package Pines
- * @subpackage com_example
+ * @package Components
+ * @subpackage example
  */
 class com_example extends component {
 	/**

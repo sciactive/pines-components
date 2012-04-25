@@ -2,8 +2,8 @@
 /**
  * com_package_package class.
  *
- * @package Pines
- * @subpackage com_package
+ * @package Components
+ * @subpackage package
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A package.
  *
- * @package Pines
- * @subpackage com_package
+ * @package Components
+ * @subpackage package
  */
 class com_package_package {
 	/**

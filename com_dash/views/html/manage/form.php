@@ -2,8 +2,8 @@
 /**
  * Provides a form for the user to edit a dashboard.
  *
- * @package Pines
- * @subpackage com_dash
+ * @package Components
+ * @subpackage dash
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

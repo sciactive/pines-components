@@ -2,8 +2,8 @@
 /**
  * com_sales_manufacturer class.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A manufacturer.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  */
 class com_sales_manufacturer extends entity {
 	/**

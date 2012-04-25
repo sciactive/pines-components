@@ -2,8 +2,8 @@
 /**
  * Shows the sales rankings for a given location.
  *
- * @package Pines
- * @subpackage com_reports
+ * @package Components
+ * @subpackage reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

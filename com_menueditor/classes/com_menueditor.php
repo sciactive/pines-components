@@ -2,8 +2,8 @@
 /**
  * com_menueditor class.
  *
- * @package Pines
- * @subpackage com_menueditor
+ * @package Components
+ * @subpackage menueditor
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_menueditor main class.
  *
- * @package Pines
- * @subpackage com_menueditor
+ * @package Components
+ * @subpackage menueditor
  */
 class com_menueditor extends component {
 	/**

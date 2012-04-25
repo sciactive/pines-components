@@ -2,8 +2,8 @@
 /**
  * Display the log.
  *
- * @package Pines
- * @subpackage com_logger
+ * @package Components
+ * @subpackage logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

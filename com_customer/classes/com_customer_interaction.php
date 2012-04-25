@@ -2,8 +2,8 @@
 /**
  * com_customer_interaction class.
  *
- * @package Pines
- * @subpackage com_customer
+ * @package Components
+ * @subpackage customer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A customer interaction.
  *
- * @package Pines
- * @subpackage com_customer
+ * @package Components
+ * @subpackage customer
  */
 class com_customer_interaction extends entity {
 	/**

@@ -2,8 +2,8 @@
 /**
  * com_oxygenicons class.
  *
- * @package Pines
- * @subpackage com_oxygenicons
+ * @package Components
+ * @subpackage oxygenicons
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A Pines Icon theme using the Oxygen icon library.
  *
- * @package Pines
- * @subpackage com_oxygenicons
+ * @package Components
+ * @subpackage oxygenicons
  */
 class com_oxygenicons extends component implements icons_interface {
 	/**

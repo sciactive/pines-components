@@ -2,8 +2,8 @@
 /**
  * com_imodules class.
  *
- * @package Pines
- * @subpackage com_imodules
+ * @package Components
+ * @subpackage imodules
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -18,8 +18,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * An inline module parser. It allows placement of various modules directly in
  * content.
  *
- * @package Pines
- * @subpackage com_imodules
+ * @package Components
+ * @subpackage imodules
  */
 class com_imodules extends component {
 	/**

@@ -2,8 +2,8 @@
 /**
  * Provides a form for the user to edit a condition.
  *
- * @package Pines
- * @subpackage com_configure
+ * @package Components
+ * @subpackage configure
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

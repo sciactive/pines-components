@@ -2,8 +2,8 @@
 /**
  * com_pgsql's information.
  *
- * @package Pines
- * @subpackage com_pgsql
+ * @package Components
+ * @subpackage pgsql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

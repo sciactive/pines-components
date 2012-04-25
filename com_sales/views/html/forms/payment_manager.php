@@ -2,8 +2,8 @@
 /**
  * Provides a form to fill in manager credentials.
  *
- * @package Pines
- * @subpackage com_sales
+ * @package Components
+ * @subpackage sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

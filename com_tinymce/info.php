@@ -2,8 +2,8 @@
 /**
  * com_tinymce's information.
  *
- * @package Pines
- * @subpackage com_tinymce
+ * @package Components
+ * @subpackage tinymce
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

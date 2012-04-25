@@ -2,8 +2,8 @@
 /**
  * Check the user's remaining session time.
  *
- * @package Pines
- * @subpackage com_timeoutnotice
+ * @package Components
+ * @subpackage timeoutnotice
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

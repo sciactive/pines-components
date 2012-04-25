@@ -2,8 +2,8 @@
 /**
  * com_authorizenet's information.
  *
- * @package Pines
- * @subpackage com_authorizenet
+ * @package Components
+ * @subpackage authorizenet
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

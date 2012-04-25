@@ -2,8 +2,8 @@
 /**
  * com_esp_plan class.
  *
- * @package Pines
- * @subpackage com_esp
+ * @package Components
+ * @subpackage esp
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * An extended service plan.
  *
- * @package Pines
- * @subpackage com_esp
+ * @package Components
+ * @subpackage esp
  */
 class com_esp_plan extends entity {
 	/**

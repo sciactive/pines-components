@@ -2,8 +2,8 @@
 /**
  * Provide a benchmark utility to test an entity manager's speed.
  *
- * @package Pines
- * @subpackage com_entitytools
+ * @package Components
+ * @subpackage entitytools
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

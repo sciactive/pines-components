@@ -2,8 +2,8 @@
 /**
  * com_mysql class.
  *
- * @package Pines
- * @subpackage com_mysql
+ * @package Components
+ * @subpackage mysql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Connect to and disconnect from a MySQL database.
  *
- * @package Pines
- * @subpackage com_mysql
+ * @package Components
+ * @subpackage mysql
  */
 class com_mysql extends component {
 	/**

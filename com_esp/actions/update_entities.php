@@ -2,8 +2,8 @@
 /**
  * Update ESP entities.
  *
- * @package Pines
- * @subpackage com_esp
+ * @package Components
+ * @subpackage esp
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

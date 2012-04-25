@@ -2,8 +2,8 @@
 /**
  * com_pinlock class.
  *
- * @package Pines
- * @subpackage com_pinlock
+ * @package Components
+ * @subpackage pinlock
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_pinlock main class.
  *
- * @package Pines
- * @subpackage com_pinlock
+ * @package Components
+ * @subpackage pinlock
  */
 class com_pinlock extends component {
 	/**

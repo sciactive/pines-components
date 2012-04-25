@@ -2,8 +2,8 @@
 /**
  * jtemplate_params class.
  *
- * @package Pines
- * @subpackage tpl_joomlatemplates
+ * @package Templates
+ * @subpackage joomlatemplates
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Joomla! template parameters class.
  *
- * @package Pines
- * @subpackage tpl_joomlatemplates
+ * @package Templates
+ * @subpackage joomlatemplates
  */
 class jtemplate_params {
 	/**

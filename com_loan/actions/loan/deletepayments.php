@@ -2,8 +2,8 @@
 /**
  * Deletes all payments made on a loan. Saves it in history as a restore point.
  *
- * @package Pines
- * @subpackage com_loan
+ * @package Components
+ * @subpackage loan
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

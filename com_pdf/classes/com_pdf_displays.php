@@ -2,8 +2,8 @@
 /**
  * com_pdf_displays class.
  *
- * @package Pines
- * @subpackage com_pdf
+ * @package Components
+ * @subpackage pdf
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -18,8 +18,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * Use this entity to provide the information com_pdf needs to print information
  * onto a PDF.
  *
- * @package Pines
- * @subpackage com_pdf
+ * @package Components
+ * @subpackage pdf
  */
 class com_pdf_displays extends entity {
 	/**

@@ -2,8 +2,8 @@
 /**
  * com_notes class.
  *
- * @package Pines
- * @subpackage com_notes
+ * @package Components
+ * @subpackage notes
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_notes main class.
  *
- * @package Pines
- * @subpackage com_notes
+ * @package Components
+ * @subpackage notes
  */
 class com_notes extends component {
 	/**

@@ -2,8 +2,8 @@
 /**
  * com_modules_module class.
  *
- * @package Pines
- * @subpackage com_modules
+ * @package Components
+ * @subpackage modules
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A module.
  *
- * @package Pines
- * @subpackage com_modules
+ * @package Components
+ * @subpackage modules
  */
 class com_modules_module extends entity {
 	/**

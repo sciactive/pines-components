@@ -2,8 +2,8 @@
 /**
  * com_esp's buttons.
  *
- * @package Pines
- * @subpackage com_esp
+ * @package Components
+ * @subpackage esp
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

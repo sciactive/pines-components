@@ -2,8 +2,8 @@
 /**
  * com_jstree' information.
  *
- * @package Pines
- * @subpackage com_jstree
+ * @package Components
+ * @subpackage jstree
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,8 @@
 /**
  * A view to build a FancyBox.
  *
- * @package Pines
- * @subpackage com_fancybox
+ * @package Components
+ * @subpackage fancybox
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,8 @@
 /**
  * com_nivoslider class.
  *
- * @package Pines
- * @subpackage com_nivoslider
+ * @package Components
+ * @subpackage nivoslider
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A JavaScript image slider widget.
  *
- * @package Pines
- * @subpackage com_nivoslider
+ * @package Components
+ * @subpackage nivoslider
  */
 class com_nivoslider extends component {
 	/**

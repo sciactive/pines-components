@@ -2,8 +2,7 @@
 /**
  * Log a user into the system.
  *
- * @package Components
- * @subpackage su
+ * @package Components\su
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -39,9 +39,21 @@
  * @subpackage financial
  */
 define('COM_FINANCIAL_ACCURACY', 1.0e-6);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_MAX_ITERATIONS', 100);
 
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_SECS_PER_DAY', 24 * 60 * 60);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_HALF_SEC', 0.5 / COM_FINANCIAL_SECS_PER_DAY);
 
 /**
@@ -95,10 +107,30 @@ define('COM_FINANCIAL_HALF_SEC', 0.5 / COM_FINANCIAL_SECS_PER_DAY);
  * @subpackage financial
  */
 define('COM_FINANCIAL_BASIS_MSRB_30_360', 0);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_BASIS_ACT_ACT', 1);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_BASIS_ACT_360', 2);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_BASIS_ACT_365', 3);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_BASIS_30E_360', 4);
+/**
+ * @package Components
+ * @subpackage financial
+ */
 define('COM_FINANCIAL_BASIS_30Ep_360', 5);
 
 /**

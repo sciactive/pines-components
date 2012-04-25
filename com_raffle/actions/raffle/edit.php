@@ -2,8 +2,7 @@
 /**
  * Provide a form to edit a raffle.
  *
- * @package Components
- * @subpackage raffle
+ * @package Components\raffle
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

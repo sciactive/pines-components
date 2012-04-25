@@ -2,8 +2,7 @@
 /**
  * tpl_pinescms class.
  *
- * @package Templates
- * @subpackage pinescms
+ * @package Templates\pinescms
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A nice default template for websites.
  *
- * @package Templates
- * @subpackage pinescms
+ * @package Templates\pinescms
  */
 class tpl_pinescms extends template {
 	/**

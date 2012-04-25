@@ -46,8 +46,7 @@
  * Built using the Barcode Render Class for PHP Created by Karim Mribti
  * http://www.mribti.com/barcode/
  *
- * @package Components
- * @subpackage barcode
+ * @package Components\barcode
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

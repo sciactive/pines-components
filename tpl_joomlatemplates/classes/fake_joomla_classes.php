@@ -2,8 +2,7 @@
 /**
  * Fake Joomla! classes.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Fake JText class.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  */
 class JText {
 	/**
@@ -44,8 +42,7 @@ define( 'JREQUEST_ALLOWHTML', 4 );
 /**
  * Fake JRequest class.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  */
 class JRequest {
 	/**
@@ -573,8 +570,7 @@ class JRequest {
 /**
  * Fake JFilterInput class.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  */
 class JFilterInput {
 	var $tagsArray; // default = empty array

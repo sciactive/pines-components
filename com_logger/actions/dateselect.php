@@ -2,8 +2,7 @@
 /**
  * Select a start and end date.
  *
- * @package Components
- * @subpackage logger
+ * @package Components\logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

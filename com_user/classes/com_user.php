@@ -2,8 +2,7 @@
 /**
  * com_user class.
  *
- * @package Components
- * @subpackage user
+ * @package Components\user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Provides an entity based user and group manager.
  *
- * @package Components
- * @subpackage user
+ * @package Components\user
  */
 class com_user extends component implements user_manager_interface {
 	/**

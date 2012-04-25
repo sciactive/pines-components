@@ -2,8 +2,7 @@
 /**
  * com_calendar's buttons.
  *
- * @package Components
- * @subpackage calendar
+ * @package Components\calendar
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

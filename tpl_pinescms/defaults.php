@@ -2,8 +2,7 @@
 /**
  * tpl_pinescms' configuration.
  *
- * @package Templates
- * @subpackage pinescms
+ * @package Templates\pinescms
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

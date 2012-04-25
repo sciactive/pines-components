@@ -2,8 +2,7 @@
 /**
  * Fake Joomla! module classes.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Fake module class.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  */
 class jmodule {
 	public $title = '';
@@ -29,8 +27,7 @@ class jmodule {
 /**
  * Fake module params class.
  *
- * @package Templates
- * @subpackage joomlatemplates
+ * @package Templates\joomlatemplates
  */
 class jmodule_params {
 	public $classes = '';

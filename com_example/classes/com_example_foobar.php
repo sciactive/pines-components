@@ -2,8 +2,7 @@
 /**
  * com_example_foobar class.
  *
- * @package Components
- * @subpackage example
+ * @package Components\example
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A foobar.
  *
- * @package Components
- * @subpackage example
+ * @package Components\example
  */
 class com_example_foobar extends entity {
 	/**

@@ -2,8 +2,7 @@
 /**
  * Add customer interaction.
  *
- * @package Components
- * @subpackage customer
+ * @package Components\customer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

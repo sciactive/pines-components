@@ -2,8 +2,7 @@
 /**
  * com_pgentity's information.
  *
- * @package Components
- * @subpackage pgentity
+ * @package Components\pgentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

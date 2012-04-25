@@ -2,8 +2,7 @@
 /**
  * com_mailer_mail class.
  *
- * @package Components
- * @subpackage mailer
+ * @package Components\mailer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -20,8 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Credit for this class goes to Alejandro Gervasio
  * http://www.devshed.com/cp/bio/Alejandro-Gervasio/
  *
- * @package Components
- * @subpackage mailer
+ * @package Components\mailer
  */
 class com_mailer_mail {
 	/**

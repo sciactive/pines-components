@@ -2,8 +2,7 @@
 /**
  * Extend the user's session.
  *
- * @package Components
- * @subpackage timeoutnotice
+ * @package Components\timeoutnotice
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * com_elfinderupload class.
  *
- * @package Components
- * @subpackage elfinderupload
+ * @package Components\elfinderupload
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A standard Pines file upload widget built with elFinder.
  *
- * @package Components
- * @subpackage elfinderupload
+ * @package Components\elfinderupload
  */
 class com_elfinderupload extends component implements uploader_interface {
 	/**

@@ -2,8 +2,7 @@
 /**
  * Handle messages and messaging events.
  *
- * @package Components
- * @subpackage messenger
+ * @package Components\messenger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

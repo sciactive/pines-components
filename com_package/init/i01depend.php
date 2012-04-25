@@ -2,8 +2,7 @@
 /**
  * Add the dependency checker for a package.
  *
- * @package Components
- * @subpackage package
+ * @package Components\package
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * Print a form to attach a PO to warehouse items.
  *
- * @package Components
- * @subpackage sales
+ * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * Provides a list of storefront products that are problematic/incomplete.
  *
- * @package Components
- * @subpackage storefront
+ * @package Components\storefront
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

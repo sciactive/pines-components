@@ -2,8 +2,7 @@
 /**
  * elFinderConnector class.
  *
- * @package Components
- * @subpackage elfinder
+ * @package Components\elfinder
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Default elFinder connector
  *
- * @package Components
- * @subpackage elfinder
+ * @package Components\elfinder
  * @author Dmitry (dio) Levashov
  **/
 class elFinderConnector {

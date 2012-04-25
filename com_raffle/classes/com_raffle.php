@@ -2,8 +2,7 @@
 /**
  * com_raffle class.
  *
- * @package Components
- * @subpackage raffle
+ * @package Components\raffle
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_raffle main class.
  *
- * @package Components
- * @subpackage raffle
+ * @package Components\raffle
  */
 class com_raffle extends component {
 	/**

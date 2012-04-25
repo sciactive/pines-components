@@ -2,8 +2,7 @@
 /**
  * com_reports_warboard class.
  *
- * @package Components
- * @subpackage reports
+ * @package Components\reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A list of employee contact information.
  *
- * @package Components
- * @subpackage reports
+ * @package Components\reports
  */
 class com_reports_warboard extends entity {
 	/**

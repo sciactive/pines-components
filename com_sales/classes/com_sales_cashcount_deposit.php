@@ -2,8 +2,7 @@
 /**
  * com_sales_cashcount_deposit class.
  *
- * @package Components
- * @subpackage sales
+ * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A deposit off of skims from a cash count.
  *
- * @package Components
- * @subpackage sales
+ * @package Components\sales
  */
 class com_sales_cashcount_deposit extends entity {
 	/**

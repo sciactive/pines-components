@@ -2,8 +2,7 @@
 /**
  * Lists employee adjustments and provides functions to manipulate them.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Kirk Johnson <kirk@sciactive.com>
  * @copyright SciActive.com

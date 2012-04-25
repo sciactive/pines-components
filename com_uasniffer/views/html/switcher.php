@@ -2,8 +2,7 @@
 /**
  * Provides a switcher to go to the desktop or mobile site.
  *
- * @package Components
- * @subpackage uasniffer
+ * @package Components\uasniffer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

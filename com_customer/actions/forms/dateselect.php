@@ -2,8 +2,7 @@
 /**
  * Select a start and end date.
  *
- * @package Components
- * @subpackage customer
+ * @package Components\customer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * List daily cash drawer counts.
  *
- * @package Components
- * @subpackage sales
+ * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

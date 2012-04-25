@@ -2,8 +2,7 @@
 /**
  * Provides a printable payment form (customer version).
  *
- * @package Components
- * @subpackage authorizenet
+ * @package Components\authorizenet
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

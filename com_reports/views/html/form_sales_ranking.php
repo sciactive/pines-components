@@ -2,8 +2,7 @@
 /**
  * Display a form to edit the details of a sales ranking.
  *
- * @package Components
- * @subpackage reports
+ * @package Components\reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

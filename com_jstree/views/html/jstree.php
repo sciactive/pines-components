@@ -2,8 +2,7 @@
 /**
  * A view to load jsTree.
  *
- * @package Components
- * @subpackage jstree
+ * @package Components\jstree
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

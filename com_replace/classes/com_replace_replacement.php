@@ -2,8 +2,7 @@
 /**
  * com_replace_replacement class.
  *
- * @package Components
- * @subpackage replace
+ * @package Components\replace
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A replacement.
  *
- * @package Components
- * @subpackage replace
+ * @package Components\replace
  */
 class com_replace_replacement extends entity {
 	/**

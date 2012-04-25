@@ -2,8 +2,7 @@
 /**
  * Setup the database.
  *
- * @package Components
- * @subpackage mysql
+ * @package Components\mysql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

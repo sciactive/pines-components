@@ -2,8 +2,7 @@
 /**
  * com_ckeditor class.
  *
- * @package Components
- * @subpackage ckeditor
+ * @package Components\ckeditor
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A standard editor using CKEditor.
  *
- * @package Components
- * @subpackage ckeditor
+ * @package Components\ckeditor
  */
 class com_ckeditor extends component implements editor_interface {
 	/**

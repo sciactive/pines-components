@@ -2,8 +2,7 @@
 /**
  * com_mysql class.
  *
- * @package Components
- * @subpackage mysql
+ * @package Components\mysql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Connect to and disconnect from a MySQL database.
  *
- * @package Components
- * @subpackage mysql
+ * @package Components\mysql
  */
 class com_mysql extends component {
 	/**

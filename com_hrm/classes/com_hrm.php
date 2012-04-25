@@ -2,8 +2,7 @@
 /**
  * com_hrm class.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Provides an HR manager.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  */
 class com_hrm extends component {
 	/**

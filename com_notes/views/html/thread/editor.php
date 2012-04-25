@@ -2,8 +2,7 @@
 /**
  * Provides a thread editor for an entity.
  *
- * @package Components
- * @subpackage notes
+ * @package Components\notes
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

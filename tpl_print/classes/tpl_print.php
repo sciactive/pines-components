@@ -2,8 +2,7 @@
 /**
  * tpl_print class.
  *
- * @package Templates
- * @subpackage print
+ * @package Templates\print
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -18,8 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * A simple template which only outputs the content position. Good for printing
  * a page.
  *
- * @package Templates
- * @subpackage print
+ * @package Templates\print
  */
 class tpl_print extends template {
 	/**

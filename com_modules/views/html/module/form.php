@@ -2,8 +2,7 @@
 /**
  * Provides a form for the user to edit a module.
  *
- * @package Components
- * @subpackage modules
+ * @package Components\modules
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

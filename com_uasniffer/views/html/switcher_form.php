@@ -2,8 +2,7 @@
 /**
  * Provides a form to set up the switcher.
  *
- * @package Components
- * @subpackage uasniffer
+ * @package Components\uasniffer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

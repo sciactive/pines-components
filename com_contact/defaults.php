@@ -2,8 +2,7 @@
 /**
  * com_contact's configuration defaults.
  *
- * @package Components
- * @subpackage contact
+ * @package Components\contact
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

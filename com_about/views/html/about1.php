@@ -2,8 +2,7 @@
 /**
  * Displays user defined "about" information.
  *
- * @package Components
- * @subpackage about
+ * @package Components\about
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

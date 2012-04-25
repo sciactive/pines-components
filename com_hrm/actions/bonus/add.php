@@ -2,8 +2,7 @@
 /**
  * Give a bonus to an employee.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

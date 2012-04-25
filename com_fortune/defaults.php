@@ -2,8 +2,7 @@
 /**
  * com_fortune's configuration defaults.
  *
- * @package Components
- * @subpackage fortune
+ * @package Components\fortune
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

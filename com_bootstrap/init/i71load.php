@@ -2,8 +2,7 @@
 /**
  * Load Bootstrap.
  *
- * @package Components
- * @subpackage bootstrap
+ * @package Components\bootstrap
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

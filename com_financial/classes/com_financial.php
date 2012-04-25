@@ -2,8 +2,7 @@
 /**
  * com_financial class.
  *
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  * @license http://www.gnu.org/licenses/gpl.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @author Enrique Garc�a M. <egarcia@egm.as>
@@ -35,24 +34,20 @@
 /**
  * Constants to define the accuracy in numeric aproximations, and the max
  * iterations to solve
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_ACCURACY', 1.0e-6);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_MAX_ITERATIONS', 100);
 
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_SECS_PER_DAY', 24 * 60 * 60);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_HALF_SEC', 0.5 / COM_FINANCIAL_SECS_PER_DAY);
 
@@ -103,33 +98,27 @@ define('COM_FINANCIAL_HALF_SEC', 0.5 / COM_FINANCIAL_SECS_PER_DAY);
  *         date adjustment: from_date is changed from 31st to 30th
  *                          to_date is changed from 31st to 1st of following month
  *         date difference: each month 30 days, within a month serial delta
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_MSRB_30_360', 0);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_ACT_ACT', 1);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_ACT_360', 2);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_ACT_365', 3);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_30E_360', 4);
 /**
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 define('COM_FINANCIAL_BASIS_30Ep_360', 5);
 
@@ -138,8 +127,7 @@ define('COM_FINANCIAL_BASIS_30Ep_360', 5);
  *
  * Financial functions.
  *
- * @package Components
- * @subpackage financial
+ * @package Components\financial
  */
 class com_financial extends component {
 	function __construct() {

@@ -2,8 +2,7 @@
 /**
  * Provide display editors for the fields of a Pines Form.
  *
- * @package Components
- * @subpackage pdf
+ * @package Components\pdf
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * com_package class.
  *
- * @package Components
- * @subpackage package
+ * @package Components\package
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_package main class.
  *
- * @package Components
- * @subpackage package
+ * @package Components\package
  * @property-read array $db The package database.
  */
 class com_package extends component {

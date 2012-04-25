@@ -2,8 +2,7 @@
 /**
  * Require the user to enter their PIN.
  *
- * @package Components
- * @subpackage pinlock
+ * @package Components\pinlock
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

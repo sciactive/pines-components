@@ -2,8 +2,7 @@
 /**
  * A view to load the Oxygen icons.
  *
- * @package Components
- * @subpackage oxygenicons
+ * @package Components\oxygenicons
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

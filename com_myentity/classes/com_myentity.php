@@ -2,8 +2,7 @@
 /**
  * com_myentity class.
  *
- * @package Components
- * @subpackage myentity
+ * @package Components\myentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Provides a MySQL based entity manager for Pines.
  *
- * @package Components
- * @subpackage myentity
+ * @package Components\myentity
  */
 class com_myentity extends component implements entity_manager_interface {
 	/**

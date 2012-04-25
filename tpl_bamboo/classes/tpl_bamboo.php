@@ -2,8 +2,7 @@
 /**
  * tpl_bamboo class.
  *
- * @package Templates
- * @subpackage bamboo
+ * @package Templates\bamboo
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * tpl_bamboo main class.
  *
- * @package Templates
- * @subpackage bamboo
+ * @package Templates\bamboo
  */
 class tpl_bamboo extends template {
 	/**

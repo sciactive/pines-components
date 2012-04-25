@@ -2,8 +2,7 @@
 /**
  * Display a form to make a payment.
  *
- * @package Components
- * @subpackage smartflights
+ * @package Components\smartflights
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com

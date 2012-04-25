@@ -7,8 +7,7 @@
  * FullCalendar Created by Adam Shaw
  * http://arshaw.com/fullcalendar/
  *
- * @package Components
- * @subpackage reports
+ * @package Components\reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

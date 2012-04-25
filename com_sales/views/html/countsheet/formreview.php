@@ -2,8 +2,7 @@
 /**
  * Provides a form for the user to review a countsheet.
  *
- * @package Components
- * @subpackage sales
+ * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

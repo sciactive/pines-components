@@ -2,8 +2,7 @@
 /**
  * com_menueditor_entry class.
  *
- * @package Components
- * @subpackage menueditor
+ * @package Components\menueditor
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * An entry.
  *
- * @package Components
- * @subpackage menueditor
+ * @package Components\menueditor
  */
 class com_menueditor_entry extends entity {
 	/**

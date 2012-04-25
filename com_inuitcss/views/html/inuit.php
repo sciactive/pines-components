@@ -2,8 +2,7 @@
 /**
  * A view to load Inuit CSS.
  *
- * @package Components
- * @subpackage inuitcss
+ * @package Components\inuitcss
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

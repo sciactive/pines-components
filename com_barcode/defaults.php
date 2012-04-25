@@ -2,8 +2,7 @@
 /**
  * com_barcode's configuration defaults.
  *
- * @package Components
- * @subpackage barcode
+ * @package Components\barcode
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

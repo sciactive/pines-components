@@ -2,8 +2,7 @@
 /**
  * Displays a raw log.
  *
- * @package Components
- * @subpackage logger
+ * @package Components\logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

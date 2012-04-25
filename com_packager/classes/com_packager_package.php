@@ -2,8 +2,7 @@
 /**
  * com_packager_package class.
  *
- * @package Components
- * @subpackage packager
+ * @package Components\packager
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A package.
  *
- * @package Components
- * @subpackage packager
+ * @package Components\packager
  */
 class com_packager_package extends entity {
 	/**

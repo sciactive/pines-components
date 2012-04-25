@@ -2,8 +2,7 @@
 /**
  * tpl_mobile's configuration.
  *
- * @package Templates
- * @subpackage mobile
+ * @package Templates\mobile
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

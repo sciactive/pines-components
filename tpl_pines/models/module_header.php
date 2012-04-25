@@ -2,8 +2,7 @@
 /**
  * Template for a module.
  *
- * @package Templates
- * @subpackage pines
+ * @package Templates\pines
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

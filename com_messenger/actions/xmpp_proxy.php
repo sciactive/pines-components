@@ -2,8 +2,7 @@
 /**
  * Proxy requests to the real BOSH server.
  *
- * @package Components
- * @subpackage messenger
+ * @package Components\messenger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

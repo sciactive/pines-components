@@ -2,8 +2,7 @@
 /**
  * com_newsletter class.
  *
- * @package Components
- * @subpackage newsletter
+ * @package Components\newsletter
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Manages newsletters to send out to users.
  *
- * @package Components
- * @subpackage newsletter
+ * @package Components\newsletter
  */
 class com_newsletter extends component {
 	/**

@@ -2,8 +2,7 @@
 /**
  * Provide a benchmark utility to test an entity manager's speed.
  *
- * @package Components
- * @subpackage entitytools
+ * @package Components\entitytools
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

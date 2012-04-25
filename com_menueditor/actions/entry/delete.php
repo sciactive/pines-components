@@ -2,8 +2,7 @@
 /**
  * Delete a set of entries.
  *
- * @package Components
- * @subpackage menueditor
+ * @package Components\menueditor
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

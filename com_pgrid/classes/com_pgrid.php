@@ -2,8 +2,7 @@
 /**
  * com_pgrid class.
  *
- * @package Components
- * @subpackage pgrid
+ * @package Components\pgrid
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A JavaScript data grid.
  *
- * @package Components
- * @subpackage pgrid
+ * @package Components\pgrid
  */
 class com_pgrid extends component {
 	/**

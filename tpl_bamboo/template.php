@@ -4,8 +4,7 @@
  *
  * The page which is output to the user is built using this file.
  *
- * @package Templates
- * @subpackage bamboo
+ * @package Templates\bamboo
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

@@ -2,8 +2,7 @@
 /**
  * Display a form to view schedules for different company divisions/locations.
  *
- * @package Components
- * @subpackage calendar
+ * @package Components\calendar
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

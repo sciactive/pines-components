@@ -2,8 +2,7 @@
 /**
  * com_storefront class.
  *
- * @package Components
- * @subpackage storefront
+ * @package Components\storefront
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_storefront main class.
  *
- * @package Components
- * @subpackage storefront
+ * @package Components\storefront
  */
 class com_storefront extends component {
 	/**

@@ -2,8 +2,7 @@
 /**
  * Save all of the events for the company calendar.
  *
- * @package Components
- * @subpackage calendar
+ * @package Components\calendar
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

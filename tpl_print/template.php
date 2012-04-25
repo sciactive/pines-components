@@ -4,8 +4,7 @@
  *
  * The page which is output to the user is built using this file.
  *
- * @package Templates
- * @subpackage print
+ * @package Templates\print
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

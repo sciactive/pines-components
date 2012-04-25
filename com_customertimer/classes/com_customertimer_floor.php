@@ -2,8 +2,7 @@
 /**
  * com_customertimer_floor class.
  *
- * @package Components
- * @subpackage customertimer
+ * @package Components\customertimer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A floorplan of stations.
  *
- * @package Components
- * @subpackage customertimer
+ * @package Components\customertimer
  */
 class com_customertimer_floor extends entity {
 	/**

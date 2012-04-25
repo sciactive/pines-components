@@ -5,8 +5,7 @@
  * Add a fourth entry to a test's array to show more detail if it fails. (This
  * entry is var_dump()ed in a dialog.)
  *
- * @package Components
- * @subpackage entitytools
+ * @package Components\entitytools
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

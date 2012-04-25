@@ -5,8 +5,7 @@
  * If the user is not logged in, a login page is provided. If he is, a list of
  * users will be printed.
  *
- * @package Components
- * @subpackage user
+ * @package Components\user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

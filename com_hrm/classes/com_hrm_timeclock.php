@@ -2,8 +2,7 @@
 /**
  * com_hrm_timeclock class.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * An employee's timeclock.
  *
- * @package Components
- * @subpackage hrm
+ * @package Components\hrm
  */
 class com_hrm_timeclock extends entity {
 	/**

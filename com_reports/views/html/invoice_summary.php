@@ -2,8 +2,7 @@
 /**
  * Shows a list of all sales, returns and voids.
  *
- * @package Components
- * @subpackage reports
+ * @package Components\reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com

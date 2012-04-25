@@ -2,8 +2,7 @@
 /**
  * com_ptags class.
  *
- * @package Components
- * @subpackage ptags
+ * @package Components\ptags
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * A JavaScript content tag editor.
  *
- * @package Components
- * @subpackage ptags
+ * @package Components\ptags
  */
 class com_ptags extends component {
 	/**

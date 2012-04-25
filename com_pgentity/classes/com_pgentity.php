@@ -2,8 +2,7 @@
 /**
  * com_pgentity class.
  *
- * @package Components
- * @subpackage pgentity
+ * @package Components\pgentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Provides a PostgreSQL based entity manager for Pines.
  *
- * @package Components
- * @subpackage pgentity
+ * @package Components\pgentity
  */
 class com_pgentity extends component implements entity_manager_interface {
 	/**

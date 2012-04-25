@@ -2,8 +2,7 @@
 /**
  * Provides a form for the user to choose featured options.
  *
- * @package Components
- * @subpackage storefront
+ * @package Components\storefront
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

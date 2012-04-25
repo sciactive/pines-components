@@ -2,8 +2,7 @@
 /**
  * com_inuitcss class.
  *
- * @package Components
- * @subpackage inuitcss
+ * @package Components\inuitcss
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_inuitcss main class.
  *
- * @package Components
- * @subpackage inuitcss
+ * @package Components\inuitcss
  */
 class com_inuitcss extends component {
 	/**

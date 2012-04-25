@@ -2,8 +2,7 @@
 /**
  * tpl_mobile class.
  *
- * @package Templates
- * @subpackage mobile
+ * @package Templates\mobile
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,8 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * jQuery UI styled template for mobile browsers.
  *
- * @package Templates
- * @subpackage mobile
+ * @package Templates\mobile
  */
 class tpl_mobile extends template {
 	/**

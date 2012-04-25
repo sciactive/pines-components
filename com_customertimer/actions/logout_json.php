@@ -2,8 +2,7 @@
 /**
  * Logout a user and return a JSON result.
  *
- * @package Components
- * @subpackage customertimer
+ * @package Components\customertimer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

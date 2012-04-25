@@ -2,8 +2,7 @@
 /**
  * com_esp class.
  *
- * @package Components
- * @subpackage esp
+ * @package Components\esp
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_esp main class.
  *
- * @package Components
- * @subpackage esp
+ * @package Components\esp
  */
 class com_esp extends component {
 	/**

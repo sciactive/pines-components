@@ -2,8 +2,7 @@
 /**
  * group class.
  *
- * @package Components
- * @subpackage user
+ * @package Components\user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Pines system groups.
  *
- * @package Components
- * @subpackage user
+ * @package Components\user
  * @property int $guid The GUID of the group.
  * @property string $groupname The group's groupname.
  * @property string $name The group's name.

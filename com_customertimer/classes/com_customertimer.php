@@ -2,8 +2,7 @@
 /**
  * com_customertimer class.
  *
- * @package Components
- * @subpackage customertimer
+ * @package Components\customertimer
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -18,8 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Uses the points from com_customer to time customers, and notify when they are
  * out of points.
  *
- * @package Components
- * @subpackage customertimer
+ * @package Components\customertimer
  */
 class com_customertimer extends component {
 	/**

@@ -2,8 +2,7 @@
 /**
  * com_loan_loan class.
  *
- * @package Components
- * @subpackage loan
+ * @package Components\loan
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Angela Murrell <angela@sciactive.com>
  * @copyright SciActive.com
@@ -15,8 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A loan.
  *
- * @package Components
- * @subpackage loan
+ * @package Components\loan
  */
 class com_loan_loan extends entity {
 	/**
@@ -2054,8 +2052,7 @@ class com_loan_loan extends entity {
 /**
  * Loan terms not possible exception.
  *
- * @package Components
- * @subpackage loan
+ * @package Components\loan
  */
 class com_loan_loan_terms_not_possible_exception extends Exception {}
 

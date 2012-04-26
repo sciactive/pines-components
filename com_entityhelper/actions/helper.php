@@ -32,9 +32,10 @@ if (is_callable(array($entity, 'helper'))) {
 	if (is_a($response, 'module')) {
 		$response->render = 'body';
 		$response->entity = $entity;
+		$body = $response->render();
 		$result = array(
-			'title' => $entity->info('name'),
-			'body' => $response->render()
+			'title' => empty($response->title) ? $entity->info('name') : $response->title,
+			'body' => $body
 		);
 		$response = $entity->helper();
 		$response->render = 'footer';

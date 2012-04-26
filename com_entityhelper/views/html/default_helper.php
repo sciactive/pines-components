@@ -27,6 +27,7 @@ if ($this->render == 'body') {
 <div style="float: right;">
 	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars(ucwords($types)); ?></a>
 </div>
+<?php } ?>
 <div style="clear: both; padding-top: 1em;">
 	<div style="float: left;">
 		Created on <?php echo format_date($this->entity->p_cdate, 'full_med'); ?>.<br />
@@ -42,7 +43,7 @@ if ($this->render == 'body') {
 	</div>
 	<?php } ?>
 </div>
-<?php } if ($image) { ?>
+<?php if ($image) { ?>
 <div style="clear: both; padding-top: 1em; text-align: center;">
 	<span class="thumbnail" style="display: inline-block; max-width: 90%;">
 		<img src="<?php echo htmlspecialchars($image); ?>" alt="" style="max-width: 100%;">

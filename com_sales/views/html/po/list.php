@@ -80,7 +80,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->pos as $po) { ?>
 		<tr title="<?php echo (int) $po->guid ?>">
-			<td><?php echo htmlspecialchars($po->po_number); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($po->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($po->po_number); ?></a></td>
 			<td><?php echo htmlspecialchars($po->reference_number); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => $po->vendor->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($po->vendor->name); ?></a></td>
 			<td><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>

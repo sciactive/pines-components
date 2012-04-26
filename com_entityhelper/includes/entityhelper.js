@@ -23,7 +23,10 @@ pines.entity_helper = function(e) {
 				return;
 			}
 			pines.pause();
-			header.find("h3").text(data.title);
+			if (data.title)
+				header.find("h3").text(data.title);
+			else
+				header.find("h3").text("Entity "+pines.safe(guid)+" ("+pines.safe(context)+")");
 			body.html(data.body);
 			footer.html(data.footer);
 			pines.play();

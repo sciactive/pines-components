@@ -266,7 +266,7 @@ if ($pines->config->com_user->check_username)
 									<tr title="<?php echo (int) $cur_group->guid ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
 										<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
 										<td><?php echo htmlspecialchars($cur_group->name); ?></td>
-										<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
+										<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->groupname); ?></a></td>
 									</tr>
 								<?php } ?>
 								</tbody>

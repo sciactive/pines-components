@@ -91,7 +91,7 @@ foreach($this->groups as $cur_group) {
 			echo htmlspecialchars("child ch_{$group->parent->guid}");
 		?>">
 			<td><?php echo (int) $group->guid ?></td>
-			<td><?php echo htmlspecialchars($group->groupname); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($group->groupname); ?></a></td>
 			<td><?php echo htmlspecialchars($group->name); ?></td>
 			<td><?php echo htmlspecialchars($group->email); ?></td>
 			<td><?php echo htmlspecialchars($group->timezone); ?></td>
@@ -112,7 +112,7 @@ foreach($this->groups as $cur_group) {
 			if ($count < 15) {
 				$user_list = '';
 				foreach ($user_array as $cur_user) {
-					$user_list .= (empty($user_list) ? '' : ', ').'<a href="'.htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_user->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_user->username).'</a>';
+					$user_list .= (empty($user_list) ? '' : ', ').'<a data-entity="'.htmlspecialchars($cur_user->guid).'" data-entity-context="user">'.htmlspecialchars($cur_user->username).'</a>';
 				}
 				echo $user_list;
 			} elseif ($count === 51) {

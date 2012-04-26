@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_user/list_users']);
 ?>
 <script type="text/javascript">
-	
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -86,7 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->users as $user) { ?>
 		<tr title="<?php echo (int) $user->guid ?>">
 			<td><?php echo (int) $user->guid ?></td>
-			<td><?php echo htmlspecialchars($user->username); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($user->username); ?></a></td>
 			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->name); ?></td>
 			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
@@ -94,12 +93,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
 			<?php } ?>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $user->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($user->group->groupname); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($user->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($user->group->groupname); ?></a></td>
 			<td><?php
 			if (count($user->groups) < 15) {
 				$group_list = '';
 				foreach ($user->groups as $cur_group) {
-					$group_list .= (empty($group_list) ? '' : ', ').'<a href="'.htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_group->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_group->groupname).'</a>';
+					$group_list .= (empty($group_list) ? '' : ', ').'<a data-entity="'.htmlspecialchars($cur_group->guid).'" data-entity-context="group">'.htmlspecialchars($cur_group->groupname).'</a>';
 				}
 				echo $group_list;
 			} else {

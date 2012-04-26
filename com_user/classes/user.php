@@ -76,6 +76,28 @@ class user extends able_object implements user_interface {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "$this->name [$this->username]";
+			case 'type':
+				return 'user';
+			case 'types':
+				return 'users';
+			case 'url_edit':
+				if (gatekeeper('com_user/edituser'))
+					return pines_url('com_user', 'edituser', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_user/listusers'))
+					return pines_url('com_user', 'listusers');
+				break;
+			case 'icon':
+				return 'picon-user-identity';
+		}
+		return null;
+	}
+
 	public function delete() {
 		if (!parent::delete())
 			return false;

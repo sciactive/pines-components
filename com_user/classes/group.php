@@ -68,6 +68,28 @@ class group extends able_object implements group_interface {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "$this->name [$this->groupname]";
+			case 'type':
+				return 'group';
+			case 'types':
+				return 'groups';
+			case 'url_edit':
+				if (gatekeeper('com_user/editgroup'))
+					return pines_url('com_user', 'editgroup', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_user/listgroups'))
+					return pines_url('com_user', 'listgroups');
+				break;
+			case 'icon':
+				return 'picon-system-users';
+		}
+		return null;
+	}
+
 	public function is_descendant($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);

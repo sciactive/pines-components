@@ -409,6 +409,16 @@ class entity implements entity_interface {
 		return false;
 	}
 
+	public function info($type) {
+		if ($type == 'name' && isset($this->name))
+			return $this->name;
+		elseif ($type == 'type')
+			return 'entity';
+		elseif ($type == 'types')
+			return 'entities';
+		return null;
+	}
+
 	public function is(&$object) {
 		if ($this->is_a_sleeping_reference)
 			$this->reference_wake();

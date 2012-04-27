@@ -70,7 +70,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->entries as $entry) { ?>
 		<tr title="<?php echo (int) $entry->guid ?>">
-			<td><?php echo htmlspecialchars($entry->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($entry->guid); ?>" data-entity-context="com_menueditor_entry"><?php echo htmlspecialchars($entry->name); ?></a></td>
 			<td><?php echo htmlspecialchars($entry->text); ?></td>
 			<td><?php echo htmlspecialchars($entry->sort_order); ?></td>
 			<td><?php echo ($entry->enabled ? 'Yes' : 'No'); ?></td>

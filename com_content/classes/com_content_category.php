@@ -58,6 +58,30 @@ class com_content_category extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'content category';
+			case 'types':
+				return 'content categories';
+			case 'url_view':
+				return pines_url('com_content', 'category', array('a' => $this->alias));
+			case 'url_edit':
+				if (gatekeeper('com_content/editcategory'))
+					return pines_url('com_content', 'category/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_content/listcategories'))
+					return pines_url('com_content', 'category/list');
+				break;
+			case 'icon':
+				return 'picon-folder-html';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the category.
 	 * @return bool True on success, false on failure.

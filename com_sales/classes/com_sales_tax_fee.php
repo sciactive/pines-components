@@ -52,6 +52,28 @@ class com_sales_tax_fee extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'tax/fee';
+			case 'types':
+				return 'taxes/fees';
+			case 'url_edit':
+				if (gatekeeper('com_sales/edittaxfee'))
+					return pines_url('com_sales', 'taxfee/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listtaxfees'))
+					return pines_url('com_sales', 'taxfee/list');
+				break;
+			case 'icon':
+				return 'picon-office-chart-pie';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the tax/fee.
 	 * @return bool True on success, false on failure.

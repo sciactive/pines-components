@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_content/category/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -86,7 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->categories as $category) { ?>
 		<tr title="<?php echo (int) $category->guid ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 			<td><?php echo isset($category->parent) ? htmlspecialchars($category->array_search($category->parent->children) + 1) : '0' ; ?></td>
-			<td><?php echo htmlspecialchars($category->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($category->guid); ?>" data-entity-context="com_content_category"><?php echo htmlspecialchars($category->name); ?></a></td>
 			<td><?php echo htmlspecialchars($category->alias); ?></td>
 			<td><?php echo ($category->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($category->pages); ?></td>

@@ -29,7 +29,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $pines->com_jstree->load();
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var submit_url = <?php echo json_encode(pines_url('com_sales', 'stock/list')); ?>;
 		var submit_search = function(){
@@ -93,7 +92,7 @@ $pines->com_jstree->load();
 					});
 				}}
 			],
-			pgrid_sort_col: 1,
+			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
@@ -146,6 +145,7 @@ $pines->com_jstree->load();
 <table id="p_muid_grid">
 	<thead>
 		<tr>
+			<th>GUID</th>
 			<th>SKU</th>
 			<th>Product</th>
 			<th>Serial</th>
@@ -163,12 +163,13 @@ $pines->com_jstree->load();
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo (int) $stock->guid ?>">
+			<td><a data-entity="<?php echo htmlspecialchars($stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($stock->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $stock->product->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($stock->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->serial); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => $stock->vendor->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($stock->vendor->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($stock->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($stock->vendor->name); ?></a></td>
 			<?php if (!$this->removed) { ?>
-			<td><?php echo htmlspecialchars("{$stock->location->name} [{$stock->location->groupname}]"); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($stock->location->guid); ?>" data-entity-context="group"><?php echo $stock->location->guid ? htmlspecialchars($stock->location->info('name')) : ''; ?></a></td>
 			<?php } ?>
 			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>

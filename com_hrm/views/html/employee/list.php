@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/employee/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var employees;
 		<?php if (gatekeeper('com_hrm/editbonus')) { ?>
@@ -359,7 +358,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->employees as $employee) { ?>
 		<tr title="<?php echo (int) $employee->guid ?>">
 			<td><?php echo (int) $employee->guid ?></td>
-			<td><?php echo htmlspecialchars($employee->username); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($employee->guid); ?>" data-entity-context="com_hrm_employee"><?php echo htmlspecialchars($employee->username); ?></a></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
 			<td><?php echo htmlspecialchars($employee->nickname); ?></td>
 			<td><?php echo htmlspecialchars($employee->email); ?></td>

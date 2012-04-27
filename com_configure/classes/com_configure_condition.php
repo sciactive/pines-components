@@ -54,6 +54,28 @@ class com_configure_condition extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'condition';
+			case 'types':
+				return 'conditions';
+			case 'url_edit':
+				if (gatekeeper('com_configure/edit'))
+					return pines_url('com_configure', 'condition/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_configure/view'))
+					return pines_url('com_configure', 'list', array('percondition' => 'true'));
+				break;
+			case 'icon':
+				return 'picon-preferences-other';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the condition.
 	 * @return bool True on success, false on failure.

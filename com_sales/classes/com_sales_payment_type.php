@@ -52,6 +52,28 @@ class com_sales_payment_type extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'payment type';
+			case 'types':
+				return 'payment types';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editpaymenttype'))
+					return pines_url('com_sales', 'paymenttype/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listpaymenttypes'))
+					return pines_url('com_sales', 'paymenttype/list');
+				break;
+			case 'icon':
+				return 'picon-view-bank';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the payment type.
 	 * @return bool True on success, false on failure.

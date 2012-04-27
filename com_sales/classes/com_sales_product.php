@@ -63,6 +63,33 @@ class com_sales_product extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		global $pines;
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'product';
+			case 'types':
+				return 'products';
+			case 'url_view':
+				if ($pines->config->com_sales->com_storefront && $this->show_in_storefront)
+					return pines_url('com_storefront', 'product', array('a' => $this->alias));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_sales/editproduct'))
+					return pines_url('com_sales', 'product/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listproducts'))
+					return pines_url('com_sales', 'product/list');
+				break;
+			case 'icon':
+				return 'picon-view-barcode';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the product.
 	 * @return bool True on success, false on failure.

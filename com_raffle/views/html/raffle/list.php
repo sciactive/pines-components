@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_raffle/raffle/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -74,7 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->raffles as $raffle) { ?>
 		<tr title="<?php echo (int) $raffle->guid ?>">
 			<td><?php echo htmlspecialchars($raffle->id); ?></td>
-			<td><?php echo htmlspecialchars($raffle->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($raffle->guid); ?>" data-entity-context="com_raffle_raffle"><?php echo htmlspecialchars($raffle->name); ?></a></td>
 			<td><?php echo (count($raffle->contestants) + count($raffle->public_contestants)); ?></td>
 			<td><?php echo htmlspecialchars($raffle->places); ?></td>
 			<td><?php echo ($raffle->complete ? 'Yes' : 'No'); ?></td>

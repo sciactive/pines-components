@@ -51,6 +51,28 @@ class com_reports_paystub extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Paystub $this->guid";
+			case 'type':
+				return 'paystub';
+			case 'types':
+				return 'paystubs';
+			case 'url_view':
+				if (gatekeeper('com_reports/reportpayroll'))
+					return pines_url('com_reports', 'reportpayroll', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_reports/reportpayroll'))
+					return pines_url('com_reports', 'listpaystubs');
+				break;
+			case 'icon':
+				return 'picon-view-time-schedule-calculus';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the sales ranking.
 	 * @return bool True on success, false on failure.
@@ -58,7 +80,7 @@ class com_reports_paystub extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted sales ranking [$this->name].", 'notice');
+		pines_log("Deleted paystub [$this->name].", 'notice');
 		return true;
 	}
 

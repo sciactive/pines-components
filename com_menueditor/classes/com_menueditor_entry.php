@@ -52,6 +52,28 @@ class com_menueditor_entry extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'menu entry';
+			case 'types':
+				return 'menu entries';
+			case 'url_edit':
+				if (gatekeeper('com_menueditor/editentry'))
+					return pines_url('com_menueditor', 'entry/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_menueditor/listentries'))
+					return pines_url('com_menueditor', 'entry/list');
+				break;
+			case 'icon':
+				return 'picon-go-jump-locationbar';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the entry.
 	 * @return bool True on success, false on failure.

@@ -53,6 +53,32 @@ class com_sales_sale extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Sale $this->id";
+			case 'type':
+				return 'sale';
+			case 'types':
+				return 'sales';
+			case 'url_view':
+				if (gatekeeper('com_sales/editsale'))
+					return pines_url('com_sales', 'sale/receipt', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_sales/editsale'))
+					return pines_url('com_sales', 'sale/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listsales'))
+					return pines_url('com_sales', 'sale/list');
+				break;
+			case 'icon':
+				return 'picon-archive-insert';
+		}
+		return null;
+	}
+
 	/**
 	 * Calculate and add commission to the employee(s).
 	 */

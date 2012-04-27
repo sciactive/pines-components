@@ -15,6 +15,7 @@ if ($this->entity->places > 1)
 	$this->note = 'And the winners are...';
 else
 	$this->note = 'And the winner is...';
+$pines->icons->load();
 
 /**
  * Adds the English ordinal suffix to a number.
@@ -45,19 +46,19 @@ function com_raffle__ordinal($number) {
 	}
     return "${number}$suffix";
 }
-?>
-<div class="pf-form">
-	<?php foreach ($this->entity->winners as $cur_place => $cur_winner) { ?>
-	<fieldset class="pf-group ui-state-highlight ui-corner-all">
-		<legend><?php echo ($this->entity->places > 1 ? com_raffle__ordinal($cur_place).' Place - ' : '') . '<strong>'.htmlspecialchars("{$cur_winner['first_name']} {$cur_winner['last_name']}").'</strong>'; ?></legend>
-		<div class="pf-element pf-full-width" style="text-align: center;">
-			<div style="float: right; text-align: left; width: 48%;">
-				<?php echo htmlspecialchars(format_phone($cur_winner['phone'])); ?>
-			</div>
-			<div style="float: left; text-align: right; width: 48%;">
-				<a href="mailto:<?php echo htmlspecialchars($cur_winner['email']); ?>"><?php echo htmlspecialchars($cur_winner['email']); ?></a>
-			</div>
-		</div>
-	</fieldset>
-	<?php } ?>
+
+foreach ($this->entity->winners as $cur_place => $cur_winner) { ?>
+<div class="hero-unit">
+	<div style="height: 32px; width: 32px; float: right;" class="picon-32 <?php echo $cur_place == 1 ? 'picon-games-highscores' : 'picon-games-achievements'; ?>"></div>
+	<h1>
+		<span style="font-size: .9em;">
+			<?php
+			echo ($this->entity->places > 1 ? '<span class="badge '.($cur_place == 1 ? 'badge-success' : 'badge-info').'" style="font-size: 1em;">'.com_raffle__ordinal($cur_place).'</span>&nbsp;' : '');
+			echo htmlspecialchars("{$cur_winner['first_name']} {$cur_winner['last_name']}");
+			?>
+		</span>
+	</h1>
+	<p style="margin-top: 2em;"><?php echo htmlspecialchars(format_phone($cur_winner['phone'])); ?></p>
+	<p><a href="mailto:<?php echo htmlspecialchars($cur_winner['email']); ?>"><?php echo htmlspecialchars($cur_winner['email']); ?></a></p>
 </div>
+<?php } ?>

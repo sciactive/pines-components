@@ -52,6 +52,28 @@ class com_sales_stock extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Stock Entry $this->guid";
+			case 'type':
+				return 'stock entry';
+			case 'types':
+				return 'stock entries';
+			case 'url_edit':
+				if (gatekeeper('com_sales/managestock'))
+					return pines_url('com_sales', 'stock/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/managestock') || gatekeeper('com_sales/seestock'))
+					return pines_url('com_sales', 'stock/list');
+				break;
+			case 'icon':
+				return 'picon-package-x-generic';
+		}
+		return null;
+	}
+
 	/**
 	 * Get the reason from the last stock transaction.
 	 * @return string The reason, or "unknown" if no last transaction could be found.

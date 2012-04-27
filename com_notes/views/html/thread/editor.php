@@ -239,7 +239,7 @@ $pines->icons->load();
 					url: <?php echo json_encode(pines_url('com_notes', 'thread/start')); ?>,
 					type: "POST",
 					dataType: "json",
-					data: {"text": text, "privacy": privacy, "id": <?php echo json_encode((int) $this->entity->guid); ?>},
+					data: {"text": text, "privacy": privacy, "id": <?php echo json_encode((int) $this->entity->guid); ?>, "context": <?php echo json_encode(str_replace('hook_override_', '', get_class($this->entity))); ?>},
 					beforeSend: function(){
 						new_thread.attr("disabled", "disabled");
 						thread_buttons.hide();

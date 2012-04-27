@@ -51,6 +51,24 @@ class com_hrm_adjustment extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Adjustment $this->guid";
+			case 'type':
+				return 'adjustment';
+			case 'types':
+				return 'adjustments';
+			case 'url_list':
+				if (gatekeeper('com_hrm/listadjustments'))
+					return pines_url('com_hrm', 'adjustment/list');
+				break;
+			case 'icon':
+				return 'picon-accessories-calculator';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the bonus.
 	 * @return bool True on success, false on failure.
@@ -58,7 +76,7 @@ class com_hrm_adjustment extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted bonus $this->guid.", 'notice');
+		pines_log("Deleted adjustment $this->guid.", 'notice');
 		return true;
 	}
 }

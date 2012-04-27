@@ -53,6 +53,28 @@ class com_esp_plan extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return 'ESP'.$this->id;
+			case 'type':
+				return 'ESP';
+			case 'types':
+				return 'ESPs';
+			case 'url_view':
+				if (gatekeeper('com_esp/listplans'))
+					return pines_url('com_esp', 'history', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_esp/listplans'))
+					return pines_url('com_esp', 'list');
+				break;
+			case 'icon':
+				return 'picon-security-high';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the esp.
 	 * @return bool True on success, false on failure.

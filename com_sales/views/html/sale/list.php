@@ -435,7 +435,7 @@ Only continue if you are fully aware of the results of changing a product."))
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo (int) $sale->guid ?>">
-			<td><?php echo htmlspecialchars($sale->id); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($sale->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($sale->status)); ?></td>
 			<td><?php echo isset($sale->user->guid) ? htmlspecialchars("{$sale->user->name} [{$sale->user->username}]") : ''; ?></td>

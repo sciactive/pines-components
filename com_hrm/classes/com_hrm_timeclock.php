@@ -51,6 +51,32 @@ class com_hrm_timeclock extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Timeclock $this->guid";
+			case 'type':
+				return 'timeclock';
+			case 'types':
+				return 'timeclocks';
+			case 'url_view':
+				if (gatekeeper('com_hrm/viewclock') || gatekeeper('com_hrm/manageclock'))
+					return pines_url('com_hrm', 'employee/timeclock/view', array('id' => $this->user->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_hrm/manageclock'))
+					return pines_url('com_hrm', 'employee/timeclock/edit', array('id' => $this->user->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_hrm/viewclock') || gatekeeper('com_hrm/manageclock'))
+					return pines_url('com_hrm', 'employee/timeclock/list');
+				break;
+			case 'icon':
+				return 'picon-view-calendar-time-spent';
+		}
+		return null;
+	}
+
 	/**
 	 * Add a time entry.
 	 * @param int $time_in The time in.

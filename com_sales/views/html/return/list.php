@@ -318,7 +318,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->returns as $return) { ?>
 		<tr title="<?php echo (int) $return->guid ?>">
-			<td><?php echo htmlspecialchars($return->id); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($return->guid); ?>" data-entity-context="com_sales_return"><?php echo htmlspecialchars($return->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($return->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($return->status)); ?></td>
 			<td><?php echo isset($return->user->guid) ? htmlspecialchars("{$return->user->name} [{$return->user->username}]") : ''; ?></td>

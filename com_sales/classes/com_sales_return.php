@@ -52,6 +52,32 @@ class com_sales_return extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Return $this->id";
+			case 'type':
+				return 'return';
+			case 'types':
+				return 'returns';
+			case 'url_view':
+				if (gatekeeper('com_sales/editreturn'))
+					return pines_url('com_sales', 'return/receipt', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_sales/editreturn'))
+					return pines_url('com_sales', 'return/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listreturns'))
+					return pines_url('com_sales', 'return/list');
+				break;
+			case 'icon':
+				return 'picon-archive-remove';
+		}
+		return null;
+	}
+
 	/**
 	 * Add negative commission to the employee(s).
 	 */

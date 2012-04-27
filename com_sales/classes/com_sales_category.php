@@ -63,6 +63,33 @@ class com_sales_category extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		global $pines;
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'product category';
+			case 'types':
+				return 'product categories';
+			case 'url_view':
+				if ($pines->config->com_sales->com_storefront)
+					return pines_url('com_storefront', 'category/browse', array('a' => $this->alias));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_sales/editcategory'))
+					return pines_url('com_sales', 'category/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listcategories'))
+					return pines_url('com_sales', 'category/list');
+				break;
+			case 'icon':
+				return 'picon-folder-tar';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the category.
 	 * @return bool True on success, false on failure.

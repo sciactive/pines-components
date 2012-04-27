@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/returnchecklist/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -68,7 +67,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->return_checklists as $return_checklist) { ?>
 		<tr title="<?php echo (int) $return_checklist->guid ?>">
-			<td><?php echo htmlspecialchars($return_checklist->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($return_checklist->guid); ?>" data-entity-context="com_sales_return_checklist"><?php echo htmlspecialchars($return_checklist->name); ?></a></td>
 			<td><?php echo $return_checklist->enabled ? 'Yes' : 'No'; ?></td>
 			<td><?php echo count($return_checklist->conditions); ?></td>
 		</tr>

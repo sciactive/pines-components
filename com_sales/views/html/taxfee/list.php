@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/taxfee/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -70,16 +69,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->tax_fees as $tax_fee) { ?>
 		<tr title="<?php echo (int) $tax_fee->guid ?>">
-			<td><?php echo htmlspecialchars($tax_fee->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($tax_fee->guid); ?>" data-entity-context="com_sales_tax_fee"><?php echo htmlspecialchars($tax_fee->name); ?></a></td>
 			<td><?php echo $tax_fee->enabled ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $tax_fee->type == 'percentage' ? 'Percentage' : 'Flat Rate'; ?></td>
 			<td><?php echo htmlspecialchars($tax_fee->rate); ?></td>
 			<td><?php
 			$groupname_array = array();
 			foreach ($tax_fee->locations as $cur_location) {
-				$groupname_array[] = "{$cur_location->name} [{$cur_location->groupname}]";
+				if (!isset($cur_location->guid))
+					continue;
+				$groupname_array[] = '<a data-entity="'.htmlspecialchars($cur_location->guid).'" data-entity-context="group">'.htmlspecialchars($cur_location->info('name')).'</a>';
 			}
-			echo htmlspecialchars(implode(', ', $groupname_array));
+			echo implode(', ', $groupname_array);
 			?></td>
 		</tr>
 	<?php } ?>

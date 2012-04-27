@@ -36,39 +36,27 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					loan_grid.makepayment_form($(row).attr("title"));
 				}},
 				<?php } if (gatekeeper('com_loan/editloan')) {
-							if (gatekeeper('com_loan/editpayments')) {
-							?>
-							{type: 'button', text: 'Edit Payments', extra_class: 'picon picon-accessories-calculator', url: <?php echo json_encode(pines_url('com_loan', 'loan/editpayments', array('id' => '__title__'))); ?>},
-							<?php
-							}
-				?>
+					if (gatekeeper('com_loan/editpayments')) { ?>
+				{type: 'button', text: 'Edit Payments', extra_class: 'picon picon-accessories-calculator', url: <?php echo json_encode(pines_url('com_loan', 'loan/editpayments', array('id' => '__title__'))); ?>},
+				<?php } ?>
 				{type: 'separator'},
 //				{type: 'button', text: 'Edit Terms', extra_class: 'picon picon-document-edit-verify'},
 //				{type: 'button', text: 'Adjustment', extra_class: 'picon picon-edit-text-frame-update'},
 //				{type: 'button', text: 'Penalties', extra_class: 'picon picon-dialog-warning'},
 //				{type: 'separator'},
-				<?php
-					if (gatekeeper('com_loan/payoffloan')) {
-				?>
+				<?php if (gatekeeper('com_loan/payoffloan')) { ?>
 				{type: 'button', text: 'Pay Off', extra_class: 'picon picon-wallet-open', click: function(e, row){
 					loan_grid.payoff_form($(row).attr("title"));
 				}},
-				<?php }
-					if (gatekeeper('com_loan/writeoffloan')) {
-				?>
+				<?php } if (gatekeeper('com_loan/writeoffloan')) { ?>
 //				{type: 'button', text: 'Write Off', extra_class: 'picon picon-document-close', click: function(e, row){
 //					loan_grid.write_off($(row).attr("title"));
 //				}},
-				<?php
-					}
-					if (gatekeeper('com_loan/cancelloan')) {
-				?>
+				<?php } if (gatekeeper('com_loan/cancelloan')) { ?>
 				{type: 'button', text: 'Cancel', extra_class: 'picon picon-dialog-cancel', click: function(e, row){
 					loan_grid.cancel_loan($(row).attr("title"));
 				}},
-				<?php
-					}
-				} ?>
+				<?php } } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_loan/deleteloan')) { ?>
@@ -244,7 +232,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->loans as $loan) { ?>
 		<tr title="<?php echo (int) $loan->guid ?>">
-			<td><?php echo htmlspecialchars($loan->id); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($loan->guid); ?>" data-entity-context="com_loan_loan"><?php echo htmlspecialchars($loan->id); ?></a></td>
 			<td><?php echo htmlspecialchars($loan->customer->name); ?></td>
 			<td><?php echo htmlspecialchars($loan->user->name); ?></td>
 			<td><?php echo htmlspecialchars($loan->user->group->name); ?></td>

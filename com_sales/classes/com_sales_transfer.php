@@ -56,6 +56,28 @@ class com_sales_transfer extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Transfer $this->guid";
+			case 'type':
+				return 'transfer';
+			case 'types':
+				return 'transfers';
+			case 'url_edit':
+				if (gatekeeper('com_sales/managestock'))
+					return pines_url('com_sales', 'transfer/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/managestock') || gatekeeper('com_sales/shipstock'))
+					return pines_url('com_sales', 'transfer/list');
+				break;
+			case 'icon':
+				return 'picon-document-export';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the transfer.
 	 * @return bool True on success, false on failure.
@@ -66,7 +88,7 @@ class com_sales_transfer extends entity {
 			return false;
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted transfer $this->transfer_number.", 'notice');
+		pines_log("Deleted transfer $this->guid.", 'notice');
 		return true;
 	}
 

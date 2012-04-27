@@ -51,6 +51,24 @@ class com_calendar_event extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->title;
+			case 'type':
+				return 'event';
+			case 'types':
+				return 'events';
+			case 'url_list':
+				if (gatekeeper('com_calendar/viewcalendar'))
+					return pines_url('com_calendar', 'editcalendar');
+				break;
+			case 'icon':
+				return 'picon-view-pim-calendar';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the event.
 	 * @return bool True on success, false on failure.

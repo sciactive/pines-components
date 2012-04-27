@@ -16,16 +16,20 @@ if ($this->render == 'body') {
 	$image = $this->entity->info('image');
 	$types = $this->entity->info('types');
 	$url_list = $this->entity->info('url_list');
+	if (!preg_match('/^[A-Z]{2,}/', $type))
+		$type = ucwords($type);
+	if (!preg_match('/^[A-Z]{2,}/', $types))
+		$types = ucwords($types);
 ?>
-<div style="float: left;">
+<h4 style="float: left;">
 	<?php if ($icon) { ?>
 	<i style="float: left; height: 16px; width: 16px;" class="<?php echo htmlspecialchars($icon); ?>"></i>&nbsp;
 	<?php }
-	echo htmlspecialchars(ucwords($type)); ?>
-</div>
+	echo htmlspecialchars($type); ?>
+</h4>
 <?php if ($url_list) { ?>
 <div style="float: right;">
-	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars(ucwords($types)); ?></a>
+	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars($types); ?></a>
 </div>
 <?php } ?>
 <div style="clear: both; padding-top: 1em;">

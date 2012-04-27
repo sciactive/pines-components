@@ -1315,7 +1315,7 @@ class com_reports extends component {
 		if($pay_rate['people']!= 0) {
 			$module->group_percent_rate = $group_percent_rate / $pay_rate['people'];
 			$module->pay_rate_total = $pay_rate['rate'] / $pay_rate['people'];
-			$module->commission_percent = $commission_percent['commission'] / ($commission_percent['commission']+$commission_percent['draw']);
+			$module->commission_percent = ($commission_percent['commission']+$commission_percent['draw']) != 0 ? $commission_percent['commission'] / ($commission_percent['commission']+$commission_percent['draw']) : 0;
 		} else {
 			$pay_rate = 0;
 			$module->pay_rate_total = 0;

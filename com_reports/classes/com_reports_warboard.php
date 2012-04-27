@@ -56,6 +56,28 @@ class com_reports_warboard extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->title;
+			case 'type':
+				return 'warboard';
+			case 'types':
+				return 'warboards';
+			case 'url_view':
+				if (gatekeeper('com_reports/warboard'))
+					return pines_url('com_reports', 'warboard');
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_reports/editwarboard'))
+					return pines_url('com_reports', 'editwarboard');
+				break;
+			case 'icon':
+				return 'picon-view-list-details';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the warboard.
 	 * @return bool True on success, false on failure.

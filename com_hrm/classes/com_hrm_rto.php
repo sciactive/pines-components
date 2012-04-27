@@ -52,6 +52,20 @@ class com_hrm_rto extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "RTO $this->guid";
+			case 'type':
+				return 'RTO';
+			case 'types':
+				return 'RTOs';
+			case 'icon':
+				return 'picon-view-calendar-upcoming-events';
+		}
+		return null;
+	}
+
 	/**
 	 * Check if the request is during a time when the employee is scheduled.
 	 *
@@ -84,7 +98,7 @@ class com_hrm_rto extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted rto $this->name.", 'notice');
+		pines_log("Deleted RTO $this->guid.", 'notice');
 		return true;
 	}
 

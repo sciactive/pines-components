@@ -49,6 +49,28 @@ class com_sales_shipper extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'shipper';
+			case 'types':
+				return 'shippers';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editshipper'))
+					return pines_url('com_sales', 'shipper/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listshippers'))
+					return pines_url('com_sales', 'shipper/list');
+				break;
+			case 'icon':
+				return 'picon-mail-folder-outbox';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the shipper.
 	 * @return bool True on success, false on failure.

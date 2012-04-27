@@ -55,6 +55,34 @@ class com_raffle_raffle extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'raffle';
+			case 'types':
+				return 'raffles';
+			case 'url_view':
+				if (gatekeeper('com_raffle/completeraffle') && $this->complete)
+					return pines_url('com_raffle', 'raffle/complete', array('id' => $this->guid));
+				elseif (!$this->complete && $this->public)
+					return pines_url('com_raffle', 'enter', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_raffle/editraffle'))
+					return pines_url('com_raffle', 'raffle/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_raffle/listraffles'))
+					return pines_url('com_raffle', 'raffle/list');
+				break;
+			case 'icon':
+				return 'picon-games-achievements';
+		}
+		return null;
+	}
+
 	/**
 	 * Complete the raffle by selecting winners.
 	 * @return bool True on success, false on failure.

@@ -51,6 +51,28 @@ class com_customer_company extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'company';
+			case 'types':
+				return 'companies';
+			case 'url_edit':
+				if (gatekeeper('com_customer/editcompany'))
+					return pines_url('com_customer', 'company/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_customer/listcompanies'))
+					return pines_url('com_customer', 'company/list');
+				break;
+			case 'icon':
+				return 'picon-resource-group';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the company.
 	 * @return bool True on success, false on failure.

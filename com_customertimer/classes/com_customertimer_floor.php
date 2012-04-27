@@ -53,6 +53,32 @@ class com_customertimer_floor extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'timed floor';
+			case 'types':
+				return 'timed floors';
+			case 'url_view':
+				if (gatekeeper('com_customertimer/timefloor'))
+					return pines_url('com_customertimer', 'timefloor', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_customertimer/editfloor'))
+					return pines_url('com_customertimer', 'editfloor', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_customertimer/listfloors'))
+					return pines_url('com_customertimer', 'listfloors');
+				break;
+			case 'icon':
+				return 'picon-player-time';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the floor.
 	 * @return bool True on success, false on failure.

@@ -55,6 +55,28 @@ class com_sales_countsheet extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Countsheet $this->guid";
+			case 'type':
+				return 'countsheet';
+			case 'types':
+				return 'countsheets';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editcountsheet'))
+					return pines_url('com_sales', 'countsheet/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listcountsheets'))
+					return pines_url('com_sales', 'countsheet/list');
+				break;
+			case 'icon':
+				return 'picon-view-task';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the countsheet.
 	 * @return bool True on success, false on failure.

@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/special/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -71,7 +70,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->specials as $special) { ?>
 		<tr title="<?php echo (int) $special->guid ?>">
-			<td><?php echo htmlspecialchars($special->code); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($special->guid); ?>" data-entity-context="com_sales_special"><?php echo htmlspecialchars($special->code); ?></a></td>
 			<td><?php echo htmlspecialchars($special->name); ?></td>
 		</tr>
 	<?php } ?>

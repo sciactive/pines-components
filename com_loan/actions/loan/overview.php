@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_loan/viewloan') )
-		punt_user(null, pines_url('com_loan', 'loan/list'));
+	punt_user(null, pines_url('com_loan', 'loan/overview', array('id' => $_REQUEST['id'])));
 
 if ( isset($_REQUEST['id']) ) {
 	$loan = com_loan_loan::factory((int) $_REQUEST['id']);

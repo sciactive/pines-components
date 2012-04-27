@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_notes/thread/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -58,6 +57,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="p_muid_grid">
 	<thead>
 		<tr>
+			<th>GUID</th>
 			<th>Last Modified</th>
 			<th>Created</th>
 			<th>Attached Entity</th>
@@ -71,17 +71,25 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->threads as $thread) { ?>
+	<?php foreach($this->threads as $thread) {
+		// Try to guess the context (class name) of the attached entity.
+		$context = str_replace('hook_override_', '', get_class($thread->entities[0]));
+		if ($context == 'entity' && substr($thread->entities[0]->tags[0], 0, 4) === 'com_') {
+			$guess = $thread->entities[0]->tags[0].'_'.$thread->entities[0]->tags[1];
+			if (class_exists($guess))
+				$context = $guess;
+		} ?>
 		<tr title="<?php echo (int) $thread->guid ?>">
+			<td><a data-entity="<?php echo htmlspecialchars($thread->guid); ?>" data-entity-context="com_notes_thread"><?php echo htmlspecialchars($thread->guid); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($thread->p_mdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($thread->p_cdate)); ?></td>
-			<td><?php echo htmlspecialchars($thread->entities[0]->guid.': '.implode(', ', $thread->entities[0]->tags)); ?></td>
+			<td><?php echo isset($thread->entities[0]->guid) ? '<a data-entity="'.htmlspecialchars($thread->entities[0]->guid).'" data-entity-context="'.htmlspecialchars($context).'">'.htmlspecialchars($thread->entities[0]->info('name')).'</a>' : ''; ?></td>
 			<td><?php echo ($thread->hidden ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($thread->ac->other ? 'everyone' : ($thread->ac->group ? 'my-group' : 'only-me')); ?></td>
 			<td><?php echo htmlspecialchars(count($thread->notes)); ?></td>
-			<td><?php echo htmlspecialchars("{$thread->user->name} [{$thread->user->username}]"); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($thread->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($thread->user->info('name')); ?></a></td>
 			<td><?php $first_note = reset($thread->notes); echo htmlspecialchars(strlen($first_note['text']) > 100 ? substr($first_note['text'], 0, 100).'...' : $first_note['text']); ?></td>
-			<td><?php $last_note = end($thread->notes); echo htmlspecialchars("{$last_note['user']->name} [{$last_note['user']->username}]"); ?></td>
+			<td><?php $last_note = end($thread->notes); ?><a data-entity="<?php echo htmlspecialchars($last_note['user']->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($last_note['user']->info('name')); ?></a></td>
 			<td><?php echo htmlspecialchars(strlen($last_note['text']) > 100 ? substr($last_note['text'], 0, 100).'...' : $last_note['text']); ?></td>
 		</tr>
 	<?php } ?>

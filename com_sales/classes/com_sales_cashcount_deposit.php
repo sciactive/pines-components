@@ -52,6 +52,20 @@ class com_sales_cashcount_deposit extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Deposit $this->guid";
+			case 'type':
+				return 'deposit';
+			case 'types':
+				return 'deposits';
+			case 'icon':
+				return 'picon-list-add';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the cash count deposit.
 	 * @return bool True on success, false on failure.
@@ -59,7 +73,7 @@ class com_sales_cashcount_deposit extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted Deposit {$this->guid}.", 'notice');
+		pines_log("Deleted deposit {$this->guid}.", 'notice');
 		return true;
 	}
 

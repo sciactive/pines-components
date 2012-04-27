@@ -58,6 +58,28 @@ class com_sales_cashcount extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Cash Count $this->guid";
+			case 'type':
+				return 'cash count';
+			case 'types':
+				return 'cash counts';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editcashcount'))
+					return pines_url('com_sales', 'cashcount/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listcashcounts'))
+					return pines_url('com_sales', 'cashcount/list');
+				break;
+			case 'icon':
+				return 'picon-office-chart-line';
+		}
+		return null;
+	}
+
 	/**
 	 * Print a form to cash out a cashcount.
 	 * @return module The form's module.

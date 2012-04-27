@@ -31,6 +31,20 @@ class com_sales_tx extends entity {
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
+
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Transaction $this->guid";
+			case 'type':
+				return 'transaction';
+			case 'types':
+				return 'transactions';
+			case 'icon':
+				return 'picon-document-swap';
+		}
+		return null;
+	}
 }
 
 ?>

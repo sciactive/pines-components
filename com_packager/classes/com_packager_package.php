@@ -54,6 +54,28 @@ class com_packager_package extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'package';
+			case 'types':
+				return 'packages';
+			case 'url_edit':
+				if (gatekeeper('com_packager/editpackage'))
+					return pines_url('com_packager', 'package/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_packager/listpackages'))
+					return pines_url('com_packager', 'package/list');
+				break;
+			case 'icon':
+				return 'picon-package-x-generic';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the package.
 	 * @return bool True on success, false on failure.

@@ -63,6 +63,22 @@ class com_pdf_displays extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				if (isset($this->pdf_title))
+					return $this->pdf_title;
+				return "PDF Displays $this->guid";
+			case 'type':
+				return 'PDF display holder';
+			case 'types':
+				return 'PDF display holders';
+			case 'icon':
+				return 'picon-application-pdf';
+		}
+		return null;
+	}
+
 	/**
 	 * Load the JavaScript to insert display editors into the page.
 	 *

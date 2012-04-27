@@ -51,6 +51,28 @@ class com_sales_return_checklist extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'return checklist';
+			case 'types':
+				return 'return checklists';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editreturnchecklist'))
+					return pines_url('com_sales', 'returnchecklist/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listreturnchecklists'))
+					return pines_url('com_sales', 'returnchecklist/list');
+				break;
+			case 'icon':
+				return 'picon-view-task';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the return checklist.
 	 * @return bool True on success, false on failure.

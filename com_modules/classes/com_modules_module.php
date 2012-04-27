@@ -54,6 +54,28 @@ class com_modules_module extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'module';
+			case 'types':
+				return 'modules';
+			case 'url_edit':
+				if (gatekeeper('com_modules/editmodule'))
+					return pines_url('com_modules', 'module/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_modules/listmodules'))
+					return pines_url('com_modules', 'module/list');
+				break;
+			case 'icon':
+				return 'picon-view-file-columns';
+		}
+		return null;
+	}
+
 	/**
 	 * Check the module's conditions.
 	 *

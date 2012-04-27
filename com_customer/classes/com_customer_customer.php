@@ -86,6 +86,28 @@ class com_customer_customer extends user {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'customer';
+			case 'types':
+				return 'customers';
+			case 'url_edit':
+				if (gatekeeper('com_customer/editcustomer'))
+					return pines_url('com_customer', 'customer/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_customer/listcustomers'))
+					return pines_url('com_customer', 'customer/list');
+				break;
+			case 'icon':
+				return 'picon-x-office-contact';
+		}
+		return null;
+	}
+
 	/**
 	 * Add days to the customer's profile.
 	 *

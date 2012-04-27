@@ -54,6 +54,28 @@ class com_sales_po extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "PO $this->po_number";
+			case 'type':
+				return 'PO';
+			case 'types':
+				return 'POs';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editpo'))
+					return pines_url('com_sales', 'po/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listpos'))
+					return pines_url('com_sales', 'po/list');
+				break;
+			case 'icon':
+				return 'picon-resource-calendar-child';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the PO.
 	 * @return bool True on success, false on failure.

@@ -53,6 +53,20 @@ class com_hrm_issue extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Issue $this->guid";
+			case 'type':
+				return 'issue';
+			case 'types':
+				return 'issues';
+			case 'icon':
+				return 'picon-task-attention';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the issue.
 	 * @return bool True on success, false on failure.
@@ -60,7 +74,7 @@ class com_hrm_issue extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted issue $this->name.", 'notice');
+		pines_log("Deleted issue $this->guid ($this->name).", 'notice');
 		return true;
 	}
 

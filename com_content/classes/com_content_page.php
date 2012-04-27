@@ -57,6 +57,30 @@ class com_content_page extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'content page';
+			case 'types':
+				return 'content pages';
+			case 'url_view':
+				return pines_url('com_content', 'page', array('a' => $this->alias));
+			case 'url_edit':
+				if (gatekeeper('com_content/editpage'))
+					return pines_url('com_content', 'page/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_content/listpages'))
+					return pines_url('com_content', 'page/list');
+				break;
+			case 'icon':
+				return 'picon-text-html';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the page.
 	 * @return bool True on success, false on failure.

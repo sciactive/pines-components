@@ -49,6 +49,28 @@ class com_sales_vendor extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'vendor';
+			case 'types':
+				return 'vendors';
+			case 'url_edit':
+				if (gatekeeper('com_sales/editvendor'))
+					return pines_url('com_sales', 'vendor/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_sales/listvendors'))
+					return pines_url('com_sales', 'vendor/list');
+				break;
+			case 'icon':
+				return 'picon-repository';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the vendor.
 	 * @return bool True on success, false on failure.

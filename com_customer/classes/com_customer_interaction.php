@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_customer_interaction extends entity {
 	/**
 	 * Load a customer interaction.
-	 * @param int $id The ID of the interction to load, 0 for a new interaction.
+	 * @param int $id The ID of the interaction to load, 0 for a new interaction.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
@@ -50,6 +50,20 @@ class com_customer_interaction extends entity {
 		$entity = new $class($args[0]);
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
+	}
+
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return 'Interaction '.$this->guid;
+			case 'type':
+				return 'interaction';
+			case 'types':
+				return 'interactions';
+			case 'icon':
+				return 'picon-meeting-participant-optional';
+		}
+		return null;
 	}
 
 	/**

@@ -51,6 +51,24 @@ class com_hrm_issue_type extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'issue type';
+			case 'types':
+				return 'issue types';
+			case 'url_list':
+				if (gatekeeper('com_hrm/listissuetypes'))
+					return pines_url('com_hrm', 'issue/list');
+				break;
+			case 'icon':
+				return 'picon-task-attention';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the issue type.
 	 * @return bool True on success, false on failure.

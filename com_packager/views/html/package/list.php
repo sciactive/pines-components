@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_packager/package/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -74,7 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->packages as $package) { ?>
 		<tr title="<?php echo (int) $package->guid ?>">
-			<td><?php echo htmlspecialchars($package->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($package->guid); ?>" data-entity-context="com_packager_package"><?php echo htmlspecialchars($package->name); ?></a></td>
 			<td><?php switch($package->type) {
 				case 'component':
 					echo 'Component';

@@ -11,6 +11,11 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
+<style type="text/css">
+a[data-entity] {
+cursor: help;
+}
+</style>
 <script type="text/javascript">
 pines.entity_helper_url = <?php echo json_encode(pines_url('com_entityhelper', 'helper')); ?>;
 pines(function(){

@@ -21,7 +21,7 @@ return array(
 	'description' => 'Create raffles, enter contestants and pick a winner/winners at random.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'entity_manager',
+		'service' => 'entity_manager&icons',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),
 	'abilities' => array(

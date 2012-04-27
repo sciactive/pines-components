@@ -53,6 +53,38 @@ class com_notes_thread extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Note Thread $this->guid";
+			case 'type':
+				return 'note thread';
+			case 'types':
+				return 'note threads';
+			case 'url_view':
+				if (gatekeeper('com_notes/seethreads') && isset($this->entities[0]->guid)) {
+					$view = $this->entities[0]->info('url_view');
+					if ($view)
+						return $view;
+					$edit = $this->entities[0]->info('url_edit');
+					if ($edit)
+						return $edit;
+				}
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_notes/editthread'))
+					return pines_url('com_notes', 'thread/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_notes/listthreads'))
+					return pines_url('com_notes', 'thread/list');
+				break;
+			case 'icon':
+				return 'picon-view-pim-notes';
+		}
+		return null;
+	}
+
 	/**
 	 * Print a form to edit the thread.
 	 * @return module The form's module.

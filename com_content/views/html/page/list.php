@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_content/page/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -76,7 +75,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->pages as $page) { ?>
 		<tr title="<?php echo (int) $page->guid ?>">
-			<td><?php echo htmlspecialchars($page->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($page->guid); ?>" data-entity-context="com_content_page"><?php echo htmlspecialchars($page->name); ?></a></td>
 			<td><?php echo htmlspecialchars($page->alias); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo (isset($page->show_front_page) ? ($page->show_front_page ? 'Yes' : 'No') : 'Use Default'); ?></td>

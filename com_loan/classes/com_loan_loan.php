@@ -52,6 +52,32 @@ class com_loan_loan extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Loan $this->id";
+			case 'type':
+				return 'loan';
+			case 'types':
+				return 'loans';
+			case 'url_view':
+				if (gatekeeper('com_loan/viewloan'))
+					return pines_url('com_loan', 'loan/overview', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_loan/editloan'))
+					return pines_url('com_loan', 'loan/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_loan/listloans'))
+					return pines_url('com_loan', 'loan/list');
+				break;
+			case 'icon':
+				return 'picon-view-bank';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the loan.
 	 * @return bool True on success, false on failure.

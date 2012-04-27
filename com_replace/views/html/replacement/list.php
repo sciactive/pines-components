@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_replace/replacement/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -68,7 +67,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->replacements as $replacement) { ?>
 		<tr title="<?php echo (int) $replacement->guid ?>">
-			<td><?php echo htmlspecialchars($replacement->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($replacement->guid); ?>" data-entity-context="com_replace_replacement"><?php echo htmlspecialchars($replacement->name); ?></a></td>
 			<td><?php echo ($replacement->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($replacement->strings); ?></td>
 		</tr>

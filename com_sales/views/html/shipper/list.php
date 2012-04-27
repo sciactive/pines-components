@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/shipper/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -75,8 +74,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->shippers as $shipper) { ?>
 		<tr title="<?php echo (int) $shipper->guid ?>">
-			<td><?php echo htmlspecialchars($shipper->name); ?></td>
-			<td><?php echo htmlspecialchars($shipper->email); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($shipper->name); ?></a></td>
+			<td><a href="mailto:<?php echo htmlspecialchars($shipper->email); ?>"><?php echo htmlspecialchars($shipper->email); ?></a></td>
 			<td><?php echo htmlspecialchars($shipper->address_1); ?></td>
 			<td><?php echo htmlspecialchars($shipper->address_2); ?></td>
 			<td><?php echo htmlspecialchars($shipper->city); ?></td>

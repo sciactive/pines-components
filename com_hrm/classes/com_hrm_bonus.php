@@ -51,6 +51,24 @@ class com_hrm_bonus extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Bonus $this->guid";
+			case 'type':
+				return 'bonus';
+			case 'types':
+				return 'bonuses';
+			case 'url_list':
+				if (gatekeeper('com_hrm/listbonuses'))
+					return pines_url('com_hrm', 'bonus/list');
+				break;
+			case 'icon':
+				return 'picon-get-hot-new-stuff';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the bonus.
 	 * @return bool True on success, false on failure.

@@ -13,9 +13,11 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = htmlspecialchars("Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})");
 if ($this->entity->per_user) {
 	if ($this->entity->user->is_com_configure_condition)
-		$this->note = htmlspecialchars("For conditional configuration {$this->entity->user->name}.");
-	else
-		$this->note = htmlspecialchars("For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].");
+		$this->note = 'For conditional configuration <a data-entity="'.htmlspecialchars($this->entity->user->guid).'" data-entity-context="com_configure_condition">'.htmlspecialchars($this->entity->user->name).'</a>.';
+	elseif ($this->entity->type == 'user')
+		$this->note = "For {$this->entity->type} <a data-entity=\"".htmlspecialchars($this->entity->user->guid)."\" data-entity-context=\"user\">".htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]").'</a>.';
+	elseif ($this->entity->type == 'group')
+		$this->note = "For {$this->entity->type} <a data-entity=\"".htmlspecialchars($this->entity->user->guid)."\" data-entity-context=\"group\">".htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->groupname}]").'</a>.';
 }
 $pines->com_ptags->load();
 ?>

@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/transfer/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -80,7 +79,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->transfers as $transfer) { ?>
 		<tr title="<?php echo (int) $transfer->guid ?>">
-			<td><?php echo (int) $transfer->guid ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($transfer->guid); ?>" data-entity-context="com_sales_transfer"><?php echo (int) $transfer->guid ?></a></td>
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>

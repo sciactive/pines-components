@@ -70,6 +70,32 @@ class com_hrm_application extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Application $this->name_first $this->name_last";
+			case 'type':
+				return 'employement application';
+			case 'types':
+				return 'employement applications';
+			case 'url_view':
+				if (gatekeeper('com_hrm/listapplications'))
+					return pines_url('com_hrm', 'application/view', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_hrm/editapplication') && isset($this->user->guid) && $this->user->is($_SESSION['user']))
+					return pines_url('com_hrm', 'application/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_hrm/listapplications'))
+					return pines_url('com_hrm', 'application/list');
+				break;
+			case 'icon':
+				return 'picon-story-editor';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the application.
 	 * @return bool True on success, false on failure.

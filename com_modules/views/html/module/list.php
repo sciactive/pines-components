@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 $module_types = $pines->com_modules->module_types();
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -71,10 +70,9 @@ $module_types = $pines->com_modules->module_types();
 	</thead>
 	<tbody>
 	<?php foreach($this->modules as $module) {
-		list ($component, $name) = explode('/', $module->type, 2);
-		?>
+		list ($component, $name) = explode('/', $module->type, 2); ?>
 		<tr title="<?php echo (int) $module->guid ?>">
-			<td><?php echo htmlspecialchars($module->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($module->guid); ?>" data-entity-context="com_modules_module"><?php echo htmlspecialchars($module->name); ?></a></td>
 			<td><?php echo htmlspecialchars($module->position); ?></td>
 			<td><?php echo htmlspecialchars($module->order); ?></td>
 			<td><?php echo ($module->enabled ? 'Yes' : 'No'); ?></td>

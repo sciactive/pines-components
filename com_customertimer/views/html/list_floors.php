@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customertimer/list_floors']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -70,7 +69,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->floors as $floor) { ?>
 		<tr title="<?php echo (int) $floor->guid ?>">
-			<td><?php echo htmlspecialchars($floor->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($floor->guid); ?>" data-entity-context="com_customertimer_floor"><?php echo htmlspecialchars($floor->name); ?></a></td>
 			<td><?php echo ($floor->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars($floor->description); ?></td>
 		</tr>

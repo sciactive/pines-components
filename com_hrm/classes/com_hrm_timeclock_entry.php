@@ -55,6 +55,20 @@ class com_hrm_timeclock_entry extends entity {
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
+
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Timeclock Entry $this->guid";
+			case 'type':
+				return 'timeclock entry';
+			case 'types':
+				return 'timeclock entries';
+			case 'icon':
+				return 'picon-view-calendar-time-spent';
+		}
+		return null;
+	}
 }
 
 ?>

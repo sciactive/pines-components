@@ -20,7 +20,16 @@ $thread = com_notes_thread::factory();
 
 // Using an array leaves the possibility to associate a thread with multiple
 // entities in the future.
-$thread->entities = array($pines->entity_manager->get_entity((int) $_REQUEST['id']));
+if (class_exists($_REQUEST['context']) && is_callable(array($_REQUEST['context'], 'factory'))) {
+	$thread->entities = array($pines->entity_manager->get_entity(
+			array('class' => $_REQUEST['context']),
+			array('&',
+				'guid' => (int) $_REQUEST['id'])
+			)
+		);
+} else {
+	$thread->entities = array($pines->entity_manager->get_entity((int) $_REQUEST['id']));
+}
 $note_id = uniqid();
 $thread->notes[$note_id] = array(
 	'date' => time(),

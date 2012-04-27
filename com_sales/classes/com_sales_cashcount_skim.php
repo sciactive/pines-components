@@ -52,6 +52,20 @@ class com_sales_cashcount_skim extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Skim $this->guid";
+			case 'type':
+				return 'skim';
+			case 'types':
+				return 'skims';
+			case 'icon':
+				return 'picon-list-remove';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the cash count skim.
 	 * @return bool True on success, false on failure.
@@ -59,7 +73,7 @@ class com_sales_cashcount_skim extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted Skim {$this->guid}.", 'notice');
+		pines_log("Deleted skim {$this->guid}.", 'notice');
 		return true;
 	}
 

@@ -95,7 +95,7 @@ return array(
 	'transfers' => array(
 		'description' => 'Transfer list.',
 		'text' => 'Transfers',
-		'class' => 'picon-resource-calendar-child',
+		'class' => 'picon-document-export',
 		'href' => pines_url('com_sales', 'transfer/list'),
 		'default' => false,
 		'depends' => array(

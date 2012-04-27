@@ -17,7 +17,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customer/company/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		// Company search function for the pgrid toolbar.
 		var company_search_box;
@@ -61,7 +60,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							"key": this.guid,
 							"values": [
 								pines.safe(this.guid),
-								pines.safe(this.name),
+								'<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_customer_company">'+pines.safe(this.name)+'</a>',
 								this.address_type == 'us' ? 'US' : 'Intl',
 								pines.safe(this.address),
 								pines.safe(this.city),

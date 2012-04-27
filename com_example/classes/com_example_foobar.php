@@ -52,6 +52,28 @@ class com_example_foobar extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'foobar';
+			case 'types':
+				return 'foobars';
+			case 'url_edit':
+				if (gatekeeper('com_example/editfoobar'))
+					return pines_url('com_example', 'foobar/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_example/listfoobars'))
+					return pines_url('com_example', 'foobar/list');
+				break;
+			case 'icon':
+				return 'picon-view-pim-journal';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the foobar.
 	 * @return bool True on success, false on failure.

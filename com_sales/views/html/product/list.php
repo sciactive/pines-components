@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/product/list']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		// Product search function for the pgrid toolbar.
 		var product_search_box;
@@ -75,7 +74,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							"key": this.guid,
 							"values": [
 								pines.safe(this.sku),
-								pines.safe(this.name),
+								'<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_sales_product">'+pines.safe(this.name)+'</a>',
 								pines.safe('$'+this.price),
 								pines.safe(costs.join(', ')),
 								vendors.join(', '),

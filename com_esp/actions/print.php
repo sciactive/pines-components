@@ -20,8 +20,8 @@ if (!isset($entity->guid)) {
 	return;
 }
 
-if ($entity->status != 'approved') {
-	pines_notice('Requested ESP has not been approved');
+if ($entity->status != 'registered') {
+	pines_notice('Requested ESP has not been registered.');
 	$pines->com_esp->list_plans();
 	return;
 }

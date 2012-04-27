@@ -57,6 +57,32 @@ class com_reports_sales_ranking extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return $this->name;
+			case 'type':
+				return 'sales ranking';
+			case 'types':
+				return 'sales rankings';
+			case 'url_view':
+				if (gatekeeper('com_reports/viewsalesranking'))
+					return pines_url('com_reports', 'viewsalesranking', array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_reports/editsalesranking'))
+					return pines_url('com_reports', 'editsalesranking', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_reports/listsalesrankings'))
+					return pines_url('com_reports', 'salesrankings');
+				break;
+			case 'icon':
+				return 'picon-office-chart-area-percentage';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the sales ranking.
 	 * @return bool True on success, false on failure.

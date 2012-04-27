@@ -125,6 +125,34 @@ class com_dash_dashboard extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return 'Dashboard for '.$this->user->name;
+			case 'type':
+				return 'dashboard';
+			case 'types':
+				return 'dashboards';
+			case 'url_view':
+				if ($this->is($_SESSION['user']->dashboard))
+					return pines_url('com_dash');
+				if (gatekeeper('com_dash/manage'))
+					return pines_url('com_dash', null, array('id' => $this->guid));
+				break;
+			case 'url_edit':
+				if (gatekeeper('com_dash/manage'))
+					return pines_url('com_dash', 'manage/edit', array('id' => $this->guid));
+				break;
+			case 'url_list':
+				if (gatekeeper('com_dash/manage'))
+					return pines_url('com_dash', 'manage/list');
+				break;
+			case 'icon':
+				return 'picon-dashboard-show';
+		}
+		return null;
+	}
+
 	/**
 	 * Print a form to edit the dashboard.
 	 * @return module The form's module.

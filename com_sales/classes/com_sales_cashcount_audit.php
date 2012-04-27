@@ -52,6 +52,20 @@ class com_sales_cashcount_audit extends entity {
 		return $entity;
 	}
 
+	public function info($type) {
+		switch ($type) {
+			case 'name':
+				return "Audit $this->guid";
+			case 'type':
+				return 'audit';
+			case 'types':
+				return 'audits';
+			case 'icon':
+				return 'picon-document-edit-verify';
+		}
+		return null;
+	}
+
 	/**
 	 * Delete the cash count audit.
 	 * @return bool True on success, false on failure.

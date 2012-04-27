@@ -89,8 +89,8 @@ $pines->com_pgrid->load();
 					<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
 					<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
 					<td class="hq_label"><input type="radio" name="hq" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
-					<td><?php echo htmlspecialchars($cur_group->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_group->parent->name); ?></td>
+					<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->name); ?></a></td>
+					<td><a data-entity="<?php echo htmlspecialchars($cur_group->parent->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->parent->name); ?></a></td>
 				</tr>
 			<?php } ?>
 			</tbody>

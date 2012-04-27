@@ -32,16 +32,16 @@ if ($this->render == 'body') {
 </div>
 <?php } ?>
 <div style="clear: both; padding-top: 1em;" class="clearfix">
-	<div class="alert alert-info" style="float: left;font-size:.9em;">
+	<div class="alert alert-info" style="float: left; font-size:.9em;">
 		Created on <?php echo format_date($this->entity->p_cdate, 'full_med'); ?>.<br />
 		Last modified on <?php echo format_date($this->entity->p_mdate, 'full_med'); ?>.
 	</div>
 	<?php if ($this->entity->user->guid) { ?>
-	<div style="float: right; clear: right;font-size:.9em;">
+	<div style="float: right; clear: right; font-size:.9em;">
 		Owned by <a data-entity="<?php echo htmlspecialchars($this->entity->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($this->entity->user->info('name')); ?></a>
 	</div>
 	<?php } if ($this->entity->group->guid) { ?>
-	<div style="float: right; clear: right;font-size:.9em;">
+	<div style="float: right; clear: right; font-size:.9em;">
 		Belongs to group <a data-entity="<?php echo htmlspecialchars($this->entity->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->group->info('name')); ?></a>
 	</div>
 	<?php } ?>

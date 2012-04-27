@@ -1,6 +1,6 @@
 <?php
 /**
- * Dialog content of the PO entity.
+ * PO entity helper.
  *
  * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -13,19 +13,22 @@ defined('P_RUN') or die('Direct access prohibited');
 if ($this->render == 'body') {
 	$type = $this->entity->info('type');
 	$icon = $this->entity->info('icon');
-	$image = $this->entity->info('image');
 	$types = $this->entity->info('types');
 	$url_list = $this->entity->info('url_list');
+	if (!preg_match('/^[A-Z]{2,}/', $type))
+		$type = ucwords($type);
+	if (!preg_match('/^[A-Z]{2,}/', $types))
+		$types = ucwords($types);
 ?>
 <div style="float: left;">
 	<?php if ($icon) { ?>
 	<i style="float: left; height: 16px; width: 16px;" class="<?php echo htmlspecialchars($icon); ?>"></i>&nbsp;
 	<?php }
-	echo htmlspecialchars(ucwords($type)); ?>
+	echo htmlspecialchars($type); ?>
 </div>
 <?php if ($url_list) { ?>
 <div style="float: right;">
-	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars(ucwords($types)); ?></a>
+	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars($types); ?></a>
 </div>
 <?php } ?>
 <div style="clear: both; padding-top: 1em;" class="clearfix">
@@ -80,12 +83,12 @@ if ($this->render == 'body') {
 			<tr>
 				<td style="font-weight:bold;">Products</td>
 				<td><?php
-			$names = array();
-			foreach ((array) $this->entity->products as $cur_product) {
-				$names[] = '<a data-entity="'.htmlspecialchars($cur_product['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_product['entity']->name).' ['.htmlspecialchars($cur_product['entity']->sku).']</a>';
-			}
-			echo implode(', ', $names);
-			?></td>
+				$names = array();
+				foreach ((array) $this->entity->products as $cur_product) {
+					$names[] = '<a data-entity="'.htmlspecialchars($cur_product['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_product['entity']->name).' ['.htmlspecialchars($cur_product['entity']->sku).']</a>';
+				}
+				echo implode(', ', $names);
+				?></td>
 			</tr>
 		</tbody>
 	</table>
@@ -111,22 +114,22 @@ if ($this->render == 'body') {
 				<td><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
 				<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 				<?php if ($this->entity->final) { ?>
-							<td>
-								<?php
-								$all_received = (array) $this->entity->received;
-								$rec_qty = 0;
-								foreach ($all_received as $key => $cur_received) {
-									if ($rec_qty >= $cur_product['quantity'])
-										break;
-									if ($cur_product['entity']->is($cur_received->product)) {
-										$rec_qty++;
-										unset($all_received[$key]);
-									}
-								}
-								echo (int) $rec_qty;
-								?>
-							</td>
-							<?php } ?>
+				<td>
+					<?php
+					$all_received = (array) $this->entity->received;
+					$rec_qty = 0;
+					foreach ($all_received as $key => $cur_received) {
+						if ($rec_qty >= $cur_product['quantity'])
+							break;
+						if ($cur_product['entity']->is($cur_received->product)) {
+							$rec_qty++;
+							unset($all_received[$key]);
+						}
+					}
+					echo (int) $rec_qty;
+					?>
+				</td>
+				<?php } ?>
 				<td><?php echo htmlspecialchars($cur_product['cost']); ?></td>
 				<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost']); ?></td>
 			</tr>
@@ -134,15 +137,7 @@ if ($this->render == 'body') {
 		</tbody>
 	</table>
 </div>
-<?php } if ($image) { ?>
-<div style="clear: both; padding-top: 1em; text-align: center;">
-	<span class="thumbnail" style="display: inline-block; max-width: 90%;">
-		<img src="<?php echo htmlspecialchars($image); ?>" alt="" style="max-width: 100%;">
-	</span>
-</div>
-<?php } ?>
-<br/>
-<?php } elseif ($this->render == 'footer') {
+<?php } } elseif ($this->render == 'footer') {
 	$url_view = $this->entity->info('url_view');
 	$url_edit = $this->entity->info('url_edit');
 	if ($url_view) { ?>

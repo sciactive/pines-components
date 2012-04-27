@@ -76,6 +76,10 @@ class com_sales_po extends entity {
 		return null;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
 	public function helper() {
 		return new module('com_sales', 'po/helper');
 	}

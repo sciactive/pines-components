@@ -76,6 +76,10 @@ class com_sales_po extends entity {
 		return null;
 	}
 
+	public function helper() {
+		return new module('com_sales', 'po/helper');
+	}
+
 	/**
 	 * Delete the PO.
 	 * @return bool True on success, false on failure.

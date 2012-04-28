@@ -90,6 +90,14 @@ class group extends able_object implements group_interface {
 		return null;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_user', 'helper_group');
+	}
+
 	public function is_descendant($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);

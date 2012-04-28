@@ -1,6 +1,6 @@
 <?php
 /**
- * A default, rather simple, dialog content of the entity.
+ * A default, rather simple, entity helper.
  *
  * @package Components\entityhelper
  * @license http://www.gnu.org/licenses/agpl-3.0.html

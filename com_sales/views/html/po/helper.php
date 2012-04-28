@@ -10,67 +10,37 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-if ($this->render == 'body') {
-	$type = $this->entity->info('type');
-	$icon = $this->entity->info('icon');
-	$types = $this->entity->info('types');
-	$url_list = $this->entity->info('url_list');
-	if (!preg_match('/^[A-Z]{2,}/', $type))
-		$type = ucwords($type);
-	if (!preg_match('/^[A-Z]{2,}/', $types))
-		$types = ucwords($types);
-?>
-<div style="float: left;">
-	<?php if ($icon) { ?>
-	<i style="float: left; height: 16px; width: 16px;" class="<?php echo htmlspecialchars($icon); ?>"></i>&nbsp;
-	<?php }
-	echo htmlspecialchars($type); ?>
-</div>
-<?php if ($url_list) { ?>
-<div style="float: right;">
-	<a href="<?php echo htmlspecialchars($url_list); ?>">List <?php echo htmlspecialchars($types); ?></a>
-</div>
-<?php } ?>
-<div style="clear: both; padding-top: 1em;" class="clearfix">
-	<div class="alert alert-info" style="float: left; font-size:.9em;">
-		Created on <?php echo format_date($this->entity->p_cdate, 'full_med'); ?>.<br />
-		Last modified on <?php echo format_date($this->entity->p_mdate, 'full_med'); ?>.
-	</div>
-	<?php if ($this->entity->user->guid) { ?>
-	<div style="float: right; clear: right; font-size:.9em;">
-		Owned by <a data-entity="<?php echo htmlspecialchars($this->entity->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($this->entity->user->info('name')); ?></a>
-	</div>
-	<?php } if ($this->entity->group->guid) { ?>
-	<div style="float: right; clear: right; font-size:.9em;">
-		Belongs to group <a data-entity="<?php echo htmlspecialchars($this->entity->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->group->info('name')); ?></a>
-	</div>
-	<?php } ?>
-</div>
-<?php if (gatekeeper('com_sales/listpos')) { ?>
+
+$module = new module('com_entityhelper', 'default_helper');
+$module->render = $this->render;
+$module->entity = $this->entity;
+echo $module->render();
+
+if ($this->render == 'body' && gatekeeper('com_sales/listpos')) { ?>
 <div style="clear:both;">
 	<hr />
-	<h3 style="margin:10px 0;">Quick Information</h3>
+	<h3 style="margin:10px 0;">Properties</h3>
 	<table class="table table-bordered" style="clear:both;">
 		<tbody>
 			<tr>
 				<td style="font-weight:bold;">PO Number</td>
-				<td><?php echo htmlspecialchars($this->entity->po_number);?></td>
+				<td><?php echo htmlspecialchars($this->entity->po_number); ?></td>
 			</tr>
 			<tr>
 				<td style="font-weight:bold;">Reference Number</td>
-				<td><?php echo htmlspecialchars($this->entity->reference_number);?></td>
+				<td><?php echo htmlspecialchars($this->entity->reference_number); ?></td>
 			</tr>
 			<tr>
 				<td style="font-weight:bold;">Vendor</td>
-				<td><a data-entity="<?php echo htmlspecialchars($this->entity->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($this->entity->vendor->name);?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($this->entity->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($this->entity->vendor->name); ?></a></td>
 			</tr>
 			<tr>
 				<td style="font-weight:bold;">Destination</td>
-				<td><a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars(ucwords($this->entity->destination->groupname));?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars(ucwords($this->entity->destination->groupname)); ?></a></td>
 			</tr>
 			<tr>
 				<td style="font-weight:bold;">Shipper</td>
-				<td><a data-entity="<?php echo htmlspecialchars($this->entity->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($this->entity->shipper->name);?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($this->entity->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($this->entity->shipper->name); ?></a></td>
 			</tr>
 			<tr>
 				<td style="font-weight:bold;">ETA</td>
@@ -137,13 +107,4 @@ if ($this->render == 'body') {
 		</tbody>
 	</table>
 </div>
-<?php } } elseif ($this->render == 'footer') {
-	$url_view = $this->entity->info('url_view');
-	$url_edit = $this->entity->info('url_edit');
-	if ($url_view) { ?>
-<a href="<?php echo htmlspecialchars($url_view); ?>" class="btn">View</a>
-<?php } if ($url_edit) { ?>
-<a href="<?php echo htmlspecialchars($url_edit); ?>" class="btn">Edit</a>
-<?php } if (!$url_view && !$url_edit) { ?>
-<a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
-<?php } } ?>
+<?php } ?>

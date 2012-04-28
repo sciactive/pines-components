@@ -24,7 +24,6 @@ foreach($this->groups as $cur_group) {
 }
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -93,7 +92,7 @@ foreach($this->groups as $cur_group) {
 			<td><?php echo (int) $group->guid ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($group->groupname); ?></a></td>
 			<td><?php echo htmlspecialchars($group->name); ?></td>
-			<td><?php echo htmlspecialchars($group->email); ?></td>
+			<td><a href="mailto:<?php echo htmlspecialchars($group->email); ?>"><?php echo htmlspecialchars($group->email); ?></a></td>
 			<td><?php echo htmlspecialchars($group->timezone); ?></td>
 			<td><?php
 			$user_array = $pines->entity_manager->get_entities(

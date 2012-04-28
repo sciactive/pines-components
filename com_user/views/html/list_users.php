@@ -89,7 +89,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->name); ?></td>
 			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
-			<td><?php echo htmlspecialchars($user->email); ?></td>
+			<td><a href="mailto:<?php echo htmlspecialchars($user->email); ?>"><?php echo htmlspecialchars($user->email); ?></a></td>
 			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
 			<?php } ?>

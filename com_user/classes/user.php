@@ -98,6 +98,14 @@ class user extends able_object implements user_interface {
 		return null;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_user', 'helper_user');
+	}
+
 	public function delete() {
 		if (!parent::delete())
 			return false;

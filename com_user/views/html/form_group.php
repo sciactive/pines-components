@@ -192,37 +192,6 @@ $pines->uploader->load();
 			"source": types
 		});
 		<?php } ?>
-
-		<?php /*
-		// Parent Tree
-		var location = $("#p_muid_form [name=parent]");
-		$("#p_muid_form .location_tree")
-		.bind("select_node.jstree", function(e, data){
-			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
-		})
-		.bind("before.jstree", function (e, data){
-			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
-				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
-		})
-		.bind("loaded.jstree", function(e, data){
-			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
-			if (!path.length) return;
-			data.inst.open_node("#"+path.join(", #"), false, true);
-		})
-		.jstree({
-			"plugins" : [ "themes", "json_data", "ui" ],
-			"json_data" : {
-				"ajax" : {
-					"dataType" : "json",
-					"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
-				}
-			},
-			"ui" : {
-				"select_limit" : 1,
-				"initially_select" : ["<?php echo (int) $this->entity->parent->guid; ?>"]
-			}
-		});
-		*/ ?>
 	});
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'savegroup')); ?>">
@@ -306,16 +275,6 @@ $pines->uploader->load();
 					</select>
 				</label>
 			</div>
-			<?php /*
-			<div class="pf-element">
-				<span class="pf-label">Parent</span>
-				<div class="pf-group">
-					<span class="pf-field"><input type="checkbox" name="no_parent" value="ON"<?php echo !isset($this->entity->parent) ? ' checked="checked"' : ''; ?> /> No Parent</span>
-					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
-				</div>
-				<input type="hidden" name="parent" />
-			</div>
-			*/ ?>
 			<?php if ($this->display_default) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">New User Primary Group</span>

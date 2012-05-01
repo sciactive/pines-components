@@ -86,6 +86,14 @@ class com_customer_customer extends user {
 		return $entity;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_customer', 'customer/helper');
+	}
+
 	public function info($type) {
 		switch ($type) {
 			case 'name':

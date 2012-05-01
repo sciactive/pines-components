@@ -45,6 +45,16 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 				<td style="font-weight:bold;">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
 			</tr>
+			<?php } if (in_array('phone', $pines->config->com_user->user_fields)) { ?>
+			<tr>
+				<td style="font-weight:bold;">Phone</td>
+				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone)); ?></a></td>
+			</tr>
+			<?php } if (in_array('fax', $pines->config->com_user->user_fields)) { ?>
+			<tr>
+				<td style="font-weight:bold;">Fax</td>
+				<td><a href="tel:<?php echo htmlspecialchars($this->entity->fax); ?>"><?php echo htmlspecialchars(format_phone($this->entity->fax)); ?></a></td>
+			</tr>
 			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Timezone</td>

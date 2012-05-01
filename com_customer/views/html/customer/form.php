@@ -510,6 +510,7 @@ $pines->com_customer->load_company_select();
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field" type="tel" name="fax" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->fax)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Timezone</span>
@@ -525,7 +526,7 @@ $pines->com_customer->load_company_select();
 					</select>
 				</label>
 			</div>
-			<?php } if (in_array('referrer', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php if (in_array('referrer', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Referrer</span>
 					<span class="pf-note">Where did you hear about us?</span>
@@ -786,12 +787,10 @@ $pines->com_customer->load_company_select();
 						</label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">City, State, Zip</span>
-							<input class="pf-field" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
-							<input class="pf-field" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
-							<input class="pf-field" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
-						</label>
+						<span class="pf-label">City, State, Zip</span>
+						<input class="pf-field" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
+						<input class="pf-field" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
+						<input class="pf-field" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
 					</div>
 				</div>
 				<br class="pf-clearing" />

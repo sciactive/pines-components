@@ -95,7 +95,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								'<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_customer_customer">'+pines.safe(this.username)+'</a>',
 								pines.safe(this.name),
 								pines.safe(this.location),
-								pines.safe(this.email),
+								'<a href="mailto:'+pines.safe(this.email)+'">'+pines.safe(this.email)+'</a>',
 								pines.safe(this.company),
 								pines.safe(this.phone_home),
 								pines.safe(this.phone_work),

@@ -45,16 +45,26 @@ if (isset($_REQUEST['host'])) {
 				$pass = $pass && @pg_query($link, 'DROP ROLE IF EXISTS "'.pg_escape_string($link, $user).'";');
 				$pass = $pass && @pg_query($link, 'CREATE ROLE "'.pg_escape_string($link, $user).'" INHERIT LOGIN PASSWORD \''.pg_escape_string($link, $password).'\' VALID UNTIL \'infinity\';');
 				$pass = $pass && @pg_query($link, 'COMMENT ON ROLE "'.pg_escape_string($link, $user).'" IS \'Automatically created by com_pgsql for Pines.\';');
+				if (!$pass) {
+					pines_error('User could not be created. Check the log for more details.');
+					pines_log('User could not be created: '.pg_last_error(), 'error');
+				}
 			}
 			// Create the database.
-			if ($pass)
-				$pass = $pass && @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'en_US.UTF-8\' LC_CTYPE = \'en_US.UTF-8\' CONNECTION LIMIT = -1;');
+			if ($pass) {
+				$pass = @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'POSIX\' LC_CTYPE = \'POSIX\' CONNECTION LIMIT = -1 TEMPLATE = template0;');
+				if (!$pass) {
+					pines_error('Database could not be created. Check the log for more details.');
+					pines_log('Database could not be created: '.pg_last_error(), 'error');
+				}
+			}
 			// Grant priveleges to use it.
-			if ($pass)
-				$pass = $pass && @pg_query($link, 'GRANT ALL ON DATABASE "'.pg_escape_string($link, $database).'" TO "'.pg_escape_string($link, $user).'";');
-			if (!$pass) {
-				pines_error('User/database could not be created. Check the log for more details.');
-				pines_log('User/database could not be created: '.pg_last_error(), 'error');
+			if ($pass) {
+				$pass = @pg_query($link, 'GRANT ALL ON DATABASE "'.pg_escape_string($link, $database).'" TO "'.pg_escape_string($link, $user).'";');
+				if (!$pass) {
+					pines_error('Database rights could not be granted. Check the log for more details.');
+					pines_log('Database rights could not be granted: '.pg_last_error(), 'error');
+				}
 			}
 			@pg_close($link);
 		} else {

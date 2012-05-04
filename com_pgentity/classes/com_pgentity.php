@@ -400,6 +400,7 @@ class com_pgentity extends component implements entity_manager_interface {
 
 		$entities = array();
 		$class = isset($options['class']) ? $options['class'] : entity;
+		$sort = isset($options['sort']) ? $options['sort'] : 'guid';
 		$count = $ocount = 0;
 
 		// Check if the requested entity is cached.
@@ -650,17 +651,32 @@ class com_pgentity extends component implements entity_manager_interface {
 		}
 		unset($cur_selector);
 
+		switch ($sort) {
+			case 'cdate':
+				// This should ensure that two entities with the same cdate get
+				// sorted correctly.
+				$sort = 'e."cdate"+(e."guid"*0.000000000001)';
+				break;
+			case 'mdate':
+				$sort = 'e."mdate"+(e."guid"*0.000000000001)';
+				break;
+			case 'guid':
+			default:
+				$sort = 'e."guid"';
+				break;
+			
+		}
 		if ($query_parts) {
 			$query = sprintf("SELECT e.\"guid\", e.\"tags\", e.\"cdate\", e.\"mdate\", d.\"name\", d.\"value\" FROM \"%scom_pgentity_entities\" e LEFT JOIN \"%scom_pgentity_data\" d USING (\"guid\") WHERE %s ORDER BY %s;",
 				$pines->config->com_pgsql->prefix,
 				$pines->config->com_pgsql->prefix,
 				'('.implode(') AND (', $query_parts).')',
-				$options['reverse'] ? 'e."guid" DESC' : 'e."guid"');
+				$options['reverse'] ? $sort.' DESC' : $sort);
 		} else {
 			$query = sprintf("SELECT e.\"guid\", e.\"tags\", e.\"cdate\", e.\"mdate\", d.\"name\", d.\"value\" FROM \"%scom_pgentity_entities\" e LEFT JOIN \"%scom_pgentity_data\" d USING (\"guid\") ORDER BY %s;",
 				$pines->config->com_pgsql->prefix,
 				$pines->config->com_pgsql->prefix,
-				$options['reverse'] ? 'e."guid" DESC' : 'e."guid"');
+				$options['reverse'] ? $sort.' DESC' : $sort);
 		}
 
 		//$time = microtime(true);

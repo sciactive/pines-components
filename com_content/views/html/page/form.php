@@ -778,6 +778,7 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Override Created Date</span>
+					<span class="pf-note">This date is used for sorting pages on the front page.</span>
 					<input class="pf-field" type="text" name="p_cdate" value="<?php echo $this->entity->p_cdate ? htmlspecialchars(format_date($this->entity->p_cdate, 'full_med')) : ''; ?>" /></label>
 			</div>
 			<div class="pf-element">

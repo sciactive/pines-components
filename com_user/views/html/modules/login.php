@@ -366,7 +366,9 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		</div>
 		<?php } if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
 		<div class="pf-element" id="p_muid_recovery">
+			<?php if ($this->style != 'small') { ?>
 			<span class="pf-label" style="height: 1px;">&nbsp;</span>
+			<?php } ?>
 			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_user', 'recover')); ?>">I can't access my account.</a>
 		</div>
 		<?php } ?>

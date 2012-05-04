@@ -27,6 +27,25 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'front_page_per_page',
+		'cname' => 'Front Page Per Page',
+		'description' => 'The number of content pages to show per page on the front page. Use 0 to show all pages.',
+		'value' => 5,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'front_page_pagination_type',
+		'cname' => 'Front Page Pagination Type',
+		'description' => "The pagination type determines how the links to next/previous pages look. Complete has the highest performance penalty.\n\nSimple means there will be Next/Prev links.\n\nBlog means there will be Older/Newer links.\n\nComplete means there will be individual page links.",
+		'value' => 'blog',
+		'options' => array(
+			'Simple' => 'simple',
+			'Blog' => 'blog',
+			'Complete' => 'complete',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'front_page_meta_tags',
 		'cname' => 'Front Page Meta Tags',
 		'description' => 'Meta tags for the front page. The format is name:content.',
@@ -130,7 +149,7 @@ return array(
 		'name' => 'tags_text',
 		'cname' => 'Tags Text',
 		'description' => 'The text to print before the tags.',
-		'value' => 'Tags: ',
+		'value' => 'Tagged: ',
 		'peruser' => true,
 	),
 	array(
@@ -212,7 +231,7 @@ return array(
 		'name' => 'def_page_show_front_page',
 		'cname' => 'Defaults: Pages: Show on Front Page',
 		'description' => '',
-		'value' => false,
+		'value' => true,
 		'peruser' => true,
 	),
 	array(
@@ -226,7 +245,7 @@ return array(
 		'name' => 'def_page_show_author_info',
 		'cname' => 'Defaults: Pages: Show Author Info',
 		'description' => '',
-		'value' => false,
+		'value' => true,
 		'peruser' => true,
 	),
 	array(
@@ -240,7 +259,7 @@ return array(
 		'name' => 'def_page_show_intro',
 		'cname' => 'Defaults: Pages: Show Intro on Page',
 		'description' => '',
-		'value' => false,
+		'value' => true,
 		'peruser' => true,
 	),
 	array(

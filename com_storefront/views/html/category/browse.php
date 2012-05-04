@@ -49,7 +49,7 @@ foreach ((array) $this->show_page_modules as $cur_module) {
 			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>">&larr;</a></li>
 			<?php } if ($this->page - 2 >= 1) {
 				if ($this->page - 2 > 1) { ?>
-			<li class="disabled">&hellip;</li>
+			<li class="disabled"><a href="javascript:void(0);">&hellip;</a></li>
 				<?php } ?>
 			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 2, 'sort' => $this->sort))); ?>"><?php echo $this->page - 2; ?></a></li>
 			<?php } if ($this->page - 1 >= 1) { ?>
@@ -62,7 +62,7 @@ foreach ((array) $this->show_page_modules as $cur_module) {
 			<?php if ($this->page + 2 <= $pages) { ?>
 			<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 2, 'sort' => $this->sort))); ?>"><?php echo $this->page + 2; ?></a></li>
 			<?php if ($this->page + 2 < $pages) { ?>
-			<li class="disabled">&hellip;</li>
+			<li class="disabled"><a href="javascript:void(0);">&hellip;</a></li>
 				<?php }
 				} ?>
 			<?php if ($this->page + 1 <= $pages) { ?>

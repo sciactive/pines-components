@@ -96,19 +96,19 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 					<?php if ($sidebar) { if ($sidebar == 'left') { ?>
 					<div class="row<?php echo ($layout_type) ? '-fluid': ''; ?>">
 						<div id="sidebar" class="span3">
-							<div class="content_padding"><?php echo $pines->page->render_modules('left'); echo $pines->page->render_modules('right'); ?></div>
+							<div class="container-fluid"><?php echo $pines->page->render_modules('left'); echo $pines->page->render_modules('right'); ?></div>
 						</div>
 						<div id="main_content" class="span9">
-							<div class="content_padding"><?php echo $pines->page->render_modules('content'); ?></div>
+							<div class="container-fluid"><?php echo $pines->page->render_modules('content'); ?></div>
 						</div>
 					</div>
 					<?php } elseif ($sidebar == 'right') { ?>
 					<div class="row<?php echo ($layout_type) ? '-fluid': ''; ?>">
 						<div id="main_content" class="span9">
-							<div class="content_padding"><?php echo $pines->page->render_modules('content'); ?></div>
+							<div class="container-fluid"><?php echo $pines->page->render_modules('content'); ?></div>
 						</div>
 						<div id="sidebar" class="span3">
-							<div class="content_padding"><?php echo $pines->page->render_modules('left'); echo $pines->page->render_modules('right'); ?></div>
+							<div class="container-fluid"><?php echo $pines->page->render_modules('left'); echo $pines->page->render_modules('right'); ?></div>
 						</div>
 					</div>
 					<?php } } else {

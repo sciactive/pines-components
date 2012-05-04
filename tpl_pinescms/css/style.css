@@ -20,12 +20,24 @@ h1, h2, h3 {
 a:hover {
 	text-decoration: underline;
 }
+.pagination a:hover {
+	text-decoration: none;
+}
 a:visited {
 	opacity: .8;
 }
 .module {
 	margin-bottom: .5em;
 	clear: both;
+}
+.module_title {
+	margin-bottom: .8em;
+}
+.module_title h2, #pines_content .module_title h2, .module_title p {
+	margin-bottom: 0;
+}
+.module_title p {
+	color: #777;
 }
 
 /* Shadow and Copyright Containers */
@@ -197,7 +209,7 @@ a:visited {
 
 /* Logo Section */
 #logo {
-	margin: 20px 0 0 15px;
+	margin: 20px 0 0 35px;
 	text-decoration: none;
 	float: left;
 	color: #3A3A3A;
@@ -207,6 +219,7 @@ a:visited {
 }
 #logo img {
 	border:none;
+	margin-left: -20px;
 }
 #header_right {
 	display: inline;
@@ -218,8 +231,11 @@ a:visited {
 }
 
 /* Precontent & Breadcrumbs */
+#breadcrumbs {
+	margin-top: 16px;
+}
 #breadcrumbs .module {
-	padding: 8px 16px 0;
+	padding: 0 16px;
 	margin: 0;
 	font-size: .7em;
 }
@@ -272,12 +288,10 @@ a:visited {
 
 /* Content */
 #pines_content {
-	padding-bottom:25px;
+	margin-top: -15px;
+	padding-bottom: 5px;
 }
 
-#pines_content .content_padding {
-	padding: 0 15px;
-}
 #pines_content h1, #pines_content h2, #pines_content h3 {
 	margin: 1em 0 .4em;
 }

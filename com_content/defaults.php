@@ -128,6 +128,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'new_pages_first',
+		'cname' => 'New Pages First',
+		'description' => 'When a page is added to a category, make it the first.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_tags_in_lists',
 		'cname' => 'Show Tags in Lists',
 		'description' => 'Show content tags on lists, like category pages.',
@@ -213,6 +220,25 @@ return array(
 		'cname' => 'Defaults: Categories: Show Breadcrumbs',
 		'description' => '',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'def_cat_per_page',
+		'cname' => 'Defaults: Categories: Per Page',
+		'description' => '',
+		'value' => 5,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'def_cat_pagination_type',
+		'cname' => 'Defaults: Categories: Pagination Type',
+		'description' => '',
+		'value' => 'blog',
+		'options' => array(
+			'Simple' => 'simple',
+			'Blog' => 'blog',
+			'Complete' => 'complete',
+		),
 		'peruser' => true,
 	),
 	array(

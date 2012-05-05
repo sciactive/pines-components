@@ -11,6 +11,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+$this->classes[] = 'content_pagination';
+
 $this->page = (int) $this->page;
 
 if ($this->type == 'complete') { ?>

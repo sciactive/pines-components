@@ -11,6 +11,9 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+$this->classes[] = 'content_page';
+$this->classes[] = 'content_page_full';
+
 if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 

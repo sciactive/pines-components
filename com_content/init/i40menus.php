@@ -58,8 +58,9 @@ if ($pines->config->com_content->show_cat_menus) {
 			if ($cur_category->get_option('link_menu'))
 				$cat_menu['href'] = array('com_content', 'category', array('a' => $cur_category->alias));
 			$show_pages = $cur_category->get_option('show_pages_in_menu');
+			$new_paths = $paths;
 			// Go through each path and add the entry and pages.
-			foreach ($paths as &$cur_path) {
+			foreach ($new_paths as &$cur_path) {
 				// Update the path.
 				$cur_path .= "/cat_{$cur_category->guid}";
 				$cat_menu['path'] = $cur_path;
@@ -80,7 +81,7 @@ if ($pines->config->com_content->show_cat_menus) {
 			unset($cur_path);
 
 			if ($cur_category->children)
-				com_content__category_menu($cur_category, $paths);
+				com_content__category_menu($cur_category, $new_paths);
 		}
 	}
 

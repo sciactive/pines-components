@@ -70,6 +70,8 @@ $category->com_menueditor_entries = json_decode($_REQUEST['com_menueditor_entrie
 // Page
 $category->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
 $category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
+$category->per_page = ($_REQUEST['per_page'] === '' ? null : (int) $_REQUEST['per_page']);
+$category->pagination_type = ($_REQUEST['pagination_type'] == 'null' ? null : $_REQUEST['pagination_type']);
 $category->intro = $_REQUEST['intro'];
 $category->variants = array();
 foreach ($_REQUEST['variants'] as $cur_variant_entry) {

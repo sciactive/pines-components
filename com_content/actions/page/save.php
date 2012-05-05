@@ -130,7 +130,10 @@ if ($page->save()) {
 	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'data' => array('enabled', true)));
 	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$page->in_array($cur_cat->pages)) {
-			$cur_cat->pages[] = $page;
+			if ($pines->config->com_content->new_pages_first)
+				$cur_cat->pages = array_merge(array($page), $cur_cat->pages);
+			else
+				$cur_cat->pages[] = $page;
 			if (!$cur_cat->save())
 				pines_error("Couldn't add page to category {$cur_cat->name}. Do you have permission?");
 		} elseif (!in_array($cur_cat->guid, $categories) && $page->in_array($cur_cat->pages)) {

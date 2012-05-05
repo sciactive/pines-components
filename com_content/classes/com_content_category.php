@@ -124,15 +124,90 @@ class com_content_category extends entity {
 	}
 
 	/**
+	 * Get the pages in this category that are ready.
+	 * @return array An array of pages.
+	 */
+	public function get_ready_pages($offset = null, $limit = null) {
+		global $pines;
+		/* This method isn't possible yet. :(
+		// First get all the GUIDs of the pages.
+		$data = $this->get_data();
+		$page_guids = array();
+		if ($data['pages']) {
+			foreach ($data['pages'] as $cur_page) {
+				if (!$cur_page)
+					continue;
+				$ref = $cur_page->to_reference();
+				$page_guids[] = $ref[1];
+			}
+		} else {
+			$sdata = $this->get_sdata();
+			if (!$sdata['pages'])
+				return array();
+			preg_match_all('/i:1;i:(\d+);/', $sdata['pages'], $matches);
+			foreach ($matches[1] as $cur_match)
+				$page_guids[] = (int) $cur_match;
+		}
+		*/
+		$pages = array();
+		foreach ($this->pages as $cur_page) {
+			if (!$cur_page || !$cur_page->enabled || !$cur_page->ready())
+				continue;
+			$pages[] = $cur_page;
+		}
+		return $pages;
+	}
+
+	/**
 	 * Print the category browser.
+	 * @param int $page_num The category page to show.
 	 * @return module The category's module.
 	 */
-	public function print_category() {
+	public function print_category($page_num = 0) {
 		if (!$this->ready())
 			return null;
 		global $pines;
+
+		// Show the pages.
+		$pages = $this->get_ready_pages();
+		$per_page = $this->get_option('per_page');
+
+		if ($per_page !== 0) {
+			// Get only the pages on this page.
+			$show_pages = array_slice($pages, $per_page * $page_num, $per_page);
+		} else
+			$show_pages = $pages;
+
+		// Check that there are pages.
+		if (!$show_pages && $page_num > 0)
+			return null;
+
+		// Print the category module first.
 		$module = new module('com_content', 'category/category', 'content');
 		$module->entity = $this;
+
+		// Print the pages.
+		foreach ($show_pages as $cur_page) {
+			$pmodule = $cur_page->print_intro();
+			if (isset($pmodule)) {
+				$pmodule->detach();
+				$pmodule->attach($module->position, $module->order);
+			}
+		}
+
+		// Do we need to show pagination?
+		if ($per_page !== 0 && (count($pages) > $per_page || $page_num > 0)) {
+			// Show a pagination module.
+			$pagination = new module('com_content', 'pagination', 'content');
+			$pagination->type = $this->get_option('pagination_type');
+			$pagination->page = $page_num;
+			if ($pagination->type == 'complete')
+				$pagination->pages = ceil(count($pages) / $per_page);
+			else
+				$pagination->next_exists = ($page_num + 1) < ceil(count($pages) / $per_page);
+			$pagination->no_page_url = pines_url('com_content', 'category', array('a' => $this->alias));
+			$pagination->page_url = pines_url('com_content', 'category', array('a' => $this->alias, 'page' => '__page__'));
+		}
 
 		return $module;
 	}

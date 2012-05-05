@@ -20,6 +20,9 @@ $pines->com_menueditor->load_editor();
 	#p_muid_pages .page {
 		cursor: default;
 	}
+	#p_muid_pages .ui-sortable-helper {
+		list-style-type: disc;
+	}
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'category/save')); ?>">
 	<script type="text/javascript">
@@ -43,6 +46,7 @@ $pines->com_menueditor->load_editor();
 				update_pages();
 				return false;
 			}).sortable({
+				helper: 'clone',
 				update: function(){
 					update_pages();
 				}
@@ -302,7 +306,7 @@ $pines->com_menueditor->load_editor();
 					<?php if ($this->entity->pages) { ?>
 					<ol id="p_muid_pages" class="pf-field well" style="padding: 1em 1em 1em 3em; min-width: 300px;">
 						<?php foreach ($this->entity->pages as $cur_page) { ?>
-						<li class="page" title="<?php echo htmlspecialchars($cur_page->guid); ?>"><?php echo htmlspecialchars($cur_page->name); ?> <a href="<?php echo htmlspecialchars(pines_url('com_content', 'page/edit', array('id' => $cur_page->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a> <a href="#" class="remove">Remove</a></li>
+						<li class="page alert alert-info" title="<?php echo htmlspecialchars($cur_page->guid); ?>"><a data-entity="<?php echo htmlspecialchars($cur_page->guid); ?>" data-entity-context="com_content_page"><?php echo htmlspecialchars($cur_page->name); ?></a> <a href="javascript:void(0);" class="remove" style="float: right;">&times;</a></li>
 						<?php } ?>
 					</ol>
 					<?php } else { ?>
@@ -738,6 +742,30 @@ $pines->com_menueditor->load_editor();
 						<option value="true"<?php echo $this->entity->show_breadcrumbs === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_breadcrumbs === false ? ' selected="selected"' : ''; ?>>No</option>
 					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Per Page</span>
+					<span class="pf-note">The number of content pages to show per page. Use 0 to show all pages. Leave blank to use the default</span>
+					<input class="pf-field" type="text" name="per_page" size="5" value="<?php echo htmlspecialchars($this->entity->per_page); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Pagination Type</span>
+					<span class="pf-note">The pagination type determines how the links to next/previous pages look.</span>
+					<select class="pf-field" name="pagination_type">
+						<option value="null">Use Default</option>
+						<option value="simple"<?php echo $this->entity->pagination_type === 'simple' ? ' selected="selected"' : ''; ?>>Simple</option>
+						<option value="blog"<?php echo $this->entity->pagination_type === 'blog' ? ' selected="selected"' : ''; ?>>Blog</option>
+						<option value="complete"<?php echo $this->entity->pagination_type === 'complete' ? ' selected="selected"' : ''; ?>>Complete</option>
+					</select></label>
+				<div class="pf-group">
+					<div class="pf-field">
+						<ul>
+							<li><strong>Simple</strong> means there will be Next/Prev links.</li>
+							<li><strong>Blog</strong> means there will be Older/Newer links.</li>
+							<li><strong>Complete</strong> means there will be individual page links.</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<div class="pf-element pf-heading">
 				<h3>Intro</h3>

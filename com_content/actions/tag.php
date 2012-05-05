@@ -23,18 +23,18 @@ $selector = array('&',
 foreach ($tags as $cur_tag)
 	$selector['array'][] = array('content_tags', $cur_tag);
 
-$entities = $pines->entity_manager->get_entities(
+$pages = $pines->entity_manager->get_entities(
 		array('class' => com_content_page),
 		$selector
 	);
 
 // Now determine that each one is ready to print.
-foreach ($entities as $key => $cur_entity) {
-	if (!$cur_entity->ready())
-		unset($entities[$key]);
+foreach ($pages as $key => $cur_page) {
+	if (!$cur_page->ready())
+		unset($pages[$key]);
 }
 
-if (!$entities)
+if (!$pages)
 	throw new HttpClientException(null, 404);
 
 // Set the default variant for categories.
@@ -50,7 +50,7 @@ $module = new module('com_content', 'breadcrumb', 'breadcrumbs');
 $module->tags = $tags;
 
 // Print the pages.
-foreach ($entities as $cur_page) {
+foreach ($pages as $cur_page) {
 	if (!isset($cur_page))
 		continue;
 	$module = $cur_page->print_intro();

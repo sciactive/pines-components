@@ -11,6 +11,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+$this->classes[] = 'content_category';
+
 if (!isset($this->entity))
 	$this->entity = com_content_category::factory((int) $this->id);
 
@@ -38,21 +40,7 @@ if (!empty($this->entity->intro)) {
 		echo '</div>';
 }
 
-$page_total = 0;
-foreach ($this->entity->pages as $cur_page) {
-	if (!isset($cur_page))
-		continue;
-	$module = $cur_page->print_intro();
-	if (isset($module)) {
-		$module->detach();
-		$module->attach($this->position, $this->order);
-		$page_total++;
-	}
-	if (!empty($this->page_limit) && $this->page_limit > 0 && $page_total >= $this->page_limit)
-		break;
-}
-
-if (empty($this->title) && empty($this->note) && empty($this->entity->intro))
+if ((!$this->show_title || (empty($this->title) && empty($this->note))) && empty($this->entity->intro))
 	$this->detach();
 
 ?>

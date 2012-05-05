@@ -22,9 +22,4 @@ $pines->entity_manager->sort($categories, 'name');
 				<?php } ?>
 			</select></label>
 	</div>
-	<div class="pf-element">
-		<label><span class="pf-label">Page Limit</span>
-			<span class="pf-note">Only show this many pages. Leave blank for unlimited.</span>
-			<input class="pf-field" style="text-align: right;" type="text" name="page_limit" size="5" value="" /></label>
-	</div>
 </div>

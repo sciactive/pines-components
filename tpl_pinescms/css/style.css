@@ -30,6 +30,9 @@ a:visited {
 	margin-bottom: .5em;
 	clear: both;
 }
+.module.content_pagination {
+	padding-top: 1em;
+}
 .module_title {
 	margin-bottom: .8em;
 }

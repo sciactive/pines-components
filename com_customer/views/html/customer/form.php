@@ -241,9 +241,9 @@ $pines->com_customer->load_company_select();
 								alert("No entry was found that matched the selected interaction.");
 								return;
 							}
-							$("#p_muid_interaction_customer").empty().append(pines.safe(data.customer));
+							$("#p_muid_interaction_customer").empty().append('<a data-entity="'+pines.safe(data.customer_guid)+'" data-entity-context="com_customer_customer">'+pines.safe(data.customer)+'</a>');
 							$("#p_muid_interaction_type").empty().append(pines.safe(data.type));
-							$("#p_muid_interaction_employee").empty().append(pines.safe(data.employee));
+							$("#p_muid_interaction_employee").empty().append('<a data-entity="'+pines.safe(data.employee_guid)+'" data-entity-context="user">'+pines.safe(data.employee)+'</a>');
 							$("#p_muid_interaction_date").empty().append(pines.safe(data.date));
 							$("#p_muid_interaction_comments").empty().append(pines.safe(data.comments));
 							$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+$.map(data.review_comments, pines.safe).join("</li><li>")+"</li>" : "");
@@ -861,10 +861,10 @@ $pines->com_customer->load_company_select();
 								<tbody>
 									<?php foreach ($this->interactions as $cur_interaction) { ?>
 									<tr title="<?php echo (int) $cur_interaction->guid; ?>">
-										<td><?php echo (int) $cur_interaction->guid; ?></td>
+										<td><a data-entity="<?php echo htmlspecialchars($cur_interaction->guid); ?>" data-entity-context="com_customer_interaction"><?php echo htmlspecialchars($cur_interaction->guid); ?></a></td>
 										<td><?php echo htmlspecialchars(format_date($cur_interaction->p_cdate, 'full_sort')); ?></td>
 										<td><?php echo htmlspecialchars(format_date($cur_interaction->action_date, 'full_sort')); ?></td>
-										<td><?php echo htmlspecialchars($cur_interaction->employee->name); ?></td>
+										<td><a data-entity="<?php echo htmlspecialchars($cur_interaction->employee->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_interaction->employee->name); ?></a></td>
 										<td><?php echo htmlspecialchars($cur_interaction->type); ?></td>
 										<td><?php echo ucwords($cur_interaction->status); ?></td>
 										<td><?php echo htmlspecialchars($cur_interaction->comments); ?></td>
@@ -907,28 +907,28 @@ $pines->com_customer->load_company_select();
 									</thead>
 									<tbody>
 										<?php foreach ((array) $this->sales as $cur_sale) {
-										$item_count = count($cur_sale->products); ?>
+											$item_count = count($cur_sale->products); ?>
 										<tr title="<?php echo (int) $cur_sale->guid; ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
-											<td>Sale <?php echo htmlspecialchars($cur_sale->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>)</td>
+											<td><a data-entity="<?php echo htmlspecialchars($cur_sale->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 											<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
-											<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
+											<td><?php echo ($item_count == 1) ? '<a data-entity="'.htmlspecialchars($cur_sale->products[0]['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_sale->products[0]['entity']->name).'</a> x ' . htmlspecialchars($cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
 											<td>$<?php echo number_format($cur_sale->subtotal, 2); ?></td>
 											<td>$<?php echo number_format($cur_sale->taxes, 2); ?></td>
 											<td>$<?php echo number_format($cur_sale->total, 2); ?></td>
 											<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
-											<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
+											<td><a data-entity="<?php echo htmlspecialchars($cur_sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
 										</tr>
 										<?php } foreach ((array) $this->returns as $cur_return) {
-										$item_count = count($cur_return->products); ?>
+											$item_count = count($cur_return->products); ?>
 										<tr title="<?php echo (int) $cur_return->guid; ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? ' class="child ch_'.htmlspecialchars($cur_return->sale->guid).'"' : ''; ?>>
-											<td>Return <?php echo htmlspecialchars($cur_return->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" target="receipt">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" target="receipt">Edit</a>)</td>
+											<td><a data-entity="<?php echo htmlspecialchars($cur_return->guid); ?>" data-entity-context="com_sales_return">Return <?php echo htmlspecialchars($cur_return->id); ?></a></td>
 											<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
-											<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></td>
+											<td><?php echo ($item_count == 1) ? '<a data-entity="'.htmlspecialchars($cur_return->products[0]['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_return->products[0]['entity']->name).'</a>' : $item_count.' items'; ?></td>
 											<td>$<?php echo number_format($cur_return->subtotal, 2); ?></td>
 											<td>$<?php echo number_format($cur_return->taxes, 2); ?></td>
 											<td>$<?php echo number_format($cur_return->total, 2); ?></td>
 											<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
-											<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
+											<td><a data-entity="<?php echo htmlspecialchars($cur_return->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_return->group->name); ?></a></td>
 										</tr>
 										<?php } ?>
 									</tbody>

@@ -30,29 +30,29 @@ if (!isset($interaction->guid))
 
 if (!isset($interaction->sale->guid)) {
 	$sale_title = '';
-	$sale_url = '';
+	$sale_guid = '';
 } else {
 	$sale_title = (count($interaction->sale->products) == 1) ? $interaction->sale->products[0]['entity']->name : count($interaction->sale->products).' items';
-	$sale_url = pines_url('com_sales', 'sale/receipt', array('id' => $interaction->sale->guid));
+	$sale_guid = (int) $interaction->sale->guid;
 }
 
-if ($interaction->type == 'Email') {
+if ($interaction->type == 'Email')
 	$contact_info = $interaction->customer->email;
-} elseif (!empty($interaction->customer->phone_cell)) {
+elseif (!empty($interaction->customer->phone_cell))
 	$contact_info = format_phone($interaction->customer->phone_cell);
-} elseif (!empty($interaction->customer->phone_home)) {
+elseif (!empty($interaction->customer->phone_home))
 	$contact_info = format_phone($interaction->customer->phone_home);
-} elseif (!empty($interaction->customer->phone_work)) {
+elseif (!empty($interaction->customer->phone_work))
 	$contact_info = format_phone($interaction->customer->phone_work);
-}
 
 $json_struct = (object) array(
 	'guid'				=> (int) $interaction->guid,
 	'customer'			=> (string) $interaction->customer->name,
-	'customer_url'		=> pines_url('com_customer', 'customer/edit', array('id' =>$interaction->customer->guid)),
+	'customer_guid'		=> (int) $interaction->customer->guid,
 	'sale'				=> $sale_title,
-	'sale_url'			=> $sale_url,
+	'sale_guid'			=> $sale_guid,
 	'employee'			=> (string) $interaction->employee->name,
+	'employee_guid'		=> (int) $interaction->employee->guid,
 	'type'				=> (string) $interaction->type,
 	'contact_info'		=> $contact_info,
 	'created_date'		=> format_date($interaction->p_cdate, 'full_sort'),

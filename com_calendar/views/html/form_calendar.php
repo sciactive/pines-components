@@ -562,13 +562,12 @@ if ($pines->config->com_calendar->com_customer)
 					return;
 				}
 				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
-				$("#p_muid_interaction_customer").empty().append('<a href="'+pines.safe(data.customer_url)+'" onclick="window.open(this.href); return false;">'+pines.safe(data.customer)+'</a>');
+				$("#p_muid_interaction_customer").empty().append('<a data-entity="'+pines.safe(data.customer_guid)+'" data-entity-context="com_customer_customer">'+pines.safe(data.customer)+'</a>');
 				if (data.sale_url != '') {
-					$("#p_muid_interaction_sale").empty().append('<a href="'+pines.safe(data.sale_url)+'" onclick="window.open(this.href); return false;">'+pines.safe(data.sale)+'</a>');
+					$("#p_muid_interaction_sale").empty().append('<a data-entity="'+pines.safe(data.sale_guid)+'" data-entity-context="com_sales_sale">'+pines.safe(data.sale)+'</a>');
 					$("#p_muid_sale_info").show();
-				} else {
+				} else
 					$("#p_muid_sale_info").hide();
-				}
 				$("#p_muid_interaction_type").empty().append(pines.safe(data.type)+' - '+pines.safe(data.contact_info));
 				$("#p_muid_interaction_employee").empty().append(pines.safe(data.employee));
 				$("#p_muid_interaction_created_date").empty().append(pines.safe(data.created_date));

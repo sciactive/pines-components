@@ -11,7 +11,7 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="module" style="float: right; clear: right;">
+<div class="module <?php echo htmlspecialchars(implode(' ', $this->classes)); ?>" style="float: right; clear: right;">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<?php if (!empty($this->title)) { ?>
 		<h2><?php echo $this->title; ?></h2>

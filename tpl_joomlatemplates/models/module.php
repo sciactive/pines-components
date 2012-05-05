@@ -45,7 +45,7 @@ switch ($pines->config->tpl_joomlatemplates->module_notes) {
 }
 
 $params = new jmodule_params();
-$params->classes = htmlspecialchars($this->classes);
+$params->classes = htmlspecialchars(implode(' ', $this->classes));
 
 // Fix breadcrumbs to look like Joomla!'s breadcrumbs layout.
 if ($this->position == 'breadcrumbs')

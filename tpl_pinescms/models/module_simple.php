@@ -11,4 +11,4 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="module"><?php echo $this->content; ?></div>
+<div class="module <?php echo htmlspecialchars(implode(' ', $this->classes)); ?>"><?php echo $this->content; ?></div>

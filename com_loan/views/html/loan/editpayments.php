@@ -523,13 +523,15 @@ switch ($this->entity->payment_frequency) {
 						</tbody>
 					</table>
 				</div>
+				<div class="pf-element" style="float:left;clear:none;">
+					<input name="refresh_payments" id="p_muid_edit_edit_refresh" class="pf-button btn btn-primary" type="submit" value="Refresh Payments" />
+				</div>
 				<div class="pf-element" style="float:right;clear:none;">
 					<?php if ( isset($this->entity->guid) ) { ?>
 						<input id="edit_payment_loan_id" type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 					<?php } ?>
 					<span class="pf-label" style="width:230px;">Save all Edited, Enabled Payments.</span>
-					<input type="hidden" name="editpayments" value="edit_payment" />
-					<input id="p_muid_edit_edit_save" class="pf-button btn btn-primary" type="submit" value="Save" />
+					<input name="editpayments" id="p_muid_edit_edit_save" class="pf-button btn btn-primary" type="submit" value="Save" />
 				</div>
 			</form>
 
@@ -570,8 +572,7 @@ switch ($this->entity->payment_frequency) {
 								<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 								<?php } ?>
 								<span class="pf-label" style="width:230px;">Save Changes to Payments.</span>
-								<input type="hidden" name="editpayments" value="all_payments" />
-								<input class="pf-button btn btn-primary" type="submit" value="Save" />
+								<input name="all_payments" class="pf-button btn btn-primary" type="submit" value="Save" />
 							</div>
 						</form>
 						<?php
@@ -1321,7 +1322,13 @@ switch ($this->entity->payment_frequency) {
 			</div>
 		</div>
 	<?php
-	} ?>
+	} 
+//	var_dump($this->entity->past_due);
+//	var_dump($this->entity->pay_by_date);
+//	var_dump($this->entity->paid);
+//	$this->entity->get_payments_array();
+//	var_dump($this->entity->payments);
+	?>
 		<div class="tab-pane" id="p_muid_tab_edit_log">
 			<div class="pf-form">
 				<div class="pf-element pf-heading">

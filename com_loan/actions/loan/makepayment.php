@@ -67,7 +67,7 @@ $loan->get_payments_array();
 // Get paid array variables we will need.
 // The date expected variable below will only be used for updating if not using a
 // if $loan->pay_by_date array exists, then missed_first_payment won't matter.
-if ($loan->payments[1]['payment_type'] != "missed")
+if ($loan->payments[1]['payment_status'] != "missed")
 	$missed_first_payment = false;
 else
 	$missed_first_payment = true;

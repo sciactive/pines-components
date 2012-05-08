@@ -22,7 +22,7 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // If Deleting All Payments:
-if ($_REQUEST['editpayments'] == "all_payments") {
+if ($_REQUEST['all_payments']) {
 	// Deleting all payments is true.
 	$delete_all_payments_name = $_REQUEST['delete_all_payments_name'];
 	$delete_all_payments_reason = $_REQUEST['delete_all_payments_reason'];
@@ -30,10 +30,16 @@ if ($_REQUEST['editpayments'] == "all_payments") {
 	return;
 }
 
-
+// If Refreshing All Payments:
+if ($_REQUEST['refresh_payments']) {
+	// This basically destroys paid array and reinstates it based on pay by date. 
+	// Similar to making another payment, without having to make another payment.
+	$loan->run_make_payments();
+	pines_notice('Payments have been Refreshed.');
+}
 
 // If Editing or Deleting a Single Payment:
-if ($_REQUEST['editpayments'] == "edit_payment") {
+if ($_REQUEST['editpayments']) {
 	// Get variables from edit payments form.
 	// All unedited fields are disabled and would not receive any information.
 	$edit_payment_amount = count($_REQUEST['payment_amount']) ? $_REQUEST['payment_amount'] : array();

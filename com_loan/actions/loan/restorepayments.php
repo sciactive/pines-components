@@ -26,7 +26,7 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 
 	$restore_point_value = $_REQUEST['delete_restore_point'];
 	// Get variables
-	if (empty($restore_point_value))
+	if (!isset($restore_point_value))
 		$restore_point_value = $_REQUEST['restore_point'];
 	$restore_name = $_REQUEST['restore_name'][$restore_point_value];
 
@@ -77,6 +77,9 @@ if (!empty($loan->paid) || !empty($loan->history->edit_payments)) {
 // Get variables
 if (!isset($restore_point_value))
 	$restore_point_value = $_REQUEST['restore_point'];
+
+if (empty($restore_point_value))
+	$restore_point_value = $_REQUEST['delete_restore_point'];
 
 $restore_name = $_REQUEST['restore_name'][$restore_point_value];
 

@@ -420,7 +420,6 @@ class com_loan_loan extends entity {
 				$c++;
 			}
 			$temp_payments[0]['past_due'] = $temp_payments[0]['unpaid_interest'] + $temp_payments[0]['unpaid_balance'];
-
 			ksort($temp_payments);
 			$payments = $temp_payments;
 			$this->payments = $payments;
@@ -584,12 +583,13 @@ class com_loan_loan extends entity {
 								else
 									$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c-1]['remaining_balance'] - ($temp_payments[$c]['payment_principal_expected']);
 								$temp_payments[$c]['remaining_balance'] = $temp_payments[$c]['current_balance'] - ($temp_payments[$c]['payment_principal_paid']);
-
+								
+								// Again, why would we not count this?
 								// Don't count short amount if the balance has been paid since, even partially.
-								if (is_int($this->payments[0]['last_payment_made']) && $due_date < $this->payments[0]['last_payment_made']) {
-									// Don't count short amount.
-									$temp_payments[$c]['payment_short'] = 0.00;
-								} else
+//								if (is_int($this->payments[0]['last_payment_made']) && $due_date < $this->payments[0]['last_payment_made']) {
+//									// Don't count short amount.
+//									$temp_payments[$c]['payment_short'] = 0.00;
+//								} else
 									$temp_payments[$c]['payment_short'] = $pines->com_sales->round(($temp_payments[$c]['payment_interest_expected'] + $temp_payments[$c]['payment_principal_expected']) - $temp_payments[$c]['payment_amount_paid']);
 
 								// This is the amount of interest unpaid that has been paid, and needs to be removed from unpaid_interest.
@@ -710,7 +710,7 @@ class com_loan_loan extends entity {
 								$temp_payments[$c]['missed_current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 							$temp_payments[$c]['current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 						}
-						$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['missed_current_balance'] * $this->rate_per_period) / 100, true);
+						$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
 						$temp_payments[$c]['payment_principal_expected'] = $this->frequency_payment - $temp_payments[$c]['payment_interest_expected'];
 						$temp_payments[$c]['payment_interest_paid'] = 0.00; // Because it is missed and no payments have ever bee made.
 						$temp_payments[$c]['payment_principal_paid'] = 0.00; // Because it is missed and no payments have ever bee made.
@@ -721,11 +721,12 @@ class com_loan_loan extends entity {
 						$temp_payments[$c]['payment_balance_unpaid'] = -1*($temp_payments[$c]['scheduled_balance'] - $temp_payments[$c]['remaining_balance']);
 						$temp_payments[$c]['payment_interest_unpaid'] = $temp_payments[$c]['payment_interest_expected'] - $temp_payments[$c]['payment_interest_paid'];
 
+						// Why would we not count this?
 						// Don't count short amount if the balance has been paid since, even partially.
-						if (is_int($this->payments[0]['last_payment_made']) && $due_date < $this->payments[0]['last_payment_made']) {
-							// Don't count short amount.
-							$temp_payments[$c]['payment_short'] = 0.00;
-						} else
+//						if (is_int($this->payments[0]['last_payment_made']) && $due_date < $this->payments[0]['last_payment_made']) {
+//							// Don't count short amount.
+//							$temp_payments[$c]['payment_short'] = 0.00;
+//						} else
 							$temp_payments[$c]['payment_short'] = $pines->com_sales->round(($temp_payments[$c]['payment_interest_expected'] + $temp_payments[$c]['payment_principal_expected']) - $temp_payments[$c]['payment_amount_paid']);
 
 						if (isset($temp_payments[$c]['remaining_balance'])) {
@@ -794,7 +795,7 @@ class com_loan_loan extends entity {
 
 							$temp_payments[$c]['payment_balance_unpaid'] = -1*($temp_payments[$c]['scheduled_balance'] - $temp_payments[$c]['remaining_balance']);
 							$temp_payments[$c]['payment_interest_unpaid'] = $temp_payments[$c]['payment_interest_expected'] - $temp_payments[$c]['payment_interest_paid'];
-							$temp_payments[$c]['payment_short'] = $this->frequency_payment - $temp_payments[$c]['payment_amount_paid'];
+							$temp_payments[$c]['payment_short'] = ($temp_payments[$c]['payment_interest_expected'] + $temp_payments[$c]['payment_principal_expected']) - $temp_payments[$c]['payment_amount_paid'];
 
 							if (isset($temp_payments[$c]['remaining_balance'])) {
 								$temp_payments[0]['remaining_balance'] = $temp_payments[$c]['remaining_balance'];
@@ -936,6 +937,107 @@ class com_loan_loan extends entity {
 			foreach ($temp_payments as $payment)
 				$sum_int = ($sum_int + $payment['payment_interest_expected']); // sum of interest payments.
 
+			// Get the prior due date, which is the due date right before the current scheduled one.
+			$ccc = 0;
+			foreach ($this->schedule as $schedule) {
+				if ($schedule['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+					break;
+				}
+				$ccc++;
+			}
+			$prior_due_date = $this->schedule[$ccc-1]['scheduled_date_expected'];
+			
+			// Get an accurate past due amount, because it wasn't working before.
+			// The partial payment will always contain the short amount and unpaid balances
+			// Even if scheduled payments become past due also and need to get added into the past
+			// due amount, because of the nature of how the get payments array works.
+			// For instance, if on Monday, a partial payment for a past due amount of 500 exists,
+			// and Thursday is the next scheduled payment date... if they miss that thursday payment
+			// the past due amount will automatically increase to by the missed monthly payment (ie 620 if the payment was 120)
+			// So the PARTIAL past due or short payment will always contain ALL necessary info regarding
+			// the past due amount and the unpaid values.
+			$last_partial = null;
+			$current_missed_payment = null;
+			$missed = null;
+			$first_time = true;
+			foreach ($temp_payments as &$temp_payment) {
+				if ($temp_payment['payment_status'] == "missed" && $first_time) {
+					// first time you hit a missed payment
+					$first_time = false;
+					$missed = true;
+					$first_missed_payment = $temp_payment;
+					$last_missed_payment = $temp_payment;
+				} elseif ($temp_payment['payment_status'] == "missed" && $missed == true) {
+					$last_missed_payment = $temp_payment;
+				} else {
+					// not a missed missed payment
+					$first_time = true;
+				}
+				$unpaid += $temp_payment['payment_short'];
+				if ($temp_payment['payment_status'] == "partial") {
+					if ($pines->com_sales->round($temp_payment['scheduled_balance']) == $pines->com_sales->round($temp_payment['remaining_balance'])) {
+						$temp_payment['payment_status'] = "paid_late";
+					}
+				}
+				if ($temp_payment['payment_status'] == "partial") {
+					$last_partial = $temp_payment;
+				}
+				if ($temp_payment['payment_status'] == "paid_late") {
+					$last_paid_late = $temp_payment;
+					$unpaid_paid += $temp_payment['payment_amount_paid'] - $this->frequency_payment; 
+				}
+				if ($temp_payment['payment_status'] == "paid") {
+					$last_paid = $temp_payment;
+				}
+				if ($temp_payment['payment_date_expected'] == $prior_due_date && $temp_payment['payment_status'] == "missed") {
+					$current_missed_payment = true;
+				}
+			}
+			unset($temp_payment);
+			
+			if ($current_missed_payment) {
+				foreach ($temp_payments as $temp_payment) {
+					if ($temp_payment['payment_date_expected'] >= $first_missed_payment['payment_date_expected'] && $temp_payment['payment_date_expected'] <= $last_missed_payment['payment_date_expected']) {
+						// We want to count the unpaid amounts in here.
+						$unpaid_balance += $temp_payment['payment_balance_unpaid'];
+						$unpaid_interest += $temp_payment['payment_interest_unpaid'];
+					}
+				}
+			}
+			
+			if ($current_missed_payment && $last_partial) {
+				// Payments were missed, and partially paid on... but then more payments were missed.
+				// So we need to add together the short amounts.
+				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_partial['payment_short'] + $current_missed_payment['payment_short']);
+				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_partial['payment_balance_unpaid'] + $current_missed_payment['payment_balance_unpaid']);
+				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_partial['payment_interest_unpaid'] + $current_missed_payment['payment_interest_unpaid']);
+				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
+			} elseif ($current_missed_payment) {
+				// Get all short amounts, subtract any paid amounts on late payments.
+				$temp_payments[0]['past_due'] = $pines->com_sales->round($unpaid - $unpaid_paid);
+				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($unpaid_interest);
+				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($unpaid_balance);
+				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
+			} elseif ($last_partial) {
+				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_partial['payment_short']);
+				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_partial['payment_balance_unpaid']);
+				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_partial['payment_interest_unpaid']);
+				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
+			} elseif ($last_paid['payment_date_expected'] > $last_paid_late['payment_date_expected']) {
+				// the last activity on this loan was a paid [on time] payment.
+				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_paid['payment_short']);
+				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_paid['payment_balance_unpaid']);
+				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_paid['payment_interest_unpaid']);
+				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
+			} elseif ($last_paid['payment_date_expected'] < $last_paid_late['payment_date_expected']) {
+				// the last activity on this loan was a paid [on time] payment.
+				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_paid_late['payment_short']);
+				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_paid_late['payment_balance_unpaid']);
+				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_paid_late['payment_interest_unpaid']);
+				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
+			}
+			
+			
 			$sub_int = $temp_payments[0]['subtract_unpaid_interest_paid'];
 			$inflated_expected_interest = $temp_payments[0]['inflated_expected_interest'];
 			$sum_int = $sum_int - ($sub_int - $inflated_expected_interest);
@@ -1645,18 +1747,30 @@ class com_loan_loan extends entity {
 			$num--;
 		} else
 			$num = 0;
-
+		
+		// Get the prior due date in case we need it.
+		$ccc = 0;
+		foreach ($this->schedule as $schedule) {
+			if ($schedule['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+				break;
+			}
+			$ccc++;
+		}
+		$prior_due_date = $this->schedule[$ccc-1]['scheduled_date_expected'];
+					
 		$this->past_due = null;
 		// Checks if the payment right before the due one is missed, which means
 		// that we are dealing with a past due payment!
-		$cc = 0;
+		// ^ Actually the code has been rewritten, because the date_expected now
+		// represents the payment that is due OR past due.
+		// The cool thing is, if the date expected is "payment date expected",
+		// we KNOW it was missed. Why? Because if it wasn't it would be 
+		// "scheduled date expected".
 		foreach ($this->payments as $payment) {
-			if ($payment['scheduled_date_expected'] == $date_expected) {
-				if ($this->payments[$cc-1]['payment_status'] == "missed") {
-					$this->past_due = $pines->com_sales->round($this->payments[0]['past_due']);
-				}
+			if ($payment['payment_date_expected'] == $date_expected) {
+				$this->past_due = $pines->com_sales->round($this->payments[0]['past_due']);
+				break;
 			}
-			$cc++;
 		}
 		$make_additional_payment = false;
 		// Create/Append to paid array.
@@ -1889,7 +2003,7 @@ class com_loan_loan extends entity {
 			if ($payment_amount < $this->past_due) {
 				// $payment amount is only partial.
 				$temp_past_due_paid['payment_type'] = 'past_due';
-				$temp_past_due_paid['payment_date_expected'] = strtotime('+1 day', $date_expected);
+				$temp_past_due_paid['payment_date_expected'] = $prior_due_date;
 				$temp_past_due_paid['payment_date_received'] = $date_received;
 				$temp_past_due_paid['payment_date_recorded'] = $date_recorded;
 				$temp_past_due_paid['payment_id'] = $payment_id;

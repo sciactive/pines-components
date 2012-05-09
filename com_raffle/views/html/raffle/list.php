@@ -77,7 +77,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo (count($raffle->contestants) + count($raffle->public_contestants)); ?></td>
 			<td><?php echo htmlspecialchars($raffle->places); ?></td>
 			<td><?php echo ($raffle->complete ? 'Yes' : 'No'); ?></td>
-			<td><?php echo ($raffle->public ? '<a href="'.htmlspecialchars(pines_url('com_raffle', 'enter', array('id' => $raffle->guid), true)).'" onclick="window.open(this.href); return false;">'.htmlspecialchars(pines_url('com_raffle', 'raffle', array('id' => $raffle->guid), true)).'</a>' : 'Not Public'); ?></td>
+			<td><?php echo ($raffle->public ? '<a href="'.htmlspecialchars(pines_url('com_raffle', 'enter', array('id' => $raffle->guid), true)).'" target="_blank">'.htmlspecialchars(pines_url('com_raffle', 'raffle', array('id' => $raffle->guid), true)).'</a>' : 'Not Public'); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

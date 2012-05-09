@@ -249,27 +249,25 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr title="<?php echo $sale->guid.'_'.$key; ?>">
 			<td<?php echo $style; ?>><?php echo htmlspecialchars(format_date($sale->tender_date, 'date_sort')); ?></td>
-			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
-			<td<?php echo $style; ?>><?php echo htmlspecialchars($sale->group->name); ?></td>
-			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['salesperson']->name); ?></td>
-			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
+			<td<?php echo $style; ?>><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($sale->group->name); ?></a></td>
+			<td<?php echo $style; ?>><a data-entity="<?php echo htmlspecialchars($cur_product['salesperson']->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_product['salesperson']->name); ?></a></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
 			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - $cur_product['returned_stock_entities'])); ?></td>
-			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->customer->name); ?></a></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($sale->customer->name); ?></a></td>
 			<?php if (isset($cur_product['po'])) { ?>
-			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_product['po']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['po']->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
 			<?php } else { ?>
-			<td<?php echo $style; ?>>None Attached</td>
+			<td<?php echo $style; ?>></td>
 			<?php } ?>
 			<td<?php echo $style; ?>>
 				<?php
 				$vendors = array(); 
 				foreach ($cur_product['entity']->vendors as $cur_vendor) {
 					$cur_string = '';
+					$cur_string .= '<a'.$style.' data-entity="'.htmlspecialchars($cur_vendor['entity']->guid).'" data-entity-context="com_sales_vendor">'.htmlspecialchars($cur_vendor['entity']->name).'</a>';
 					if (!empty($cur_vendor['link']))
-						$cur_string .= '<a'.$style.' href="'.htmlspecialchars($cur_vendor['link']).'" onclick="window.open(this.href); return false;">';
-					$cur_string .= htmlspecialchars($cur_vendor['entity']->name);
-					if (!empty($cur_vendor['link']))
-						$cur_string .= '</a>';
+						$cur_string .= ' [<a'.$style.' href="'.htmlspecialchars($cur_vendor['link']).'" target="_blank">Vendor Link</a>]';
 					$vendors[] = $cur_string;
 				}
 				echo implode(', ', $vendors);

@@ -79,11 +79,11 @@ $pines->com_pgrid->load();
 	</div>
 	<?php foreach ($this->items as $cur_item) { ?>
 	<div class="pf-element">
-		<span class="pf-label">From Sale <a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_item['sale']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_item['sale']->id); ?></a></span>
+		<span class="pf-label">From <a data-entity="<?php echo htmlspecialchars($cur_item['sale']->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></a></span>
 		<div class="pf-group">
 			<?php foreach ($cur_item['products'] as $cur_product) { ?>
 			<div class="pf-field">
-				<strong><?php echo htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]"); ?></strong>
+				<strong><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]"); ?></a></strong>
 				<em>x <?php echo (int) $cur_product['quantity']; ?></em>
 			</div>
 			<?php } ?>

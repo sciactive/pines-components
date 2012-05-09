@@ -31,7 +31,6 @@ echo $module->render();
 	<script type="text/javascript">
 		pines(function(){
 			$("#p_muid_customer_name").customerselect();
-			var customer_link = <?php echo json_encode(htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => '__id__')))); ?>;
 			$("#p_muid_done").click(function(){
 				var customer_name = $("#p_muid_customer_name"),
 					customer_name_val = customer_name.val(),
@@ -58,7 +57,7 @@ echo $module->render();
 					},
 					success: function(data){
 						if (data) {
-							status_bar.html('<div style="padding-bottom: 10px;"><i class="icon-ok-sign"></i> Success!<?php if (gatekeeper('com_customer/editcustomer')) { ?> <a href="'+customer_link.replace('__id__', pines.safe(parseInt(customer_name_val)))+'" onclick="window.open(this.href);return false;">View Customer</a>.<?php } ?></div>');
+							status_bar.html('<div style="padding-bottom: 10px;"><i class="icon-ok-sign"></i> Success!<?php if (gatekeeper('com_customer/editcustomer')) { ?> <a data-entity="'+pines.safe(parseInt(customer_name_val))+'" data-entity-context="com_customer_customer">View Customer</a>.<?php } ?></div>');
 							comments.val('');
 							customer_name.val('');
 							interaction_type.val('');

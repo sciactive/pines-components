@@ -225,13 +225,13 @@ $pines->com_pgrid->load();
 						<tbody>
 						<?php foreach ($this->sales as $cur_sale) { ?>
 							<tr title="<?php echo (int) $cur_sale->guid ?>">
-								<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 								<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
-								<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
-								<td><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->products[0]['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></a></td>
 								<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
 								<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
-								<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
 							</tr>
 						<?php } ?>
 						</tbody>
@@ -250,6 +250,7 @@ $pines->com_pgrid->load();
 						<thead>
 							<tr>
 								<th>ID</th>
+								<th>Sale ID</th>
 								<th>Date</th>
 								<th>Customer</th>
 								<th>First Item</th>
@@ -261,13 +262,14 @@ $pines->com_pgrid->load();
 						<tbody>
 						<?php foreach ($this->returns as $cur_return) { ?>
 							<tr title="<?php echo (int) $cur_return->guid ?>">
-								<td><?php echo htmlspecialchars($cur_return->id); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_return->guid); ?>" data-entity-context="com_sales_return"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_return->sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_return->sale->id); ?></a></td>
 								<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
-								<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
-								<td><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_return->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_return->products[0]['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></a></td>
 								<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
 								<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
-								<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_return->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_return->group->name); ?></a></td>
 							</tr>
 						<?php } ?>
 						</tbody>

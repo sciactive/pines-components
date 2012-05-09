@@ -196,6 +196,7 @@ $pines->com_jstree->load();
 	<thead>
 		<tr>
 			<th>Created Date</th>
+			<th>Stock</th>
 			<th>SKU</th>
 			<th>Product</th>
 			<th>Location</th>
@@ -211,44 +212,51 @@ $pines->com_jstree->load();
 	foreach ($this->transactions as $cur_transaction) {
 		switch ($cur_transaction->type) {
 			case 'sale':
-				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->guid));
-				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
+				$link = $cur_transaction->entity->guid;
+				$context = 'com_sales_sale';
+				$group = $cur_transaction->entity->group;
 				$quantity = count($cur_transaction->entity->products);
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'return':
-				$link = pines_url('com_sales', 'return/receipt', array('id' => $cur_transaction->entity->guid));
-				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
+				$link = $cur_transaction->entity->guid;
+				$context = 'com_sales_return';
+				$group = $cur_transaction->entity->group;
 				$quantity = count($cur_transaction->entity->products);
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'swap':
-				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));
-				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
+				$link = $cur_transaction->entity->ticket->guid;
+				$context = 'com_sales_sale';
+				$group = $cur_transaction->entity->group;
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'countsheet':
-				$link = pines_url('com_sales', 'countsheet/approve', array('id' => $cur_transaction->entity->guid));
-				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
+				$link = $cur_transaction->entity->guid;
+				$context = 'com_sales_countsheet';
+				$group = $cur_transaction->entity->group;
 				$quantity = count($cur_transaction->entity->products);
 				$serials = '';
 				break;
 			case 'transfer':
-				$link = pines_url('com_sales', 'transfer/edit', array('id' => $cur_transaction->entity->guid));
-				$groupname = "{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]";
+				$link = $cur_transaction->entity->guid;
+				$context = 'com_sales_transfer';
+				$group = $cur_transaction->entity->destination;
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'po':
-				$link = pines_url('com_sales', 'po/edit', array('id' => $cur_transaction->entity->guid));
-				$groupname = "{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]";
+				$link = $cur_transaction->entity->guid;
+				$context = 'com_sales_po';
+				$group = $cur_transaction->entity->destination;
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			default:
 				$link = '';
-				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
+				$context = '';
+				$group = $cur_transaction->entity->group;
 				$quantity = '';
 				$serials = '';
 				break;
@@ -256,10 +264,11 @@ $pines->com_jstree->load();
 	?>
 		<tr title="<?php echo (int) $cur_transaction->entity->guid ?>">
 			<td><?php echo htmlspecialchars(format_date($cur_transaction->entity->p_cdate)); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_transaction->stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_transaction->stock->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->sku); ?></td>
-			<td><?php echo htmlspecialchars($cur_transaction->product->name); ?></td>
-			<td><?php echo htmlspecialchars($groupname); ?></td>
-			<td><a href="<?php echo htmlspecialchars($link); ?>" onclick="window.open(this.href); return false;"><?php echo (int) $cur_transaction->entity->guid ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_transaction->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_transaction->product->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$group->name} [{$group->groupname}]"); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($link); ?>" data-entity-context="<?php echo htmlspecialchars($context); ?>"><?php echo (int) $cur_transaction->entity->guid ?></a></td>
 			<td><?php echo htmlspecialchars(ucwords($cur_transaction->type)); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
 			<td><?php echo htmlspecialchars($quantity); ?></td>

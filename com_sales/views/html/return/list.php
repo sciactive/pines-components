@@ -321,9 +321,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><a data-entity="<?php echo htmlspecialchars($return->guid); ?>" data-entity-context="com_sales_return"><?php echo htmlspecialchars($return->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($return->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($return->status)); ?></td>
-			<td><?php echo isset($return->user->guid) ? htmlspecialchars("{$return->user->name} [{$return->user->username}]") : ''; ?></td>
+			<td><?php if (isset($return->user->guid)) { ?><a data-entity="<?php echo htmlspecialchars($return->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars("{$return->user->name} [{$return->user->username}]"); ?></a><?php } ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($return->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></a></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

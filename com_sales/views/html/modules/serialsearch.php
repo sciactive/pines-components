@@ -32,9 +32,6 @@ $pines->icons->load();
 	</style>
 	<script type="text/javascript">
 		pines(function(){
-			// Links for editing:
-			var stock_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'stock/edit', array('id' => '__id__')))); ?>,
-				product_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => '__id__')))); ?>;
 			$("[name=serial]", "#p_muid_controls").keypress(function(e){
 				if (e.keyCode == 13)
 					$("#p_muid_search").click();
@@ -71,8 +68,8 @@ $pines->icons->load();
 						// Build the stock results:
 						var stock_struct = [];
 						$.each(data.stock_entries, function(){
-							var cur_stock_link = '<a href="'+stock_link.replace('__id__', pines.safe(this.guid))+'" onclick="window.open(this.href);return false;">Entry '+pines.safe(this.serial)+'</a>',
-							cur_product_link = '<a href="'+product_link.replace('__id__', pines.safe(this.product_guid))+'" onclick="window.open(this.href);return false;">'+pines.safe(this.product_name)+'</a>';
+							var cur_stock_link = '<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_sales_stock">'+pines.safe(this.serial)+'</a>',
+							cur_product_link = '<a data-entity="'+pines.safe(this.product_guid)+'" data-entity-context="com_sales_product">'+pines.safe(this.product_name)+'</a>';
 
 							var content = "<p><strong>Serial:</strong> "+pines.safe(this.serial)+"</p>"+
 								"<p><strong>Location:</strong> "+(this.location_name ? pines.safe(this.location_name) : "Not in Inventory")+"</p>"+
@@ -82,7 +79,7 @@ $pines->icons->load();
 								"<p><strong>Manufacturer:</strong> "+pines.safe(this.manufacturer)+"</p>"+
 								"<p><strong>Manufacturer SKU:</strong> "+pines.safe(this.manufacturer_sku)+"</p>";
 							stock_struct.push($("<div class=\"entry clearfix alert alert-success\">"+cur_stock_link+" | "+cur_product_link+"<br/>Last Transaction: "+pines.safe(this.last_transaction)+"</div>").popover({
-								title: "Stock Entry "+pines.safe(this.serial),
+								title: "Stock Entry "+pines.safe(this.guid),
 								content: content
 							}));
 						});

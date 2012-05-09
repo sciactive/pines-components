@@ -62,7 +62,7 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 		<div class="pf-element license">
 			<span class="pf-label">License</span>
 			<?php if (preg_match('/^https?:\/\//', $this->package['license'])) { ?>
-			<span class="pf-field"><a href="<?php echo htmlspecialchars($this->package['license']); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($this->package['license']); ?></a></span>
+			<span class="pf-field"><a href="<?php echo htmlspecialchars($this->package['license']); ?>" target="_blank"><?php echo htmlspecialchars($this->package['license']); ?></a></span>
 			<?php } else { ?>
 			<span class="pf-field"><?php echo htmlspecialchars($this->package['license']); ?></span>
 			<?php } ?>
@@ -70,7 +70,7 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 		<div class="pf-element license">
 			<span class="pf-label">Website</span>
 			<?php if (preg_match('/^https?:\/\//', $this->package['website'])) { ?>
-			<span class="pf-field"><a href="<?php echo htmlspecialchars($this->package['website']); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($this->package['website']); ?></a></span>
+			<span class="pf-field"><a href="<?php echo htmlspecialchars($this->package['website']); ?>" target="_blank"><?php echo htmlspecialchars($this->package['website']); ?></a></span>
 			<?php } else { ?>
 			<span class="pf-field"><?php echo htmlspecialchars($this->package['website']); ?></span>
 			<?php } ?>
@@ -97,7 +97,7 @@ $this->title = 'Package Info for '.htmlspecialchars($this->package['package']);
 			<span class="pf-note">Install com_fancybox for a fancier screenshot experience.</span>
 			<?php foreach ($this->package['screens'] as $cur_screen) { ?>
 			<div class="pf-group">
-				<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_plaza', 'package/media', array('local' => 'false', 'name' => $this->package['package'], 'publisher' => $this->package['publisher'], 'media' => $cur_screen['file']))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_screen['alt']); ?></a></div>
+				<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_plaza', 'package/media', array('local' => 'false', 'name' => $this->package['package'], 'publisher' => $this->package['publisher'], 'media' => $cur_screen['file']))); ?>" target="_blank"><?php echo htmlspecialchars($cur_screen['alt']); ?></a></div>
 			</div>
 			<?php } ?>
 		</div>

@@ -80,13 +80,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo (int) $cur_stock->guid; ?>">
 			<td><?php echo (int) $sale->guid; ?></td>
 			<td><?php echo htmlspecialchars(format_date($sale->tender_date, 'full_sort')); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_stock->serial); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
-			<td><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
 			<?php if (isset($cur_stock->location)) { ?>
-			<td><?php echo htmlspecialchars("{$cur_stock->location->name} [{$cur_stock->location->groupname}]"); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_stock->location->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_stock->location->name} [{$cur_stock->location->groupname}]"); ?></a></td>
 			<td><?php echo $cur_stock->location->is($sale->group) ? 'Yes' : 'No'; ?></td>
 			<?php } else { ?>
 			<td>In Transit</td>

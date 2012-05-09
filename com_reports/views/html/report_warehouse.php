@@ -177,16 +177,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					continue;
 			?>
 			<tr title="<?php echo htmlspecialchars((int) $cur_tx->customer->guid); ?>">
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_tx->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_tx->id); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_tx->id); ?></a></td>
 				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate)); ?></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_tx->status)); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
-				<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_tx->user->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_tx->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_tx->customer->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_tx->group->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_tx->user->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_tx->customer->name); ?></a></td>
 				<td><?php echo htmlspecialchars($cur_item['sku']); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['serial']); ?></td>
-				<td><?php echo htmlspecialchars($cur_item['entity']->name); ?></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_item['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_item['entity']->name); ?></a></td>
 				<td>$<?php echo round($cur_item['entity']->vendors[0]['cost'], 2); ?></td>
 				<td>$<?php echo round($cur_item['price'], 2); ?></td>
 			</tr>

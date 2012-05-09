@@ -134,21 +134,17 @@ $this->note = 'Provide shipment details in this form.';
 		default: 
 			?>
 	<div class="pf-element pf-heading">
-		<h3>Sale #<?php echo htmlspecialchars($this->entity->id); ?> Packing List</h3>
+		<h3><a data-entity="<?php echo htmlspecialchars($this->entity->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($this->entity->id); ?></a> Packing List</h3>
 		<?php if ($this->entity->warehouse_pending) { ?>
 		<p><strong>There are still unassigned warehouse items on this sale. It can only be partially shipped.</strong></p>
-		<?php } ?>
+		<?php } if (!empty($this->entity->comments)) { ?>
 		<p>
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
-			<?php if (gatekeeper('com_sales/editsale')) { ?>
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
-			<?php } if (!empty($this->entity->comments)) { ?>
 			<a href="javascript:void(0);" onclick="$(this).parent().next().slideToggle(); return false;">Comments</a>
-			<?php } ?>
 		</p>
 		<p style="display: none;">
 			<small><?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->comments)); ?></small>
 		</p>
+		<?php } ?>
 	</div>
 	<div id="p_muid_packing_list">
 			<?php foreach ($this->entity->products as $key => $cur_product) {
@@ -174,7 +170,7 @@ $this->note = 'Provide shipment details in this form.';
 				?>
 		<div class="pf-element product">
 			<div class="key" style="display: none"><?php echo htmlspecialchars($key); ?></div>
-			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
+			<span class="pf-label"><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
 			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars(count($stock_entries) - count($shipped_stock_entries)); ?></span></span>
 			<div class="pf-group">
 				<div class="pf-field">
@@ -189,7 +185,8 @@ $this->note = 'Provide shipment details in this form.';
 					<div class="ui-widget-content ui-corner-all item_box" style="float: left; font-size: .8em; padding: .4em; margin: 0 .4em .4em 0;">
 						<div class="key" style="display: none"><?php echo htmlspecialchars($stock_key); ?></div>
 						<div class="ui-widget-content ui-corner-all number_box" style="font-weight: bold; float: right;">#<?php echo $i; ?></div>
-						<div>Shipped From: <?php echo htmlspecialchars($cur_stock->location->name); ?></div>
+						<div>Stock Entry: <a data-entity="<?php echo htmlspecialchars($cur_stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_stock->guid); ?></a></div>
+						<div>Shipped From: <a data-entity="<?php echo htmlspecialchars($cur_stock->location->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_stock->location->name); ?></a></div>
 						<?php if ($cur_product['entity']->serialized) { ?>
 						<div>Serial Number: <?php echo htmlspecialchars($cur_stock->serial); ?></div>
 						<?php } ?>

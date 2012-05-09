@@ -182,7 +182,7 @@ $pines->com_pgrid->load();
 			}
 			?>
 		<tr title="<?php echo (int) $cur_employee['entity']->guid?>" >
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_employee['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_employee['entity']->guid); ?>" data-entity-context="com_hrm_employee"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
 			<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
 			<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>
 			<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0 && $cur_employee['commission_status'] != 'hourly') ? number_format((($cur_employee['commission'] / $cur_employee['sales_total']) * 100), 2, '.', '') : '-'; ?></td>
@@ -201,7 +201,7 @@ $pines->com_pgrid->load();
 			<td style="text-align: center;">$<?php echo number_format($cur_employee['adjustments'], 2, '.', '');?></td>
 			<td><?php echo "$".number_format($cur_employee['total_with_reimburse'], 2, '.', '');?></td>
 			<td></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_employee['entity']->group->guid)));?>" onclick="window.open(this.href);return false;"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_employee['entity']->group->guid);?>" data-entity-context="group"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
 			<td><?php echo htmlspecialchars($cur_employee->job_title)?></td>
 			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['total_rate'], 2, '.', '') : '-'; ?></td>
 		</tr>

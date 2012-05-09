@@ -123,7 +123,7 @@ $pines->com_ptags->load();
 							alert("Please provide both a SKU and a cost for this vendor.");
 							return;
 						}
-						cur_vendor_link = '<a href="'+pines.safe(cur_vendor_link)+'" onclick="window.open(this.href); return false;">'+pines.safe(cur_vendor_link)+'</a>';
+						cur_vendor_link = '<a href="'+pines.safe(cur_vendor_link)+'" target="_blank">'+pines.safe(cur_vendor_link)+'</a>';
 						if (cur_vendor == null) {
 							var new_vendor = [{
 								key: cur_vendor_entity[0].key,
@@ -380,7 +380,7 @@ $pines->com_ptags->load();
 									<td><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['sku']); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['cost']); ?></td>
-									<td><a href="<?php echo htmlspecialchars($cur_vendor['link']); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_vendor['link']); ?></a></td>
+									<td><a href="<?php echo htmlspecialchars($cur_vendor['link']); ?>" target="_blank"><?php echo htmlspecialchars($cur_vendor['link']); ?></a></td>
 								</tr>
 								<?php } } ?>
 							</tbody>

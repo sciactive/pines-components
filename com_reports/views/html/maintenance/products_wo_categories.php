@@ -67,17 +67,17 @@ $pines->com_pgrid->load();
 	<?php foreach($this->products as $product) {
 		$costs = $vendors = array();
 		foreach($product->vendors as $cur_vendor) {
-			$vendors[] = '<a href="'.htmlspecialchars(pines_url('com_sales','vendor/edit',array('id'=> $cur_vendor['entity']->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_vendor['entity']->name).'</a>';
+			$vendors[] = '<a data-entity="'.htmlspecialchars($cur_vendor['entity']->guid).'" data-entity-context="com_sales_vendor">'.htmlspecialchars($cur_vendor['entity']->name).'</a>';
 			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
 		}
 	?>
 		<tr title="<?php echo (int) $product->guid ?>">
 			<td><?php echo htmlspecialchars($product->sku); ?></td>
-			<td><?php echo htmlspecialchars($product->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($product->name); ?></a></td>
 			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>
 			<td style="text-align: right;"><?php echo htmlspecialchars(implode(', ', $costs)); ?></td>
 			<td><?php echo implode(', ', $vendors); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'manufacturer/edit', array('id' => $product->manufacturer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($product->manufacturer->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($product->manufacturer->guid); ?>" data-entity-context="com_sales_manufacturer"><?php echo htmlspecialchars($product->manufacturer->name); ?></a></td>
 			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
 			<td><?php switch ($product->stock_type) {
 				case 'non_stocked':

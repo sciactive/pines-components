@@ -30,13 +30,14 @@ $pines->com_pgrid->load();
 		width: 16px;
 		height: 16px;
 	}
-	.return td {
-		color: red;
-	}
-	.sale td {
+	#p_muid_grid .return td {
 		font-weight: bold;
 	}
-	.void td {
+	#p_muid_grid .sale td {
+		font-weight: normal;
+	}
+	#p_muid_grid .void td {
+		font-weight: normal;
 		font-style: italic;
 	}
 	#p_muid_grid .total {
@@ -45,7 +46,6 @@ $pines->com_pgrid->load();
 </style>
 <script type="text/javascript">
 	var p_muid_notice;
-
 	pines(function(){
 		search_invoices = function(){
 			// Submit the form with all of the fields.
@@ -205,12 +205,12 @@ $pines->com_pgrid->load();
 			}
 		?>
 		<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($cur_invoice->has_tag('return') ? 'return/receipt' : 'sale/receipt'), array('id' => $cur_invoice->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_invoice->guid); ?>" data-entity-context="<?php echo $cur_invoice->has_tag('return') ? 'com_sales_return' : 'com_sales_sale'; ?>"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
 			<td><?php echo ucwords($type); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_invoice->p_cdate, 'full_sort')); ?></td>
-			<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
-			<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_invoice->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_invoice->group->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_invoice->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($cur_invoice->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_invoice->user->name); ?></a></td>
 			<td class="total">$<?php echo htmlspecialchars(number_format($cur_invoice->subtotal, 2, '.', '')); ?></td>
 			<?php /* <td class="total">$<?php echo htmlspecialchars(number_format($total_cost, 2, '.', '')); ?></td>
 			<td class="total">$<?php echo htmlspecialchars(number_format(($cur_invoice->subtotal - $total_cost), 2, '.', '')); ?></td> */ ?>

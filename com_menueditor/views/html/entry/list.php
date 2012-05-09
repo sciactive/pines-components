@@ -75,7 +75,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($entry->sort_order); ?></td>
 			<td><?php echo ($entry->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars($entry->location); ?></td>
-			<td><?php echo empty($entry->link) ? '' : '<a href="'.htmlspecialchars($entry->link).'" onclick="window.open(this.href); return false;">'.  htmlspecialchars($entry->link).'</a>'; ?></td>
+			<td><?php echo empty($entry->link) ? '' : '<a href="'.htmlspecialchars($entry->link).'" target="_blank">'.  htmlspecialchars($entry->link).'</a>'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

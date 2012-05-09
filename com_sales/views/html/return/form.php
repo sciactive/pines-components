@@ -1345,11 +1345,7 @@ if ($this->entity->specials) { ?>
 		<span class="pf-label">Attached Sale</span>
 		<span class="pf-note">This return is attached to a sale.</span>
 		<span class="pf-field">
-			Sale #<?php echo htmlspecialchars($this->entity->sale->id); ?>:
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
-			<?php if (gatekeeper('com_sales/editsale')) { ?>
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
-			<?php } ?>
+			<a data-entity="<?php echo htmlspecialchars($this->entity->sale->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($this->entity->sale->id); ?></a>
 		</span>
 	</div>
 	<?php } ?>

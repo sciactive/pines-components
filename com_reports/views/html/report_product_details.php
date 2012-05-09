@@ -22,8 +22,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_product_details']);
 ?>
 <style type="text/css" >
-	.p_muid_return td {
-		color: red;
+	#p_muid_grid td {
+		font-weight: normal;
+	}
+	#p_muid_grid .p_muid_return td {
+		font-weight: bold;
 	}
 </style>
 <script type="text/javascript">
@@ -230,16 +233,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			?>
 			<tr <?php echo $class; ?>>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($tx_type == 'SA' ? 'sale/receipt' : 'return/receipt'), array('id' => $cur_tx->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($tx_type.$cur_tx->id); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="<?php echo $tx_type == 'SA' ? 'com_sales_sale' : 'com_sales_return'; ?>"><?php echo htmlspecialchars($tx_type.$cur_tx->id); ?></a></td>
 				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate)); ?></td>
 				<td><?php echo htmlspecialchars($cur_status); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
-				<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_item['salesperson']->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_tx->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_tx->customer->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_tx->group->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_item['salesperson']->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_item['salesperson']->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_tx->customer->name); ?></a></td>
 				<td><?php echo htmlspecialchars($cur_item['sku']); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['serial']); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_item['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_item['entity']->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_item['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_item['entity']->name); ?></a></td>
 				<td>$<?php echo round($cur_item['entity']->vendors[0]['cost'], 2); ?></td>
 				<td>$<?php echo round($cur_item['price'], 2); ?></td>
 			</tr>

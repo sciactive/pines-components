@@ -16,7 +16,7 @@ $this->note = htmlspecialchars("Version {$pines->info->version}");
 <p>
 <?php echo htmlspecialchars($pines->info->name); ?> is a PHP application
 framework from
-<a href="http://sciactive.com/" onclick="window.open(this.href); return false;">SciActive</a>,
+<a href="http://sciactive.com/" target="_blank">SciActive</a>,
 designed to be extensible and easy to use. It allows rapid development, highly
 customizable implementation, easy maintenance, and unmatched flexibility.
 </p>

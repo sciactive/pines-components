@@ -132,13 +132,13 @@ $pines->com_jstree->load();
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo (int) $sale->guid ?>">
 			<td>Sale</td>
-			<td><?php echo htmlspecialchars($sale->id); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($sale->tender_date, 'full_sort')); ?></td>
 			<?php if (!$this->removed) { ?>
-			<td><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></a></td>
 			<?php } ?>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$sale->shipping_address->name} ({$sale->customer->guid}: {$sale->customer->name})"); ?></a></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'shipper/edit', array('id' => $sale->shipper->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->shipper->name); ?></a></td>
+			<td><?php echo htmlspecialchars($sale->shipping_address->name); ?><?php if (isset($sale->customer->guid)) { ?> (<a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a>)<?php } ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($sale->shipper->name); ?></a></td>
 			<td><?php echo htmlspecialchars(isset($sale->tracking_numbers) ? implode(', ', $sale->tracking_numbers) : ''); ?></td>
 			<td><?php echo isset($sale->eta) ? htmlspecialchars(format_date($sale->eta, 'date_sort')) : '' ; ?></td>
 		</tr>

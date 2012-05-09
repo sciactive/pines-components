@@ -39,6 +39,7 @@ if (!isset($warehouse->guid)) {
 $module = new module('com_sales', 'warehouse/pending_info');
 
 // Find warehouse stock.
+$module->warehouse_entity = $warehouse;
 $module->warehouse = $pines->entity_manager->get_entities(
 		array('class' => com_sales_stock, 'skip_ac' => true),
 		array('&',
@@ -97,7 +98,7 @@ foreach ($stock as $cur_stock) {
 		continue;
 	if (!$cur_stock->location->in_array($module->locations))
 		$module->locations[] = $cur_stock->location;
-	$module->locations_serials[$cur_stock->location->guid][] = $cur_stock->serial;
+	$module->locations_serials[$cur_stock->location->guid][] = $cur_stock;
 }
 
 $module->product = $product;

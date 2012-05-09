@@ -438,9 +438,9 @@ Only continue if you are fully aware of the results of changing a product."))
 			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($sale->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($sale->status)); ?></td>
-			<td><?php echo isset($sale->user->guid) ? htmlspecialchars("{$sale->user->name} [{$sale->user->username}]") : ''; ?></td>
+			<td><?php if (isset($sale->user->guid)) { ?><a data-entity="<?php echo htmlspecialchars($sale->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars("{$sale->user->name} [{$sale->user->username}]"); ?></a><?php } ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo $sale->customer->guid ? htmlspecialchars("{$sale->customer->guid}: \"{$sale->customer->name}\"") : ''; ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo $sale->customer->guid ? htmlspecialchars("{$sale->customer->guid}: \"{$sale->customer->name}\"") : ''; ?></a></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

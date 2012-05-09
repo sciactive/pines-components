@@ -80,7 +80,7 @@ $this->note = 'All new packages are signed against this certificate.';
 		software source. If your certificate is self signed, however, the user
 		will need to add your certificate as a trusted authority.
 		<div class="pf-group">
-			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?></a>
+			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?>" target="_blank"><?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?></a>
 		</div>
 	</div>
 	<?php } ?>

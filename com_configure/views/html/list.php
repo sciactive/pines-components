@@ -160,8 +160,8 @@ $this->title = 'Configure Components';
 					<?php if (is_array($cur_component->info->services)) { ?>
 					<div class="service">This component provides <?php echo (count($cur_component->info->services) == 1) ? 'a service' : 'services'; ?>: <?php echo htmlspecialchars(implode(', ', $cur_component->info->services)); ?></div>
 					<?php } ?>
-					<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->license).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_component->info->license).'</a>' : htmlspecialchars($cur_component->info->license); ?></div>
-					<div class="license">Website: <?php echo (substr($cur_component->info->website, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->website).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_component->info->website).'</a>' : htmlspecialchars($cur_component->info->website); ?></div>
+					<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->license).'" target="_blank">'.htmlspecialchars($cur_component->info->license).'</a>' : htmlspecialchars($cur_component->info->license); ?></div>
+					<div class="license">Website: <?php echo (substr($cur_component->info->website, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->website).'" target="_blank">'.htmlspecialchars($cur_component->info->website).'</a>' : htmlspecialchars($cur_component->info->website); ?></div>
 					<div class="description"><?php echo str_replace("\n", '<br />', htmlspecialchars($cur_component->info->description)); ?></div>
 				</div>
 			</div>

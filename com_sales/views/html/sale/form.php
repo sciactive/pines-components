@@ -2000,11 +2000,7 @@ if ($pines->config->com_sales->com_esp) {
 		<div class="pf-group">
 		<?php foreach($this->returns as $cur_return) { ?>
 		<span class="pf-field">
-			Return #<?php echo htmlspecialchars($cur_return->id); ?>:
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
-			<?php if (gatekeeper('com_sales/editreturn')) { ?>
-			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
-			<?php } ?>
+			<a data-entity="<?php echo htmlspecialchars($cur_return->guid); ?>" data-entity-context="com_sales_return">Return <?php echo htmlspecialchars($cur_return->id); ?></a>
 		</span><br />
 		<?php } ?>
 		</div>

@@ -55,20 +55,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					}
 					var struct = [];
 					$.each(data, function(){
-						if (typeof this.manufacturer_name != "undefined" && this.manufacturer_name !== null) {
-							var manufacturer_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'manufacturer/edit', array('id' => '__id__')))); ?>;
-							this.manufacturer = '<a href="'+manufacturer_link.replace('__id__', pines.safe(this.manufacturer_guid))+'" onclick="window.open(this.href);return false;">'+pines.safe(this.manufacturer_name)+'</a>';
-						} else
+						if (typeof this.manufacturer_name != "undefined" && this.manufacturer_name !== null)
+							this.manufacturer = '<a data-entity="'+pines.safe(this.manufacturer_guid)+'" data-entity-context="com_sales_manufacturer">'+pines.safe(this.manufacturer_name)+'</a>';
+						else
 							this.manufacturer = '';
 						var vendors = [],
 							links = [],
-							costs = [],
-							vendors_link = <?php echo json_encode(htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => '__id__')))); ?>;
+							costs = [];
 						$.each(this.vendors, function(i, vendor){
-							vendors.push('<a href="'+vendors_link.replace('__id__', pines.safe(vendor.guid))+'" onclick="window.open(this.href);return false;">'+pines.safe(vendor.name)+'</a>');
+							vendors.push('<a data-entity="'+pines.safe(vendor.guid)+'" data-entity-context="com_sales_vendor">'+pines.safe(vendor.name)+'</a>');
 							costs.push(vendor.cost);
 							if (typeof vendor.link != "undefined" && vendor.link !== null && vendor.link !== "")
-								links.push('<a href="'+pines.safe(vendor.link)+'" onclick="window.open(this.href);return false;">'+pines.safe(vendor.link)+'</a>');
+								links.push('<a href="'+pines.safe(vendor.link)+'" target="_blank">'+pines.safe(vendor.link)+'</a>');
 						});
 						struct.push({
 							"key": this.guid,

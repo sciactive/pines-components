@@ -419,11 +419,17 @@ class com_loan_loan extends entity {
 				}
 				$c++;
 			}
-			$temp_payments[0]['past_due'] = $temp_payments[0]['unpaid_interest'] + $temp_payments[0]['unpaid_balance'];
 			ksort($temp_payments);
 			$payments = $temp_payments;
 			$this->payments = $payments;
-			$this->past_due = $temp_payments[0]['past_due'];
+			$past_due = $this->get_pastdue($this->payments, $this->paid);
+			//$this->past_due = $past_due['interest'] + $past_due['principal'];
+			// Get pastdue
+			$past_due = $this->get_pastdue($temp_payments, $this->paid);
+			$this->past_due = $temp_payments[0]['past_due'] = $pines->com_sales->round($past_due['interest'] + $past_due['principal']);
+			$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($past_due['short_principal']);
+			$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($past_due['short_interest']);
+			$temp_payments[0]['sum_payment_short'] = $pines->com_sales->round($past_due['short_interest'] + $past_due['short_principal']);
 			return $this->payments;
 		}
 
@@ -456,6 +462,10 @@ class com_loan_loan extends entity {
 									$temp_payments[$c]['payment_date_received'] = $paid['payment_date_received'];
 									$temp_payments[$c]['payment_date_recorded'] = $paid['payment_date_recorded'];
 									$temp_payments[$c]['payment_id'] = $paid['payment_id'];
+									if (empty($temp_payments[$c]['payment_id'])) {
+										$temp_payments[$c]['payment_id_parent'] = $paid['payment_id_parent'];
+										unset($temp_payments[$c]['payment_id']);
+									}
 									// Calculate days payment late if paid_late.
 									if (!$paid['payment_days_late'])
 										$temp_payments[$c]['payment_days_late'] = (format_date_range($paid['payment_date_expected'], $paid['payment_date_received'], '#days#'));
@@ -466,6 +476,10 @@ class com_loan_loan extends entity {
 									$temp_payments[$c]['payment_date_received'] = $paid['payment_date_received'];
 									$temp_payments[$c]['payment_date_recorded'] = $paid['payment_date_recorded'];
 									$temp_payments[$c]['payment_id'] = $paid['payment_id'];
+									if (empty($temp_payments[$c]['payment_id'])) {
+										$temp_payments[$c]['payment_id_parent'] = $paid['payment_id_parent'];
+										unset($temp_payments[$c]['payment_id']);
+									}
 									// Calculate days payment late if paid_late.
 									if (!$paid['payment_days_late'])
 										$temp_payments[$c]['payment_days_late'] = (format_date_range($paid['payment_date_expected'], $paid['payment_date_received'], '#days#'));
@@ -488,62 +502,25 @@ class com_loan_loan extends entity {
 										$temp_payments[$c]['scheduled_current_balance'] = $temp_payments[$c-1]['scheduled_balance'];
 										$temp_payments[$c]['current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 									}
-									// Establish expected interest and principal based off of unpaid balance & interest.
-									// Because the payments array gets rewritten often, we had to save a static unpaid
-									// interest and unpaid balance ONLY if the first payment was missed.
-									$temp_payments[$c]['payment_interest_expected'] = $this->missed_first_payment_unpaid_interest;
-									$temp_payments[$c]['payment_principal_expected'] = $this->missed_first_payment_unpaid_balance;
-
-									// Get unpaid interest and unpaid balance.
-									// Unpaid interest gets paid first.
-									if ($this->missed_first_payment_unpaid_interest > 0 && $paid_amount >= $this->missed_first_payment_unpaid_interest) {
-										// unpaid interest exists && is fully paid, you can also calculate the balance unpaid.
-										$temp_payments[$c]['payment_interest_paid'] = $this->missed_first_payment_unpaid_interest;
-										$temp_payments[$c]['payment_interest_unpaid'] = 0;
-										// if there was leftover paid, put it towards principal.
-										$temp_payments[$c]['payment_principal_paid'] = $paid_amount - $this->missed_first_payment_unpaid_interest;
-										$temp_payments[$c]['payment_balance_unpaid'] = $pines->com_sales->round($this->missed_first_payment_unpaid_balance - $temp_payments[$c]['payment_principal_paid']);
-									} elseif ($paid_amount < $this->missed_first_payment_unpaid_interest) {
-										$temp_payments[$c]['payment_interest_paid'] = $paid_amount;
-										$temp_payments[$c]['payment_balance_unpaid'] = $this->missed_first_payment_unpaid_balance;
-										$temp_payments[$c]['payment_interest_unpaid'] = $this->missed_first_payment_unpaid_interest - $paid_amount;
-									}
-									// Maybe there was no interest unpaid, check for the existance of above variables, and if not, check unpaid balance.
-									if (!isset($temp_payments[$c]['payment_interest_paid']) && $this->missed_first_payment_unpaid_balance > 0) {
-										$temp_payments[$c]['payment_interest_paid'] = 0.00; // no unpaid interest to settle.
-										$temp_payments[$c]['payment_principal_paid'] = $paid_amount;
-										$temp_payments[$c]['payment_balance_unpaid'] = $pines->com_sales->round($this->missed_first_payment_unpaid_balance - $paid_amount);
-									}
-									$temp_payments[0]['inflated_expected_interest'] += (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
+//									$temp_payments[0]['inflated_expected_interest'] += (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
 								} else {
 									$temp_payments[$c]['scheduled_current_balance'] = $temp_payments[$c-1]['scheduled_balance'];
 									$temp_payments[$c]['current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 									// Establish expected interest and principal based off of unpaid balance & interest.
-									$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round($this->unpaid_interest, true);
-									$temp_payments[$c]['payment_principal_expected'] =  (float) $pines->com_sales->round($this->unpaid_balance, true);
-									// Get unpaid interest and unpaid balance.
-									// Unpaid interest gets paid first.
-									if ($temp_payments[$c]['payment_interest_expected'] >= .01 && $paid_amount >= $temp_payments[$c]['payment_interest_expected']) {
-										// unpaid interest exists && is fully paid, you can also calculate the balance unpaid.
-										$temp_payments[$c]['payment_interest_paid'] = $temp_payments[$c]['payment_interest_expected'];
-										// if there was leftover paid, put it towards principal.
-										$temp_payments[$c]['payment_principal_paid'] = $paid_amount - $temp_payments[$c]['payment_interest_expected'];
-										$temp_payments[$c]['payment_balance_unpaid'] = $pines->com_sales->round($temp_payments[$c]['payment_principal_expected'] - $temp_payments[$c]['payment_principal_paid']);
-									} elseif ($paid_amount < $temp_payments[$c]['payment_interest_expected']) {
-										$temp_payments[$c]['payment_interest_paid'] = $paid_amount;
-										$temp_payments[$c]['payment_principal_paid'] = 0;
-										$temp_payments[$c]['payment_balance_unpaid'] = $temp_payments[$c]['payment_principal_expected'];
-										$temp_payments[$c]['payment_interest_unpaid'] = $temp_payments[$c]['payment_interest_expected'] - $paid_amount;
-									}
-									// Maybe there was no interest unpaid, check for the existance of above variables, and if not, check unpaid balance.
-									if (!isset($temp_payments[$c]['payment_interest_paid']) && $temp_payments[$c]['payment_principal_expected'] >= 0.01) {
-										$temp_payments[$c]['payment_interest_paid'] = 0.00; // no unpaid interest to settle.
-										$temp_payments[$c]['payment_principal_paid'] = $paid_amount;
-										$temp_payments[$c]['payment_balance_unpaid'] = $pines->com_sales->round($temp_payments[$c-1]['payment_balance_unpaid'] - $paid_amount);
-									}
-									$temp_payments[0]['inflated_expected_interest'] += (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
+									
+									//$temp_payments[0]['inflated_expected_interest'] += (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
 //									$temp_payments[$c]['payment_interest_unpaid'] = ($temp_payments[$c-1]['payment_interest_unpaid'] - $temp_payments[$c]['payment_interest_paid']) + (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
 								}
+								// Get Expected values
+								$temp_payments[$c]['payment_interest_expected'] = $paid['payment_interest_expected'];
+								$temp_payments[$c]['payment_principal_expected'] = $paid['payment_principal_expected'];
+								$temp_payments[$c]['payment_interest_unpaid_expected'] = $paid['payment_interest_unpaid_expected'];
+								$temp_payments[$c]['payment_principal_unpaid_expected'] = $paid['payment_principal_unpaid_expected'];
+								// Get paid and unpaid amounts.
+								$temp_payments[$c]['payment_interest_paid'] = $paid['payment_interest_paid'];
+								$temp_payments[$c]['payment_interest_unpaid'] = $paid['payment_interest_unpaid_remainder'];
+								$temp_payments[$c]['payment_principal_paid'] = $paid['payment_principal_paid'];
+								$temp_payments[$c]['payment_balance_unpaid'] = $paid['payment_principal_unpaid_remainder'];
 								// We keep these numbers even for partial past due, and we'll add extra payments if necessary to these amounts.
 								if (!$temp_payments[$c]['payment_interest_paid'])
 									$temp_payments[$c]['payment_interest_paid'] = $paid['payment_interest_paid'];
@@ -580,8 +557,12 @@ class com_loan_loan extends entity {
 								$temp_payments[$c]['payment_amount_paid'] = $temp_payments[$c]['payment_interest_paid'] + $temp_payments[$c]['payment_principal_paid'] + $temp_payments[$c]['payment_additional'];
 								if ($c == 1)
 									$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c]['scheduled_current_balance'] - ($this->schedule[0]['payment_principal_expected']);
-								else
-									$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c-1]['remaining_balance'] - ($temp_payments[$c]['payment_principal_expected']);
+								else {
+									if ($temp_payments[$c-1]['payment_type'] != 'past_due')
+										$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c-1]['remaining_balance'] - ($temp_payments[$c]['payment_principal_expected']);
+									else
+										$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c-1]['scheduled_balance'] - ($temp_payments[$c]['payment_principal_expected']);
+								}
 								$temp_payments[$c]['remaining_balance'] = $temp_payments[$c]['current_balance'] - ($temp_payments[$c]['payment_principal_paid']);
 								
 								// Again, why would we not count this?
@@ -924,7 +905,6 @@ class com_loan_loan extends entity {
 					$first_last_payment_date = $temp_payments[$c+1]['payment_date_received'];
 					$due_date = $temp_payments[$i]['payment_date_expected'];
 					$temp_payments[$i]['payment_days_late'] = format_date_range($due_date, $first_last_payment_date, '#days#');
-
 				}
 				$i++;
 			}
@@ -936,107 +916,13 @@ class com_loan_loan extends entity {
 			// Get summarizing info.
 			foreach ($temp_payments as $payment)
 				$sum_int = ($sum_int + $payment['payment_interest_expected']); // sum of interest payments.
-
-			// Get the prior due date, which is the due date right before the current scheduled one.
-			$ccc = 0;
-			foreach ($this->schedule as $schedule) {
-				if ($schedule['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
-					break;
-				}
-				$ccc++;
-			}
-			$prior_due_date = $this->schedule[$ccc-1]['scheduled_date_expected'];
 			
-			// Get an accurate past due amount, because it wasn't working before.
-			// The partial payment will always contain the short amount and unpaid balances
-			// Even if scheduled payments become past due also and need to get added into the past
-			// due amount, because of the nature of how the get payments array works.
-			// For instance, if on Monday, a partial payment for a past due amount of 500 exists,
-			// and Thursday is the next scheduled payment date... if they miss that thursday payment
-			// the past due amount will automatically increase to by the missed monthly payment (ie 620 if the payment was 120)
-			// So the PARTIAL past due or short payment will always contain ALL necessary info regarding
-			// the past due amount and the unpaid values.
-			$last_partial = null;
-			$current_missed_payment = null;
-			$missed = null;
-			$first_time = true;
-			foreach ($temp_payments as &$temp_payment) {
-				if ($temp_payment['payment_status'] == "missed" && $first_time) {
-					// first time you hit a missed payment
-					$first_time = false;
-					$missed = true;
-					$first_missed_payment = $temp_payment;
-					$last_missed_payment = $temp_payment;
-				} elseif ($temp_payment['payment_status'] == "missed" && $missed == true) {
-					$last_missed_payment = $temp_payment;
-				} else {
-					// not a missed missed payment
-					$first_time = true;
-				}
-				$unpaid += $temp_payment['payment_short'];
-				if ($temp_payment['payment_status'] == "partial") {
-					if ($pines->com_sales->round($temp_payment['scheduled_balance']) == $pines->com_sales->round($temp_payment['remaining_balance'])) {
-						$temp_payment['payment_status'] = "paid_late";
-					}
-				}
-				if ($temp_payment['payment_status'] == "partial") {
-					$last_partial = $temp_payment;
-				}
-				if ($temp_payment['payment_status'] == "paid_late") {
-					$last_paid_late = $temp_payment;
-					$unpaid_paid += $temp_payment['payment_amount_paid'] - $this->frequency_payment; 
-				}
-				if ($temp_payment['payment_status'] == "paid") {
-					$last_paid = $temp_payment;
-				}
-				if ($temp_payment['payment_date_expected'] == $prior_due_date && $temp_payment['payment_status'] == "missed") {
-					$current_missed_payment = true;
-				}
-			}
-			unset($temp_payment);
-			
-			if ($current_missed_payment) {
-				foreach ($temp_payments as $temp_payment) {
-					if ($temp_payment['payment_date_expected'] >= $first_missed_payment['payment_date_expected'] && $temp_payment['payment_date_expected'] <= $last_missed_payment['payment_date_expected']) {
-						// We want to count the unpaid amounts in here.
-						$unpaid_balance += $temp_payment['payment_balance_unpaid'];
-						$unpaid_interest += $temp_payment['payment_interest_unpaid'];
-					}
-				}
-			}
-			
-			if ($current_missed_payment && $last_partial) {
-				// Payments were missed, and partially paid on... but then more payments were missed.
-				// So we need to add together the short amounts.
-				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_partial['payment_short'] + $current_missed_payment['payment_short']);
-				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_partial['payment_balance_unpaid'] + $current_missed_payment['payment_balance_unpaid']);
-				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_partial['payment_interest_unpaid'] + $current_missed_payment['payment_interest_unpaid']);
-				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
-			} elseif ($current_missed_payment) {
-				// Get all short amounts, subtract any paid amounts on late payments.
-				$temp_payments[0]['past_due'] = $pines->com_sales->round($unpaid - $unpaid_paid);
-				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($unpaid_interest);
-				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($unpaid_balance);
-				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
-			} elseif ($last_partial) {
-				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_partial['payment_short']);
-				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_partial['payment_balance_unpaid']);
-				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_partial['payment_interest_unpaid']);
-				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
-			} elseif ($last_paid['payment_date_expected'] > $last_paid_late['payment_date_expected']) {
-				// the last activity on this loan was a paid [on time] payment.
-				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_paid['payment_short']);
-				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_paid['payment_balance_unpaid']);
-				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_paid['payment_interest_unpaid']);
-				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
-			} elseif ($last_paid['payment_date_expected'] < $last_paid_late['payment_date_expected']) {
-				// the last activity on this loan was a paid [on time] payment.
-				$temp_payments[0]['past_due'] = $pines->com_sales->round($last_paid_late['payment_short']);
-				$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($last_paid_late['payment_balance_unpaid']);
-				$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($last_paid_late['payment_interest_unpaid']);
-				$temp_payments[0]['sum_payment_short'] = $temp_payments[0]['past_due'];
-			}
-			
+			// Get pastdue
+			$past_due = $this->get_pastdue($temp_payments, $this->paid);
+			$temp_payments[0]['past_due'] = $pines->com_sales->round($past_due['interest'] + $past_due['principal']);
+			$temp_payments[0]['unpaid_balance'] = $pines->com_sales->round($past_due['short_principal']);
+			$temp_payments[0]['unpaid_interest'] = $pines->com_sales->round($past_due['short_interest']);
+			$temp_payments[0]['sum_payment_short'] = $pines->com_sales->round($past_due['short_interest'] + $past_due['short_principal']);
 			
 			$sub_int = $temp_payments[0]['subtract_unpaid_interest_paid'];
 			$inflated_expected_interest = $temp_payments[0]['inflated_expected_interest'];
@@ -1044,7 +930,9 @@ class com_loan_loan extends entity {
 			$this->new_total_payment_sum = $this->principal + $sum_int;
 			$this->total_interest_sum = $sum_int;
 			$this->est_interest_savings = $this->total_interest_sum_original - $this->total_interest_sum;
-			$this->past_due = $temp_payments[0]['past_due'];
+			//$this->past_due = $temp_payments[0]['past_due'];
+			$past_due = $this->get_pastdue($temp_payments, $this->paid);
+			$this->past_due = $past_due['interest'] + $past_due['principal'];
 			$this->remaining_balance = $this->past_due = $temp_payments[0]['remaining_balance'];
 
 			//Set Loan status!
@@ -1659,13 +1547,18 @@ class com_loan_loan extends entity {
 		foreach ($this->pay_by_date as $pbd) {
 			// Run get_payments_array so we get an updated next-payment-due for date expected.
 			$this->get_payments_array();
-			if ($this->missed_first_payment == true && $first_time != true) {
-				$date_expected = $this->payments[0]['first_payment_missed'];
-				$first_time = true;
-			} elseif (isset($this->payments[0]['next_payment_due']))
-				$date_expected = $this->payments[0]['next_payment_due'];
+//			if ($this->missed_first_payment == true && $first_time != true) {
+//				$date_expected = $this->payments[0]['first_payment_missed'];
+//				$first_time = true;
+//			} elseif (isset($this->payments[0]['next_payment_due']))
+//				$date_expected = $this->payments[0]['next_payment_due'];
+//			else
+//				$date_expected = $this->first_payment_date;
+			if (!empty($this->paid))
+				$c = $this->paid[0]['num_payments_paid'];
 			else
-				$date_expected = $this->first_payment_date;
+				$c = 0;
+			$date_expected = $this->schedule[$c]['scheduled_date_expected'];
 			$payment_amount = $pbd['payment_amount'];
 			$date_received = $pbd['date_received'];
 			$date_recorded = $pbd['date_recorded'];
@@ -1686,6 +1579,7 @@ class com_loan_loan extends entity {
 	public function insert_pbd($insert_pbd) {
 		$temp_pay_by_date = $this->pay_by_date;
 		$re_insert = array();
+		$c = 0;
 		foreach ($temp_pay_by_date as $pbd) {
 			if ($insert_pbd['date_received'] > $pbd['date_received']) {
 				// Greater one is more recent.
@@ -1700,9 +1594,21 @@ class com_loan_loan extends entity {
 					$inserted = true;
 				} else {
 					// Only happens if the dates are equal, to preserve a consistent order and avoid confusion.
-					$re_insert[] = $pbd;
-					$re_insert[] = $insert_pbd;
-					$inserted = true;
+					// Problem is I want the insert_pbd to come in last.
+					// However if there are multiple PBDs with this date, I need it to be
+					// THE LAST ONE.
+					$n = $c;
+					while ($temp_pay_by_date[$n+1]['date_received'] == $insert_pbd['date_received']) {
+						$n++;
+					}
+					if ($n == $c) {
+						// No other payments were made this same day besides this one.
+						$re_insert[] = $pbd;
+						$re_insert[] = $insert_pbd;
+						$inserted = true;
+					} else {
+						$re_insert[] = $pbd;
+					}
 				}
 			} elseif($insert_pbd['date_received'] < $pbd['date_received'] && $inserted != true) {
 				// It could be going right back in it's place,
@@ -1717,6 +1623,7 @@ class com_loan_loan extends entity {
 				// inserted is true, we skip to here.
 				$re_insert[] = $pbd;
 			}
+			$c++;
 		}
 		if (!$inserted) {
 			// It was never inserted becaused it needs to be appended to the very end.
@@ -1747,142 +1654,331 @@ class com_loan_loan extends entity {
 			$num--;
 		} else
 			$num = 0;
+			
+		$past_due = $this->get_pastdue($this->payments, $this->paid);
+		$this->past_due = $past_due['interest'] + $past_due['principal'];
 		
-		// Get the prior due date in case we need it.
-		$ccc = 0;
-		foreach ($this->schedule as $schedule) {
-			if ($schedule['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
-				break;
-			}
-			$ccc++;
+		// if at the time we received it, it may not have been past due... so need to be
+		// careful about how we determine it was past due or not.
+		if ($date_received < $date_expected) {
+			$this->past_due = null;
 		}
-		$prior_due_date = $this->schedule[$ccc-1]['scheduled_date_expected'];
-					
-		$this->past_due = null;
-		// Checks if the payment right before the due one is missed, which means
-		// that we are dealing with a past due payment!
-		// ^ Actually the code has been rewritten, because the date_expected now
-		// represents the payment that is due OR past due.
-		// The cool thing is, if the date expected is "payment date expected",
-		// we KNOW it was missed. Why? Because if it wasn't it would be 
-		// "scheduled date expected".
-		foreach ($this->payments as $payment) {
-			if ($payment['payment_date_expected'] == $date_expected) {
-				$this->past_due = $pines->com_sales->round($this->payments[0]['past_due']);
-				break;
-			}
-		}
+		
 		$make_additional_payment = false;
 		// Create/Append to paid array.
 
 		// This is for extra payments that have been made on a partial past due payment.
+		// Rewrite how past_due/partial payments are handled.
 		if ($this->paid[$num]['payment_status'] == "partial") {
-			// the last payment made was a past due amount, and it was only partially paid.
-			// Needs to attach to previous paid array matching this date expected.
-			foreach ($this->payments as $payment) {
-				if ($payment['payment_type'] == "past_due" && $payment['payment_status'] == "partial") {
-					// we need the payment date for a past due partial payment.
-					// there should only ever be one of these, because only the last payment can be a partial payment.
-					$partial_expected_date = strtotime("+1 day", $payment['payment_date_expected']);
-				} elseif ($payment['payment_status'] == "partial")
-					$partial_expected_date = $payment['payment_date_expected'];
-			}
-			foreach ($this->paid as &$paid) {
-				$temp_extra = array();
-				if ($paid['payment_date_expected'] == $partial_expected_date || $paid['payment_date_expected'] == strtotime("-1 day", $partial_expected_date)) {
-					// get possible extra arrays that already exist
-					// because we need to get how much we've paid off on this payment
-					// to calculate how much is needed to finish the payment.
-					if (!empty($paid['extra_payments'])) {
-						// only if this exists, which it might not.
-						foreach ($paid['extra_payments'] as $old_extra) {
-							$interest_paid += $old_extra['payment_interest_paid'];
-							$balance_paid += $old_extra['payment_principal_paid'];
-						}
-					}
-					// The partial payment must also be added to paid amount.
-					$interest_paid += $paid['payment_interest_paid'];
-					$balance_paid += $paid['payment_principal_paid'];
-
-					$unpaid_interest = (($paid['payment_interest_expected'] - $interest_paid) > 0) ? $paid['payment_interest_expected'] - $interest_paid : 0.00;
-					$unpaid_balance = (($paid['payment_principal_expected'] - $balance_paid) > 0) ? $paid['payment_principal_expected'] - $balance_paid : 0.00;
-
-					$extra = array();
-					$extra['payment_type'] = "past_due";
-					$extra['payment_date_expected'] = $paid['payment_date_expected'];
-					$extra['payment_date_received'] = $date_received;
-					$extra['payment_date_recorded'] = $date_recorded;
-					$extra['payment_id'] = $payment_id;
-					if ($unpaid_interest > 0 && $payment_amount <= $unpaid_interest) {
-						// only potentially covers interest expected.
-						$extra['payment_status'] = "partial";
-						$extra['payment_interest_paid'] = $payment_amount;
-						$extra['payment_principal_paid'] = 0;
-					} else {
-						$extra['payment_interest_paid'] = $unpaid_interest;
-						if (($payment_amount - $unpaid_interest) >= $unpaid_balance) {
-							// at least entire balance has to be paid for this to work here.
-							$extra['payment_principal_paid'] = $unpaid_balance;
-							$additional = $payment_amount - ($extra['payment_interest_paid'] + $extra['payment_principal_paid']);
-							if ($additional >= .01)
-								$make_additional_payment = true;
-							$paid['payment_status'] = 'paid_late';
+			// create an extra payment for this. 
+			
+			// Because remainder values are updated to include payments with extra payments,
+			// it's safe to use these without checking extra payments.
+			$unpaid_interest = $this->paid[$num]['payment_interest_unpaid_remainder'];
+			$unpaid_principal = $this->paid[$num]['payment_principal_unpaid_remainder'];
+			
+			// The payment amount might exceed exactly what is needed to fill in this partial payment.
+			// or it might not even cover it. 
+			if ($this->paid[$num]['extra_payments'])
+				$total_paid = $this->paid[$num]['payment_interest_paid_total'] + $this->paid[$num]['payment_principal_paid_total'];
+			else
+				$total_paid = $this->paid[$num]['payment_interest_paid'] + $this->paid[$num]['payment_principal_paid'];
+			$total_expected = $this->paid[$num]['payment_total_expected'];
+			$partial_expected = $total_expected - $total_paid;
+			
+			if ($partial_expected <= $payment_amount) {
+				// the payment amount will cover this partial payment and it might create
+				// another payment, either past due or normal.
+				$extra_payment_amount = $partial_expected;
+				
+				if ($payment_amount - $partial_expected >= .01)
+					$rollover = true;
+				
+				$extra = array();
+				$extra['payment_type'] = "past_due";
+				$extra['payment_date_expected'] = $this->paid[$num]['payment_date_expected'];
+				$extra['payment_date_received'] = $date_received;
+				$extra['payment_date_recorded'] = $date_recorded;
+				$extra['payment_id'] = $payment_id;
+				$extra['payment_status'] = 'paid_late';
+				if ($unpaid_interest > $partial_expected) {
+					// we still haven't paid off the unpaid interest.
+					$extra['payment_interest_paid'] = $partial_expected;
+					$extra['payment_principal_paid'] = 0.00;
+				} else {
+					// unpaid interest can be paid with partial expected
+					$extra['payment_interest_paid'] = $unpaid_interest;
+					$extra['payment_principal_paid'] = $extra_payment_amount - $unpaid_interest;
+				}
+				$extra['payment_additional'] = 0;
+				
+				// Update remainder values now.
+				$this->paid[$num]['payment_interest_unpaid_remainder'] -= $extra['payment_interest_paid'];
+				$this->paid[$num]['payment_principal_unpaid_remainder'] -= $extra['payment_principal_paid'];
+				
+				// Create/Update total paid
+				if ($this->paid[$num]['extra_payments']) {
+					$this->paid[$num]['payment_interest_paid_total'] += $extra['payment_interest_paid'];
+					$this->paid[$num]['payment_principal_paid_total'] += $extra['payment_principal_paid'];
+				} else {
+					$this->paid[$num]['payment_interest_paid_total'] = $this->paid[$num]['payment_interest_paid'] + $extra['payment_interest_paid'];
+					$this->paid[$num]['payment_principal_paid_total'] = $this->paid[$num]['payment_principal_paid'] + $extra['payment_principal_paid'];
+				}
+				
+				// Create the rollover payment
+				// Figure out if it's a next due payment or a rollover past due
+				// if any principal is not paid, then there's still a past due amount.
+				if ($this->paid[$num]['payment_principal_unpaid_remainder'] >= .01) {
+					// ROLLOVER
+					// Set up the rollover
+					if ($rollover)
+						$this->paid[$num]['payment_paid_rollover'] = $payment_amount - $extra_payment_amount;
+					$rollover_payments = array();
+					$c = $num;
+					$new_date_received = $date_received;
+					$new_date_recorded = $date_recorded;
+					while ($rollover == true && $this->payments[$c+1]['payment_date_expected'] && $this->payments[$c+1]['payment_status'] == "missed") {
+						$new_rollover_payment = array();
+						$new_rollover_payment['payment_type'] = 'past_due';
+						$new_rollover_payment['payment_date_expected'] = $this->schedule[$c]['scheduled_date_expected'];
+						$new_rollover_payment['payment_date_received'] = $new_date_received;
+						$new_rollover_payment['payment_date_recorded'] = $new_date_recorded;
+						$new_rollover_payment['payment_id_parent'] = $payment_id;
+						
+						if (!$new_payment_amount) {
+							$new_payment_amount = $this->paid[$num]['payment_paid_rollover'];
+							$new_interest_unpaid_expected = $this->paid[$num]['payment_interest_unpaid_remainder'];
+							$new_principal_unpaid_expected = $this->paid[$num]['payment_principal_unpaid_remainder'];
 						} else {
-							// balance not fully covered
-							$extra['payment_principal_paid'] = $payment_amount - $unpaid_interest;
-							$extra['payment_additional'] = 0;
-							$paid['payment_status'] = 'partial';
+							$new_payment_amount = $new_rollover_payment['payment_paid_rollover'];
+							$new_interest_unpaid_expected = $new_rollover_payment['payment_interest_unpaid_remainder'];
+							$new_principal_unpaid_expected = $new_rollover_payment['payment_principal_unpaid_remainder'];
 						}
+					
+						$new_rollover_payment['payment_interest_unpaid_expected'] = $new_interest_unpaid_expected;
+						$new_rollover_payment['payment_principal_unpaid_expected'] = $new_principal_unpaid_expected;
 
-					}
-				}
-				if (!empty($extra)) {
-					$paid['extra_payments'][] = $extra;
-					$paid_array_adjusted = true;
-				}
-				// if final extra payment went over, into the next payment due.
-				if ($make_additional_payment) {
-					$new_payment = array();
-					$new_payment['payment_status'] = "payment";
-					$new_payment['payment_type'] = "payment";
-					$new_payment['payment_date_expected'] = $date_expected;
-					$new_payment['payment_date_received'] = $date_received;
-					$new_payment['payment_date_recorded'] = strtotime("+1 second", $date_recorded);
-					$new_payment['payment_id'] = uniqid();
-					$new_payment['parent_payment_id'] = $payment_id;
-
-					foreach ($this->payments as $payment) {
-						if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
-							if ($additional < $payment['payment_interest_expected']) {
-								// interest not covered.
-								$new_payment['payment_interest_paid'] = $additional;
-								$new_payment['payment_principal_paid'] = 0.00;
-								$partial = true;
+						$new_rollover_payment['payment_interest_expected'] = $this->schedule[$c]['payment_interest_expected'];
+						$new_rollover_payment['payment_principal_expected'] = $this->schedule[$c]['payment_principal_expected'];
+						$total_expected = $new_rollover_payment['payment_interest_expected'] + $new_rollover_payment['payment_principal_expected'];
+						$new_rollover_payment['payment_total_expected'] = $total_expected;
+						
+						
+						if (($new_payment_amount - $total_expected) >= 0.01) {
+							// $new_payment_amount exceeds $total_expected, rollover will happen again.
+							$rollover = true;
+							if ($new_interest_unpaid_expected > $new_payment_amount) {
+								// not done paying off interest with rollover.
+								$new_rollover_payment['payment_interest_paid'] = $total_expected;
+								$new_rollover_payment['payment_principal_paid'] = 0.00;
+								$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $total_expected;
+								$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
 							} else {
-								$new_payment['payment_interest_paid'] = $payment['payment_interest_expected'];
-								if (($additional - $payment['payment_interest_expected']) < $payment['payment_principal_expected']){
-									// principal not covered
-									$new_payment['payment_principal_paid'] = $additional - $new_payment['payment_interest_paid'];
-									$partial = true;
+								// the $new_payment_amount DOES cover the interest, but the interest amount may cause a rollover.
+								// if it doesn't cause a rollover on the interest, it does on the principal.
+								if ($new_interest_unpaid_expected > $total_expected) {
+									// interest causes rollover
+									$new_rollover_payment['payment_interest_paid'] = $total_expected;
+									$new_rollover_payment['payment_principal_paid'] = 0.00;
+									$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $total_expected;
+									$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
 								} else {
-									// principal covered, possibly additional amount.
-									$new_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
-									$new_payment['additional_payment'] = $additional - ($new_payment['payment_interest_paid'] + $new_payment['payment_principal_paid']);
+									// interest covered, principal causes rollover.
+									$new_rollover_payment['payment_interest_paid'] = $new_interest_unpaid_expected;
+									$new_rollover_payment['payment_principal_paid'] = $total_expected - $new_interest_unpaid_expected;
+									$new_rollover_payment['payment_interest_unpaid_remainder'] = 0.00;
+									$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected - $new_rollover_payment['payment_principal_paid'];
 								}
 							}
-
-							$new_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
-							$new_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
-
-							if ($partial)
-								$new_payment['payment_status'] = 'partial_not_due';
-							else
-								$new_payment['payment_status'] = 'paid';
+							// The statements above all have this in common because a rollover is created.
+							$new_rollover_payment['payment_paid_rollover'] = $new_payment_amount - $total_expected;
+						} else {
+							unset($new_rollover_payment['payment_paid_rollover']);
+							$rollover = false;
+							// Could be false because it didn't finish paying off unpaid, OR because it DID.
+							// this is the end of the rollover.
+							if ($new_payment_amount < $new_interest_unpaid_expected) {
+								// interest not done. unpaid not finished.
+								$new_rollover_payment['payment_interest_paid'] = $new_payment_amount;
+								$new_rollover_payment['payment_principal_paid'] = 0.00;
+								$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $new_payment_amount;
+								$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
+								$new_rollover_payment['payment_status'] = 'partial';
+							} elseif ($new_payment_amount > $new_interest_unpaid_expected) {
+								// possibly unpaid could be paid off.
+								$new_rollover_payment['payment_interest_paid'] = $new_interest_unpaid_expected;
+								$new_rollover_payment['payment_principal_paid'] = $new_payment_amount - $new_interest_unpaid_expected;
+								$new_rollover_payment['payment_interest_unpaid_remainder'] = 0.00;
+								$new_rollover_payment['payment_principal_unpaid_remainder'] = $pines->com_sales->round($new_principal_unpaid_expected - $new_rollover_payment['payment_principal_paid']);
+								if ($new_rollover_payment['payment_principal_unpaid_remainder'] >= 0.01) {
+									$new_rollover_payment['payment_status'] = 'partial';
+								} else 
+									$new_rollover_payment['payment_status'] = 'paid_late';
+							}
 						}
+						
+						$rollover_payments[] = $new_rollover_payment;
+						$c++;
+					}
+				
+					// This is for adjusting the LAST rollover amount.
+					// 
+					// If the rollover was always going to generate a next payment due,
+					// It would happen in the ELSE of this if statement.
+					// 
+					// This happens if someone pays MORE than the past due amount
+					// We don't want to apply it as an additional amount. 
+					// We want the rollover amount to make the next due payment
+					// IF more than the next due payment exists, THEN it would become
+					// an additional amount on THAT next due payment.
+					$cr = count($rollover_payments) - 1;
+					if ($rollover_payments[$cr]['payment_paid_rollover'] >= .01) {
+						// We want to make this towards the next due payment.
+						$payment_amount = $rollover_payments[$cr]['payment_paid_rollover'];
+						// find the next due payment.
+						$next_due_payment = array();
+						foreach ($this->payments as $payment) {
+							if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+								if ($payment_amount < $payment['payment_interest_expected']) {
+									// does not cover full interest payment.
+									$next_due_payment['payment_interest_paid'] = $payment_amount;
+									$next_due_payment['payment_principal_paid'] = 0.00;
+									$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$partial = true;
+								} else {
+									// interest is covered at least with possibly more.
+									$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
+									if (($payment_amount - $next_due_payment['payment_interest_paid']) < $payment['payment_principal_expected']) {
+										// does not fully cover principal.
+										$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
+										if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
+											$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+											$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+											$partial = true;
+										}
+									} else {
+										// principal is covered with possibly more.
+										$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
+										$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+									}
+								}
+								break;
+							}
+						}
+						if (!isset($next_due_payment['payment_additional']))
+							$next_due_payment['payment_additional'] = 0.00;
+						$next_due_payment['payment_date_expected'] = $payment['scheduled_date_expected'];
+						$next_due_payment['payment_date_received'] = $date_received;
+						$next_due_payment['payment_date_recorded'] = $date_recorded;
+						$next_due_payment['payment_id_parent'] = $payment_id;
+						if (!isset($next_due_payment['payment_status'])) {
+							if (isset($partial) && $partial == true)
+								$next_due_payment['payment_status'] = 'partial_not_due';
+							else
+								$next_due_payment['payment_status'] = 'paid';
+						}
+
+						unset($rollover_payments[$cr]['payment_paid_rollover']);
+					}
+				} else {
+					// NEXT DUE PAYMENT
+					// This happens if someone pays MORE than the past due amount
+					// We don't want to apply it as an additional amount. 
+					// We want the rollover amount to make the next due payment
+					// IF more than the next due payment exists, THEN it would become
+					// an additional amount on THAT next due payment.
+					if ($this->paid[$num]['payment_paid_rollover'] >= .01) {
+						// We want to make this towards the next due payment.
+						$payment_amount = $this->paid[$num]['payment_paid_rollover'];
+						// find the next due payment.
+						$next_due_payment = array();
+						foreach ($this->payments as $payment) {
+							if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+								if ($payment_amount < $payment['payment_interest_expected']) {
+									// does not cover full interest payment.
+									$next_due_payment['payment_interest_paid'] = $payment_amount;
+									$next_due_payment['payment_principal_paid'] = 0.00;
+									$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$partial = true;
+								} else {
+									// interest is covered at least with possibly more.
+									$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
+									if (($payment_amount - $next_due_payment['payment_interest_paid']) < $payment['payment_principal_expected']) {
+										// does not fully cover principal.
+										$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
+										if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
+											$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+											$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+											$partial = true;
+										}
+									} else {
+										// principal is covered with possibly more.
+										$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
+										$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+									}
+								}
+								break;
+							}
+						}
+						if (!isset($next_due_payment['payment_additional']))
+							$next_due_payment['payment_additional'] = 0.00;
+						$next_due_payment['payment_date_expected'] = $payment['scheduled_date_expected'];
+						$next_due_payment['payment_date_received'] = $date_received;
+						$next_due_payment['payment_date_recorded'] = $date_recorded;
+						$next_due_payment['payment_id_parent'] = $payment_id;
+						if (!isset($next_due_payment['payment_status'])) {
+							if (isset($partial) && $partial == true)
+								$next_due_payment['payment_status'] = 'partial_not_due';
+							else
+								$next_due_payment['payment_status'] = 'paid';
+						}
+
+						unset($this->paid[$num]['payment_paid_rollover']);
 					}
 				}
+			} else {
+				// If the extra payment is still partial for this payment.
+				$extra = array();
+				$extra['payment_type'] = "past_due";
+				$extra['payment_date_expected'] = $this->paid[$num]['payment_date_expected'];
+				$extra['payment_date_received'] = $date_received;
+				$extra['payment_date_recorded'] = $date_recorded;
+				$extra['payment_id'] = $payment_id;
+				$extra['payment_status'] = 'partial';
+				if ($unpaid_interest > $payment_amount) {
+					// we still haven't paid off the unpaid interest.
+					$extra['payment_interest_paid'] = $payment_amount;
+					$extra['payment_principal_paid'] = 0.00;
+				} else {
+					// unpaid interest can be paid with partial expected
+					$extra['payment_interest_paid'] = $unpaid_interest;
+					$extra['payment_principal_paid'] = $payment_amount - $unpaid_interest;
+				}
+				$extra['payment_additional'] = 0;
+				
+				// Update remainder values now.
+				$this->paid[$num]['payment_interest_unpaid_remainder'] -= $extra['payment_interest_paid'];
+				$this->paid[$num]['payment_principal_unpaid_remainder'] -= $extra['payment_principal_paid'];
+				
+				// Create/Update total paid
+				if ($this->paid[$num]['extra_payments']) {
+					$this->paid[$num]['payment_interest_paid_total'] += $extra['payment_interest_paid'];
+					$this->paid[$num]['payment_principal_paid_total'] += $extra['payment_principal_paid'];
+				} else {
+					$this->paid[$num]['payment_interest_paid_total'] = $this->paid[$num]['payment_interest_paid'] + $extra['payment_interest_paid'];
+					$this->paid[$num]['payment_principal_paid_total'] = $this->paid[$num]['payment_principal_paid'] + $extra['payment_principal_paid'];
+				}
 			}
-			unset($paid);
+			// This is where you assign the extra payment!
+			if (!empty($this->paid[$num]['extra_payments']))
+				$this->paid[$num]['extra_payments'][] = $extra;
+			else {
+				$this->paid[$num]['extra_payments'] = array();
+				$this->paid[$num]['extra_payments'][] = $extra;
+			}
+				
 		}
 		// only for when a partial not due payment has been MADE and an extra payment
 		// is needed. This does not generate the partial payment, rather the extra payment.
@@ -1998,94 +2094,93 @@ class com_loan_loan extends entity {
 				}
 			}
 			unset($paid);
-		} elseif ($this->past_due >= .01 && $this->paid[$num]['payment_status'] != "partial") {
-			// This creates a past due payment, but does not deal with extra_past_due payments.
-			if ($payment_amount < $this->past_due) {
-				// $payment amount is only partial.
-				$temp_past_due_paid['payment_type'] = 'past_due';
-				$temp_past_due_paid['payment_date_expected'] = $prior_due_date;
-				$temp_past_due_paid['payment_date_received'] = $date_received;
-				$temp_past_due_paid['payment_date_recorded'] = $date_recorded;
-				$temp_past_due_paid['payment_id'] = $payment_id;
-				$temp_past_due_paid['payment_amount_paid'] = $payment_amount;
-				$temp_past_due_paid['payment_interest_expected'] = $this->payments[0]['unpaid_interest'];
-				$temp_past_due_paid['payment_principal_expected'] = $this->payments[0]['unpaid_balance'];
-				if ($payment_amount < $temp_past_due_paid['payment_interest_expected']) {
-					// interest amount not fully covered
-					$temp_past_due_paid['payment_interest_paid'] = $payment_amount;
-					$temp_past_due_paid['payment_principal_paid'] = 0.00;
-				} else {
-					// interest is fully paid:
-					$temp_past_due_paid['payment_interest_paid'] = $temp_past_due_paid['payment_interest_expected'];
-					if (($payment_amount - $temp_past_due_paid['payment_interest_expected']) <  $temp_past_due_paid['payment_principal_expected']) {
-						// Principal not covered
-						$temp_past_due_paid['payment_principal_paid'] = ($payment_amount - $temp_past_due_paid['payment_interest_paid']);
-					}
-				}
-				$temp_past_due_paid['payment_status'] = 'partial';
-			} elseif ($payment_amount == $this->past_due) {
-				// $payment amount is exact.
-				$temp_past_due_paid['payment_type'] = 'past_due';
-				$temp_past_due_paid['payment_date_expected'] = strtotime('-1 month', $date_expected);
-				$temp_past_due_paid['payment_date_received'] = $date_received;
-				$temp_past_due_paid['payment_date_recorded'] = $date_recorded;
-				$temp_past_due_paid['payment_id'] = $payment_id;
-				$temp_past_due_paid['payment_amount_paid'] = $this->past_due;
-				$temp_past_due_paid['payment_status'] = 'paid_late';
-			} else {
-				// $payment amount will cover past due amount + more.
-				// Past due payment.
-				$temp_past_due_paid['payment_type'] = 'past_due';
-				$temp_past_due_paid['payment_date_expected'] = strtotime('+1 day', $date_expected);
-				$temp_past_due_paid['payment_date_received'] = $date_received;
-				$temp_past_due_paid['payment_date_recorded'] = $date_recorded;
-				$temp_past_due_paid['payment_id'] = $payment_id;
-				$temp_past_due_paid['payment_amount_paid'] =  $this->past_due;
-				$temp_past_due_paid['payment_status'] = 'paid_late';
-
-				// The additional payment amount.
-				$payment_amount -= $this->past_due;
-				foreach ($this->payments as $payment) {
-					if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
-						if ($payment_amount <= $payment['payment_interest_expected']) {
-							// only potentially covers interest expected.
-							$temp_payment_paid['payment_interest_paid'] = $payment_amount;
-							$temp_payment_paid['payment_principal_paid'] = 0.00;
-							$partial = true;
-						} else {
-							// interest is covered + more.
-							$temp_payment_paid['payment_interest_paid'] = $payment['payment_interest_expected'];
-							if ($payment_amount <= $payment['payment_principal_expected']) {
-								// only potentially covers principal expected.
-								$temp_payment_paid['payment_principal_paid'] = $payment_amount - $temp_payment_paid['payment_interest_paid'];
-								if ($temp_payment_paid['payment_principal_paid'] < $payment['payment_principal_expected'])
-									$partial = true;
-							} else {
-								// principal is covered + more.
-								$temp_payment_paid['payment_principal_paid'] = $payment['payment_principal_expected'];
-								$temp_payment_paid['payment_additional'] = $pines->com_sales->round($payment_amount - ($temp_payment_paid['payment_interest_paid'] + $temp_payment_paid['payment_principal_paid']));
-							}
-
-						}
-					}
-				}
-				if (!isset($temp_payment_paid['payment_additional']))
-					$temp_payment_paid['payment_additional'] = 0.00;
-				$temp_payment_paid['payment_date_expected'] = $this->payments[0]['next_payment_due'];;
-				$temp_payment_paid['payment_date_received'] = $date_received;
-				$temp_payment_paid['payment_date_recorded'] = $date_recorded;
-				$temp_payment_paid['parent_payment_id'] = $payment_id;
-				$temp_payment_paid['payment_id'] = uniqid();
-				if ($partial)
-					$temp_payment_paid['payment_status'] = 'partial_not_due';
-				else
-					$temp_payment_paid['payment_status'] = 'paid';
-			}
 		} else {
-			// No past due amount exist, payment is normal.
+			// Past due payments and normal payments are now really similar.
+			// Past due may contain ROLLOVER amounts which will be dealt with in the get payments array?
+			$rollover = null;
+			$rollover_payments = array();
 			foreach ($this->payments as $payment) {
 				if ($payment['scheduled_date_expected'] == $date_expected || $payment['payment_date_expected'] == $date_expected) {
-					if ($payment_amount < $payment['payment_interest_expected']) {
+					if ($this->past_due >= .01 && $date_received > $payment['payment_date_expected']) {
+						// This is where we deal with past_due payments.
+						// We now will set an amount of unpaid expected.
+						$temp_payment_paid['payment_type'] = "past_due";
+						$temp_payment_paid['payment_interest_unpaid_expected'] = $past_due['interest'];
+						$temp_payment_paid['payment_principal_unpaid_expected'] = $past_due['principal'];
+						
+						$total_expected = $pines->com_sales->round($payment['payment_interest_expected'] + $payment['payment_principal_expected']);
+						// So with past due amounts, we want to pay the interest first.
+						// But we want to look at the overview and see the frequency payment amount for each
+						// date or time that they make payments. In other words, it should CAP off at the amount.
+						// We are going to construct something so that ADDITIONAL amounts just call the make payment function
+						// on the left over amount for past dues.. instead of changing the PBD array.
+						
+						// Let's get the amount that would be expected this month.
+						$temp_payment_paid['payment_total_expected'] = $total_expected;
+					
+						if ($payment_amount < $temp_payment_paid['payment_interest_unpaid_expected']) {
+							$temp_payment_paid['payment_interest_unpaid_remainder'] = $temp_payment_paid['payment_interest_unpaid_expected'] - $payment_amount;
+							$temp_payment_paid['payment_principal_unpaid_remainder'] = $temp_payment_paid['payment_principal_unpaid_expected'];
+							// past due amounts remain.
+							
+							if (($pines->com_sales->round($temp_payment_paid['payment_interest_unpaid_expected'] + $temp_payment_paid['payment_principal_unpaid_expected'])) == $pines->com_sales->round($temp_past_due_paid['payment_total_expected'])) {
+								// They missed one payment.
+								// Now adjust payment down to frequency payment.
+								$temp_payment_paid['payment_interest_paid'] = $payment_amount;
+								$temp_payment_paid['payment_principal_paid'] = 0.00;
+								$temp_payment_paid['payment_status'] = "partial";
+							} else {
+								// They missed multiple payments.
+								// Now adjust payment down to frequency payment.
+								if ($payment_amount <= $temp_payment_paid['payment_total_expected']) {
+									$temp_payment_paid['payment_interest_paid'] = $payment_amount;
+									$temp_payment_paid['payment_status'] = "partial";
+								} else {
+									$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_total_expected'];
+									$temp_payment_paid['payment_paid_rollover'] = $payment_amount - $temp_payment_paid['payment_interest_paid'];
+									$rollover = true;
+									$temp_payment_paid['payment_status'] = "paid_late";
+								}
+								// since in this if section, unpaid interest was not paid, no amount can come off the principal unpaid.
+								$temp_payment_paid['payment_principal_paid'] = 0.00;
+							}
+							$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
+							$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+						} else {
+							$temp_payment_paid['payment_status'] = "paid_late";
+							// unpaid interest amount was covered with possibly more.
+							if ($temp_payment_paid['payment_interest_unpaid_expected'] < $temp_payment_paid['payment_total_expected']) {
+								// the unpaid interest is LESS than the normal frequency payment.
+								// this could happen from just missing one payment.
+								if (($pines->com_sales->round($temp_payment_paid['payment_interest_unpaid_expected'] + $temp_payment_paid['payment_principal_unpaid_expected'])) == $pines->com_sales->round($temp_past_due_paid['payment_total_expected'])) {
+									// They missed one payment.
+									// Now adjust payment down to frequency payment.
+									$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_interest_unpaid_expected'];
+									$temp_payment_paid['payment_principal_paid'] = $payment_amount - $temp_payment_paid['payment_interest_unpaid_expected'];
+									$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+								}
+							} else {
+								// past due amounts remain.
+								// Now adjust payment down to frequency payment.
+								$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_total_expected'];
+								$temp_payment_paid['payment_principal_paid'] = 0.00;
+								
+								// unpaid interest exceeds the frequency payment. (ie multiple missed payments).
+								// Now, there technically isn't any remainder for interest at least, but the thing is...
+								// we want to max out this payment at the frequency amount and just make more payments from the leftover amount.
+								// The remainder amounts are kind of "wrong" because we only took off the frequency amount.
+								// We keep track of how much to pay still with future payments with ROLLOVER.
+								$temp_payment_paid['payment_interest_unpaid_remainder'] = $temp_payment_paid['payment_interest_unpaid_expected'] - $temp_payment_paid['payment_total_expected'];
+								$temp_payment_paid['payment_paid_rollover'] = $payment_amount - $temp_payment_paid['payment_interest_paid'];
+								$temp_payment_paid['payment_principal_unpaid_remainder'] = $temp_payment_paid['payment_principal_unpaid_expected'];
+								$rollover = true;
+								
+								$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
+								$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+							}
+						}
+					} elseif ($payment_amount < $payment['payment_interest_expected']) {
 						// does not cover full interest payment.
 						$temp_payment_paid['payment_interest_paid'] = $payment_amount;
 						$temp_payment_paid['payment_principal_paid'] = 0.00;
@@ -2110,6 +2205,93 @@ class com_loan_loan extends entity {
 						}
 
 					}
+					continue;
+				}
+				// As long as there is a rollover amount to create another payment and it is LESS than the next payment due... it will do this.
+				if ($rollover && $payment['payment_date_expected'] && $payment['payment_status'] == "missed") {
+					if (!$new_payment_amount) {
+						$new_payment_amount = $temp_payment_paid['payment_paid_rollover'];
+						$new_interest_unpaid_expected = $temp_payment_paid['payment_interest_unpaid_remainder'];
+						$new_principal_unpaid_expected = $temp_payment_paid['payment_principal_unpaid_remainder'];
+					} else {
+						$new_payment_amount = $new_rollover_payment['payment_paid_rollover'];
+						$new_interest_unpaid_expected = $new_rollover_payment['payment_interest_unpaid_remainder'];
+						$new_principal_unpaid_expected = $new_rollover_payment['payment_principal_unpaid_remainder'];
+					}
+					$new_date_expected = $payment['payment_date_expected'];
+					$new_date_received = $date_received;
+					$new_date_recorded = $date_recorded;
+
+					// Find out what is expected this period, and determine if rollover amount covers it.
+					$total_expected = $pines->com_sales->round($payment['payment_interest_expected'] + $payment['payment_principal_expected']);
+
+					$new_rollover_payment['payment_type'] = 'past_due';
+					$new_rollover_payment['payment_date_expected'] = $new_date_expected;
+					$new_rollover_payment['payment_date_received'] = $new_date_received;
+					$new_rollover_payment['payment_date_recorded'] = $new_date_recorded;
+					$new_rollover_payment['payment_id_parent'] = $payment_id;
+					$new_rollover_payment['payment_status'] = 'paid_late';
+
+					$new_rollover_payment['payment_interest_unpaid_expected'] = $new_interest_unpaid_expected;
+					$new_rollover_payment['payment_principal_unpaid_expected'] = $new_principal_unpaid_expected;
+
+					$new_rollover_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+					$new_rollover_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+					$new_rollover_payment['payment_total_expected'] = $total_expected;
+
+					if (($new_payment_amount - $total_expected) >= 0.01) {
+						// $new_payment_amount exceeds $total_expected, rollover will happen again.
+						$rollover = true;
+						if ($new_interest_unpaid_expected > $new_payment_amount) {
+							// not done paying off interest with rollover.
+							$new_rollover_payment['payment_interest_paid'] = $total_expected;
+							$new_rollover_payment['payment_principal_paid'] = 0.00;
+							$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $total_expected;
+							$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
+						} else {
+							// the $new_payment_amount DOES cover the interest, but the interest amount may cause a rollover.
+							// if it doesn't cause a rollover on the interest, it does on the principal.
+							if ($new_interest_unpaid_expected > $total_expected) {
+								// interest causes rollover
+								$new_rollover_payment['payment_interest_paid'] = $total_expected;
+								$new_rollover_payment['payment_principal_paid'] = 0.00;
+								$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $total_expected;
+								$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
+							} else {
+								// interest covered, principal causes rollover.
+								$new_rollover_payment['payment_interest_paid'] = $new_interest_unpaid_expected;
+								$new_rollover_payment['payment_principal_paid'] = $total_expected - $new_interest_unpaid_expected;
+								$new_rollover_payment['payment_interest_unpaid_remainder'] = 0.00;
+								$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected - $new_rollover_payment['payment_principal_paid'];
+							}
+						}
+						// The statements above all have this in common because a rollover is created.
+						$new_rollover_payment['payment_paid_rollover'] = $new_payment_amount - $total_expected;
+					} else {
+						unset($new_rollover_payment['payment_paid_rollover']);
+						$rollover = false;
+						// Could be false because it didn't finish paying off unpaid, OR because it DID.
+						// this is the end of the rollover.
+						if ($new_payment_amount < $new_interest_unpaid_expected) {
+							// interest not done. unpaid not finished.
+							$new_rollover_payment['payment_interest_paid'] = $new_payment_amount;
+							$new_rollover_payment['payment_principal_paid'] = 0.00;
+							$new_rollover_payment['payment_interest_unpaid_remainder'] = $new_interest_unpaid_expected - $new_payment_amount;
+							$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected;
+							$new_rollover_payment['payment_status'] = 'partial';
+						} elseif ($new_payment_amount > $new_interest_unpaid_expected) {
+							// possibly unpaid could be paid off.
+							$new_rollover_payment['payment_interest_paid'] = $new_interest_unpaid_expected;
+							$new_rollover_payment['payment_principal_paid'] = $new_payment_amount - $new_interest_unpaid_expected;
+							$new_rollover_payment['payment_interest_unpaid_remainder'] = 0.00;
+							$new_rollover_payment['payment_principal_unpaid_remainder'] = $pines->com_sales->round($new_principal_unpaid_expected - $new_rollover_payment['payment_principal_paid']);
+							if ($new_rollover_payment['payment_principal_unpaid_remainder'] >= 0.01) {
+								$new_rollover_payment['payment_status'] = 'partial';
+							} else 
+								$new_rollover_payment['payment_status'] = 'paid_late';
+						}
+					}
+				$rollover_payments[] = $new_rollover_payment;
 				}
 			}
 			if (!isset($temp_payment_paid['payment_additional']))
@@ -2118,25 +2300,91 @@ class com_loan_loan extends entity {
 			$temp_payment_paid['payment_date_received'] = $date_received;
 			$temp_payment_paid['payment_date_recorded'] = $date_recorded;
 			$temp_payment_paid['payment_id'] = $payment_id;
-			if (isset($partial) && $partial == true)
-				$temp_payment_paid['payment_status'] = 'partial_not_due';
-			else
-				$temp_payment_paid['payment_status'] = 'paid';
+			if (!isset($temp_payment_paid['payment_status'])) {
+				if (isset($partial) && $partial == true)
+					$temp_payment_paid['payment_status'] = 'partial_not_due';
+				else
+					$temp_payment_paid['payment_status'] = 'paid';
+			}
+		}
+		
+		// This is for adjusting the LAST rollover amount.
+		// This happens if someone pays MORE than the past due amount
+		// We don't want to apply it as an additional amount. 
+		// We want the rollover amount to make the next due payment
+		// IF more than the next due payment exists, THEN it would become
+		// an additional amount on THAT next due payment.
+		$cr = count($rollover_payments) - 1;
+		if ($rollover_payments[$cr]['payment_paid_rollover'] >= .01) {
+			// We want to make this towards the next due payment.
+			$payment_amount = $rollover_payments[$cr]['payment_paid_rollover'];
+			// find the next due payment.
+			$next_due_payment = array();
+			foreach ($this->payments as $payment) {
+				if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+					if ($payment_amount < $payment['payment_interest_expected']) {
+						// does not cover full interest payment.
+						$next_due_payment['payment_interest_paid'] = $payment_amount;
+						$next_due_payment['payment_principal_paid'] = 0.00;
+						$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+						$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+						$partial = true;
+					} else {
+						// interest is covered at least with possibly more.
+						$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
+						if (($payment_amount - $next_due_payment['payment_interest_paid']) < $payment['payment_principal_expected']) {
+							// does not fully cover principal.
+							$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
+							if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
+								$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+								$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+								$partial = true;
+							}
+						} else {
+							// principal is covered with possibly more.
+							$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
+							$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+						}
+					}
+					break;
+				}
+			}
+			if (!isset($next_due_payment['payment_additional']))
+				$next_due_payment['payment_additional'] = 0.00;
+			$next_due_payment['payment_date_expected'] = $payment['scheduled_date_expected'];
+			$next_due_payment['payment_date_received'] = $date_received;
+			$next_due_payment['payment_date_recorded'] = $date_recorded;
+			$next_due_payment['payment_id_parent'] = $payment_id;
+			if (!isset($next_due_payment['payment_status'])) {
+				if (isset($partial) && $partial == true)
+					$next_due_payment['payment_status'] = 'partial_not_due';
+				else
+					$next_due_payment['payment_status'] = 'paid';
+			}
+			
+			unset($rollover_payments[$cr]['payment_paid_rollover']);
 		}
 
 		// assign above payments to temporary paid array.
 		$temp_paid = array();
-		$temp_paid[0] = array();
+		if (empty($this->paid))
+			$temp_paid[0] = array();
 
-
-		// Creating a Past Due payment
-		if (!empty($temp_past_due_paid))
-			$temp_paid[] = $temp_past_due_paid;
 		// A normal Payment.
-		if (!empty($temp_payment_paid))
+		if (!empty($temp_payment_paid)) {
 			$temp_paid[] = $temp_payment_paid;
-
-
+		}
+		// Rollover Past Due Payments.
+		if (!empty($rollover_payments)) {
+			foreach ($rollover_payments as $rollover_payment) {
+				$temp_paid[] = $rollover_payment;
+			}
+		}
+		// Rollover Next Payment Due.
+		if (!empty($next_due_payment)) {
+			$temp_paid[] = $next_due_payment;
+		}
+		
 		// Assign paid array and save it!
 		if (empty($this->paid)) {
 			// create paid array
@@ -2149,10 +2397,11 @@ class com_loan_loan extends entity {
 			$this->paid = $this->paid;
 		} else {
 			// append to paid array
-			if ($this->past_due > 0)
-				$this->paid[] = $temp_past_due_paid;
-			if (!empty($temp_payment_paid))
-				$this->paid[] = $temp_payment_paid;
+				foreach ($temp_paid as $payment_paid) {
+					if (empty($payment_paid))
+						continue;
+					$this->paid[] = $payment_paid;
+				}
 		}
 
 
@@ -2164,10 +2413,11 @@ class com_loan_loan extends entity {
 			unset($this->paid);
 		else
 			$this->paid[0]['num_payments_paid'] = $num_payments_paid;
-
+		
 		if (!$delete_payment)
 			$this->paid = $this->array_values_recursive($this->paid);
-
+		
+		
 
 		// Run Payments array again so that grid will update with correct information.
 		$this->get_payments_array();
@@ -2186,6 +2436,125 @@ class com_loan_loan extends entity {
 				$arr[$key] = array_values_recursive($val);
 
 		return $arr;
+	}
+	
+	/**
+	 * Get the current past due amount.
+	 * 
+	 * @param array $payments_array The payments array to be used to get past due amount.
+	 * @param array $paid_array The paid array to be used to get past due amount.
+	 * @return array The pastdue amount.
+	 */
+	public function get_pastdue($payments_array, $paid_array) {
+		global $pines;
+		$pastdue = array();
+		
+		// Find PAID amount
+		$interest_paid = ($payments_array[0]['total_interest_paid']) ? $payments_array[0]['total_interest_paid'] : 0;
+		$principal_paid = ($payments_array[0]['total_principal_paid']) ? $payments_array[0]['total_principal_paid'] : 0;
+		
+		// Find EXPECTED amount (not scheduled).
+		foreach ($payments_array as $payment) {
+			if ($payment['payment_date_expected']) {
+				$interest_expected += $payment['payment_interest_expected'];
+				$principal_expected +=  + $payment['payment_principal_expected'];
+			}
+			if ($payment['payment_status'] == "partial_not_due") {
+				$interest_not_due += $payment['payment_interest_expected'];
+				$principal_not_due +=  + $payment['payment_principal_expected'];
+			}
+		}
+		
+		// Figure out PAST DUE
+		$pastdue_interest = $pines->com_sales->round($interest_expected - $interest_paid);
+		$pastdue_principal = $pines->com_sales->round($principal_expected - $principal_paid);
+		
+		// Consider that I need a short amount.
+		// This works because it DOES not REMOVE partial not due shortness.
+		$short_interest = $pastdue_interest;
+		$short_principal = $pastdue_principal;
+		
+		// But now we need to consider partial not due
+		$pastdue_interest -= $interest_not_due;
+		$pastdue_principal -= $principal_not_due;
+		
+		
+		
+		
+		// Set past due amounts.
+		if ($pastdue_interest >= .01)
+			$pastdue['interest'] = $pastdue_interest;
+		else 
+			$pastdue['interest'] = 0;
+		
+		if ($pastdue_principal >= .01)
+			$pastdue['principal'] = $pastdue_principal;
+		else 
+			$pastdue['principal'] = 0;
+		
+		// Also add in short amounts to this for fun
+		if ($short_interest >= .01)
+			$pastdue['short_interest'] = $short_interest;
+		else 
+			$pastdue['short_interest'] = 0;
+		
+		if ($short_principal >= .01)
+			$pastdue['short_principal'] = $short_principal;
+		else 
+			$pastdue['short_principal'] = 0;
+		
+//		foreach ($paid_array as $paid_payment) {
+//			if ($paid_payment['extra_payents']) {
+//				foreach ($paid_payment['extra_payents'] as $extra_paid) {
+//					$paid_interest += $paid_payment['payment_interest_paid'];
+//					$paid_principal += $paid_payment['payment_interest_paid'] + $paid_payment['payment_additional'];
+//				}
+//			}
+//			$paid_interest += $paid_payment['payment_interest_paid'];
+//			$paid_principal += $paid_payment['payment_interest_paid'] + $paid_payment['payment_additional'];
+//		}
+		
+//		if (empty($paid_array)) {
+//			$c = 0;
+//			$start_date = $payments_array[0]['first_payment_due'];
+//		} else {
+//			$c = $paid_array[0]['num_payments_paid'];
+//			$start_date = $paid_array[$c]['payment_date_expected'];
+//		}
+//		$end_date = $payments_array[0]['next_payment_due'];
+//		
+//		// Find current missed payments
+//		foreach ($payments_array as $payment) {
+//			if ($payment['payment_date_expected'] > $start_date && $payment['payment_date_expected'] < $end_date) {
+//				// This will get payments that are missed AFTER the last paid and BEFORE current due date.
+//				$pastdue_interest += $payment['payment_interest_expected'];
+//				$pastdue_principal +=  + $payment['payment_principal_expected'];
+//			}
+//		}
+//		
+//		// Get possible partial payment missing
+//		// Be careful here. We need to do this different for past due payments.
+//		if ($paid_array[$c]['payment_total_expected']) {
+//			if ($paid_array[$c]['payment_interest_unpaid_remainder'] >= .01) {
+//				// there is an unpaid interest remainder.
+//				$pastdue_interest += $paid_array[$c]['payment_interest_unpaid_remainder'];
+//			}
+//			if ($paid_array[$c]['payment_principal_unpaid_remainder'] >= .01) {
+//				// there is an unpaid interest remainder.
+//				$pastdue_principal += $paid_array[$c]['payment_principal_unpaid_remainder'];
+//			}
+//		} else {
+//			if ($paid_array[$c]['payment_interest_paid'] < $paid_array[$c]['payment_interest_expected']) {
+//			$pastdue_interest += $paid_array[$c]['payment_interest_expected'] - $paid_array[$c]['payment_interest_paid'];
+//		}
+//			if ($paid_array[$c]['payment_principal_paid'] < $paid_array[$c]['payment_principal_expected']) {
+//				$pastdue_principal += $paid_array[$c]['payment_principal_expected'] - $paid_array[$c]['payment_principal_paid'];
+//			}
+//		}
+//		
+//		$pastdue['interest'] = $pastdue_interest;
+//		$pastdue['principal'] = $pastdue_principal;
+		return $pastdue;
 	}
 }
 

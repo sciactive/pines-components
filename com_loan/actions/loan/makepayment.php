@@ -72,13 +72,14 @@ if ($loan->payments[1]['payment_status'] != "missed")
 else
 	$missed_first_payment = true;
 
-if ($missed_first_payment == true) {
-	$date_expected = $loan->payments[0]['first_payment_missed'];
-	$missed_first_payment = false;
-} elseif (isset($loan->payments[0]['next_payment_due']))
-	$date_expected = $loan->payments[0]['next_payment_due'];
-else
-	$date_expected = $loan->first_payment_date;
+//if ($missed_first_payment == true) {
+//	$date_expected = $loan->payments[0]['first_payment_missed'];
+//	$missed_first_payment = false;
+//} elseif (isset($loan->payments[0]['next_payment_due']))
+//	$date_expected = $loan->payments[0]['next_payment_due'];
+//else
+//	$date_expected = $loan->first_payment_date;
+$date_expected = $loan->first_payment_date;
 if (!$date_received)
 	$date_received = strtotime($_REQUEST['payment_date_input']);
 $date_recorded = strtotime('now');

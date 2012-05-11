@@ -101,19 +101,21 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_dash', 'dashboard/widgetoptions_form', array('id' => (string) $this->entity->guid))); ?>,
 				type: "POST",
-				dataType: "html",
+				dataType: "json",
 				data: {"key": widget.children(".key").text()},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve the form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
-					if (data == "false") {
+					if (!data) {
 						alert("This widget has no options.");
 						return;
 					}
 					pines.pause();
+					if (typeof data.head !== "undefined")
+						$("head").append(data.head);
 					var form = $("<div title=\"Widget Options\"></div>")
-					.html('<form method="post" action="">'+data+"</form><br />");
+					.html('<form method="post" action="">'+data.content+"</form><br />");
 					form.find("form").submit(function(){
 						form.dialog('option', 'buttons').Done();
 						return false;
@@ -158,8 +160,6 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 							}
 						}
 					});
-					if (form.find("textarea.peditor, textarea.peditor_simple").length)
-						$("head").append(<?php echo json_encode($editor_html); ?>);
 					pines.play();
 				}
 			});
@@ -364,6 +364,8 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 					if (!data)
 						return;
 					pines.pause();
+					if (typeof data.head !== "undefined")
+						$("head").append(data.head);
 					widget.find("> .widget_header .title").html(data.title == "" ? "Untitled Widget" : data.title).end().children(".content").html(data.content);
 					pines.play();
 				}

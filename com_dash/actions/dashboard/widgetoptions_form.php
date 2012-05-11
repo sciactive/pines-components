@@ -15,6 +15,7 @@ if ( !gatekeeper('com_dash/dash') || !gatekeeper('com_dash/editdash') )
 	punt_user(null, pines_url('com_dash'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if (!empty($_REQUEST['id']) && gatekeeper('com_dash/manage'))
 	$dashboard = com_dash_dashboard::factory((int) $_REQUEST['id']);
@@ -39,7 +40,16 @@ if (!isset($view)) {
 }
 $module = new module($widget_entry['component'], $view);
 
+$pines->page->modules['head'] = array();
 $content = $module->render();
-$pines->page->override_doc($content);
+// Render any modules placed into the head. (In case they add more.)
+foreach ($pines->page->modules['head'] as $cur_module)
+	$cur_module->render();
+// Now get their content.
+$head = '';
+foreach ($pines->page->modules['head'] as $cur_module)
+	$head .= $cur_module->render();
+
+$pines->page->override_doc(json_encode(array('content' => $content, 'head' => $head)));
 
 ?>

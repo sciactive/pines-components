@@ -67,7 +67,16 @@ foreach ((array) $widget_entry['options'] as $cur_option) {
 	}
 }
 
+$pines->page->modules['head'] = array();
 $content = $module->render();
-$pines->page->override_doc(json_encode(array('title' => $module->title, 'content' => $content)));
+// Render any modules placed into the head. (In case they add more.)
+foreach ($pines->page->modules['head'] as $cur_module)
+	$cur_module->render();
+// Now get their content.
+$head = '';
+foreach ($pines->page->modules['head'] as $cur_module)
+	$head .= $cur_module->render();
+
+$pines->page->override_doc(json_encode(array('title' => $module->title, 'content' => $content, 'head' => $head)));
 
 ?>

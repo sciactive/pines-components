@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit an page.
+ * Provides a form for the user to edit a page.
  *
  * @package Components\content
  * @license http://www.gnu.org/licenses/agpl-3.0.html

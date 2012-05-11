@@ -12,6 +12,20 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
+	'quickpage' => array(
+		'cname' => 'Quick Page',
+		'description' => 'Quickly create and publish content pages.',
+		//'image' => 'includes/page_widget_screen.png',
+		'view' => 'modules/quickpage',
+		'form' => 'modules/quickpage_form',
+		'type' => 'widget',
+		'widget' => array(
+			'default' => true,
+			'depends' => array(
+				'ability' => 'com_content/newpage',
+			),
+		),
+	),
 	'page' => array(
 		'cname' => 'Page Content',
 		'description' => 'Show the content of a page.',

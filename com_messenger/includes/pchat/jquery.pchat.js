@@ -258,7 +258,7 @@ if (!window.localStorage) {
 				else if (connection.blocking.blocking_support === false)
 					alert("The connected server does not support the Simple Communications Blocking protocol.");
 				else
-					blocked_user_dialog.dialog("show");
+					blocked_user_dialog.dialog("open");
 			}));
 			if (pchat.pchat_sounds) {
 				if (!soundManager) {
@@ -290,9 +290,14 @@ if (!window.localStorage) {
 				}));
 			}
 			// Blocked users dialog.
-			var blocked_user_dialog = $('<div class="Blocked Users"></div>').dialog({
+			var blocked_user_dialog = $('<div title="Blocked Users"></div>').dialog({
 				modal: true,
-				autoOpen: false
+				autoOpen: false,
+				open: function(){
+					blocked_user_dialog.dialog("option", "position", "center");
+				},
+				height: "auto",
+				width: "auto"
 			});
 
 			// The log function only does anything if the log is enabled.
@@ -325,6 +330,7 @@ if (!window.localStorage) {
 				localStorage.setItem("pchat-roster", JSON.stringify(connection.roster.items));
 				localStorage.setItem("pchat-rosterver", JSON.stringify(connection.roster.ver));
 				// Save the blocklist.
+				localStorage.setItem("pchat-blocksupport", JSON.stringify(connection.blocking.blocking_support));
 				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
 				// Save conversations.
 				localStorage.setItem("pchat-conversations", JSON.stringify(pchat.pchat_conversations));
@@ -392,6 +398,7 @@ if (!window.localStorage) {
 								// This is an attached session, so request roster changes using the stored roster.
 								var roster = localStorage.getItem("pchat-roster"),
 									ver = localStorage.getItem("pchat-rosterver"),
+									blocksupport = localStorage.getItem("pchat-blocksupport"),
 									blocklist = localStorage.getItem("pchat-blocklist"),
 									presence = localStorage.getItem("pchat-presence"),
 									pres_stat = localStorage.getItem("pchat-presence-status"),
@@ -426,8 +433,10 @@ if (!window.localStorage) {
 								// Rebuild the blocklist.
 								if (blocklist) {
 									log("Loading Saved Blocklist: "+blocklist);
+									blocksupport = JSON.parse(blocksupport);
 									blocklist = JSON.parse(blocklist);
 									// Put the recovered blocklist back into the blocking plugin.
+									connection.blocking.blocking_support = blocksupport;
 									connection.blocking.blocklist = blocklist;
 									// Call the blocklist handler.
 									handlers.onBlocklist(blocklist);
@@ -437,6 +446,8 @@ if (!window.localStorage) {
 									connection.roster.get(null, ver, roster);
 								save_state();
 							}
+							console.log("Connection:");
+							console.log(connection);
 							break;
 						case Strophe.Status.DISCONNECTING:
 							log('Disconnecting.');
@@ -453,6 +464,7 @@ if (!window.localStorage) {
 								localStorage.removeItem("pchat-rid");
 								localStorage.removeItem("pchat-roster");
 								localStorage.removeItem("pchat-rosterver");
+								localStorage.removeItem("pchat-blocksupport");
 								localStorage.removeItem("pchat-blocklist");
 								localStorage.removeItem("pchat-conversations");
 								// If we tried to attach from localStorage and failed, try starting a new connection.
@@ -709,18 +721,21 @@ if (!window.localStorage) {
 				},
 				onBlocklist: function(blocklist){
 					blocked_user_dialog.empty();
-					$.each(blocklist, function(cur_block){
-						var cur_elem = $('<div><span></span><button style="display: none; float: right;" class="button">Unblock</button></div>')
-						.children('span').text(cur_block).end()
-						.on('mouseenter', function(){
-							$(this).children('button').show();
-						}).on('mouseleave', function(){
-							$(this).children('button').hide();
-						}).on('click', 'button', function(){
-							connection.blocking.unblock($(this).prev('span').text());
+					$.each(blocklist, function(i, jid){
+						var cur_elem = $('<ul class="nav nav-pills"><li class="jid active"><a></a></li><li class="unblock" style="float: right;"><a href="javascript:void(0);">Unblock</a></li></ul>')
+						.find('li.jid a').text(jid).end()
+						.on('click', 'li.unblock a', function(){
+							connection.blocking.unblock($(this).closest('ul').find('li.jid a').text());
 						});
 						blocked_user_dialog.append(cur_elem);
 					});
+					blocked_user_dialog.append($('<div><button class="btn">Block Another User</button></div>')
+					.on("click", "button", function(){
+						var jid = prompt("Please provide the address of a user to block:");
+						if (!jid)
+							return;
+						connection.blocking.block(jid);
+					}));
 					// Now rerun the roster to put block links in.
 					handlers.onRoster(connection.roster.items);
 				},

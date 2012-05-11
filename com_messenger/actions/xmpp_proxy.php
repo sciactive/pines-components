@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
-set_time_limit($pines->config->com_messenger->proxy_timeout);
+set_time_limit($pines->config->com_messenger->proxy_timeout * 2);
 
 $headers = array();
 foreach ($_SERVER as $name => $value) {
@@ -31,20 +31,31 @@ if (!empty($_SERVER['HTTP_COOKIE']))
 // Set up the cURL request.
 $request = curl_init();
 curl_setopt_array($request, array(
-	CURLOPT_URL => $pines->config->com_messenger->xmpp_bosh_url,
-	CURLOPT_HEADER => true,
-	CURLINFO_HEADER_OUT => true,
-	CURLOPT_HTTPHEADER => $headers,
-	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_URL				=> $pines->config->com_messenger->xmpp_bosh_url,
+	CURLOPT_FOLLOWLOCATION	=> true,
+	CURLOPT_USERAGENT		=> $pines->info->com_messenger->name.' '.$pines->info->com_messenger->version,
+	CURLOPT_HEADER			=> true,
+	CURLINFO_HEADER_OUT		=> true,
+	CURLOPT_HTTPHEADER		=> $headers,
+	CURLOPT_RETURNTRANSFER	=> true,
+	CURLOPT_CONNECTTIMEOUT	=> 30,
+	CURLOPT_TIMEOUT			=> $pines->config->com_messenger->proxy_timeout,
+	CURLOPT_MAXCONNECTS		=> 1000,
 ));
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	curl_setopt_array($request, array(
-		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => !empty($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input"),
+		CURLOPT_POST		=> true,
+		CURLOPT_POSTFIELDS	=> !empty($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input"),
 	));
 
 // Send the request.
 $response = curl_exec($request);
+if ($response === false) {
+	header('X-Curl-ErrNo: '.curl_errno($request));
+	header('X-Curl-Error: '.curl_error($request));
+	curl_close($request);
+	throw new HttpServerException(null, 500);
+}
 list($response_headers, $response_body) = explode("\r\n\r\n", $response, 2);
 
 // Return headers.
@@ -59,6 +70,11 @@ foreach (explode("\n", $response_headers) as $cur_header) {
 		header($cur_header);
 }
 
+//if (strpos($response_body, 'body') === false)
+//	print_r($response);
+
 echo $response_body;
+
+curl_close($request);
 
 ?>

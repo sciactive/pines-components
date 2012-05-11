@@ -189,14 +189,16 @@ Strophe.addConnectionPlugin('blocking',
     _onReceiveBlocklistSuccess: function(userCallback, stanza)
     {
         this._updateItems(stanza);
-        userCallback(this.blocklist);
+		if (userCallback)
+			userCallback(this.blocklist);
     },
     /** PrivateFunction: _onReceiveBlocklistError
      *
      */
     _onReceiveBlocklistError: function(userCallback, stanza)
     {
-        userCallback(this.blocklist);
+        if (userCallback)
+			userCallback(this.blocklist);
     },
     /** PrivateFunction: _call_backs
      *
@@ -226,7 +228,7 @@ Strophe.addConnectionPlugin('blocking',
     {
         var self = this;
         var blocklist = iq.getElementsByTagName('blocklist');
-        if (blocklist.length != 0)
+        if (blocklist.length == 0)
 			blocklist = iq.getElementsByTagName('block');
         if (blocklist.length != 0)
         {

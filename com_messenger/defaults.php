@@ -37,8 +37,8 @@ return array(
 	array(
 		'name' => 'proxy_timeout',
 		'cname' => 'Proxy Time Limit',
-		'description' => 'Time limit (in seconds) for the proxy script to execute.',
-		'value' => 61,
+		'description' => 'Time limit (in seconds) for the proxy script to execute. Should be greater than the wait value of your BOSH server. (Like, 2x greater.)',
+		'value' => 120,
 		'peruser' => true,
 	),
 );

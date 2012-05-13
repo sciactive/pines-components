@@ -16,7 +16,7 @@ $pines->editor->load();
 	<div class="pf-element pf-full-width">
 		<label>
 			<span class="pf-label">Content</span><br />
-			<textarea rows="8" cols="35" class="peditor" style="width: 740px; height: 500px;" name="icontent"></textarea>
+			<textarea rows="8" cols="35" class="peditor" style="width: 740px; height: 500px;" name="icontent"><?php echo htmlspecialchars($this->icontent); ?></textarea>
 		</label>
 	</div>
 </div>

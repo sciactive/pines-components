@@ -173,7 +173,13 @@ class com_modules_module extends entity {
 					break;
 				default:
 					$name = $cur_option['name'];
-					$module->$name = $cur_option['value'];
+					if (substr($name, -2) == '[]') {
+						$name = substr($name, 0, -2);
+						if ((array) $module->$name !== $module->$name)
+							$module->$name = array();
+						array_push($module->$name, $cur_option['value']);
+					} else
+						$module->$name = $cur_option['value'];
 					break;
 			}
 		}

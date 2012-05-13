@@ -11,8 +11,10 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (empty($this->title))
+if (empty($this->widget_title))
 	$this->title = 'Quick Page';
+else
+	$this->title = $this->widget_title;
 
 $pines->editor->load();
 $pines->com_ptags->load();
@@ -29,18 +31,26 @@ margin-left: 120px;
 margin-left: 125px;
 }
 </style>
-<form class="pf-form" method="post" id="p_muid_form" action="">
+<script type="text/javascript">
+	pines(function(){
+		$("#p_muid_form").on("click", ":button .page-save", function(){
+			var enabled = $(this).hasClass("page-publish");
+			// TODO: Save the page through ajax.
+		});
+	});
+</script>
+<div class="pf-form" id="p_muid_form">
 	<div class="pf-element pf-full-width">
 		<script type="text/javascript">
 			pines(function(){
 				var alias = $("#p_muid_form [name=alias]");
 				$("#p_muid_form [name=name]").change(function(){
 					if (alias.val() == "")
-						alias.val($(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase());
+						alias.val($(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase());
 				}).blur(function(){
 					$(this).change();
 				}).focus(function(){
-					if (alias.val() == $(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase())
+					if (alias.val() == $(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase())
 						alias.val("");
 				});
 			});
@@ -91,19 +101,19 @@ margin-left: 125px;
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Intro</span><br />
 		<div style="overflow: auto;">
-			<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%; height: 100px;" name="intro"></textarea>
+			<textarea rows="3" cols="35" class="<?php echo $this->intro_full_editor == 'true' ? 'peditor' : 'peditor-simple'; ?>" style="width: 100%; height: 100px;" name="intro"></textarea>
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Content</span><br />
 		<div style="overflow: auto;">
-			<textarea rows="5" cols="35" class="peditor" style="width: 100%; height: 200px;" name="content"></textarea>
+			<textarea rows="5" cols="35" class="<?php echo $this->content_simple_editor == 'true' ? 'peditor-simple' : 'peditor'; ?>" style="width: 100%; height: 200px;" name="content"></textarea>
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Tags</span>
 		<div class="pf-group">
-			<input class="pf-field" type="text" name="content_tags" size="10" value="" />
+			<input class="pf-field" type="text" name="content_tags" size="10" value="<?php echo htmlspecialchars(implode(',', (array) $this->content_tags)); ?>" />
 			<script type="text/javascript">
 				pines(function(){
 					$("#p_muid_form [name=content_tags]").ptags({
@@ -118,8 +128,11 @@ margin-left: 125px;
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="btn-group" style="float: right;">
-			<input class="pf-button btn btn-success" type="submit" value="Save and Publish" />
-			<input class="pf-button btn" type="submit" value="Save" />
+			<input class="pf-button btn btn-success page-save page-publish" type="button" value="Save and Publish" />
+			<input class="pf-button btn page-save" type="button" value="Save" />
 		</div>
 	</div>
-</form>
+	<?php foreach (array() as $cur_var) { ?>
+	<input type="hidden" name="<?php echo htmlspecialchars($cur_var); ?>" value="" />
+	<?php } ?>
+</div>

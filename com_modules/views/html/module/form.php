@@ -10,17 +10,9 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
+
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Module' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide module details in this form.';
-// Get the HTML for the system editor.
-$no_editor_modules = $pines->page->modules['head'];
-$pines->editor->load();
-$with_editor_modules = $pines->page->modules['head'];
-$editor_modules = array_diff_key($with_editor_modules, $no_editor_modules);
-$editor_html = '';
-foreach ($editor_modules as $cur_module) {
-	$editor_html .= $cur_module->render();
-}
 
 $pines->com_pgrid->load();
 ?>
@@ -64,32 +56,40 @@ $pines->com_pgrid->load();
 							alert("Please select a module type.");
 							return;
 						}
-						if (typeof type_elem.data("module_form") != "undefined") {
-							type_elem.data("module_form").dialog("open");
-							return;
-						}
-						var form = type_elem.siblings(".form").text();
-						if (form == "") {
+						if (!type_elem.siblings(".form").length) {
 							alert("The selected module type has no options.")
 							options_table.pgrid_get_all_rows().pgrid_delete();
 							update_options();
 							return;
 						}
-						var type = type_elem.val();
+						var type = type_elem.val(),
+							cur_data = options_table.pgrid_get_all_rows(),
+							module_data = [];
+						if (cur_data.length) {
+							cur_data.each(function(){
+								var cur_row = $(this);
+								module_data.push({
+									name: cur_row.pgrid_get_value(1),
+									value: pines.unsafe(cur_row.pgrid_get_value(2))
+								});
+							});
+						}
 						$.ajax({
 							url: <?php echo json_encode(pines_url('com_modules', 'module/form')); ?>,
 							type: "POST",
-							dataType: "html",
-							data: {"type": type},
+							dataType: "json",
+							data: {"type": type, "data": JSON.stringify(module_data)},
 							error: function(XMLHttpRequest, textStatus){
 								pines.error("An error occured while trying to retrieve the form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
-								if (data == "")
+								if (!data)
 									return;
 								pines.pause();
+								if (typeof data.head !== "undefined")
+									$("head").append(data.head);
 								var form = $("<div title=\"Module Options\"></div>")
-								.html('<form method="post" action="">'+data+"</form><br />");
+								.html('<form method="post" action="">'+data.content+"</form><br />");
 								form.find("form").submit(function(){
 									form.dialog('option', 'buttons').Done();
 									return false;
@@ -99,26 +99,10 @@ $pines->com_pgrid->load();
 									autoOpen: true,
 									modal: true,
 									width: "auto",
-									open: function(){
-										var cur_data = options_table.pgrid_get_all_rows();
-										if (cur_data.length) {
-											cur_data.each(function(){
-												var cur_row = $(this);
-												var name = cur_row.pgrid_get_value(1);
-												var value = pines.unsafe(cur_row.pgrid_get_value(2));
-												form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value).change();
-												form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked").change();
-												if (value == "")
-													form.find(":input:checkbox[name="+name+"]").removeAttr("checked").change();
-												else
-													form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked").change();
-											});
-										}
-									},
 									buttons: {
 										"Done": function(){
 											options_table.pgrid_get_all_rows().pgrid_delete();
-											form.find(":input").each(function(){
+											form.find(":input[name]").each(function(){
 												var cur_input = $(this);
 												if (cur_input.is(":radio:not(:checked)"))
 													return;
@@ -137,9 +121,6 @@ $pines->com_pgrid->load();
 										}
 									}
 								});
-								if (form.find("textarea.peditor, textarea.peditor_simple").length)
-									$("head").append(<?php echo json_encode($editor_html); ?>);
-								type_elem.data("module_form", form);
 								pines.play();
 							}
 						});
@@ -361,12 +342,24 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 			<?php $i=0; foreach ($this->modules as $cur_component => $cur_modules) { $i++; ?>
 			<div class="pf-element pf-full-width component_modules">
-				<div style="padding: .5em;" class="ui-helper-clearfix<?php echo ($i % 2) ? '' : ' ui-widget-content'; ?>">
-					<strong class="pf-label"><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></strong>
+				<div style="padding: .5em;" class="ui-helper-clearfix<?php echo ($i % 2) ? '' : ' alert-info'; ?>">
+					<strong class="pf-label" style="font-size: 1.1em;"><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></strong>
 					<div class="pf-group">
 						<?php foreach ($cur_modules as $cur_modname => $cur_module) { ?>
 						<div class="pf-field">
-							<label><input type="radio" name="type" value="<?php echo htmlspecialchars("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> /> <span class="form"><?php echo htmlspecialchars($cur_module['form']); ?></span><?php echo htmlspecialchars($cur_module['cname']); ?></label>
+							<label>
+								<input type="radio" name="type" value="<?php echo htmlspecialchars("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> />
+								<?php if (isset($cur_module['form']) || isset($cur_module['form_callback'])) { ?>
+								<span class="form">&nbsp;</span>
+								<?php } ?>
+								<strong><?php echo htmlspecialchars($cur_module['cname']); ?></strong>
+								<span style="display: block; padding: 0 0 0 1.8em;">
+									<?php echo htmlspecialchars($cur_module['description']); ?>
+								</span>
+								<span style="display: block; padding: 0 0 .6em 1.8em;">
+									<span class="label"><?php echo str_replace(' ', '</span> <span class="label">', htmlspecialchars(isset($cur_module['type']) ? $cur_module['type'] : 'module imodule')); ?></span>
+								</span>
+							</label>
 						</div>
 						<?php } ?>
 					</div>

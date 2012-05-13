@@ -12,14 +12,20 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Page' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide page details in this form.';
-$pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
-$pines->com_menueditor->load_editor();
-?>
+
+if (!$this->quickpage_options) {
+	$pines->editor->load();
+	$pines->com_menueditor->load_editor();
+	?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'page/save')); ?>">
+<?php } else { ?>
+<div id="p_muid_form" style="width: 800px;">
+<?php } ?>
 	<script type="text/javascript">
 		pines(function(){
+			<?php if (!$this->quickpage_options) { ?>
 			$("#p_muid_menu_entries").menueditor({
 				disabled_fields: ['link'],
 				defaults: {
@@ -31,6 +37,7 @@ $pines->com_menueditor->load_editor();
 					}
 				}
 			});
+			<?php } ?>
 
 			// Conditions
 			var conditions = $("#p_muid_form [name=conditions]");
@@ -140,25 +147,27 @@ $pines->com_menueditor->load_editor();
 		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
 		<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
 		<li><a href="#p_muid_tab_head" data-toggle="tab">Page Head</a></li>
-		<?php } ?>
+		<?php } if (!$this->quickpage_options) { ?>
 		<li><a href="#p_muid_tab_menu" data-toggle="tab">Menu</a></li>
+		<?php } ?>
 		<li><a href="#p_muid_tab_categories" data-toggle="tab">Categories</a></li>
 		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
 		<li><a href="#p_muid_tab_advanced" data-toggle="tab">Advanced</a></li>
 	</ul>
 	<div id="p_muid_page_tabs" class="tab-content">
 		<div class="tab-pane active" id="p_muid_tab_general">
+			<?php if (!$this->quickpage_options) { ?>
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
 					pines(function(){
 						var alias = $("#p_muid_form [name=alias]");
 						$("#p_muid_form [name=name]").change(function(){
 							if (alias.val() == "")
-								alias.val($(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase());
+								alias.val($(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase());
 						}).blur(function(){
 							$(this).change();
 						}).focus(function(){
-							if (alias.val() == $(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase())
+							if (alias.val() == $(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase())
 								alias.val("");
 						});
 					});
@@ -201,6 +210,7 @@ $pines->com_menueditor->load_editor();
 					</span>
 				</div>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Title Position</span>
 					<select class="pf-field" name="title_position">
@@ -219,11 +229,12 @@ $pines->com_menueditor->load_editor();
 				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
 				<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
 			</div>
-			<?php } ?>
+			<?php } if (!$this->quickpage_options) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled (Published)</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Show on Front Page</span>
 					<select class="pf-field" name="show_front_page">
@@ -248,6 +259,7 @@ $pines->com_menueditor->load_editor();
 					</script>
 				</div>
 			</div>
+			<?php if (!$this->quickpage_options) { ?>
 			<div class="pf-element pf-heading">
 				<h3>Intro</h3>
 			</div>
@@ -260,6 +272,7 @@ $pines->com_menueditor->load_editor();
 			<div class="pf-element pf-full-width">
 				<textarea rows="8" cols="35" class="peditor" style="width: 100%; height: 500px;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
 			</div>
+			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
 		<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
@@ -650,7 +663,7 @@ $pines->com_menueditor->load_editor();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php } ?>
+		<?php } if (!$this->quickpage_options) { ?>
 		<div class="tab-pane" id="p_muid_tab_menu">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Menu Entries</span>
@@ -661,6 +674,7 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 		<div class="tab-pane" id="p_muid_tab_categories">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
@@ -703,7 +717,10 @@ $pines->com_menueditor->load_editor();
 					</thead>
 					<tbody>
 					<?php
-					$category_guids = $this->entity->get_categories_guid();
+					if ($this->quickpage_options)
+						$category_guids = $this->category_guids;
+					else
+						$category_guids = $this->entity->get_categories_guid();
 					foreach($this->categories as $cur_category) { ?>
 						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
@@ -787,7 +804,7 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Begin Publish Date</span>
-					<input class="pf-field" type="text" name="publish_begin" value="<?php echo $this->entity->publish_begin ? htmlspecialchars(format_date($this->entity->publish_begin, 'full_med')) : htmlspecialchars(format_date(time(), 'full_med')); ?>" /></label>
+					<input class="pf-field" type="text" name="publish_begin" value="<?php echo $this->entity->publish_begin ? htmlspecialchars(format_date($this->entity->publish_begin, 'full_med')) : ($this->quickpage_options ? '' : htmlspecialchars(format_date(time(), 'full_med'))); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">End Publish Date</span>
@@ -798,7 +815,7 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Title</span>
-					<select class="pf-field" name="show_title">
+					<select class="pf-field" name="show_title<?php echo $this->quickpage_options ? '_save' : ''; ?>">
 						<option value="null">Use Default</option>
 						<option value="true"<?php echo $this->entity->show_title === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_title === false ? ' selected="selected"' : ''; ?>>No</option>
@@ -924,6 +941,9 @@ $pines->com_menueditor->load_editor();
 			<br class="pf-clearing" />
 		</div>
 	</div>
+<?php if ($this->quickpage_options) { ?>
+</div>
+<?php } else { ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
@@ -932,3 +952,4 @@ $pines->com_menueditor->load_editor();
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_content', 'page/list'))); ?>);" value="Cancel" />
 	</div>
 </form>
+<?php } ?>

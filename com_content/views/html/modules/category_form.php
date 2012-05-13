@@ -18,7 +18,7 @@ $pines->entity_manager->sort($categories, 'name');
 		<label><span class="pf-label">Category</span>
 			<select class="pf-field" name="id">
 				<?php foreach ($categories as $cur_category) { ?>
-				<option value="<?php echo (int) $cur_category->guid; ?>"><?php echo htmlspecialchars($cur_category->name); ?></option>
+				<option value="<?php echo (int) $cur_category->guid; ?>"<?php echo $this->id == "$cur_category->guid" ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_category->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>

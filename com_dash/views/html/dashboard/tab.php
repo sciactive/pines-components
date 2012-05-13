@@ -125,24 +125,10 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 						autoOpen: true,
 						modal: true,
 						width: "auto",
-						open: function(){
-							if (options.length) {
-								$.each(options, function(i, cur_option){
-									var name = cur_option.name;
-									var value = cur_option.value;
-									form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value).change();
-									form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked").change();
-									if (value == "")
-										form.find(":input:checkbox[name="+name+"]").removeAttr("checked").change();
-									else
-										form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked").change();
-								});
-							}
-						},
 						buttons: {
 							"Done": function(){
 								options = [];
-								form.find(":input").each(function(){
+								form.find(":input[name]").each(function(){
 									var cur_input = $(this);
 									if (cur_input.is(":radio:not(:checked)"))
 										return;

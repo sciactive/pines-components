@@ -34,11 +34,46 @@ if (!$widget_entry)
 // Get the view and make a module.
 $def = $pines->com_dash->get_widget_def($widget_entry);
 $view = $def['form'];
-if (!isset($view)) {
-	$pines->page->override_doc('false');
-	return;
+$view_callback = $def['form_callback'];
+if (!isset($view) && !isset($view_callback))
+	throw new HttpServerException(null, 500);
+
+if (isset($view))
+	$module = new module($widget_entry['component'], $view);
+else {
+	$module = call_user_func($view_callback, null, null, (array) $widget_entry['options']);
+	if (!$module)
+		throw new HttpServerException(null, 500);
 }
-$module = new module($widget_entry['component'], $view);
+
+// Include the options.
+foreach ((array) $widget_entry['options'] as $cur_option) {
+	switch ($cur_option['name']) {
+		case 'muid':
+		case 'title':
+		case 'note':
+		case 'classes':
+		case 'content':
+		case 'component':
+		case 'view':
+		case 'position':
+		case 'order':
+		case 'show_title':
+		case 'is_rendered':
+		case 'data_container':
+			break;
+		default:
+			$name = $cur_option['name'];
+			if (substr($name, -2) == '[]') {
+				$name = substr($name, 0, -2);
+				if ((array) $module->$name !== $module->$name)
+					$module->$name = array();
+				array_push($module->$name, $cur_option['value']);
+			} else
+				$module->$name = $cur_option['value'];
+			break;
+	}
+}
 
 $pines->page->modules['head'] = array();
 $content = $module->render();

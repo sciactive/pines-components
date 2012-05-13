@@ -47,7 +47,7 @@ do {
 		}
 		if (!isset($cur_entity->alias)) {
 			$alias = $cur_entity->name;
-			$alias = preg_replace('/[^\w\d\s-.]/', '', $alias);
+			$alias = preg_replace('/[^\w\d\s\-.]/', '', $alias);
 			$alias = preg_replace('/\s/', '-', $alias);
 			$alias = strtolower($alias);
 			$cur_entity->alias = $alias;

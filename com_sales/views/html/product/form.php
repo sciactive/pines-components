@@ -954,11 +954,11 @@ $pines->com_ptags->load();
 						var alias = $("#p_muid_form [name=alias]");
 						$("#p_muid_form [name=name]").change(function(){
 							if (alias.val() == "")
-								alias.val($(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase());
+								alias.val($(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase());
 						}).blur(function(){
 							$(this).change();
 						}).focus(function(){
-							if (alias.val() == $(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase())
+							if (alias.val() == $(this).val().replace(/[^\w\d\s\-.]/g, '').replace(/\s/g, '-').toLowerCase())
 								alias.val("");
 						});
 					});

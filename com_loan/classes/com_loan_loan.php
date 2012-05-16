@@ -2251,6 +2251,21 @@ class com_loan_loan extends entity {
 									$temp_payment_paid['payment_principal_paid'] = $payment_amount - $temp_payment_paid['payment_interest_unpaid_expected'];
 									$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
 									$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+								} else {
+									// Missed only a few payments to where the interest unpaid is less than the monthly amount.
+									// So interest was covered, and part of principal - (possibly all of the principal?)
+									$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_interest_unpaid_expected'];
+									$temp_payment_paid['payment_principal_paid'] = $total_expected - $temp_payment_paid['payment_interest_unpaid_expected'];
+									$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$temp_payment_paid['payment_paid_rollover'] = $payment_amount - ($temp_payment_paid['payment_interest_paid'] + $temp_payment_paid['payment_principal_paid']);
+									if ($temp_payment_paid['payment_paid_rollover'] < .01)
+										unset($temp_payment_paid['payment_paid_rollover']);
+									else
+										$rollover = true;
+									// impossible to pay the interest and all the principal in this payment if in this else.
+									$temp_payment_paid['payment_interest_unpaid_remainder'] = $temp_payment_paid['payment_interest_unpaid_expected'] - $temp_payment_paid['payment_interest_paid'];
+									$temp_payment_paid['payment_principal_unpaid_remainder'] = $temp_payment_paid['payment_principal_unpaid_expected'] - $temp_payment_paid['payment_principal_paid'];
 								}
 							} else {
 								// past due amounts remain.

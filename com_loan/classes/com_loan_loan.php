@@ -921,11 +921,13 @@ class com_loan_loan extends entity {
 						$last_receive = $temp_payments[$i]['extra_payments'][$r]['payment_date_received'];
 					} else
 						$last_receive = $temp_payments[$i]['payment_date_received'];
+					// Make last receive a midnight time to get an accurate days late.
+					$last_receive = strtotime("00:00:00", $last_receive);
 					$due_date = $temp_payments[$i]['payment_date_expected'];
 					if ($tpayment['payment_status'] == "partial")
-						$temp_payments[$i]['payment_days_late'] = format_date_range($last_receive, $due_date, '#days#');
+						$temp_payments[$i]['payment_days_late'] = abs(format_date_range($last_receive, $due_date, '#days#'));
 					else
-						$temp_payments[$i]['payment_days_late'] = format_date_range($due_date, $last_receive, '#days#');
+						$temp_payments[$i]['payment_days_late'] = abs(format_date_range($due_date, $last_receive, '#days#'));
 				}
 				$i++;
 			}

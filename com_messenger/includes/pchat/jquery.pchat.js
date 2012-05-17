@@ -252,6 +252,13 @@ if (!window.localStorage) {
 					}
 				});
 			}))
+			.append($('<li><a href="javascript:void(0);"><i class="icon-envelope"></i>Send a Message</a></li>').on("click", "a", function(){
+				var jid = prompt('To what address would you like to send a message?');
+				if (!jid)
+					return;
+				var cw = get_conv(jid);
+				cw.element.find("textarea").focus().select();
+			}))
 			.append($('<li><a href="javascript:void(0);"><i class="icon-ban-circle"></i>Manage Block List</a></li>').on("click", "a", function(){
 				if (connection.blocking.blocking_support === null)
 					alert("Blocking support for the connected account has not been verified yet. Please wait a moment and try again.");
@@ -740,18 +747,18 @@ if (!window.localStorage) {
 					handlers.onRoster(connection.roster.items);
 				},
 				onMessage: function(msg){
-					var to = msg.getAttribute('to');
-					var from = msg.getAttribute('from');
-					var type = msg.getAttribute('type');
-					var elems = msg.getElementsByTagName('body');
+					var to = msg.getAttribute('to'),
+						from = msg.getAttribute('from'),
+						type = msg.getAttribute('type'),
+						elems = msg.getElementsByTagName('body'),
+						body = elems[0],
+						from_alias = connection.roster.findItem(Strophe.getBareJidFromJid(from));
+					if (from_alias)
+						from_alias = (from_alias.name && from_alias.name != "") ? from_alias.name : from_alias.jid;
+					else
+						from_alias = Strophe.getBareJidFromJid(from);
 
 					if (type == "chat" && elems.length > 0) {
-						var body = elems[0];
-						var from_alias = connection.roster.findItem(Strophe.getBareJidFromJid(from));
-						if (from_alias)
-							from_alias = (from_alias.name && from_alias.name != "") ? from_alias.name : from_alias.jid;
-						else
-							from_alias = Strophe.getBareJidFromJid(from);
 						pchat.pchat_display_message({
 							from_jid: from,
 							from_alias: from_alias,
@@ -760,7 +767,8 @@ if (!window.localStorage) {
 							date: new Date().getTime(),
 							content: $(body).text()
 						});
-					}
+					} else if (type == "headline" && elems.length > 0)
+						alert(from_alias+": "+$(body).text());
 
 					// Handlers always must return true to stay active.
 					return true;
@@ -1082,9 +1090,12 @@ if (!window.localStorage) {
 				var bare_jid = Strophe.getBareJidFromJid(contact_jid);
 				//if (pchat.pchat_conversations[bare_jid] && pchat.pchat_conversations[bare_jid].element.length && pchat.pchat_conversations[bare_jid].element.closest("body").length)
 				//	return pchat.pchat_conversations[bare_jid].element;
-				if (pchat.pchat_conversations[bare_jid])
+				if (pchat.pchat_conversations[bare_jid]) {
+					// Update the contact JID if there is a resource part.
+					if (bare_jid != contact_jid)
+						pchat.pchat_conversations[bare_jid].contact_jid = contact_jid;
 					return pchat.pchat_conversations[bare_jid];
-				else {
+				} else {
 					var convo = {
 						contact_jid: contact_jid,
 						contact_alias: pchat.pchat_get_contact_alias(bare_jid),
@@ -1187,7 +1198,8 @@ if (!window.localStorage) {
 				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid);
 				var bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid);
 				var convo = get_conv(bare_jid);
-				if (incoming)
+				// If we just received this and the JID has a resource, save that in the convo.
+				if (!noui && incoming && message.from_jid != bare_jid)
 					convo.contact_jid = message.from_jid;
 				convo.messages.push(message);
 				var message_container = convo.element.find(".ui-pchat-messages");

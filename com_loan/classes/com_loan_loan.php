@@ -2382,7 +2382,14 @@ class com_loan_loan extends entity {
 
 					if (($new_payment_amount - $total_expected) >= 0.01) {
 						// $new_payment_amount exceeds $total_expected, rollover will happen again.
+						// We need to be careful, because this rollover might create a past due payment
+						// but it might really need to go into a next payment due.
 						$rollover = true;
+						// You would think that rollover wouldnt happen because it checks for the payment
+						// status to be missed and for it to have a payment date expected...
+						// But it could look late before it really is.. so that doesn't stop the rollover
+						// from happening..
+						// So we make ^^^ rollover false in the one section this could be true.
 						if ($new_interest_unpaid_expected > $new_payment_amount) {
 							// not done paying off interest with rollover.
 							$new_rollover_payment['payment_interest_paid'] = $total_expected;
@@ -2404,6 +2411,11 @@ class com_loan_loan extends entity {
 								$new_rollover_payment['payment_principal_paid'] = $total_expected - $new_interest_unpaid_expected;
 								$new_rollover_payment['payment_interest_unpaid_remainder'] = 0.00;
 								$new_rollover_payment['payment_principal_unpaid_remainder'] = $new_principal_unpaid_expected - $new_rollover_payment['payment_principal_paid'];
+								if ($new_rollover_payment['payment_principal_unpaid_remainder'] < .01) {
+									// Make rollover false
+									$rollover = false;
+								}
+									
 							}
 						}
 						// The statements above all have this in common because a rollover is created.
@@ -2461,33 +2473,66 @@ class com_loan_loan extends entity {
 			$payment_amount = $rollover_payments[$cr]['payment_paid_rollover'];
 			// find the next due payment.
 			$next_due_payment = array();
-			foreach ($this->payments as $payment) {
-				if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
-					if ($payment_amount < $payment['payment_interest_expected']) {
-						// does not cover full interest payment.
-						$next_due_payment['payment_interest_paid'] = $payment_amount;
-						$next_due_payment['payment_principal_paid'] = 0.00;
-						$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
-						$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
-						$partial = true;
-					} else {
-						// interest is covered at least with possibly more.
-						$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
-						if (($payment_amount - $next_due_payment['payment_interest_paid']) < $payment['payment_principal_expected']) {
-							// does not fully cover principal.
-							$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
-							if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
-								$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
-								$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
-								$partial = true;
-							}
+			$paid_num = ($cr + 1) + 1 + $num;
+			if ($this->schedule[$paid_num]['scheduled_date_expected'] > $date_received) {
+				foreach ($this->schedule as $payment) {
+					if ($payment['scheduled_date_expected'] == $this->schedule[$paid_num]['scheduled_date_expected']) {
+						if ($payment_amount < $payment['payment_interest_expected']) {
+							// does not cover full interest payment.
+							$next_due_payment['payment_interest_paid'] = $payment_amount;
+							$next_due_payment['payment_principal_paid'] = 0.00;
+							$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+							$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+							$partial = true;
 						} else {
-							// principal is covered with possibly more.
-							$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
-							$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+							// interest is covered at least with possibly more.
+							$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
+							if ($pines->com_sales->round($payment_amount - $next_due_payment['payment_interest_paid']) < $pines->com_sales->round($payment['payment_principal_expected'])) {
+								// does not fully cover principal.
+								$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
+								if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
+									$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$partial = true;
+								}
+							} else {
+								// principal is covered with possibly more.
+								$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
+								$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+							}
 						}
+						break;
 					}
-					break;
+				}
+			} else {
+				foreach ($this->payments as $payment) {
+					if ($payment['scheduled_date_expected'] == $this->payments[0]['next_payment_due']) {
+						if ($payment_amount < $payment['payment_interest_expected']) {
+							// does not cover full interest payment.
+							$next_due_payment['payment_interest_paid'] = $payment_amount;
+							$next_due_payment['payment_principal_paid'] = 0.00;
+							$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+							$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+							$partial = true;
+						} else {
+							// interest is covered at least with possibly more.
+							$next_due_payment['payment_interest_paid'] = $pines->com_sales->round((float) $payment['payment_interest_expected']);
+							if (($payment_amount - $next_due_payment['payment_interest_paid']) < $payment['payment_principal_expected']) {
+								// does not fully cover principal.
+								$next_due_payment['payment_principal_paid'] = $payment_amount - $next_due_payment['payment_interest_paid'];
+								if ($next_due_payment['payment_principal_paid'] < $payment['payment_principal_expected']) {
+									$next_due_payment['payment_interest_expected'] = $payment['payment_interest_expected'];
+									$next_due_payment['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$partial = true;
+								}
+							} else {
+								// principal is covered with possibly more.
+								$next_due_payment['payment_principal_paid'] = $payment['payment_principal_expected'];
+								$next_due_payment['payment_additional'] =  $pines->com_sales->round($payment_amount - ($next_due_payment['payment_interest_paid'] + $next_due_payment['payment_principal_paid']));
+							}
+						}
+						break;
+					}
 				}
 			}
 			if (!isset($next_due_payment['payment_additional']))

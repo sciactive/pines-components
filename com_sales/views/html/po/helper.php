@@ -16,7 +16,7 @@ $module->render = $this->render;
 $module->entity = $this->entity;
 echo $module->render();
 
-if ($this->render == 'body' && gatekeeper('com_sales/listpos')) { ?>
+if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('com_sales/managestock'))) { ?>
 <div style="clear:both;">
 	<hr />
 	<h3 style="margin:10px 0;">Properties</h3>

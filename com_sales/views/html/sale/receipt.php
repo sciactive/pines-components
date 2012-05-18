@@ -242,8 +242,8 @@ switch ($this->entity->status) {
 									$text[] = "($left to ship)";
 							}
 							$unfulfilled = $quantity - $fulfilled;
-								if ($unfulfilled)
-									$text[] = "($unfulfilled to fulfill)";
+							if ($unfulfilled)
+								$text[] = "($unfulfilled to fulfill)";
 						}
 					}
 					echo htmlspecialchars(implode(' ', $text));

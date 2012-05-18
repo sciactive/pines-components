@@ -52,6 +52,14 @@ class com_sales_return extends entity {
 		return $entity;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_sales', 'return/helper');
+	}
+
 	public function info($type) {
 		switch ($type) {
 			case 'name':

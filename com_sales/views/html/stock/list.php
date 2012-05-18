@@ -69,7 +69,7 @@ $pines->com_jstree->load();
 								pines.error("An error occured while trying to lookup last transaction:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
-								cur_row.pgrid_set_value(<?php echo $this->removed ? 7 : 8; ?>, data);
+								cur_row.pgrid_set_value(<?php echo $this->removed ? 8 : 9; ?>, data);
 							}
 						});
 					});
@@ -171,7 +171,7 @@ $pines->com_jstree->load();
 			<?php if (!$this->removed) { ?>
 			<td><a data-entity="<?php echo htmlspecialchars($stock->location->guid); ?>" data-entity-context="group"><?php echo $stock->location->guid ? htmlspecialchars($stock->location->info('name')) : ''; ?></a></td>
 			<?php } ?>
-			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
+			<td><?php echo isset($stock->cost) ? '$'.htmlspecialchars(number_format($stock->cost, 2)) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
 			<?php if (gatekeeper('com_sales/managestock')) { ?>
 			<td></td>

@@ -323,7 +323,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars(ucwords($return->status)); ?></td>
 			<td><?php if (isset($return->user->guid)) { ?><a data-entity="<?php echo htmlspecialchars($return->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars("{$return->user->name} [{$return->user->username}]"); ?></a><?php } ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><a data-entity="<?php echo htmlspecialchars($return->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($return->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo $return->customer->guid ? htmlspecialchars($return->customer->name) : ''; ?></a></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

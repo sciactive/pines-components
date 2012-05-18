@@ -2278,13 +2278,18 @@ class com_loan_loan extends entity {
 							if ($temp_payment_paid['payment_interest_unpaid_expected'] < $temp_payment_paid['payment_total_expected']) {
 								// the unpaid interest is LESS than the normal frequency payment.
 								// this could happen from just missing one payment.
-								if (($pines->com_sales->round($temp_payment_paid['payment_interest_unpaid_expected'] + $temp_payment_paid['payment_principal_unpaid_expected'])) == $pines->com_sales->round($temp_past_due_paid['payment_total_expected'])) {
+								if (($pines->com_sales->round($temp_payment_paid['payment_interest_unpaid_expected'] + $temp_payment_paid['payment_principal_unpaid_expected'])) == $pines->com_sales->round($temp_payment_paid['payment_total_expected'])) {
 									// They missed one payment.
 									// Now adjust payment down to frequency payment.
 									$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_interest_unpaid_expected'];
-									$temp_payment_paid['payment_principal_paid'] = $payment_amount - $temp_payment_paid['payment_interest_unpaid_expected'];
+									$temp_payment_paid['payment_principal_paid'] = $total_expected - $temp_payment_paid['payment_interest_unpaid_expected'];
 									$temp_payment_paid['payment_interest_expected'] = $payment['payment_interest_expected'];
 									$temp_payment_paid['payment_principal_expected'] = $payment['payment_principal_expected'];
+									$temp_payment_paid['payment_paid_rollover'] = $payment_amount - ($temp_payment_paid['payment_interest_paid'] + $temp_payment_paid['payment_principal_paid']);
+									$temp_payment_paid['payment_interest_unpaid_remainder'] = $temp_payment_paid['payment_interest_unpaid_expected'] - $temp_payment_paid['payment_interest_paid'];
+									$temp_payment_paid['payment_principal_unpaid_remainder'] = $temp_payment_paid['payment_principal_unpaid_expected'] - $temp_payment_paid['payment_principal_paid'];
+									if ($temp_payment_paid['payment_principal_unpaid_remainder'] < .01)
+										$make_next_payment = true;
 								} else {
 									// Missed only a few payments to where the interest unpaid is less than the monthly amount.
 									// So interest was covered, and part of principal - (possibly all of the principal?)
@@ -2468,12 +2473,21 @@ class com_loan_loan extends entity {
 		// IF more than the next due payment exists, THEN it would become
 		// an additional amount on THAT next due payment.
 		$cr = count($rollover_payments) - 1;
-		if ($rollover_payments[$cr]['payment_paid_rollover'] >= .01) {
+		// this if statement has to keep in mind that maybe the rollover creates a next due payment
+		// directly from the temp paid payment and not a roll over payment.
+		if ($rollover_payments[$cr]['payment_paid_rollover'] >= .01 || (!$rollover_payments && $make_next_payment && $temp_payment_paid['payment_paid_rollover'] >= .01) ) {
 			// We want to make this towards the next due payment.
 			$payment_amount = $rollover_payments[$cr]['payment_paid_rollover'];
+			if ($make_next_payment) {
+				$payment_amount = $temp_payment_paid['payment_paid_rollover'];
+				// 1 represents the temp payment paid and num, the existing paid payments in array.
+				$paid_num = 1 + $num;
+				unset($temp_payment_paid['payment_paid_rollover']);
+			}
 			// find the next due payment.
 			$next_due_payment = array();
-			$paid_num = ($cr + 1) + 1 + $num;
+			if (!isset($paid_num))
+				$paid_num = ($cr + 1) + 1 + $num;
 			if ($this->schedule[$paid_num]['scheduled_date_expected'] > $date_received) {
 				foreach ($this->schedule as $payment) {
 					if ($payment['scheduled_date_expected'] == $this->schedule[$paid_num]['scheduled_date_expected']) {

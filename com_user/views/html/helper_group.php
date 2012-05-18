@@ -38,18 +38,22 @@ if ($this->render == 'body' && gatekeeper('com_user/listgroups')) { ?>
 				<td style="font-weight:bold;" colspan="2">Enabled</td>
 				<td><?php echo $this->entity->has_tag('enabled') ? 'Yes' : 'No'; ?></td>
 			</tr>
+			<?php if (!empty($this->entity->email)) { ?>
 			<tr>
 				<td style="font-weight:bold;" colspan="2">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
 			</tr>
+			<?php } if (!empty($this->entity->timezone)) { ?>
 			<tr>
 				<td style="font-weight:bold;" colspan="2">Timezone</td>
 				<td><?php echo htmlspecialchars($this->entity->timezone); ?></td>
 			</tr>
+			<?php } if ($this->entity->parent->guid) { ?>
 			<tr>
 				<td style="font-weight:bold;" colspan="2">Parent</td>
-				<td><a data-entity="<?php echo htmlspecialchars($this->entity->parent->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->parent->guid ? $this->entity->parent->info('name') : ''); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($this->entity->parent->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->parent->info('name')); ?></a></td>
 			</tr>
+			<?php } ?>
 			<tr>
 				<td style="font-weight:bold;" rowspan="2">Members</td>
 				<td style="font-weight:bold;">Primary</td>

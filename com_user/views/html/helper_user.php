@@ -40,17 +40,17 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 				<td style="font-weight:bold;">Enabled</td>
 				<td><?php echo $this->entity->has_tag('enabled') ? 'Yes' : 'No'; ?></td>
 			</tr>
-			<?php if (in_array('email', $pines->config->com_user->user_fields)) { ?>
+			<?php if (!empty($this->entity->email) && in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
 			</tr>
-			<?php } if (in_array('phone', $pines->config->com_user->user_fields)) { ?>
+			<?php } if (!empty($this->entity->phone) && in_array('phone', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Phone</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone)); ?></a></td>
 			</tr>
-			<?php } if (in_array('fax', $pines->config->com_user->user_fields)) { ?>
+			<?php } if (!empty($this->entity->fax) && in_array('fax', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Fax</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->fax); ?>"><?php echo htmlspecialchars(format_phone($this->entity->fax)); ?></a></td>
@@ -60,11 +60,12 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 				<td style="font-weight:bold;">Timezone</td>
 				<td><?php echo htmlspecialchars($this->entity->get_timezone()).(empty($this->entity->timezone) ? ' (Inherited)' : ' (Assigned)'); ?></td>
 			</tr>
-			<?php } ?>
+			<?php } if ($this->entity->group->guid) { ?>
 			<tr>
 				<td style="font-weight:bold;">Primary Group</td>
-				<td><a data-entity="<?php echo htmlspecialchars($this->entity->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->group->guid ? $this->entity->group->info('name') : ''); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($this->entity->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->group->info('name')); ?></a></td>
 			</tr>
+			<?php } if ($this->entity->groups) { ?>
 			<tr>
 				<td style="font-weight:bold;">Groups</td>
 				<td>
@@ -81,11 +82,12 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 					</ul>
 				</td>
 			</tr>
+			<?php } ?>
 			<tr>
 				<td style="font-weight:bold;">Inherit Abilities</td>
 				<td><?php echo $this->entity->inherit_abilities ? 'Yes' : 'No'; ?></td>
 			</tr>
-			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<?php if (!empty($this->entity->referral_code) && $pines->config->com_user->referral_codes) { ?>
 			<tr>
 				<td style="font-weight:bold;">Referral Code</td>
 				<td><?php echo htmlspecialchars($this->entity->referral_code); ?></td>

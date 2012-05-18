@@ -10,50 +10,26 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlspecialchars($this->entity->po_number).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : 'Editing PO ['.htmlspecialchars($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
+if ($this->entity->final)
+	$this->note .= ' Most options cannot be edited after the PO has been committed.';
 $pines->com_pgrid->load();
-$pines->com_jstree->load();
+if (!$this->entity->final)
+	$pines->com_jstree->load();
 $read_only = '';
-if ($this->entity->final) {
+if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
-}
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'po/save')); ?>">
 	<script type="text/javascript">
 		pines(function(){
-			var products = $("#p_muid_products");
-			var products_table = $("#p_muid_products_table");
-			var available_products_table = $("#p_muid_available_products_table");
-			var product_dialog = $("#p_muid_product_dialog");
-			var cur_vendor = <?php echo ($this->entity->vendor ? (int) $this->entity->vendor->guid : 'null'); ?>;
-			// Number of decimal places to round to.
-			var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
-			var all_products = <?php
-			$products = array();
-			foreach ($this->products as $cur_product) {
-				$cur_vendor_guids = array();
-				foreach($cur_product->vendors as $cur_vendor) {
-					$cur_vendor_guids[] = (object) array(
-						'guid' => $cur_vendor['entity']->guid,
-						'sku' => $cur_vendor['sku'],
-						'cost' => $cur_vendor['cost']
-					);
-				}
-				$export_product = (object) array(
-					'guid' => $cur_product->guid,
-					'sku' => $cur_product->sku,
-					'name' => $cur_product->name,
-					'manufacturer' => $cur_product->manufacturer->name,
-					'manufacturer_sku' => $cur_product->manufacturer_sku,
-					'unit_price' => $cur_product->unit_price,
-					'vendors' => $cur_vendor_guids
-				);
-				array_push($products, $export_product);
-			}
-			echo json_encode($products);
-			?>;
-
+			var products = $("#p_muid_products"),
+				products_table = $("#p_muid_products_table"),
+				available_products_table = $("#p_muid_available_products_table"),
+				product_dialog = $("#p_muid_product_dialog"),
+				cur_vendor = <?php echo ($this->entity->vendor ? (int) $this->entity->vendor->guid : 'null'); ?>,
+				dec = <?php echo (int) $pines->config->com_sales->dec; ?>; // Number of decimal places to round to.
 			var round_to_dec = function(value){
 				var rnd = Math.pow(10, dec);
 				var mult = value * rnd;
@@ -62,7 +38,6 @@ if ($this->entity->final) {
 				value = value.toFixed(dec);
 				return (value);
 			};
-
 			var gaussianRound = function(x){
 				var absolute = Math.abs(x);
 				var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
@@ -80,30 +55,9 @@ if ($this->entity->final) {
 
 			pines.com_sales_select_vendor = function(vendor_id, loading) {
 				if (cur_vendor == vendor_id && !loading) return;
-				var select_products = [];
 				available_products_table.pgrid_get_all_rows().pgrid_delete();
 				if (!loading)
 					products_table.pgrid_get_all_rows().pgrid_delete();
-				$.each(all_products, function(){
-					var cur_product = this;
-					$.each(cur_product.vendors, function(){
-						if (vendor_id == this.guid) {
-							$.merge(select_products, [{
-									"key": cur_product.guid,
-									values: [
-										pines.safe(cur_product.sku),
-										pines.safe(cur_product.name),
-										pines.safe(cur_product.manufacturer),
-										pines.safe(cur_product.manufacturer_sku),
-										pines.safe(this.sku),
-										pines.safe(this.cost),
-										pines.safe(cur_product.unit_price)
-									]
-								}]);
-						}
-					});
-				});
-				available_products_table.pgrid_add(select_products);
 				cur_vendor = vendor_id;
 				update_products();
 			};
@@ -200,7 +154,7 @@ if ($this->entity->final) {
 					}}
 				],
 				pgrid_paginate: false,
-				pgrid_view_height: "250px"
+				pgrid_view_height: "150px"
 			});
 			$("#p_muid_missing_table").pgrid({
 				pgrid_toolbar: true,
@@ -216,11 +170,101 @@ if ($this->entity->final) {
 					}}
 				],
 				pgrid_paginate: false,
-				pgrid_view_height: "250px"
+				pgrid_view_height: "150px"
 			});
 			<?php } ?>
+			// Product search function for the pgrid toolbar.
+			var product_search_box;
+			var submit_search = function(){
+				var search_string = product_search_box.val();
+				if (search_string == "") {
+					alert("Please enter a search string.");
+					return;
+				}
+				var loader;
+				$.ajax({
+					url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
+					type: "POST",
+					dataType: "json",
+					data: {"q": search_string, "enabled": "true"},
+					beforeSend: function(){
+						loader = $.pnotify({
+							pnotify_title: 'Search',
+							pnotify_text: 'Searching the database...',
+							pnotify_notice_icon: 'picon picon-throbber',
+							pnotify_nonblock: true,
+							pnotify_hide: false,
+							pnotify_history: false
+						});
+					},
+					complete: function(){
+						loader.pnotify_remove();
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+					},
+					success: function(data){
+						if (!data) {
+							available_products_table.pgrid_get_all_rows().pgrid_delete();
+							alert("No products were found that matched the query.");
+							return;
+						}
+						var struct = [];
+						$.each(data, function(){
+							if (this.stock_type == "non_stocked")
+								return;
+							if (typeof this.manufacturer_name != "undefined" && this.manufacturer_name !== null)
+								this.manufacturer = '<a data-entity="'+pines.safe(this.manufacturer_guid)+'" data-entity-context="com_sales_manufacturer">'+pines.safe(this.manufacturer_name)+'</a>';
+							else
+								this.manufacturer = '';
+							var sku = "",
+								cost = "",
+								link = "",
+								pass = false;
+							$.each(this.vendors, function(i, vendor){
+								if (pass || vendor.guid != cur_vendor)
+									return;
+								sku = vendor.sku;
+								cost = vendor.cost;
+								if (typeof vendor.link != "undefined" && vendor.link !== null && vendor.link !== "")
+									link = '<a href="'+pines.safe(vendor.link)+'" target="_blank">'+pines.safe(vendor.link)+'</a>';
+								pass = true;
+							});
+							if (!pass)
+								return;
+							struct.push({
+								"key": this.guid,
+								"values": [
+									pines.safe(this.sku),
+									'<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_sales_product">'+pines.safe(this.name)+'</a>',
+									this.manufacturer,
+									pines.safe(this.manufacturer_sku),
+									pines.safe(sku),
+									pines.safe(cost),
+									pines.safe('$'+this.price),
+									link
+								]
+							});
+						});
+						available_products_table.pgrid_get_all_rows().pgrid_delete();
+						available_products_table.pgrid_add(struct);
+					}
+				});
+			}
 			// Needs to be gridified before it's hidden.
 			available_products_table.pgrid({
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents: [
+					{type: 'text', load: function(textbox){
+						// Display the current product being searched for.
+						textbox.keydown(function(e){
+							if (e.keyCode == 13)
+								submit_search();
+						});
+						product_search_box = textbox;
+					}},
+					{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search}
+				],
 				pgrid_multi_select: false,
 				pgrid_paginate: false,
 				pgrid_view_height: "300px"
@@ -264,6 +308,7 @@ if ($this->entity->final) {
 				}
 			});
 
+			<?php if (!$this->entity->final) { ?>
 			// Location Tree
 			var location = $("#p_muid_form [name=destination]");
 			$("#p_muid_form .location_tree")
@@ -292,6 +337,7 @@ if ($this->entity->final) {
 					"initially_select" : ["<?php echo (int) $this->entity->destination->guid; ?>"]
 				}
 			});
+			<?php } ?>
 
 			pines.com_sales_select_vendor(cur_vendor, true);
 		});
@@ -319,42 +365,62 @@ if ($this->entity->final) {
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" /></label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Vendor</span>
+		<label>
+			<span class="pf-label">Vendor</span>
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
-				<span class="pf-note">Changing this will clear selected products!</span>
-			<?php } else { ?>
-				<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
-			<?php } ?>
-			<select class="pf-field" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<span class="pf-note">Changing this will clear selected products!</span>
+			<select class="pf-field" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));">
 				<option value="null">-- None --</option>
 				<?php
 				$pines->entity_manager->sort($this->vendors, 'name');
 				foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
 				<?php } ?>
-			</select></label>
+			</select>
+			<?php } else { ?>
+			<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
+			<span class="pf-field">
+				<a data-entity="<?php echo htmlspecialchars($this->entity->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($this->entity->vendor->name); ?></a>
+			</span>
+			<?php } ?>
+		</label>
 	</div>
 	<div class="pf-element">
-		<span class="pf-label">Location</span>
+		<span class="pf-label">Destination</span>
+		<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 		<div class="pf-group">
 			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
+		<?php } else { ?>
+		<span class="pf-note">Destination can't be changed after PO is committed or received.</span>
+		<span class="pf-field">
+			<a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->destination->guid ? "{$this->entity->destination->name} [{$this->entity->destination->groupname}]" : ''); ?></a>
+		</span>
+		<?php } ?>
 		<input type="hidden" name="destination" />
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field" name="shipper"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+		<label>
+			<span class="pf-label">Shipper</span>
+			<?php if (!$this->entity->final) { ?>
+			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
-			</select></label>
+			</select>
+			<?php } else { ?>
+			<span class="pf-note">Shipper can't be changed after PO is committed.</span>
+			<span class="pf-field">
+				<a data-entity="<?php echo htmlspecialchars($this->entity->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($this->entity->shipper->name); ?></a>
+			</span>
+			<?php } ?>
+		</label>
 	</div>
 	<div class="pf-element">
-		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			pines(function(){
 				$("#p_muid_eta").datepicker({
@@ -364,9 +430,8 @@ if ($this->entity->final) {
 				});
 			});
 		</script>
-		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
@@ -441,10 +506,11 @@ if ($this->entity->final) {
 					<th>Vendor SKU</th>
 					<th>Vendor Cost</th>
 					<th>Unit Price</th>
+					<th>Link</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />
@@ -468,6 +534,7 @@ if ($this->entity->final) {
 					<table id="p_muid_received_table">
 						<thead>
 							<tr>
+								<th>GUID</th>
 								<th>SKU</th>
 								<th>Product</th>
 								<th>Serial</th>
@@ -486,11 +553,12 @@ if ($this->entity->final) {
 								}
 							?>
 							<tr>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_entity->guid); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_entity->product->sku); ?></td>
-								<td><?php echo htmlspecialchars($cur_entity->product->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_entity->product->name); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_entity->serial); ?></td>
-								<td><?php echo htmlspecialchars("{$cur_entity->user->name} [{$cur_entity->user->username}]"); ?></td>
-								<td><?php echo htmlspecialchars("{$cur_entity->group->name} [{$cur_entity->group->groupname}]"); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars("{$cur_entity->user->name} [{$cur_entity->user->username}]"); ?></a></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_entity->group->name} [{$cur_entity->group->groupname}]"); ?></a></td>
 								<td><?php echo htmlspecialchars(format_date($cur_entity->p_cdate, 'full_sort')); ?></td>
 							</tr>
 							<?php } ?>
@@ -516,7 +584,7 @@ if ($this->entity->final) {
 							<?php foreach ($missing_products as $cur_entry) { ?>
 							<tr>
 								<td><?php echo htmlspecialchars($cur_entry['entity']->sku); ?></td>
-								<td><?php echo htmlspecialchars($cur_entry['entity']->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entry['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_entry['entity']->name); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_entry['quantity']); ?></td>
 							</tr>
 							<?php } ?>

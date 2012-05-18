@@ -10,19 +10,22 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlspecialchars($this->entity->guid).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : 'Editing  Transfer ['.htmlspecialchars($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
+if ($this->entity->final)
+	$this->note .= ' Most options cannot be edited after the transfer has been committed.';
 $pines->com_pgrid->load();
-$pines->com_jstree->load();
+if (!$this->entity->final)
+	$pines->com_jstree->load();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
 $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
+$missing_stock = array();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/save')); ?>">
 	<script type="text/javascript">
-		
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -263,7 +266,7 @@ if ($this->entity->final)
 					}}
 				],
 				pgrid_paginate: false,
-				pgrid_view_height: "250px"
+				pgrid_view_height: "150px"
 			});
 			$("#p_muid_missing_table").pgrid({
 				pgrid_toolbar: true,
@@ -279,10 +282,11 @@ if ($this->entity->final)
 					}}
 				],
 				pgrid_paginate: false,
-				pgrid_view_height: "250px"
+				pgrid_view_height: "150px"
 			});
 			<?php } ?>
 
+			<?php if (!$this->entity->final) { ?>
 			// Location Tree
 			var origin = $("#p_muid_form [name=origin]");
 			var destination = $("#p_muid_form [name=destination]");
@@ -338,6 +342,7 @@ if ($this->entity->final)
 					"initially_select" : ["<?php echo (int) $this->entity->destination->guid; ?>"]
 				}
 			});
+			<?php } ?>
 
 			update_products();
 		});
@@ -360,33 +365,61 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" /></label>
 	</div>
-	<div class="pf-element" style="width: 49%;">
-		<span class="pf-label">Origin</span>
-		<div class="pf-group">
-			<div class="pf-field location_tree_origin ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+	<div class="row-fluid" style="clear: both;">
+		<div class="span6">
+			<div class="pf-element">
+				<span class="pf-label">Origin</span>
+				<?php if (!$this->entity->final && !$this->entity->shipped) { ?>
+				<div class="pf-group">
+					<div class="pf-field location_tree_origin ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+				</div>
+				<?php } else { ?>
+				<span class="pf-note">Origin can't be changed after transfer is committed or shipped.</span>
+				<span class="pf-field">
+					<a data-entity="<?php echo htmlspecialchars($this->entity->origin->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->origin->guid ? "{$this->entity->origin->name} [{$this->entity->origin->groupname}]" : ''); ?></a>
+				</span>
+				<?php } ?>
+				<input type="hidden" name="origin" />
+			</div>
 		</div>
-		<input type="hidden" name="origin" />
-	</div>
-	<div class="pf-element" style="width: 49%; clear: none;">
-		<span class="pf-label">Destination</span>
-		<div class="pf-group">
-			<div class="pf-field location_tree_destination ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+		<div class="span6">
+			<div class="pf-element">
+				<span class="pf-label">Destination</span>
+				<?php if (!$this->entity->final && !$this->entity->shipped) { ?>
+				<div class="pf-group">
+					<div class="pf-field location_tree_destination ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
+				</div>
+				<?php } else { ?>
+				<span class="pf-note">Destination can't be changed after transfer is committed or shipped.</span>
+				<span class="pf-field">
+					<a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->destination->guid ? "{$this->entity->destination->name} [{$this->entity->destination->groupname}]" : ''); ?></a>
+				</span>
+				<?php } ?>
+				<input type="hidden" name="destination" />
+			</div>
 		</div>
-		<input type="hidden" name="destination" />
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field" name="shipper" <?php echo $read_only; ?>>
+		<label>
+			<span class="pf-label">Shipper</span>
+			<?php if (!$this->entity->shipped) { ?>
+			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
-			</select></label>
+			</select>
+			<?php } else { ?>
+			<span class="pf-note">Shipper can't be changed after transfer is shipped.</span>
+			<span class="pf-field">
+				<a data-entity="<?php echo htmlspecialchars($this->entity->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($this->entity->shipper->name); ?></a>
+			</span>
+			<?php } ?>
+		</label>
 	</div>
 	<div class="pf-element">
-		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			pines(function(){
 				$("#p_muid_eta").datepicker({
@@ -396,9 +429,8 @@ if ($this->entity->final)
 				});
 			});
 		</script>
-		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
 		<table id="p_muid_category_grid">
@@ -450,10 +482,7 @@ if ($this->entity->final)
 					</thead>
 					<tbody>
 						<?php if (!$this->entity->shipped) {
-							foreach ($this->entity->products as $cur_product) {
-								if (!isset($cur_product->guid))
-									continue;
-								?>
+							foreach ($this->entity->products as $cur_product) { ?>
 						<tr>
 							<td><?php echo htmlspecialchars($cur_product->guid); ?></td>
 							<td><?php echo htmlspecialchars($cur_product->sku); ?></td>
@@ -463,13 +492,8 @@ if ($this->entity->final)
 						<?php }
 						} else {
 							foreach ($this->entity->stock as $cur_stock) {
-								if (!isset($cur_stock->guid))
-									continue;
-								if (isset($missing_products[$cur_stock->product->guid])) {
-									$missing_products[$cur_stock->product->guid]['quantity']++;
-								} else {
-									$missing_products[$cur_stock->product->guid] = array('entity' => $cur_stock->product, 'quantity' => 1);
-								}
+								if ($cur_stock->guid && !$cur_stock->in_array($this->entity->received))
+									$missing_stock[] = $cur_stock;
 								?>
 						<tr>
 							<td><?php echo htmlspecialchars($cur_stock->product->guid); ?></td>
@@ -487,36 +511,25 @@ if ($this->entity->final)
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
 		<div class="pf-element pf-full-width">
-			<span class="pf-label">Received</span>
+			<span class="pf-label">Stock Received</span>
 			<div class="pf-group">
 				<div class="pf-field">
 					<table id="p_muid_received_table">
 						<thead>
 							<tr>
+								<th>GUID</th>
 								<th>SKU</th>
 								<th>Product</th>
 								<th>Serial</th>
-								<th>User</th>
-								<th>Location</th>
-								<th>Time</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-							foreach ($this->entity->received as $cur_entity) {
-								if (isset($missing_products[$cur_entity->product->guid])) {
-									$missing_products[$cur_entity->product->guid]['quantity']--;
-									if (!$missing_products[$cur_entity->product->guid]['quantity'])
-										unset($missing_products[$cur_entity->product->guid]);
-								}
-							?>
+							<?php foreach ($this->entity->received as $cur_entity) { ?>
 							<tr>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_entity->guid); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_entity->product->sku); ?></td>
-								<td><?php echo htmlspecialchars($cur_entity->product->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_entity->product->name); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_entity->serial); ?></td>
-								<td><?php echo htmlspecialchars("{$cur_entity->user->name} [{$cur_entity->user->username}]"); ?></td>
-								<td><?php echo htmlspecialchars("{$cur_entity->group->name} [{$cur_entity->group->groupname}]"); ?></td>
-								<td><?php echo htmlspecialchars(format_date($cur_entity->p_cdate, 'full_sort')); ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -524,25 +537,27 @@ if ($this->entity->final)
 				</div>
 			</div>
 		</div>
-		<?php if (!empty($missing_products)) { ?>
+		<?php if (!empty($missing_stock)) { ?>
 		<div class="pf-element pf-full-width">
-			<span class="pf-label">Not Received</span>
+			<span class="pf-label">Stock Not Received</span>
 			<div class="pf-group">
 				<div class="pf-field">
 					<table id="p_muid_missing_table">
 						<thead>
 							<tr>
+								<th>GUID</th>
 								<th>SKU</th>
 								<th>Product</th>
-								<th>Quantity</th>
+								<th>Serial</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach ($missing_products as $cur_entry) { ?>
+							<?php foreach ($missing_stock as $cur_entity) { ?>
 							<tr>
-								<td><?php echo htmlspecialchars($cur_entry['entity']->sku); ?></td>
-								<td><?php echo htmlspecialchars($cur_entry['entity']->name); ?></td>
-								<td><?php echo htmlspecialchars($cur_entry['quantity']); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_entity->guid); ?></a></td>
+								<td><?php echo htmlspecialchars($cur_entity->product->sku); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_entity->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_entity->product->name); ?></a></td>
+								<td><?php echo htmlspecialchars($cur_entity->serial); ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>

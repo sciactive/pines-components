@@ -445,7 +445,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				<?php foreach($this->pos as $cur_shipment) { ?>
 					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>PO</td>
-						<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_shipment->po_number); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
 						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
@@ -461,15 +461,14 @@ if ($pines->config->com_sales->autocomplete_product)
 						?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
 					</tr>
-				<?php } ?>
-				<?php foreach($this->transfers as $cur_shipment) { ?>
+				<?php } foreach($this->transfers as $cur_shipment) { ?>
 					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>Transfer</td>
-						<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_transfer"><?php echo htmlspecialchars($cur_shipment->guid); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
 						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
-						<td><?php echo htmlspecialchars($cur_shipment->origin->name); ?></td>
+						<td><?php echo htmlspecialchars("{$cur_shipment->origin->name} [{$cur_shipment->origin->groupname}]"); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
 						<td><?php echo $cur_shipment->final ? ($cur_shipment->finished ? 'Received' : (empty($cur_shipment->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 						<td><?php

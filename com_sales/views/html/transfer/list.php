@@ -81,16 +81,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo (int) $transfer->guid ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($transfer->guid); ?>" data-entity-context="com_sales_transfer"><?php echo (int) $transfer->guid ?></a></td>
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
-			<td><?php echo htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]"); ?></td>
-			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($transfer->origin->guid); ?>" data-entity-context="group"><?php echo $transfer->origin->guid ? htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]") : ''; ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($transfer->destination->guid); ?>" data-entity-context="group"><?php echo $transfer->destination->guid ? htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]") : ''; ?></a></td>
 			<td><?php echo $transfer->shipped ? htmlspecialchars(format_date($transfer->shipped_date, 'full_sort')) : 'No'; ?></td>
-			<td><?php echo htmlspecialchars($transfer->shipper->name); ?></td>
+			<td><a data-entity="<?php echo htmlspecialchars($transfer->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($transfer->shipper->name); ?></a></td>
 			<td><?php echo $transfer->eta ? htmlspecialchars(format_date($transfer->eta, 'date_sort')) : 'None'; ?></td>
 			<td><?php echo $transfer->final ? ($transfer->finished ? 'Received' : (empty($transfer->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 			<td><?php
 			$names = array();
 			foreach ((array) $transfer->products as $cur_product) {
-				$names[] = htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]");
+				$names[] = '<a data-entity="'.htmlspecialchars($cur_product->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]").'</a>';
 			}
 			echo implode(', ', $names);
 			?></td>

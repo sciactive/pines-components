@@ -24,14 +24,6 @@ foreach ($this->entity->products as $cur_product) {
 }
 ?>
 <style type="text/css">
-	#p_muid_product_table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-	#p_muid_product_table th, #p_muid_product_table td {
-		border: 1px solid;
-		padding: .3em;
-	}
 	#p_muid_product_table td {
 		vertical-align: top;
 	}
@@ -45,30 +37,46 @@ foreach ($this->entity->products as $cur_product) {
 		<span class="pf-label">Reference #</span>
 		<span class="pf-field"><?php echo htmlspecialchars($this->entity->reference_number); ?></span>
 	</div>
-	<div class="pf-element" style="width: 49%;">
-		<strong class="pf-label">Origin</strong>
-		<div class="pf-group">
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->origin->name); ?></div>
-			<?php if ($this->entity->origin->address_type == 'us') { ?>
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->origin->address_1); ?></div>
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->origin->address_2); ?></div>
-			<div class="pf-field"><?php echo htmlspecialchars("{$this->entity->origin->city}, {$this->entity->origin->state} {$this->entity->origin->zip}"); ?></div>
-			<?php } else { ?>
-			<pre class="pf-field"><?php echo htmlspecialchars($this->entity->origin->address_international); ?></pre>
-			<?php } ?>
+	<div class="row-fluid" style="clear: both;">
+		<div class="span6">
+			<div class="pf-element">
+				<strong class="pf-label">Origin</strong>
+				<div class="pf-group">
+					<div class="pf-field">
+						<?php echo htmlspecialchars($this->entity->origin->name); ?>
+						<address>
+							<?php if ($this->entity->origin->address_type == 'us') {
+								echo htmlspecialchars($this->entity->origin->address_1);
+								if (!empty($this->entity->origin->address_2))
+									echo htmlspecialchars($this->entity->origin->address_2);
+								echo htmlspecialchars("{$this->entity->origin->city}, {$this->entity->origin->state} {$this->entity->origin->zip}");
+							} else { ?>
+							<pre><?php echo htmlspecialchars($this->entity->origin->address_international); ?></pre>
+							<?php } ?>
+						</address>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-	<div class="pf-element" style="width: 49%; clear: none;">
-		<strong class="pf-label">Destination</strong>
-		<div class="pf-group">
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->destination->name); ?></div>
-			<?php if ($this->entity->destination->address_type == 'us') { ?>
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->destination->address_1); ?></div>
-			<div class="pf-field"><?php echo htmlspecialchars($this->entity->destination->address_2); ?></div>
-			<div class="pf-field"><?php echo htmlspecialchars("{$this->entity->destination->city}, {$this->entity->destination->state} {$this->entity->destination->zip}"); ?></div>
-			<?php } else { ?>
-			<pre class="pf-field"><?php echo htmlspecialchars($this->entity->destination->address_international); ?></pre>
-			<?php } ?>
+		<div class="span6">
+			<div class="pf-element">
+				<strong class="pf-label">Destination</strong>
+				<div class="pf-group">
+					<div class="pf-field">
+						<?php echo htmlspecialchars($this->entity->destination->name); ?>
+						<address>
+							<?php if ($this->entity->destination->address_type == 'us') {
+								echo htmlspecialchars($this->entity->destination->address_1);
+								if (!empty($this->entity->destination->address_2))
+									echo htmlspecialchars($this->entity->destination->address_2);
+								echo htmlspecialchars("{$this->entity->destination->city}, {$this->entity->destination->state} {$this->entity->destination->zip}");
+							} else { ?>
+							<pre><?php echo htmlspecialchars($this->entity->destination->address_international); ?></pre>
+							<?php } ?>
+						</address>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="pf-element">
@@ -77,14 +85,14 @@ foreach ($this->entity->products as $cur_product) {
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">ETA</span>
-		<span class="pf-field"><?php echo htmlspecialchars(format_date($this->entity->eta, 'date_med')); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(format_date($this->entity->eta, 'date_long')); ?></span>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<span class="pf-note">Please enter one serial number per line in the spaces provided.</span>
 		<div class="pf-group">
 			<div class="pf-field">
-				<table id="p_muid_product_table">
+				<table id="p_muid_product_table" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
 							<th>SKU</th>
@@ -113,12 +121,14 @@ foreach ($this->entity->products as $cur_product) {
 			</div>
 		</div>
 	</div>
+	<?php if (!empty($this->entity->comments)) { ?>
 	<div class="pf-element pf-heading">
 		<h3>Comments</h3>
 	</div>
 	<div class="pf-element pf-full-width">
-		<?php echo htmlspecialchars($this->entity->comments); ?>
+		<div style="white-space: pre-wrap; padding-bottom: .5em;"><?php echo htmlspecialchars($this->entity->comments); ?></div>
 	</div>
+	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />

@@ -56,6 +56,14 @@ class com_sales_transfer extends entity {
 		return $entity;
 	}
 
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_sales', 'transfer/helper');
+	}
+
 	public function info($type) {
 		switch ($type) {
 			case 'name':
@@ -127,6 +135,7 @@ class com_sales_transfer extends entity {
 				$return = false;
 		}
 		$this->shipped = true;
+		$this->shipped_user = $_SESSION['user'];
 		$this->shipped_date = time();
 		return $return;
 	}
@@ -147,7 +156,12 @@ class com_sales_transfer extends entity {
 				)
 			);
 		$module->locations = (array) $pines->user_manager->get_groups();
-		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
+		$module->shippers = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_shipper),
+				array('&',
+					'tag' => array('com_sales', 'shipper')
+				)
+			);
 
 		return $module;
 	}
@@ -157,7 +171,6 @@ class com_sales_transfer extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_ship() {
-		global $pines;
 		$module = new module('com_sales', 'transfer/ship', 'content');
 		$module->entity = $this;
 

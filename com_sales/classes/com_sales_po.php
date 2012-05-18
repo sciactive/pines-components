@@ -141,13 +141,6 @@ class com_sales_po extends entity {
 		$module->locations = (array) $pines->user_manager->get_groups();
 		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
 		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
-		$module->products = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_product),
-				array('&',
-					'tag' => array('com_sales', 'product'),
-					'data' => array('enabled', true)
-				)
-			);
 
 		return $module;
 	}

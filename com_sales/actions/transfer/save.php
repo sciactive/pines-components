@@ -26,8 +26,8 @@ if ( isset($_REQUEST['id']) ) {
 
 // General
 // Certain items can't be changed after it's shipped.
-if (!$transfer->final) {
-	$transfer->reference_number = $_REQUEST['reference_number'];
+$transfer->reference_number = $_REQUEST['reference_number'];
+if (!$transfer->final && !$transfer->shipped) {
 	$transfer->origin = group::factory((int) $_REQUEST['origin']);
 	if (!isset($transfer->origin->guid))
 		$transfer->origin = null;
@@ -52,28 +52,29 @@ if (!$transfer->shipped) {
 	// Can't change serials.
 }
 
-if (!isset($transfer->origin)) {
-	$transfer->print_form();
-	pines_error('Specified origin is not valid.');
-	return;
-}
-if (!isset($transfer->destination)) {
-	$transfer->print_form();
-	pines_error('Specified destination is not valid.');
-	return;
+if (!$transfer->final) {
+	if (!isset($transfer->origin)) {
+		$transfer->print_form();
+		pines_error('Specified origin is not valid.');
+		return;
+	}
+	if (!isset($transfer->destination)) {
+		$transfer->print_form();
+		pines_error('Specified destination is not valid.');
+		return;
+	}
 }
 
 $transfer->ac->other = 2;
 
-if ($_REQUEST['save'] == 'commit')
+if (!$transfer->final && $_REQUEST['save'] == 'commit')
 	$transfer->final = true;
 
 if ($transfer->save()) {
-	if ($transfer->final) {
+	if ($transfer->final)
 		pines_notice('Committed transfer ['.$transfer->guid.']');
-	} else {
+	else
 		pines_notice('Saved transfer ['.$transfer->guid.']');
-	}
 } else {
 	pines_error('Error saving transfer. Do you have permission?');
 }

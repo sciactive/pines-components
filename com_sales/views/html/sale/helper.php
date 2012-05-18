@@ -234,7 +234,7 @@ echo $module->render();
 <div style="clear:both;">
 	<hr />
 	<h3 style="margin:10px 0;">Comments</h3>
-	<div style="font-size: 75%;"><?php echo htmlspecialchars($this->entity->comments); ?></div>
+	<div style="white-space: pre-wrap; padding-bottom: .5em;"><?php echo htmlspecialchars($this->entity->comments); ?></div>
 </div>
 <?php }
 $returns = (array) $pines->entity_manager->get_entities(

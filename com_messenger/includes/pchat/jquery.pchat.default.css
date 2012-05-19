@@ -10,16 +10,22 @@
 .ui-pchat-widget .ui-pchat-header {
 	padding: .2em .5em;
 }
-.ui-pchat-roster, .ui-pchat-action-bar {
+.ui-pchat-roster, .ui-pchat-action-bar, .ui-pchat-groups {
 	clear: both;
 	padding: 0 .5em;
-	margin-bottom: .5em;
+}
+.ui-pchat-action-bar, .ui-pchat-groups {
+	margin: .5em 0;
 }
 .ui-pchat-header {
 	border-left: none !important;
 	border-top: none !important;
 	border-right: none !important;
 	padding: .5em;
+}
+.ui-pchat-groups * {
+	margin-right: .2em;
+	cursor: pointer;
 }
 .ui-pchat-widget .nav-pills > li.pull-right {
 	float: right;

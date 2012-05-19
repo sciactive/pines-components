@@ -129,6 +129,30 @@ if (!window.localStorage) {
 					break;
 			}
 
+			var shown_groups = [], show_ungrouped = true;
+			var group_elem = $('<div class="ui-pchat-groups"><span class="ui-pchat-ungrouped label label-success">Ungrouped</span></div>').appendTo(pchat).on("click", ".label", function(){
+				var group = $(this).toggleClass("label-success"),
+					name = group.text();
+				if (group.hasClass("ui-pchat-ungrouped")) {
+					show_ungrouped = group.hasClass("label-success");
+				} else {
+					if (group.hasClass("label-success"))
+						shown_groups.push(name);
+					else
+						shown_groups = $.grep(shown_groups, function(e){return e != name});
+				}
+				update_groups();
+			}).hide();
+			var update_groups = function(){
+				// Hide contacts whose group(s) are not selected.
+				var contacts = roster_elem.find(".ui-pchat-contact").hide();
+				if (show_ungrouped)
+					contacts.filter(':not(:has(.ui-pchat-contact-groups *))').show();
+				$.each(shown_groups, function(i, group){
+					contacts.filter(':has(.ui-pchat-contact-groups :contains(":'+group+':"))').show();
+				});
+				save_state();
+			};
 			var roster_elem = $('<div class="ui-pchat-roster"></div>').appendTo(pchat).on('click.dropdown', '.dropdown', function(e){
 				// This function is needed so the menus don't get clipped by the roster div.
 				// It positions the menu correctly, since the dropdown element has to be positioned as static.
@@ -144,7 +168,7 @@ if (!window.localStorage) {
 					bottom: "auto",
 					right: "auto"
 				});
-			});
+			}).hide();
 
 			var presence_text = {
 				"working": '<i class="'+pchat.pchat_presence_icons.working+'"></i>Updating...',
@@ -336,6 +360,9 @@ if (!window.localStorage) {
 				// Save the roster.
 				localStorage.setItem("pchat-roster", JSON.stringify(connection.roster.items));
 				localStorage.setItem("pchat-rosterver", JSON.stringify(connection.roster.ver));
+				// Save the list of shown groups.
+				localStorage.setItem("pchat-showngroups", JSON.stringify(shown_groups));
+				localStorage.setItem("pchat-showungrouped", JSON.stringify(show_ungrouped));
 				// Save the blocklist.
 				localStorage.setItem("pchat-blocksupport", JSON.stringify(connection.blocking.blocking_support));
 				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
@@ -373,6 +400,10 @@ if (!window.localStorage) {
 								log('Connected.');
 							login_button.hide().removeClass("disabled");
 							logout_button.show().removeClass("disabled");
+							if (localStorage.getItem("pchat-minimized") != "true") {
+								roster_elem.show();
+								group_elem.show();
+							}
 							localStorage.setItem("pchat-jid", connection.jid);
 							localStorage.setItem("pchat-sid", connection.sid);
 							localStorage.setItem("pchat-rid", connection.rid);
@@ -405,6 +436,8 @@ if (!window.localStorage) {
 								// This is an attached session, so request roster changes using the stored roster.
 								var roster = localStorage.getItem("pchat-roster"),
 									ver = localStorage.getItem("pchat-rosterver"),
+									showngroups = localStorage.getItem("pchat-showngroups"),
+									showungrouped = localStorage.getItem("pchat-showungrouped"),
 									blocksupport = localStorage.getItem("pchat-blocksupport"),
 									blocklist = localStorage.getItem("pchat-blocklist"),
 									presence = localStorage.getItem("pchat-presence"),
@@ -436,6 +469,19 @@ if (!window.localStorage) {
 									connection.roster.ver = ver;
 									// Call the roster handler.
 									handlers.onRoster(roster);
+								}
+								// Rebuild the shown group list.
+								if (showngroups) {
+									shown_groups = JSON.parse(showngroups);
+									group_elem.children(":not(.ui-pchat-ungrouped)").each(function(){
+										var group = $(this), name = group.text();
+										if ($.inArray(name, shown_groups) === -1)
+											group.removeClass("label-success");
+									});
+									show_ungrouped = JSON.parse(showungrouped);
+									if (!show_ungrouped)
+										group_elem.children(".ui-pchat-ungrouped").removeClass("label-success");
+									update_groups();
 								}
 								// Rebuild the blocklist.
 								if (blocklist) {
@@ -471,6 +517,8 @@ if (!window.localStorage) {
 								localStorage.removeItem("pchat-rid");
 								localStorage.removeItem("pchat-roster");
 								localStorage.removeItem("pchat-rosterver");
+								localStorage.removeItem("pchat-showngroups"),
+								localStorage.removeItem("pchat-showungrouped"),
 								localStorage.removeItem("pchat-blocksupport");
 								localStorage.removeItem("pchat-blocklist");
 								localStorage.removeItem("pchat-conversations");
@@ -480,24 +528,29 @@ if (!window.localStorage) {
 									pchat.pchat_connect();
 								}
 							}
-							roster_elem.empty();
+							roster_elem.empty().hide();
+							group_elem.empty().hide();
+							shown_groups = [];
+							show_ungrouped = true;
 							break;
 					}
 				},
 				onRoster: function(roster, item){
 					// Save the roster.
 					save_state();
+					var groups = [];
 					$.each(roster, function(i, contact){
 						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
-						var contact_display, contact_menu, contact_status, contact_features;
+						var contact_display, contact_menu, contact_status, contact_features, contact_groups;
 						if (contact_elem.length) {
 							contact_display = contact_elem.children(".ui-pchat-contact-display").children("a").empty();
 							contact_features = contact_elem.children(".ui-pchat-contact-features").children("a").empty().hide();
+							contact_groups = contact_elem.children(".ui-pchat-contact-groups").empty();
 							contact_menu = contact_elem.find(".dropdown-menu").empty();
 							// Remove old contact info.
 							contact_elem.children(".ui-pchat-contact-status").remove();
 						} else {
-							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-features pull-right"><a href="javascript:void(0);"></a></li><li class="ui-pchat-contact-display"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-features pull-right"><a href="javascript:void(0);"></a></li><li class="ui-pchat-contact-display"></li><li class="ui-pchat-contact-groups hide"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
 							contact_display = $('<a href="javascript:void(0);"></a>').appendTo(contact_elem.children(".ui-pchat-contact-display")).click(function(e){
 								if ($(e.target).is("input"))
 									return;
@@ -505,9 +558,16 @@ if (!window.localStorage) {
 								cw.element.find("textarea").focus().select();
 							});
 							contact_features = contact_elem.children(".ui-pchat-contact-features").children("a").hide();
+							contact_groups = contact_elem.children(".ui-pchat-contact-groups");
 							contact_menu = contact_elem.find(".dropdown-menu");
 						}
 						contact_status = $('<li class="ui-pchat-contact-status"><a href="javascript:void(0);"></a></li>');
+						// Get all of this contact's groups and merge into the group array.
+						$.each(contact.groups, function(i, group){
+							if ($.inArray(group, groups) === -1)
+								groups.push(group);
+							contact_groups.append($('<span/>').text(":"+group+":"));
+						});
 						// Remember that this contact was added by us, so we can automatically authorize them.
 						if (contact.ask == "subscribe")
 							contact_elem.attr("data-authorize", "true");
@@ -655,7 +715,7 @@ if (!window.localStorage) {
 							contact_features.show().append($('<span>&#8203;</span>').addClass(client_icon).attr('title', client_desc));
 						}
 						// Menu items.
-						contact_menu.append($('<li><a href="javascript:void(0);">Alias</a></li>').on("click", "a", function(){
+						contact_menu.append($('<li><a href="javascript:void(0);" title="Change the name by which you see this contact.">Alias</a></li>').on("click", "a", function(){
 							var name_box = contact_display.find(".ui-pchat-contact-name");
 							var cur_content = name_box.html();
 							name_box.empty();
@@ -673,6 +733,49 @@ if (!window.localStorage) {
 							}).blur(function(){
 								save($(this).val());
 							}).appendTo(name_box).focus().select();
+						}));
+						contact_menu.append($('<li><a href="javascript:void(0);" title="Edit the groups to which this contact belongs.">Groups</a></li>').on("click", "a", function(){
+							var groups_dialog = $('<div title="Groups for '+Strophe.xmlescape(name)+'"></div>').dialog({
+								modal: true,
+								autoOpen: false,
+								open: function(){
+									groups_dialog.dialog("option", "position", "center");
+								},
+								height: "auto",
+								width: "auto",
+								buttons: {
+									"Save": function(){
+										var groups = [];
+										groups_dialog.find(".groupname a").each(function(){
+											groups.push($(this).text());
+										});
+										connection.roster.update(contact.jid, name, groups);
+										groups_dialog.dialog("destroy").remove();
+									}
+								}
+							});
+							var group_gen = function(group){
+								return $('<ul class="nav nav-pills"><li class="groupname active"><a></a></li><li class="remove" style="float: right;"><a href="javascript:void(0);">Remove</a></li></ul>')
+								.find('li.groupname a').text(group).end()
+								.on('click', 'li.remove a', function(){
+									$(this).closest('ul').remove();
+								});
+							};
+							$.each(contact.groups, function(i, group){
+								groups_dialog.append(group_gen(group));
+							});
+							groups_dialog.append($('<div><button class="btn">Add Another Group</button></div>')
+							.on("click", "button", function(){
+								var group = prompt("Name of the group:");
+								if (!group)
+									return;
+								// Is he already in the group?
+								if (groups_dialog.find(".groupname a").filter(function(){return $(this).text() == group;}).length) {
+									alert("This contact is already in that group.");
+									return;
+								}
+								$(this).before(group_gen(group));
+							})).dialog("open");
 						}));
 						// If they have granted access to us.
 						if (contact.subscription == "to" || contact.subscription == "both")
@@ -697,11 +800,11 @@ if (!window.localStorage) {
 						contact_menu.append($('<li class="divider"></li>'));
 						if (connection.blocking.blocking_support) {
 							if (connection.blocking.isBlocked(contact.jid)) {
-								contact_menu.append($('<li><a href="javascript:void(0);">Unblock</a></li>').on("click", "a", function(){
+								contact_menu.append($('<li><a href="javascript:void(0);" title="Allow this contact to interact with you.">Unblock</a></li>').on("click", "a", function(){
 									connection.blocking.unblock(contact.jid);
 								}));
 							} else {
-								contact_menu.append($('<li><a href="javascript:void(0);">Block</a></li>').on("click", "a", function(){
+								contact_menu.append($('<li><a href="javascript:void(0);" title="Don\'t allow this contact to interact with you.">Block</a></li>').on("click", "a", function(){
 									connection.blocking.block(contact.jid);
 								}));
 							}
@@ -724,6 +827,22 @@ if (!window.localStorage) {
 								pchat.pchat_conversations[contact.jid].element.find(".ui-pchat-messages .ui-pchat-notice.status-offline").remove();
 						}
 					});
+					// Update the group selector.
+					group_elem.children(":not(.ui-pchat-ungrouped)").each(function(){
+						var group = $(this), name = group.text();
+						if ($.inArray(name, groups) === -1) {
+							group.remove();
+							shown_groups = $.grep(shown_groups, function(e){return e != name});
+						}
+					});
+					$.each(groups, function(i, group){
+						// Skip if it's already there.
+						if (group_elem.children().filter(function(){return $(this).text() == group;}).length)
+							return;
+						group_elem.append($('<span class="label label-success"/>').text(group));
+						shown_groups.push(group);
+					});
+					update_groups();
 					return true;
 				},
 				onBlocklist: function(blocklist){

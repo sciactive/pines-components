@@ -12,7 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Import';
 ?>
-<form enctype="multipart/form-data" class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_entitytools', 'import')); ?>">
+<script type="text/javascript">
+	pines(function(){
+		$("#p_muid_form").on("submit", function(){
+			if ($("[name=reset_entities]", "#p_muid_form").is(":checked"))
+				if (!confirm("Choosing to reset entities will PERMANENTLY DELETE all entities. Are you sure?"))
+					return false;
+		});
+	});
+</script>
+<form id="p_muid_form" enctype="multipart/form-data" class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_entitytools', 'import')); ?>">
 	<div class="pf-element pf-heading">
 		<p>
 			Use this feature to import entities from a file made by a Pines
@@ -22,6 +31,10 @@ $this->title = 'Entity Manager Import';
 	<div class="pf-element">
 		<label><span class="pf-label">Upload File</span>
 			<input class="pf-field" type="file" name="entity_import" /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Reset Entities</span>
+			<input class="pf-field" type="checkbox" name="reset_entities" value="ON" /> Log me out and delete all entities before the import.</label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />

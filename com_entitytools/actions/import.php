@@ -20,14 +20,28 @@ if (!is_callable(array($pines->entity_manager, 'import'))) {
 }
 
 if (!empty($_FILES['entity_import']['tmp_name'])) {
-	set_time_limit(3600);
-	if ($pines->entity_manager->import($_FILES['entity_import']['tmp_name'])) {
-		pines_notice('Import complete.');
-	} else {
-		pines_notice('Import failed.');
+	set_time_limit(28800);
+	if ($_REQUEST['reset_entities'] == 'ON') {
+		// First log the user out.
+		$pines->user_manager->logout();
+		// Delete all current entities.
+		$last_entity = $pines->entity_manager->get_entity(array('reverse' => true, 'sort' => 'guid'));
+		if (!$last_entity->guid) {
+			pines_error('Couldn\'t find last entity.');
+			return;
+		}
+		for ($i = 1; $i <= $last_entity->guid; $i++)
+			$pines->entity_manager->delete_entity_by_id($i);
 	}
+	if ($pines->entity_manager->import($_FILES['entity_import']['tmp_name']))
+		pines_notice('Import complete.');
+	else
+		pines_notice('Import failed.');
 }
 
-$module = new module('com_entitytools', 'import', 'content');
+if ($_REQUEST['reset_entities'] == 'ON')
+	$pines->user_manager->punt_user('You have been logged out.');
+else
+	$module = new module('com_entitytools', 'import', 'content');
 
 ?>

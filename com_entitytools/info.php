@@ -27,7 +27,7 @@ return array(
 	'abilities' => array(
 		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),
 		array('export', 'Export', 'User can export all entities.'),
-		array('import', 'Import', 'User can import entities.')
+		array('import', 'Import', 'User can import entities. Caution! User can also use this to delete all entities!')
 	),
 );
 

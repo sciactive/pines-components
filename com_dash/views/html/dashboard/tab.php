@@ -34,7 +34,6 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 			tolerance: "pointer",
 			placeholder: "ui-state-highlight placeholder",
 			forcePlaceholderSize: true,
-			helper: "clone",
 			connectWith: "#p_muid_tab .column",
 			dropOnEmpty: true,
 			handle: "> .widget_header",

@@ -25,6 +25,12 @@ if ( isset($_REQUEST['id']) ) {
 	$page = com_content_page::factory();
 }
 
+if ($_REQUEST['ajax'] == 'true') {
+	$ajax = true;
+	$pines->page->override = true;
+	header('Content-Type: application/json');
+}
+
 // General
 $page->name = $_REQUEST['name'];
 $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
@@ -87,7 +93,7 @@ $page->show_content_in_list = ($_REQUEST['show_content_in_list'] == 'null' ? nul
 $page->show_intro = ($_REQUEST['show_intro'] == 'null' ? null : ($_REQUEST['show_intro'] == 'true'));
 $page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
 $page->variants = array();
-foreach ($_REQUEST['variants'] as $cur_variant_entry) {
+foreach ((array) $_REQUEST['variants'] as $cur_variant_entry) {
 	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
 	if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
 		pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
@@ -99,11 +105,15 @@ foreach ($_REQUEST['variants'] as $cur_variant_entry) {
 if (empty($page->name)) {
 	$page->print_form();
 	pines_notice('Please specify a name.');
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => false, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 	return;
 }
 if (empty($page->alias)) {
 	$page->print_form();
 	pines_notice('Please specify an alias.');
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => false, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 	return;
 }
 
@@ -111,11 +121,15 @@ $test = $pines->entity_manager->get_entity(array('class' => com_content_page, 's
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$page->print_form();
 	pines_notice('There is already an page with that alias. Please choose a different alias.');
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => false, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 	return;
 }
 
 if (!$pines->com_menueditor->check_entries($page->com_menueditor_entries)) {
 	$page->print_form();
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => false, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 	return;
 }
 
@@ -144,10 +158,15 @@ if ($page->save()) {
 		}
 	}
 	unset($cur_cat);
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => true, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 } else {
 	pines_error('Error saving page. Do you have permission?');
+	if ($ajax)
+		$pines->page->override_doc(json_encode(array('result' => false, 'notice' => $pines->page->get_notice(), 'error' => $pines->page->get_error())));
 }
 
-pines_redirect(pines_url('com_content', 'page/list'));
+if (!$ajax)
+	pines_redirect(pines_url('com_content', 'page/list'));
 
 ?>

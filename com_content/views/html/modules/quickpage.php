@@ -33,9 +33,38 @@ margin-left: 125px;
 </style>
 <script type="text/javascript">
 	pines(function(){
-		$("#p_muid_form").on("click", ":button .page-save", function(){
-			var enabled = $(this).hasClass("page-publish");
-			// TODO: Save the page through ajax.
+		var form = $("#p_muid_form").on("click", ":button.page-save", function(){
+			$(":button.page-save", "#p_muid_form").attr("disabled", "disabled");
+			var enabled = $(this).hasClass("page-publish"),
+				data = form.find(":input[name]").serialize();
+			if (enabled)
+				data += "&enabled=ON";
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_content', 'page/save')); ?>,
+				type: "POST",
+				dataType: "json",
+				data: data,
+				complete: function(){
+					$(":button.page-save", "#p_muid_form").removeAttr("disabled");
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to save the page:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (!data) {
+						pines.error("Page could not be saved.");
+						return;
+					}
+					if (data.notice.length)
+						$.each(data.notice, function(i, e){pines.notice(pines.safe(e))});
+					if (data.error.length)
+						$.each(data.error, function(i, e){pines.error(pines.safe(e))});
+					if (data.result) {
+						// Clear the form.
+						form.closest(".object").find(".widget_refresh").click();
+					}
+				}
+			});
 		});
 	});
 </script>
@@ -126,13 +155,32 @@ margin-left: 125px;
 			</script>
 		</div>
 	</div>
+	<input type="hidden" name="com_menueditor_entries" value="[]" />
+	<input type="hidden" name="title_position" value="<?php echo htmlspecialchars(isset($this->title_position) ? $this->title_position : 'null'); ?>" />
+	<input type="hidden" name="show_front_page" value="<?php echo htmlspecialchars(isset($this->show_front_page) ? $this->show_front_page : 'null'); ?>" />
+	<input type="hidden" name="meta_tags" value="<?php echo htmlspecialchars(isset($this->meta_tags) ? $this->meta_tags : '[]'); ?>" />
+	<input type="hidden" name="enable_custom_head" value="<?php echo htmlspecialchars($this->enable_custom_head); ?>" />
+	<input type="hidden" name="custom_head" value="<?php echo htmlspecialchars($this->custom_head); ?>" />
+	<input type="hidden" name="conditions" value="<?php echo htmlspecialchars(isset($this->conditions) ? $this->conditions : '[]'); ?>" />
+	<input type="hidden" name="p_cdate" value="<?php echo htmlspecialchars($this->p_cdate); ?>" />
+	<input type="hidden" name="p_mdate" value="<?php echo htmlspecialchars($this->p_mdate); ?>" />
+	<input type="hidden" name="publish_begin" value="<?php echo htmlspecialchars(!empty($this->publish_begin) ? $this->publish_begin : format_date(time(), 'full_med')); ?>" />
+	<input type="hidden" name="publish_end" value="<?php echo htmlspecialchars($this->publish_end); ?>" />
+	<input type="hidden" name="show_title" value="<?php echo htmlspecialchars(isset($this->show_title_save) ? $this->show_title_save : 'null'); ?>" />
+	<input type="hidden" name="show_author_info" value="<?php echo htmlspecialchars(isset($this->show_author_info) ? $this->show_author_info : 'null'); ?>" />
+	<input type="hidden" name="show_content_in_list" value="<?php echo htmlspecialchars(isset($this->show_content_in_list) ? $this->show_content_in_list : 'null'); ?>" />
+	<input type="hidden" name="show_intro" value="<?php echo htmlspecialchars(isset($this->show_intro) ? $this->show_intro : 'null'); ?>" />
+	<input type="hidden" name="show_breadcrumbs" value="<?php echo htmlspecialchars(isset($this->show_breadcrumbs) ? $this->show_breadcrumbs : 'null'); ?>" />
+	<?php foreach ((array) $this->variants as $cur_variant) { if (empty($cur_variant)) continue; ?>
+	<input type="hidden" name="variants[]" value="<?php echo htmlspecialchars($cur_variant); ?>" />
+	<?php } foreach ((array) $this->categories as $cur_guid) { if (empty($cur_guid)) continue; ?>
+	<input type="hidden" name="categories[]" value="<?php echo htmlspecialchars($cur_guid); ?>" />
+	<?php } ?>
+	<input type="hidden" name="ajax" value="true" />
 	<div class="pf-element pf-full-width">
 		<div class="btn-group" style="float: right;">
 			<input class="pf-button btn btn-success page-save page-publish" type="button" value="Save and Publish" />
 			<input class="pf-button btn page-save" type="button" value="Save" />
 		</div>
 	</div>
-	<?php foreach (array() as $cur_var) { ?>
-	<input type="hidden" name="<?php echo htmlspecialchars($cur_var); ?>" value="" />
-	<?php } ?>
 </div>

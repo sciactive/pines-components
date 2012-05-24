@@ -91,7 +91,7 @@ if (isset($this->variants)) {
 $page_form = $this->entity->print_form();
 $page_form->quickpage_options = true;
 $page_form->category_guids = array();
-foreach ($this->categories as $cur_guid) {
+foreach ((array) $this->categories as $cur_guid) {
 	if ($cur_guid)
 		$page_form->category_guids[] = (int) $cur_guid;
 }

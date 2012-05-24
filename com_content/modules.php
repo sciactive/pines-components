@@ -15,7 +15,7 @@ return array(
 	'quickpage' => array(
 		'cname' => 'Quick Page',
 		'description' => 'Quickly create and publish content pages.',
-		//'image' => 'includes/page_widget_screen.png',
+		'image' => 'includes/quickpage_widget_screen.png',
 		'view' => 'modules/quickpage',
 		'form' => 'modules/quickpage_form',
 		'type' => 'widget',

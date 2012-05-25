@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <div class="module <?php echo htmlspecialchars(implode(' ', $this->classes)); ?>">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
-	<div class="module_title ui-widget-header ui-corner-all">
+	<div class="module_title ui-widget-header">
 		<?php if (!empty($this->title)) { ?>
 			<h2><?php echo $this->title; ?></h2>
 		<?php } ?>

@@ -18,7 +18,7 @@ return array(
 		'name' => 'variant',
 		'cname' => 'Page Variant/Layout',
 		'description' => 'The layout of the page. On two column layouts, the sidebars are combined into one. On full page, the sidebars are not available.',
-		'value' => 'twocol-sideright',
+		'value' => 'threecol',
 		'options' => array(
 			'threecol (Three columns.)' => 'threecol',
 			'twocol-sideleft (Two columns, left sidebar.)' => 'twocol-sideleft',

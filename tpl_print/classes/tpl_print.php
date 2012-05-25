@@ -29,7 +29,7 @@ class tpl_print extends template {
 	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css
 	 */
-	public $editor_css = 'templates/tpl_print/css/editor.css';
+	public $editor_css = 'templates/tpl_print/css/style.css';
 
 	/**
 	 * Format a menu in HTML.

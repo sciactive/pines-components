@@ -30,8 +30,8 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strp
 		'pos_content_bottom_left' => $pines->page->render_modules('content_bottom_left'),
 		'pos_content_bottom_right' => $pines->page->render_modules('content_bottom_right'),
 		'pos_post_content' => $pines->page->render_modules('post_content', 'module_header'),
-		'pos_left' => $pines->page->render_modules('left'),
-		'pos_right' => $pines->page->render_modules('right', 'module_right'),
+		'pos_left' => $pines->page->render_modules('left', 'module_side'),
+		'pos_right' => $pines->page->render_modules('right', 'module_side'),
 		'pos_footer' => $pines->page->render_modules('footer', 'module_header'),
 		'pos_bottom' => $pines->page->render_modules('bottom', 'module_header')
 	);
@@ -48,15 +48,13 @@ header('Content-Type: text/html');
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 	<meta name="HandheldFriendly" content="true" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 	<?php if ($pines->config->tpl_pines->menu_delay) { ?>
-	<script type="text/javascript">
-		pines.tpl_pines_menu_delay = true;</script>
+	<script type="text/javascript">pines.tpl_pines_menu_delay = true;</script>
 	<?php } ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/template.js"></script>
 	<?php if ($pines->config->tpl_pines->ajax) { ?>
@@ -107,12 +105,8 @@ header('Content-Type: text/html');
 						</a>
 					</div>
 				</div>
-				<div id="header_position" class="span4">
-					<?php echo $pines->page->render_modules('header', 'module_header'); ?>&nbsp;
-				</div>
-				<div id="header_right" class="span4">
-					<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
-				</div>
+				<div id="header_position" class="span4"><?php echo $pines->page->render_modules('header', 'module_header'); ?>&nbsp;</div>
+				<div id="header_right" class="span4"><?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?></div>
 			</div>
 		</div>
 		<div class="container-fluid page-width centered">
@@ -133,8 +127,8 @@ header('Content-Type: text/html');
 			<div class="row-fluid">
 				<?php if (in_array($pines->config->tpl_pines->variant, array('threecol', 'twocol-sideleft'))) { ?>
 				<div id="left" class="span2">
-					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
-					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
+					<?php echo $pines->page->render_modules('left', 'module_side'); ?>
+					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_side'); } ?>&nbsp;
 				</div>
 				<?php } ?>
 				<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'span12' : ($pines->config->tpl_pines->variant == 'threecol' ? 'span8' : 'span10'); ?>">
@@ -153,8 +147,8 @@ header('Content-Type: text/html');
 				</div>
 				<?php if (in_array($pines->config->tpl_pines->variant, array('threecol', 'twocol-sideright'))) { ?>
 				<div id="right" class="span2">
-					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
-					<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
+					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_side'); } ?>
+					<?php echo $pines->page->render_modules('right', 'module_side'); ?>&nbsp;
 				</div>
 				<?php } ?>
 			</div>

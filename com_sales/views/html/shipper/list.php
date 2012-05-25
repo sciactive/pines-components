@@ -66,7 +66,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>City</th>
 			<th>State</th>
 			<th>Zip</th>
-			<th>Corporate Phone</th>
+			<th>Phone</th>
 			<th>Fax</th>
 			<th>Account #</th>
 		</tr>

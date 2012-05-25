@@ -61,13 +61,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>Name</th>
 			<th>Email</th>
+			<th>Phone</th>
+			<th>Fax</th>
 			<th>Address 1</th>
 			<th>Address 2</th>
 			<th>City</th>
 			<th>State</th>
 			<th>Zip</th>
-			<th>Corporate Phone</th>
-			<th>Fax</th>
 			<th>Account #</th>
 		</tr>
 	</thead>
@@ -76,13 +76,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo (int) $vendor->guid ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($vendor->name); ?></a></td>
 			<td><a href="mailto:<?php echo htmlspecialchars($vendor->email); ?>"><?php echo htmlspecialchars($vendor->email); ?></a></td>
+			<td><?php echo htmlspecialchars(format_phone($vendor->phone_work)); ?></td>
+			<td><?php echo htmlspecialchars(format_phone($vendor->fax)); ?></td>
 			<td><?php echo htmlspecialchars($vendor->address_1); ?></td>
 			<td><?php echo htmlspecialchars($vendor->address_2); ?></td>
 			<td><?php echo htmlspecialchars($vendor->city); ?></td>
 			<td><?php echo htmlspecialchars($vendor->state); ?></td>
 			<td><?php echo htmlspecialchars($vendor->zip); ?></td>
-			<td><?php echo htmlspecialchars(format_phone($vendor->phone_work)); ?> </td>
-			<td><?php echo htmlspecialchars(format_phone($vendor->fax)); ?></td>
 			<td><?php echo htmlspecialchars($vendor->account_number); ?></td>
 		</tr>
 	<?php } ?>

@@ -27,13 +27,15 @@ if ( isset($_REQUEST['id']) ) {
 
 $shipper->name = $_REQUEST['name'];
 $shipper->email = $_REQUEST['email'];
+$shipper->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$shipper->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$shipper->address_type = $_REQUEST['address_type'];
 $shipper->address_1 = $_REQUEST['address_1'];
 $shipper->address_2 = $_REQUEST['address_2'];
 $shipper->city = $_REQUEST['city'];
 $shipper->state = $_REQUEST['state'];
 $shipper->zip = $_REQUEST['zip'];
-$shipper->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
-$shipper->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$shipper->address_international = $_REQUEST['address_international'];
 $shipper->account_number = $_REQUEST['account_number'];
 $shipper->terms = $_REQUEST['terms'];
 $shipper->comments = $_REQUEST['comments'];

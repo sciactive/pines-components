@@ -34,6 +34,8 @@ class com_sales_shipper extends entity {
 				return;
 			}
 		}
+		// Defaults.
+		$this->address_type = 'us';
 	}
 
 	/**
@@ -47,6 +49,14 @@ class com_sales_shipper extends entity {
 		$entity = new $class($args[0]);
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
+	}
+
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_sales', 'shipper/helper');
 	}
 
 	public function info($type) {

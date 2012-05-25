@@ -27,13 +27,15 @@ if ( isset($_REQUEST['id']) ) {
 
 $vendor->name = $_REQUEST['name'];
 $vendor->email = $_REQUEST['email'];
+$vendor->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$vendor->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$vendor->address_type = $_REQUEST['address_type'];
 $vendor->address_1 = $_REQUEST['address_1'];
 $vendor->address_2 = $_REQUEST['address_2'];
 $vendor->city = $_REQUEST['city'];
 $vendor->state = $_REQUEST['state'];
 $vendor->zip = $_REQUEST['zip'];
-$vendor->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
-$vendor->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$vendor->address_international = $_REQUEST['address_international'];
 $vendor->account_number = $_REQUEST['account_number'];
 $vendor->client_username = $_REQUEST['client_username'];
 $vendor->client_password = $_REQUEST['client_password'];

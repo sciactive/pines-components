@@ -105,7 +105,7 @@ echo $module->render();
 			echo htmlspecialchars($this->entity->shipping_address->state).' ';
 			echo htmlspecialchars($this->entity->shipping_address->zip);
 		} else {
-			echo '<pre>'.htmlspecialchars($this->entity->address_international).'</pre>';
+			echo '<pre>'.htmlspecialchars($this->entity->shipping_address->address_international).'</pre>';
 		} ?>
 	</address>
 </div>

@@ -27,13 +27,15 @@ if ( isset($_REQUEST['id']) ) {
 
 $manufacturer->name = $_REQUEST['name'];
 $manufacturer->email = $_REQUEST['email'];
+$manufacturer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$manufacturer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$manufacturer->address_type = $_REQUEST['address_type'];
 $manufacturer->address_1 = $_REQUEST['address_1'];
 $manufacturer->address_2 = $_REQUEST['address_2'];
 $manufacturer->city = $_REQUEST['city'];
 $manufacturer->state = $_REQUEST['state'];
 $manufacturer->zip = $_REQUEST['zip'];
-$manufacturer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
-$manufacturer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$manufacturer->address_international = $_REQUEST['address_international'];
 
 if ($_REQUEST['remove_logo'] == 'ON' && isset($manufacturer->logo))
 	unset($manufacturer->logo);

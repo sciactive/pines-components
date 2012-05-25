@@ -11,11 +11,13 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Attached Notes';
+if (isset($this->entity->guid))
+	$this->note = htmlspecialchars($this->entity->info('name'));
 $pines->icons->load();
 ?>
 <div id="p_muid_notes">
 	<?php if (!isset($this->entity->guid)) { ?>
-	Notes will be available once this page is saved.
+	Notes will be available once the <?php echo htmlspecialchars($this->entity->info('type')); ?> is saved.
 	<?php } else { ?>
 	<style type="text/css" scoped="scoped">
 		#p_muid_current_threads.picon {
@@ -31,7 +33,10 @@ $pines->icons->load();
 		}
 		#p_muid_current_threads .thread .ui-widget-header {
 			font-size: .9em;
-			margin: .2em .2em 0;
+			margin: 0;
+			border-top-width: 0;
+			border-left-width: 0;
+			border-right-width: 0;
 		}
 		#p_muid_current_threads .thread .ui-widget-header .privacy {
 			float: right;
@@ -112,7 +117,7 @@ $pines->icons->load();
 
 		function p_muid_format_thread(thread) {
 			var html = $("<div class=\"thread ui-widget-content\"></div>").data("thread", thread);
-			html.append("<div class=\"ui-widget-header\"><div class=\"privacy\"><i class=\""+(thread.privacy == "everyone" ? "icon-eye-open" : (thread.privacy == "my-group" ? "icon-lock" : "icon-user"))+"\" title=\""+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+"\"></i></div>\n\
+			html.append("<div class=\"ui-widget-header\"><div class=\"privacy\"><i class=\""+(thread.privacy == "everyone" ? "icon-globe" : (thread.privacy == "my-group" ? "icon-lock" : "icon-user"))+"\" title=\""+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+"\"></i></div>\n\
 			<div class=\"date\">"+pines.safe(thread.date)+"</div>\n\
 			<div class=\"user\">"+pines.safe(thread.user)+"</div></div>");
 			var note_div = $("<div class=\"notes\"></div>");
@@ -266,13 +271,13 @@ $pines->icons->load();
 			var thread_buttons = $("#p_muid_new_thread_buttons");
 		});
 	</script>
-	<div style="width: 100%;" class="ui-clearfix">
+	<div style="width: 100%;" class="clearfix">
 		<textarea id="p_muid_new_thread" rows="1" cols="12" style="width: 100%; padding: 0; margin: .5em 0 .1em; font-style: italic;">New Thread</textarea>
-		<div id="p_muid_new_thread_buttons" class="btn-group" style="font-size: .8em;">
+		<div id="p_muid_new_thread_buttons" class="btn-group dropup pull-right" style="font-size: .8em;">
 			<button id="p_muid_new_thread_submit" class="btn">Save</button>
-			<button id="p_muid_new_thread_privacy" class="btn dropdown-toggle" data-toggle="dropdown" title="Everyone."><i class="icon-eye-open"></i></button>
-			<ul class="dropdown-menu">
-				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'everyone').html('&lt;i class=&quot;icon-eye-open&quot;&gt;&lt;/i&gt;').attr('title', 'Everyone.');"><i class="icon-eye-open"></i> Share with everyone.</a></li>
+			<button id="p_muid_new_thread_privacy" class="btn dropdown-toggle" data-toggle="dropdown" title="Everyone."><i class="icon-globe"></i></button>
+			<ul class="dropdown-menu pull-right">
+				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'everyone').html('&lt;i class=&quot;icon-globe&quot;&gt;&lt;/i&gt;').attr('title', 'Everyone.');"><i class="icon-globe"></i> Share with everyone.</a></li>
 				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'my-group').html('&lt;i class=&quot;icon-lock&quot;&gt;&lt;/i&gt;').attr('title', 'My group.');"><i class="icon-lock"></i> Share with my group.</a></li>
 				<li><a href="javascript:void(0);" onclick="$('#p_muid_new_thread_privacy').data('thread-privacy', 'only-me').html('&lt;i class=&quot;icon-user&quot;&gt;&lt;/i&gt;').attr('title', 'Only me.');"><i class="icon-user"></i> Keep private to me.</a></li>
 			</ul>

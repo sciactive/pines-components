@@ -13,6 +13,14 @@ hr {
 	padding-left: 0;
 	padding-right: 0;
 }
+/* Bootstrap Min-height Fix */
+.page-width > .row-fluid > [class*="span"],
+#content_top_left,
+#content_top_right,
+#content_bottom_left,
+#content_bottom_right {
+	min-height: 0 !important;
+}
 /* Margins */
 .page-width.centered {
 	margin-left: auto;

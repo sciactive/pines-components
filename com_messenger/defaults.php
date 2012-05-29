@@ -41,6 +41,13 @@ return array(
 		'value' => 120,
 		'peruser' => true,
 	),
+	/*array(
+		'name' => 'guest_access',
+		'cname' => 'Guest Access',
+		'description' => 'Allow guests to login using a fictional guest account. (Requires use of the ejabberd_auth.php script.)',
+		'value' => true,
+		'peruser' => true,
+	),*/
 );
 
 ?>

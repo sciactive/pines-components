@@ -30,7 +30,7 @@ if (!empty($_SERVER['HTTP_COOKIE']))
 
 // Set up the cURL request.
 $request = curl_init();
-curl_setopt_array($request, array(
+$opts = array(
 	CURLOPT_URL				=> $pines->config->com_messenger->xmpp_bosh_url,
 	CURLOPT_FOLLOWLOCATION	=> true,
 	CURLOPT_USERAGENT		=> $pines->info->com_messenger->name.' '.$pines->info->com_messenger->version,
@@ -41,12 +41,12 @@ curl_setopt_array($request, array(
 	CURLOPT_CONNECTTIMEOUT	=> 30,
 	CURLOPT_TIMEOUT			=> $pines->config->com_messenger->proxy_timeout,
 	CURLOPT_MAXCONNECTS		=> 1000,
-));
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	curl_setopt_array($request, array(
-		CURLOPT_POST		=> true,
-		CURLOPT_POSTFIELDS	=> !empty($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input"),
-	));
+);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$opts[CURLOPT_POST] = true;
+	$opts[CURLOPT_POSTFIELDS] = !empty($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : file_get_contents("php://input");
+}
+curl_setopt_array($request, $opts);
 
 // Send the request.
 $response = curl_exec($request);

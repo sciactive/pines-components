@@ -1122,10 +1122,10 @@ if (!window.localStorage) {
 				// Check for an already active BOSH connection.
 				var bosh_jid = localStorage.getItem("pchat-jid"), bosh_sid = localStorage.getItem("pchat-sid"), bosh_rid = localStorage.getItem("pchat-rid");
 				if (bosh_jid && bosh_sid && bosh_rid)
-					connection.attach(bosh_jid, bosh_sid, bosh_rid, handlers.onConnect, 60, 1, 1);
+					connection.attach(bosh_jid, bosh_sid, bosh_rid, handlers.onConnect, 60, pchat.pchat_hold, 1);
 				else {
 					attaching_from_storage = false;
-					connection.connect(pchat.pchat_jid, pchat.pchat_password, handlers.onConnect);
+					connection.connect(pchat.pchat_jid, pchat.pchat_password, handlers.onConnect, 60, pchat.pchat_hold);
 				}
 			};
 			/**
@@ -1410,6 +1410,8 @@ if (!window.localStorage) {
 		pchat_rid: false,
 		// Automatically log in.
 		pchat_auto_login: true,
+		// How many open connections to hold. This is requested from the server, but the server might not allow it.
+		pchat_hold: 10,
 		// Whether to play sounds on events. The user can still enable this feature unless pchat_sounds is set to false as well.
 		pchat_sound: false,
 		// The location of the sounds to play. Each entry should be an array of URL(s). The first one determined to be playable will be used.

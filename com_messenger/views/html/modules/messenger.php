@@ -11,31 +11,24 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+$this->title = 'Chat ('.htmlspecialchars($_SESSION['user']->username).')';
+
 if (!isset($_SESSION['user']->guid)) {
 	echo 'Please log in to chat.';
 	return;
 }
 
-$pines->icons->load();
-$pines->com_soundmanager->load();
+$pines->com_messenger->load();
 
 $xmpp_user = $_SESSION['user']->username;
 $xmpp_pass = $pines->com_messenger->get_temp_secret();
 
-$remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->config->com_messenger->xmpp_bosh_url, 0, 1) !== '/';
+// Add a class to remove the module frame.
+$this->classes[] = 'hide';
+$frame_class = uniqid('frame_');
+$this->classes[] = $frame_class;
 ?>
 <script type="text/javascript">
-	<?php if ($remote_server) { ?>
-	pines.loadjs("http://flxhr.flensed.com/code/build/flXHR.js");
-	<?php } ?>
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/strophe.js");
-	<?php if ($remote_server) { ?>
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.flxhr.js");
-	<?php } ?>
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.roster.js");
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/strophejs-latest/plugins/strophe.blocking.js");
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/jquery.pchat.js");
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/jquery.pchat.default.css");
 	pines(function(){
 		$("#p_muid_main").pchat({
 			pchat_bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
@@ -49,9 +42,15 @@ $remote_server = !$pines->config->com_messenger->use_proxy && substr($pines->con
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
 			//pchat_show_log: true,
-			pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
-			pchat_status_input: true
+			//pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
+			pchat_status_input: true,
+			// Keep the interface as a dashboard widget.
+			pchat_interface_container: false,
+			pchat_widget_box: false,
+			pchat_title: false
 		});
+		// Remove the module frame.
+		$(<?php echo json_encode(".$frame_class"); ?>).remove();
 	});
 </script>
 <div id="p_muid_main"></div>

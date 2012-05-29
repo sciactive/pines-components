@@ -18,6 +18,26 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_messenger extends component {
 	/**
+	 * Whether the pchat JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded
+	 */
+	private $js_loaded = false;
+
+	/**
+	 * Load the scripts.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load() {
+		if (!$this->js_loaded) {
+			$module = new module('com_messenger', 'pchat', 'head');
+			$module->render();
+			$this->js_loaded = true;
+		}
+	}
+
+	/**
 	 * Make a temporary secret to use as a password for current user XMPP login.
 	 * @return string The secret password.
 	 */

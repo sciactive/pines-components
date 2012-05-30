@@ -51,6 +51,24 @@ class com_messenger extends component {
 		pines_session('close');
 		return $_SESSION['user']->xmpp_secret;
 	}
+
+	/**
+	 * Make temporary credentials to use as a guest XMPP login.
+	 * @return string The secret password.
+	 */
+	function get_guest() {
+		global $pines;
+		if ((object) $_SESSION['xmpp_guest'] !== $_SESSION['xmpp_guest']) {
+			pines_session('write');
+			$un = uniqid('xmpp_guest_');
+			$_SESSION['xmpp_guest'] = (object) array(
+				'username' => $un,
+				'password' => md5($un.$pines->config->com_messenger->guest_key)
+			);
+			pines_session('close');
+		}
+		return $_SESSION['xmpp_guest'];
+	}
 }
 
 ?>

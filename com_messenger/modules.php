@@ -16,6 +16,7 @@ return array(
 		'cname' => 'Instant Messenger',
 		'description' => 'Chat with other users on the system.',
 		'view' => 'modules/messenger',
+		'form' => 'modules/messenger_form',
 		'type' => 'module imodule widget',
 		'widget' => array(
 			'default' => false,

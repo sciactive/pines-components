@@ -11,26 +11,40 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Chat ('.htmlspecialchars($_SESSION['user']->username).')';
+if (!isset($this->widget_title))
+	$this->widget_title = 'Chat #name# [#username#]';
+if (!empty($this->widget_title))
+	$this->title = htmlspecialchars(str_replace(array('#name#', '#username#'), array($_SESSION['user']->name, $_SESSION['user']->username), $this->widget_title));
 
-if (!isset($_SESSION['user']->guid)) {
+if (!isset($this->interface))
+	$this->interface = 'inline';
+
+if ($this->guest != 'true' && !isset($_SESSION['user']->guid)) {
 	echo 'Please log in to chat.';
 	return;
 }
 
 $pines->com_messenger->load();
 
-$xmpp_user = $_SESSION['user']->username;
-$xmpp_pass = $pines->com_messenger->get_temp_secret();
+if ($this->guest == 'true') {
+	$guest = $pines->com_messenger->get_guest();
+	$xmpp_user = $guest->username;
+	$xmpp_pass = $guest->password;
+} else {
+	$xmpp_user = $_SESSION['user']->username;
+	$xmpp_pass = $pines->com_messenger->get_temp_secret();
+}
 
-// Add a class to remove the module frame.
-$this->classes[] = 'hide';
-$frame_class = uniqid('frame_');
-$this->classes[] = $frame_class;
+if ($this->interface == 'floating') {
+	// Add a class to remove the module frame.
+	$this->classes[] = 'hide';
+	$frame_class = uniqid('frame_');
+	$this->classes[] = $frame_class;
+}
 ?>
 <script type="text/javascript">
 	pines(function(){
-		$("#p_muid_main").pchat({
+		var pchat = $("#p_muid_main").pchat({
 			pchat_bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
 			pchat_domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
 			pchat_jid: <?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
@@ -42,15 +56,24 @@ $this->classes[] = $frame_class;
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
 			//pchat_show_log: true,
-			//pchat_title: pines.safe("Chat ("+<?php echo json_encode($xmpp_user); ?>+")"),
-			pchat_status_input: true,
-			// Keep the interface as a dashboard widget.
+			<?php if ($this->interface == 'floating') { ?>
+			pchat_title: pines.safe(<?php echo json_encode($this->title); ?>),
+			<?php } elseif ($this->interface == 'inline') { ?>
 			pchat_interface_container: false,
 			pchat_widget_box: false,
-			pchat_title: false
+			pchat_title: false,
+			<?php } ?>
+			pchat_status_input: <?php echo json_encode($this->hide_status_box != 'true'); ?>
 		});
+		<?php if ($this->interface == 'floating') { ?>
 		// Remove the module frame.
 		$(<?php echo json_encode(".$frame_class"); ?>).remove();
+		<?php } ?>
+		/*var subscribe = pchat.get(0).pines_chat.pchat_connection.roster.subscribe;
+		pchat.get(0).pines_chat.pchat_connection.roster.subscribe = function(){
+			alert('You hit subscribe! You win!');
+			subscribe.apply(this, arguments);
+		};*/
 	});
 </script>
 <div id="p_muid_main"></div>

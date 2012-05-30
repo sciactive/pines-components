@@ -550,7 +550,7 @@ if (!window.localStorage) {
 							// Remove old contact info.
 							contact_elem.children(".ui-pchat-contact-status").remove();
 						} else {
-							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-features pull-right"><a href="javascript:void(0);"></a></li><li class="ui-pchat-contact-display"></li><li class="ui-pchat-contact-groups hide"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
+							contact_elem = $('<ul class="ui-pchat-contact nav nav-pills"><li class="ui-pchat-contact-display"></li><li class="dropdown dropup pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><b class="caret"></b></a><ul class="dropdown-menu"></ul></li><li class="ui-pchat-contact-features pull-right"><a href="javascript:void(0);"></a></li><li class="ui-pchat-contact-groups hide"></li></ul>').attr("data-jid", Strophe.xmlescape(contact.jid)).appendTo(roster_elem);
 							contact_display = $('<a href="javascript:void(0);"></a>').appendTo(contact_elem.children(".ui-pchat-contact-display")).click(function(e){
 								if ($(e.target).is("input"))
 									return;
@@ -1089,6 +1089,7 @@ if (!window.localStorage) {
 
 			// The BOSH connection.
 			connection = new Strophe.Connection(pchat.pchat_bosh_url);
+			pchat.pchat_connection = connection;
 
 			if (pchat.pchat_show_log) {
 				connection.rawInput = function (data) {log('RECV: ' + data);};

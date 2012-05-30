@@ -180,8 +180,8 @@
 	padding: .5em;
 }
 .ui-pchat-conversation-controls textarea {
-	padding: 0;
-	width: 100%;
+	padding: 0 !important;
+	width: 100% !important;
 	resize: none;
 	border-radius: 0;
 	-moz-border-radius: 0;

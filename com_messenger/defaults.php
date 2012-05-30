@@ -41,13 +41,20 @@ return array(
 		'value' => 120,
 		'peruser' => true,
 	),
-	/*array(
+	array(
 		'name' => 'guest_access',
 		'cname' => 'Guest Access',
-		'description' => 'Allow guests to login using a fictional guest account. (Requires use of the ejabberd_auth.php script.)',
+		'description' => 'Allow guests to login using a chat-only guest account. (Requires use of the ejabberd_auth.php script.)',
 		'value' => true,
 		'peruser' => true,
-	),*/
+	),
+	array(
+		'name' => 'guest_key',
+		'cname' => 'Guest Key',
+		'description' => 'This key is used to secure guest logins. You should change it to something else.',
+		'value' => 'O(&Hf87segfo8&GSA8dgsadfo86A^Sfg97a6dsfga8gfde87GUSFD*^A%SCD*7fearf',
+		'peruser' => true,
+	),
 );
 
 ?>

@@ -233,6 +233,10 @@ class JabberAuth {
 		// Uncomment the following line to start using the notifier above.
 		//`echo "EjabberD Auth|User: {$this->jabber_user} --- Passord: {$this->jabber_pass}" | nc localhost 1337`;
 
+		global $pines;
+		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'xmpp_guest_') === 0)
+			return (md5($this->jabber_user.$pines->config->com_messenger->guest_key) === $this->jabber_pass);
+
 		$user = user::factory($this->jabber_user);
 		if (!isset($user->guid) || !$user->has_tag('enabled'))
 			return false;
@@ -253,6 +257,9 @@ class JabberAuth {
 		 * $this->jabber_pass
 		 * $this->jabber_server
 		 */
+		global $pines;
+		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'xmpp_guest_') === 0)
+			return true;
 		$user = user::factory($this->jabber_user);
 		return (isset($user->guid) && $user->has_tag('enabled'));
 	}

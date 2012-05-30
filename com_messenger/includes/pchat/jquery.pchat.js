@@ -366,6 +366,16 @@ if (!window.localStorage) {
 				localStorage.setItem("pchat-rid", connection.rid);
 				return true;
 			};
+			var cloneconv = function(o){
+				if (o == null || typeof o != 'object')
+					return o;
+				var copy = o.constructor();
+				for (var key in o) {
+					if (key != "element")
+						copy[key] = cloneconv(o[key]);
+				}
+				return copy;
+			};
 			var save_state = function(){
 				log('Saved state.');
 				// Save the state of the session.
@@ -380,7 +390,8 @@ if (!window.localStorage) {
 				localStorage.setItem("pchat-blocksupport", JSON.stringify(connection.blocking.blocking_support));
 				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
 				// Save conversations.
-				localStorage.setItem("pchat-conversations", JSON.stringify(pchat.pchat_conversations));
+				var conversations = cloneconv(pchat.pchat_conversations);
+				localStorage.setItem("pchat-conversations", JSON.stringify(conversations));
 				return true;
 			};
 			// Save the RID when the page is unloading.
@@ -514,8 +525,8 @@ if (!window.localStorage) {
 									connection.roster.get(null, ver, roster);
 								save_state();
 							}
-							console.log("Connection:");
-							console.log(connection);
+							//console.log("Connection:");
+							//console.log(connection);
 							break;
 						case Strophe.Status.DISCONNECTING:
 							log('Disconnecting.');
@@ -895,9 +906,9 @@ if (!window.localStorage) {
 						body = elems[0],
 						from_alias = connection.roster.findItem(Strophe.getBareJidFromJid(from));
 					if (from_alias)
-						from_alias = (from_alias.name && from_alias.name != "") ? from_alias.name : from_alias.jid;
+						from_alias = (from_alias.name && from_alias.name != "") ? from_alias.name : Strophe.getNodeFromJid(from_alias.jid);
 					else
-						from_alias = Strophe.getBareJidFromJid(from);
+						from_alias = Strophe.getNodeFromJid(from);
 
 					if (type == "chat" && elems.length > 0) {
 						pchat.pchat_display_message({
@@ -1261,11 +1272,12 @@ if (!window.localStorage) {
 				else
 					convo_window.appendTo(pchat.pchat_conversation_container.call(pchat, contact_jid));
 				// Get the contact text.
-				var roster_lookup = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(Strophe.getBareJidFromJid(contact_jid))+"\"] .brand");
+				var bare_jid = Strophe.getBareJidFromJid(contact_jid),
+					roster_lookup = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(bare_jid)+"\"] .brand");
 				if (!roster_lookup.length)
 					var to_alias = pchat.pchat_get_contact_alias(contact_jid);
 				var header = $('<div class="ui-pchat-header ui-widget-header ui-helper-clearfix"></div>')
-				.append($('<span class="ui-pchat-conversation-title"></span>').append(roster_lookup.length ? roster_lookup.html() : $('<span class="ui-pchat-contact-name"></span>').text(to_alias)))
+				.append($('<span class="ui-pchat-conversation-title"></span>').append((roster_lookup.length ? roster_lookup.html() : $('<span class="ui-pchat-contact-name"></span>').text(to_alias)).attr('title', bare_jid)))
 				.append($('<span class="ui-pchat-controls"><i class="ui-icon ui-icon-circle-minus"></i><i class="ui-icon ui-icon-circle-close"></i></span>'))
 				.on("click", ".ui-icon-circle-minus", function(){
 					var c = $(this).closest(".ui-pchat-conversation");
@@ -1337,20 +1349,26 @@ if (!window.localStorage) {
 			 * @param noui Don't update the UI. (For recovering saved messages.)
 			 */
 			pchat.pchat_display_message = function(message, noui){
-				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid);
-				var bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid);
-				var convo = get_conv(bare_jid);
+				var incoming = Strophe.getBareJidFromJid(message.from_jid) != Strophe.getBareJidFromJid(connection.jid),
+					bare_jid = Strophe.getBareJidFromJid(incoming ? message.from_jid : message.to_jid),
+					convo = get_conv(bare_jid);
 				// If we just received this and the JID has a resource, save that in the convo.
 				if (!noui && incoming && message.from_jid != bare_jid)
 					convo.contact_jid = message.from_jid;
 				convo.messages.push(message);
-				var message_container = convo.element.find(".ui-pchat-messages");
-				message_container
-				.append($('<div class="ui-pchat-message ui-widget-content"></div>').addClass(incoming ? 'ui-pchat-incoming' : 'ui-pchat-outgoing').append($('<div class="ui-pchat-name"></div>').text(message.from_alias)).append($('<div class="ui-pchat-time"></div>').text(pchat.pchat_format_date(new Date(message.date)))).append($('<div class="ui-pchat-content"></div>').text(message.content)));
+				var container = convo.element.find(".ui-pchat-messages");
+				container
+				.append(
+					$('<div class="ui-pchat-message ui-widget-content"></div>')
+					.addClass(incoming ? 'ui-pchat-incoming' : 'ui-pchat-outgoing')
+					.append($('<div class="ui-pchat-name"></div>').text(message.from_alias))
+					.append($('<div class="ui-pchat-time"></div>').text(pchat.pchat_format_date(new Date(message.date))))
+					.append($('<div class="ui-pchat-content"></div>').text(message.content))
+				);
 				if (!noui) {
 					if (!convo.element.is(":focus") && !convo.element.find(":focus").length)
 						convo.notice = true;
-					message_container.scrollTop(999999);
+					container.scrollTop(999999);
 					pchat.pchat_play_sound("received");
 					save_state();
 				}

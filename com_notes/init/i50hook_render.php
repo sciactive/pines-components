@@ -21,7 +21,7 @@ function com_notes__attach_note_editors() {
 		if ($cur_module->component == 'com_notes')
 			return;
 		// It has to have one and only one entity.
-		if (!isset($cur_module->entity) || !is_object($cur_module->entity))
+		if (!isset($cur_module->entity) || !is_object($cur_module->entity) || !is_callable(array($cur_module->entity, 'info')))
 			return;
 		// And the user must be able to see threads.
 		if (!gatekeeper('com_notes/seethreads'))

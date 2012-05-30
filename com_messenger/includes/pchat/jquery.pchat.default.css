@@ -25,7 +25,9 @@
 }
 .ui-pchat-groups * {
 	margin-right: .2em;
+	margin-bottom: .1em;
 	cursor: pointer;
+	float: left;
 }
 .ui-pchat-widget .nav-pills > li.pull-right {
 	float: right;
@@ -82,7 +84,7 @@
 	margin-bottom: 0;
 	margin-right: 0.4em;
 }
-.ui-pchat-status-container input {
+.ui-pchat-status {
 	display: inline;
 	margin-left: .2em;
 }

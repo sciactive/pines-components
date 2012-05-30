@@ -130,7 +130,7 @@ if (!window.localStorage) {
 			}
 
 			var shown_groups = [], show_ungrouped = true;
-			var group_elem = $('<div class="ui-pchat-groups"><span class="ui-pchat-ungrouped label label-success">Ungrouped</span></div>').appendTo(pchat).on("click", ".label", function(){
+			var group_elem = $('<div class="ui-pchat-groups clearfix"><span class="ui-pchat-ungrouped label label-success">Ungrouped</span></div>').appendTo(pchat).on("click", ".label", function(){
 				var group = $(this).toggleClass("label-success"),
 					name = group.text();
 				if (group.hasClass("ui-pchat-ungrouped")) {
@@ -146,6 +146,8 @@ if (!window.localStorage) {
 			var update_groups = function(){
 				// Hide contacts whose group(s) are not selected.
 				var contacts = roster_elem.find(".ui-pchat-contact").hide();
+				if (pchat.pchat_hide_offline)
+					contacts = contacts.filter(':not([data-status=offline])');
 				if (show_ungrouped)
 					contacts.filter(':not(:has(.ui-pchat-contact-groups *))').show();
 				$.each(shown_groups, function(i, group){
@@ -181,6 +183,7 @@ if (!window.localStorage) {
 				"disconnected": '<i class="'+pchat.pchat_presence_icons.offline+'"></i>Not Connected'
 			};
 			var action_bar = $('<div class="ui-pchat-action-bar ui-helper-clearfix"></div>').appendTo(pchat);
+
 			// Presence state dropdown:
 			action_bar.append($('<div class="ui-pchat-presence-menu btn-group dropup"><a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="ui-pchat-presence-current">'+presence_text.disconnected+'</span>&nbsp;<span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
 			var presence_current = action_bar.find(".ui-pchat-presence-current");
@@ -217,7 +220,7 @@ if (!window.localStorage) {
 			// Status input:
 			var presence_status;
 			if (pchat.pchat_status_input) {
-				action_bar.append($('<label class="ui-pchat-status-container">Status:<input type="text" size="15" class="ui-pchat-status" /></label>'));
+				action_bar.append($('<label class="ui-pchat-status-container"><input type="text" size="15" class="ui-pchat-status" title="Status" /></label>'));
 				presence_status = action_bar.find(".ui-pchat-status").change(function(){
 					pchat.pchat_set_presence(localStorage.getItem("pchat-presence"), presence_status.val());
 				}).keypress(function(e){
@@ -226,6 +229,7 @@ if (!window.localStorage) {
 				});
 			} else
 				presence_status = $('<input type="text" />');
+
 			// Main menu:
 			action_bar.append($('<div class="ui-pchat-main-menu btn-group dropup pull-right"><a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a><ul class="dropdown-menu"></ul></div>'));
 			var main_menu = action_bar.find(".ui-pchat-main-menu .dropdown-menu");
@@ -290,6 +294,14 @@ if (!window.localStorage) {
 					alert("The connected server does not support the Simple Communications Blocking protocol.");
 				else
 					blocked_user_dialog.dialog("open");
+			}))
+			.append($('<li><a href="javascript:void(0);"><i class="icon-eye-open"></i>Offline Contacts</a></li>').each(function(){
+				if (pchat.pchat_hide_offline)
+					$(this).find('i').removeClass('icon-eye-open').addClass('icon-eye-close');
+			}).on("click", "a", function(){
+				pchat.pchat_hide_offline = !pchat.pchat_hide_offline;
+				$(this).find('i').removeClass('icon-eye-open icon-eye-close').addClass(pchat.pchat_hide_offline ? 'icon-eye-close' : 'icon-eye-open');
+				update_groups();
 			}));
 			if (pchat.pchat_sounds) {
 				if (!soundManager) {
@@ -363,6 +375,7 @@ if (!window.localStorage) {
 				// Save the list of shown groups.
 				localStorage.setItem("pchat-showngroups", JSON.stringify(shown_groups));
 				localStorage.setItem("pchat-showungrouped", JSON.stringify(show_ungrouped));
+				localStorage.setItem("pchat-hideoffline", JSON.stringify(pchat.pchat_hide_offline));
 				// Save the blocklist.
 				localStorage.setItem("pchat-blocksupport", JSON.stringify(connection.blocking.blocking_support));
 				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
@@ -438,6 +451,7 @@ if (!window.localStorage) {
 									ver = localStorage.getItem("pchat-rosterver"),
 									showngroups = localStorage.getItem("pchat-showngroups"),
 									showungrouped = localStorage.getItem("pchat-showungrouped"),
+									hideoffline = localStorage.getItem("pchat-hideoffline"),
 									blocksupport = localStorage.getItem("pchat-blocksupport"),
 									blocklist = localStorage.getItem("pchat-blocklist"),
 									presence = localStorage.getItem("pchat-presence"),
@@ -481,6 +495,7 @@ if (!window.localStorage) {
 									show_ungrouped = JSON.parse(showungrouped);
 									if (!show_ungrouped)
 										group_elem.children(".ui-pchat-ungrouped").removeClass("label-success");
+									pchat.pchat_hide_offline = JSON.parse(hideoffline);
 									update_groups();
 								}
 								// Rebuild the blocklist.
@@ -519,6 +534,7 @@ if (!window.localStorage) {
 								localStorage.removeItem("pchat-rosterver");
 								localStorage.removeItem("pchat-showngroups"),
 								localStorage.removeItem("pchat-showungrouped"),
+								localStorage.removeItem("pchat-hideoffline"),
 								localStorage.removeItem("pchat-blocksupport");
 								localStorage.removeItem("pchat-blocklist");
 								localStorage.removeItem("pchat-conversations");
@@ -538,7 +554,7 @@ if (!window.localStorage) {
 				onRoster: function(roster, item){
 					// Save the roster.
 					save_state();
-					var groups = [];
+					var groups = [], is_ungrouped = false;
 					$.each(roster, function(i, contact){
 						var contact_elem = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(contact.jid)+"\"]");
 						var contact_display, contact_menu, contact_status, contact_features, contact_groups;
@@ -563,6 +579,8 @@ if (!window.localStorage) {
 						}
 						contact_status = $('<li class="ui-pchat-contact-status"><a href="javascript:void(0);"></a></li>');
 						// Get all of this contact's groups and merge into the group array.
+						if (!contact.groups || !contact.groups.length)
+							is_ungrouped = true;
 						$.each(contact.groups, function(i, group){
 							if ($.inArray(group, groups) === -1)
 								groups.push(group);
@@ -645,10 +663,10 @@ if (!window.localStorage) {
 							}
 						}
 						// Play a sound when a contact changes online state.
-						var prev_status = contact_elem.attr("data-prev-status");
+						var prev_status = contact_elem.attr("data-status");
 						if ((prev_status == "offline" && cur_status == "online") || (prev_status == "online" && cur_status == "offline"))
 							pchat.pchat_play_sound(cur_status);
-						contact_elem.attr("data-prev-status", cur_status);
+						contact_elem.attr("data-status", cur_status);
 						// Name, presence, status.
 						var name = (contact.name && contact.name != "") ? contact.name : contact.jid,
 							sname = name.replace(new RegExp('^(.{0,'+pchat.pchat_roster_max_len+'}).*$'), '$1');
@@ -828,6 +846,10 @@ if (!window.localStorage) {
 						}
 					});
 					// Update the group selector.
+					if (is_ungrouped)
+						group_elem.children(".ui-pchat-ungrouped").show();
+					else
+						group_elem.children(".ui-pchat-ungrouped").hide();
 					group_elem.children(":not(.ui-pchat-ungrouped)").each(function(){
 						var group = $(this), name = group.text();
 						if ($.inArray(name, groups) === -1) {
@@ -1450,6 +1472,8 @@ if (!window.localStorage) {
 		pchat_status_input: true,
 		// The maximum length of a name displayed in the roster.
 		pchat_roster_max_len: 10,
+		// Whether to hide contacts who are offline.
+		pchat_hide_offline: true,
 		// Where to put new conversation windows. Can be a selector or a function which takes the (full) JID of the contact and "this" refers to the pchat element.
 		pchat_conversation_container: function(){
 			if (this.convo_container)

@@ -25,13 +25,18 @@ defined('P_RUN') or die('Direct access prohibited');
 			</select></label>
 	</div>
 	<div class="pf-element">
+		<label><span class="pf-label">Roster Max Length</span>
+			<span class="pf-note">The max length of a displayed name in the roster (Longer names will show &hellip;).</span>
+			<input class="pf-field" type="text" name="roster_max_len" size="5" value="<?php echo isset($this->roster_max_len) ? htmlspecialchars((int) $this->roster_max_len) : '20'; ?>" /></label>
+	</div>
+	<div class="pf-element">
 		<span class="pf-label">Status Box</span>
-		<label class="pf-field"><input name="hide_status_box" type="checkbox" value="true"<?php echo $this->hide_status_box == 'true' ? ' checked="checked"' : ''; ?>> Hide the status input box.</label>
+		<label class="pf-field"><input type="checkbox" name="hide_status_box" value="true"<?php echo $this->hide_status_box == 'true' ? ' checked="checked"' : ''; ?>> Hide the status input box.</label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Guest</span>
 		<?php if ($pines->config->com_messenger->guest_access) { ?>
-		<label class="pf-field"><input name="guest" type="checkbox" value="true"<?php echo $this->guest == 'true' ? ' checked="checked"' : ''; ?>> Login to chat as a guest.</label>
+		<label class="pf-field"><input type="checkbox" name="guest" value="true"<?php echo $this->guest == 'true' ? ' checked="checked"' : ''; ?>> Login to chat as a guest.</label>
 		<?php } else { ?>
 		<span class="pf-field">Guest access is disabled.</span>
 		<?php } ?>

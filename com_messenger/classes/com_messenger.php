@@ -60,7 +60,7 @@ class com_messenger extends component {
 		global $pines;
 		if ((object) $_SESSION['xmpp_guest'] !== $_SESSION['xmpp_guest']) {
 			pines_session('write');
-			$un = uniqid('xmpp_guest_');
+			$un = uniqid('pines_guest_');
 			$_SESSION['xmpp_guest'] = (object) array(
 				'username' => $un,
 				'password' => md5($un.$pines->config->com_messenger->guest_key)

@@ -650,8 +650,8 @@ if (!window.localStorage) {
 							pchat.pchat_play_sound(cur_status);
 						contact_elem.attr("data-prev-status", cur_status);
 						// Name, presence, status.
-						var name = (contact.name && contact.name != "") ? contact.name : contact.jid;
-						var sname = name.replace(/^(.{0,25}).*$/, '$1');
+						var name = (contact.name && contact.name != "") ? contact.name : contact.jid,
+							sname = name.replace(new RegExp('^(.{0,'+pchat.pchat_roster_max_len+'}).*$'), '$1');
 						if (name != sname)
 							sname += '\u2026';
 						contact_display.append($('<span class="ui-pchat-contact-presence">&nbsp;</span>').addClass(icon_class))
@@ -1448,6 +1448,8 @@ if (!window.localStorage) {
 		},
 		// Whether to show the status input box.
 		pchat_status_input: true,
+		// The maximum length of a name displayed in the roster.
+		pchat_roster_max_len: 10,
 		// Where to put new conversation windows. Can be a selector or a function which takes the (full) JID of the contact and "this" refers to the pchat element.
 		pchat_conversation_container: function(){
 			if (this.convo_container)

@@ -19,6 +19,8 @@ if (!empty($this->widget_title))
 if (!isset($this->interface))
 	$this->interface = 'inline';
 
+$this->roster_max_len = isset($this->roster_max_len) ? (int) $this->roster_max_len : 20;
+
 if ($this->guest != 'true' && !isset($_SESSION['user']->guid)) {
 	echo 'Please log in to chat.';
 	return;
@@ -63,7 +65,8 @@ if ($this->interface == 'floating') {
 			pchat_widget_box: false,
 			pchat_title: false,
 			<?php } ?>
-			pchat_status_input: <?php echo json_encode($this->hide_status_box != 'true'); ?>
+			pchat_status_input: <?php echo json_encode($this->hide_status_box != 'true'); ?>,
+			pchat_roster_max_len: <?php echo json_encode($this->roster_max_len); ?>
 		});
 		<?php if ($this->interface == 'floating') { ?>
 		// Remove the module frame.

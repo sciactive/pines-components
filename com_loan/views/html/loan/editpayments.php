@@ -581,6 +581,7 @@ switch ($this->entity->payment_frequency) {
 			</div>
 			<?php } ?>
 		</div>
+		<br/>
 	</div>
 	<?php
 		// Check if any payment history type exists.
@@ -1194,6 +1195,7 @@ switch ($this->entity->payment_frequency) {
 					</table>
 				</div>
 			</div>
+			<br/>
 		</div>
 		<div class="tab-pane" id="p_muid_tab_restore_log">
 			<div class="pf-form">
@@ -1320,6 +1322,7 @@ switch ($this->entity->payment_frequency) {
 					</table>
 				</div>
 			</div>
+			<br/>
 		</div>
 	<?php
 	} 
@@ -2011,6 +2014,7 @@ switch ($this->entity->payment_frequency) {
 					</table>
 				</div>
 			</div>
+			<br/>
 		</div>
 		<div class="tab-pane" id="p_muid_tab_overview">
 			<?php 
@@ -2491,5 +2495,6 @@ switch ($this->entity->payment_frequency) {
 					</table>
 				</div>
 			</div>
+			<br/>
 		</div>
 </div>

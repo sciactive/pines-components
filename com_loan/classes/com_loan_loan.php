@@ -2229,13 +2229,16 @@ class com_loan_loan extends entity {
 							} else {
 								// They missed multiple payments.
 								// Now adjust payment down to frequency payment.
-								if ($payment_amount <= $temp_payment_paid['payment_total_expected']) {
+								if ($payment_amount < $temp_payment_paid['payment_total_expected']) {
 									$temp_payment_paid['payment_interest_paid'] = $payment_amount;
 									$temp_payment_paid['payment_status'] = "partial";
 								} else {
 									$temp_payment_paid['payment_interest_paid'] = $temp_payment_paid['payment_total_expected'];
 									$temp_payment_paid['payment_paid_rollover'] = $payment_amount - $temp_payment_paid['payment_interest_paid'];
-									$rollover = true;
+									if ($temp_payment_paid['payment_paid_rollover'] < .01)
+										unset($temp_payment_paid['payment_paid_rollover']);
+									else
+										$rollover = true;
 									$temp_payment_paid['payment_status'] = "paid_late";
 								}
 								// since in this if section, unpaid interest was not paid, no amount can come off the principal unpaid.

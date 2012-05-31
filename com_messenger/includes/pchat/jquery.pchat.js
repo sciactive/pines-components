@@ -208,7 +208,7 @@ if (!window.localStorage) {
 			.append($('<li><a href="javascript:void(0);">'+presence_text.xa+'</a></li>').on("click", "a", function(){
 				pchat.pchat_set_presence("xa", localStorage.getItem("pchat-presence-status"));
 			}))
-			.append($('<li><a href="javascript:void(0);">'+presence_text.dnd+'</li>').on("click", "a", function(){
+			.append($('<li><a href="javascript:void(0);">'+presence_text.dnd+'</a></li>').on("click", "a", function(){
 				pchat.pchat_set_presence("dnd", localStorage.getItem("pchat-presence-status"));
 			}))
 			.append($('<li><a href="javascript:void(0);">'+presence_text.offline+'</a></li>').on("click", "a", function(){

@@ -639,7 +639,7 @@ class com_loan_loan extends entity {
 									}
 								}
 								$temp_payments[$c]['payment_amount_paid'] = $temp_payments[$c]['payment_interest_paid'] + $temp_payments[$c]['payment_principal_paid'] + $temp_payments[$c]['payment_additional'];
-								$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c]['scheduled_current_balance'] - ($temp_payments[$c]['payment_principal_expected'] + $temp_payments[$c]['payment_additional']);
+								$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c]['scheduled_current_balance'] - ($temp_payments[$c]['payment_principal_expected']);
 								$temp_payments[$c]['remaining_balance'] = $temp_payments[$c]['current_balance'] - ($temp_payments[$c]['payment_principal_paid'] + $temp_payments[$c]['payment_additional']);
 								$temp_payments[$c]['payment_balance_unpaid'] = $pines->com_sales->round(-1*($temp_payments[$c]['scheduled_balance'] - $temp_payments[$c]['remaining_balance']));
 								$temp_payments[$c]['payment_interest_unpaid'] = $pines->com_sales->round($temp_payments[$c]['payment_interest_expected'] - $temp_payments[$c]['payment_interest_paid']);
@@ -697,7 +697,10 @@ class com_loan_loan extends entity {
 								$temp_payments[$c]['missed_current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 							$temp_payments[$c]['current_balance'] = $temp_payments[$c-1]['remaining_balance'];
 						}
-						$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
+						if ($temp_payments[$c-1]['payment_additional'] >= .01)
+							$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['missed_current_balance'] * $this->rate_per_period) / 100, true);
+						else
+							$temp_payments[$c]['payment_interest_expected'] = (float) $pines->com_sales->round(($temp_payments[$c]['scheduled_current_balance'] * $this->rate_per_period) / 100, true);
 						$temp_payments[$c]['payment_principal_expected'] = $this->frequency_payment - $temp_payments[$c]['payment_interest_expected'];
 						$temp_payments[$c]['payment_interest_paid'] = 0.00; // Because it is missed and no payments have ever bee made.
 						$temp_payments[$c]['payment_principal_paid'] = 0.00; // Because it is missed and no payments have ever bee made.
@@ -705,6 +708,9 @@ class com_loan_loan extends entity {
 						$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c]['scheduled_current_balance'] - $temp_payments[$c]['payment_principal_expected'];
 						$temp_payments[$c]['remaining_balance'] =  $temp_payments[$c]['current_balance'] - $temp_payments[$c]['payment_principal_paid'];
 						$temp_payments[$c]['missed_remaining_balance'] =  $temp_payments[$c]['missed_current_balance'] - $temp_payments[$c]['payment_principal_expected'];
+						// Actually, we need to change the scheduled balance to reflect the changes to the schedule from additional payments
+						if ($temp_payments[$c-1]['payment_additional'] >= .01)
+							$temp_payments[$c]['scheduled_balance'] = $temp_payments[$c]['missed_remaining_balance'];
 						$temp_payments[$c]['payment_balance_unpaid'] = -1*($temp_payments[$c]['scheduled_balance'] - $temp_payments[$c]['remaining_balance']);
 						$temp_payments[$c]['payment_interest_unpaid'] = $temp_payments[$c]['payment_interest_expected'] - $temp_payments[$c]['payment_interest_paid'];
 
@@ -1062,6 +1068,7 @@ class com_loan_loan extends entity {
 		}
 		// Find that payment in the paid array so we can get a num.
 		// $c needs to start at one, because the [0] position of paid array is misc.
+		// Apparently not ^.
 		$c = 0;
 		foreach ($this->paid as $paid) {
 			if ($paid['payment_id'] == $edit_payment_id) {
@@ -1304,12 +1311,19 @@ class com_loan_loan extends entity {
 			// This happens when a PAST DUE payment was made with an additional amount.
 			// (as you know, past due payments do not contain an additional amount
 			// the excess amount generates a new payment.)
+			// 
+			// This ^ has been rewritten and now the pay-by-date array never generates
+			// new payments. The paid array interprets pay-by-dates to reflect newly generated
+			// payments instead, so that we can maintain the integrity and accuracy of
+			// our data stored in the pay-by-date array. We should never wind up here.
 			//
 			// (Remember - not edited -  with an additional amount, but CREATED!)
 			// (when it was created, it was given a unique payment_id, it's just not in the PBD array)
 			//
 			// Why? It stays as a solid payment unless edited, in case things get changed, and it's not
 			// a past due payment anymore, we want the payment to be applied as having an additional amount.
+			// * Now the paid array handles this, applying the pay-by-date as either past due, or additional
+			// where appropriate, despite edits or rearranging.
 			//
 			// But now that we are editing it though, we need to make it editable without changing the parent.
 			// Which means we need to create its own seperate PBD and subtract the amount from the parent payment.
@@ -1756,6 +1770,10 @@ class com_loan_loan extends entity {
 				$this->paid[$num]['payment_interest_unpaid_remainder'] -= $extra['payment_interest_paid'];
 				$this->paid[$num]['payment_principal_unpaid_remainder'] -= $extra['payment_principal_paid'];
 				
+				// Round remainders.
+				$this->paid[$num]['payment_interest_unpaid_remainder'] = $pines->com_sales->round($this->paid[$num]['payment_interest_unpaid_remainder']);
+				$this->paid[$num]['payment_principal_unpaid_remainder'] = $pines->com_sales->round($this->paid[$num]['payment_principal_unpaid_remainder']);
+				
 				// Create/Update total paid
 				if ($this->paid[$num]['extra_payments']) {
 					$this->paid[$num]['payment_interest_paid_total'] += $extra['payment_interest_paid'];
@@ -1804,8 +1822,8 @@ class com_loan_loan extends entity {
 						$new_rollover_payment['payment_interest_unpaid_expected'] = $new_interest_unpaid_expected;
 						$new_rollover_payment['payment_principal_unpaid_expected'] = $new_principal_unpaid_expected;
 
-						$new_rollover_payment['payment_interest_expected'] = $this->schedule[$c]['payment_interest_expected'];
-						$new_rollover_payment['payment_principal_expected'] = $this->schedule[$c]['payment_principal_expected'];
+						$new_rollover_payment['payment_interest_expected'] = $this->payments[$c+1]['payment_interest_expected'];
+						$new_rollover_payment['payment_principal_expected'] = $this->payments[$c+1]['payment_principal_expected'];
 						$total_expected = $new_rollover_payment['payment_interest_expected'] + $new_rollover_payment['payment_principal_expected'];
 						$new_rollover_payment['payment_total_expected'] = $total_expected;
 						
@@ -1881,7 +1899,7 @@ class com_loan_loan extends entity {
 					// an additional amount on THAT next due payment.
 					$cr = count($rollover_payments) - 1;
 					if ($rollover_payments[$cr]['payment_paid_rollover'] >= .01) {
-						unset($rollover_payments[$cr]['payment_paid_rollover']);
+						//unset($rollover_payments[$cr]['payment_paid_rollover']);
 						// We want to make this towards the next due payment.
 						$payment_amount = $rollover_payments[$cr]['payment_paid_rollover'];
 						// find the next due payment.
@@ -2605,6 +2623,15 @@ class com_loan_loan extends entity {
 		// Find PAID amount
 		$interest_paid = ($payments_array[0]['total_interest_paid']) ? $payments_array[0]['total_interest_paid'] : 0;
 		$principal_paid = ($payments_array[0]['total_principal_paid']) ? $payments_array[0]['total_principal_paid'] : 0;
+		
+		// Find additional amounts paid (need to be subtracted from principal paid)
+		foreach ($payments_array as $payment) {
+			if ($payment['payment_additional'] >= .01) {
+				$additional_paid += $payment['payment_additional'];
+			}
+		}
+		
+		$principal_paid -= $additional_paid;
 		
 		// Find EXPECTED amount before receive date.
 		if ($date_received) {

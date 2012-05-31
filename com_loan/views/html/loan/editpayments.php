@@ -1531,6 +1531,7 @@ switch ($this->entity->payment_frequency) {
 																<thead>
 																	<tr>
 																		<th>Entry</th>
+																		<th>Change</th>
 																		<th>Receive Date</th>
 																		<th>Date Recorded</th>
 																		<th>Payment Amount</th>
@@ -1583,6 +1584,9 @@ switch ($this->entity->payment_frequency) {
 																	?>
 																	<tr>
 																		<td>Original Payment</td>
+																		<td>
+																			n/a
+																		</td>
 																		<td><?php echo htmlspecialchars(format_date($original_received, "full_short")); ?></td>
 																		<td><?php echo htmlspecialchars(format_date($original_recorded, "full_short")); ?></td>
 																		<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($original_payment_amount, true)); ?></td>
@@ -1603,6 +1607,36 @@ switch ($this->entity->payment_frequency) {
 																				?>
 																				<tr class="alert-info">
 																					<td><?php echo "Current Edit ".$match_count; ?></td>
+																					<td>
+																					<?php
+		//																			// Get edit payment amount paid.
+																					// The edit_info "edit_payment" is the edited payment AMOUNT
+																					// The edit_payment contains the entire section from the payment array that was REPLACED
+																					// So in this section we compare the total edit amount NOW to the replaced amount
+																					// Since we have an entire section of the payments array, we need to determine if the
+																					// EDIT payment we are dealing with is an extra payment so that the comparison is accurate.
+																					if ($a_match['edit_payment']['payment_id'] == $a_match['edit_info']['payment_id']) {
+																						if ($a_match['edit_payment']['extra_payments']) {
+																							$total_edit_payment = $a_match['edit_payment']['payment_amount_paid_orig'];
+																						} else {
+																							$total_edit_payment = $a_match['edit_payment']['payment_amount_paid'];
+																						}
+																					} elseif ($a_match['edit_payment']['extra_payments']) {
+																						foreach($a_match['edit_payment']['extra_payments'] as $extra_payment) {
+																							if ($extra_payment['payment_id'] == $a_match['edit_info']['payment_id']) {
+																								$total_edit_payment = $extra_payment['payment_interest_paid'] + $extra_payment['payment_principal_paid'] + $extra_payment['payment_additional'];
+																							}
+																						}
+																					}
+																					// Determine positive or negative change. (or date change)
+																					if ($a_match['edit_info']['edit_payment'] - $total_edit_payment >= .01 )
+																						echo '<span class="picon-flag-green" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> +</span>';
+																					elseif ($a_match['edit_info']['edit_payment'] - $total_edit_payment <= -.01)
+																						echo '<span class="picon-flag-red" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> -</span>';
+																					else
+																						echo '<span class="picon-view-calendar-day" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> Date</span>';
+																					?>
+																					</td>
 																					<td><?php echo htmlspecialchars(format_date($a_match['edit_info']['edit_date_received'], "full_short")); ?></td>
 																					<td><?php echo htmlspecialchars(format_date($a_match['edit_info']['edit_date_recorded'], "full_short")); ?></td>
 																					<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($a_match['edit_info']['edit_payment'], true)); ?></td>
@@ -1617,6 +1651,36 @@ switch ($this->entity->payment_frequency) {
 																		?>
 																		<tr>
 																			<td><?php echo "Edit ". $match_count; ?></td>
+																			<td>
+																			<?php
+//																			// Get edit payment amount paid.
+																			// The edit_info "edit_payment" is the edited payment AMOUNT
+																			// The edit_payment contains the entire section from the payment array that was REPLACED
+																			// So in this section we compare the total edit amount NOW to the replaced amount
+																			// Since we have an entire section of the payments array, we need to determine if the
+																			// EDIT payment we are dealing with is an extra payment so that the comparison is accurate.
+																			if ($a_match['edit_payment']['payment_id'] == $a_match['edit_info']['payment_id']) {
+																				if ($a_match['edit_payment']['extra_payments']) {
+																					$total_edit_payment = $a_match['edit_payment']['payment_amount_paid_orig'];
+																				} else {
+																					$total_edit_payment = $a_match['edit_payment']['payment_amount_paid'];
+																				}
+																			} elseif ($a_match['edit_payment']['extra_payments']) {
+																				foreach($a_match['edit_payment']['extra_payments'] as $extra_payment) {
+																					if ($extra_payment['payment_id'] == $a_match['edit_info']['payment_id']) {
+																						$total_edit_payment = $extra_payment['payment_interest_paid'] + $extra_payment['payment_principal_paid'] + $extra_payment['payment_additional'];
+																					}
+																				}
+																			}
+																			// Determine positive or negative change. (or date change)
+																			if ($a_match['edit_info']['edit_payment'] - $total_edit_payment >= .01 )
+																				echo '<span class="picon-flag-green" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> +</span>';
+																			elseif ($a_match['edit_info']['edit_payment'] - $total_edit_payment <= -.01)
+																				echo '<span class="picon-flag-red" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> -</span>';
+																			else
+																				echo '<span class="picon-view-calendar-day" style="white-space:nowrap;display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;"> Date</span>';
+																			?>
+																			</td>
 																			<td><?php echo htmlspecialchars(format_date($a_match['edit_info']['edit_date_received'], "full_short")); ?></td>
 																			<td><?php echo htmlspecialchars(format_date($a_match['edit_info']['edit_date_recorded'], "full_short")); ?></td>
 																			<td><?php echo '$'.htmlspecialchars($pines->com_sales->round($a_match['edit_info']['edit_payment'], true)); ?></td>
@@ -2317,15 +2381,15 @@ switch ($this->entity->payment_frequency) {
 								</td>
 								<td>
 									<?php
-									if (($payment['payment_interest_expected'] - $payment['payment_interest_paid']) >= 0.01 && $payment['payment_status'] != 'not due yet' && $payment['payment_status'] != 'partial_not_due') {
+									if ((($payment['payment_interest_unpaid_expected'] - $payment['payment_interest_paid']) >= 0.01 && $payment['payment_status'] != 'not due yet' && $payment['payment_status'] != 'partial_not_due')) {
 										// I need a tooltip to show unpaid interest and expected interest.
 										$uniq2 = htmlspecialchars(uniqid());
 										?>
 										<script type="text/javascript">
 											pines(function(){
 												$("#p_muid_tooltip_<?php echo ($uniq2); ?>").popover({
-													title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid'], true))); ?>,
-													content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_expected'], true)));?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true))); ?>+'</span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
+													title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid_expected'] - $payment['payment_interest_paid'], true))); ?>,
+													content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid_expected'], true)));?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true))); ?>+'</span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
 													placement: "right"
 												});
 											});
@@ -2372,8 +2436,8 @@ switch ($this->entity->payment_frequency) {
 										<script type="text/javascript">
 											pines(function(){
 												$("#p_muid_tooltip_<?php echo $uniq; ?>").popover({
-													title: 'Unpaid Balance: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_balance_unpaid'], true))); ?>,
-													content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true))); ?>+' </span><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
+													title: 'Unpaid Balance: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'] - $payment['scheduled_balance'], true))); ?>,
+													content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true))); ?>+'</span><br/><hr style="margin: 10px 0;"/>Unpaid Payment Principal: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_principal_expected'], true))); ?>+'</span><br/>Accumulated Unpaid Principal: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'] - $payment['scheduled_balance'], true))); ?>+'</span><br/><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
 													placement: "right"
 												});
 											});

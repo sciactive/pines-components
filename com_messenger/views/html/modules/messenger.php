@@ -46,6 +46,10 @@ if ($this->interface == 'floating') {
 ?>
 <script type="text/javascript">
 	pines(function(){
+		<?php if ($this->status_url == 'true') { ?>
+		var status = <?php echo json_encode('URL: '.$_SERVER['REQUEST_URI']); ?>;
+		localStorage.setItem("pchat-presence-status", status);
+		<?php } ?>
 		var pchat = $("#p_muid_main").pchat({
 			pchat_bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
 			pchat_domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
@@ -57,6 +61,16 @@ if ($this->interface == 'floating') {
 				online: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.mp3"],
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
+			<?php if ($this->status_url == 'true') { ?>
+			pchat_onconnect: function(){
+				setTimeout(function(c){
+					var pres = localStorage.getItem("pchat-presence");
+					if (!pres)
+						pres = "available";
+					c.pchat_set_presence(pres, status);
+				}, 500, this);
+			},
+			<?php } ?>
 			//pchat_show_log: true,
 			<?php if ($this->interface == 'floating') { ?>
 			pchat_title: pines.safe(<?php echo json_encode($this->title); ?>),

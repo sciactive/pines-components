@@ -34,6 +34,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label class="pf-field"><input type="checkbox" name="hide_status_box" value="true"<?php echo $this->hide_status_box == 'true' ? ' checked="checked"' : ''; ?>> Hide the status input box.</label>
 	</div>
 	<div class="pf-element">
+		<span class="pf-label">Status is URL</span>
+		<label class="pf-field"><input type="checkbox" name="status_url" value="true"<?php echo $this->status_url == 'true' ? ' checked="checked"' : ''; ?>> Set the status to what URL the user is viewing.</label>
+	</div>
+	<div class="pf-element">
 		<span class="pf-label">Guest</span>
 		<?php if ($pines->config->com_messenger->guest_access) { ?>
 		<label class="pf-field"><input type="checkbox" name="guest" value="true"<?php echo $this->guest == 'true' ? ' checked="checked"' : ''; ?>> Login to chat as a guest.</label>

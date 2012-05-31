@@ -525,6 +525,8 @@ if (!window.localStorage) {
 									connection.roster.get(null, ver, roster);
 								save_state();
 							}
+							if (pchat.pchat_onconnect)
+								pchat.pchat_onconnect.call(pchat);
 							//console.log("Connection:");
 							//console.log(connection);
 							break;
@@ -1516,6 +1518,7 @@ if (!window.localStorage) {
 			else
 				return (month+"/"+date+" "+hours+":"+(minutes < 10 ? '0'+minutes : minutes)+ap);
 		},
+		pchat_onconnect: function(){},
 		// Whether to show the debug log.
 		pchat_show_log: false
 	};

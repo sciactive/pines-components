@@ -234,8 +234,8 @@ class JabberAuth {
 		//`echo "EjabberD Auth|User: {$this->jabber_user} --- Passord: {$this->jabber_pass}" | nc localhost 1337`;
 
 		global $pines;
-		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'pines_guest_') === 0)
-			return (md5($this->jabber_user.$pines->config->com_messenger->guest_key) === $this->jabber_pass);
+		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'guest_') === 0)
+			return (md5($this->jabber_user.format_date(time(), 'date_short', '', 'UTC').$pines->config->com_messenger->guest_key) === $this->jabber_pass);
 
 		$user = user::factory($this->jabber_user);
 		if (!isset($user->guid) || !$user->has_tag('enabled'))
@@ -258,7 +258,7 @@ class JabberAuth {
 		 * $this->jabber_server
 		 */
 		global $pines;
-		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'pines_guest_') === 0)
+		if ($pines->config->com_messenger->guest_access && strpos($this->jabber_user, 'guest_') === 0)
 			return true;
 		$user = user::factory($this->jabber_user);
 		return (isset($user->guid) && $user->has_tag('enabled'));

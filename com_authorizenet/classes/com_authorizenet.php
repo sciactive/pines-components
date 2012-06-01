@@ -33,13 +33,13 @@ class com_authorizenet extends component {
 			$prefix = substr($card_num, 0, 2);
 			if ($prefix == '30' || $prefix == '36' || $prefix == '38') {
 				return 'DC';
-			} else if ($prefix == '34' || $prefix == '37') {
+			} elseif ($prefix == '34' || $prefix == '37') {
 				return 'AMEX';
-			} else if ($prefix == '35') {
+			} elseif ($prefix == '35') {
 				return 'JCB';
-			} else if ($prefix == '51' || $prefix == '52' || $prefix == '53' || $prefix == '54' || $prefix == '55') {
+			} elseif ($prefix == '51' || $prefix == '52' || $prefix == '53' || $prefix == '54' || $prefix == '55') {
 				return 'MC';
-			} else if ($prefix == '64' || $prefix == '65') {
+			} elseif ($prefix == '64' || $prefix == '65') {
 				return 'DISC';
 			} else {
 				$prefix = substr($card_num, 0, 4);
@@ -273,7 +273,7 @@ class com_authorizenet extends component {
 					break;
 				}
 
-				$response_array = explode($post_values['x_delim_char'],$post_response);
+				$response_array = explode($post_values['x_delim_char'], $post_response);
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'voided';

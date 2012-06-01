@@ -68,6 +68,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } if (gatekeeper('com_sales/voidsale') || gatekeeper('com_sales/voidownsale')) { ?>
 				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>},
+				{type: 'button', text: 'Force Void', title: 'Ignore errors while voiding payments.', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/void', array('id' => '__title__', 'force' => 'true'))); ?>},
 				<?php } if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep')) { ?>
 				{type: 'button', title: 'Change Salesperson', extra_class: 'picon picon-edit-find-user', click: function(e, row){
 					sale_grid.salesrep_form(row.pgrid_get_value(1), row.attr("title"));

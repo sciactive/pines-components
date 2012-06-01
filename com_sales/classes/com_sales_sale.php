@@ -1723,9 +1723,10 @@ class com_sales_sale extends entity {
 	 * A sale transaction is created, and the sale's status is changed to
 	 * 'voided'.
 	 *
+	 * @param bool $force Whether to ignore errors during payment voiding.
 	 * @return bool True on success, false on failure.
 	 */
-	public function void() {
+	public function void($force = false) {
 		global $pines;
 		if ($this->status == 'voided')
 			return true;
@@ -1831,7 +1832,10 @@ class com_sales_sale extends entity {
 				// If the payment was voided, record it, if not, consider it a
 				// failure.
 				if ($cur_payment['status'] != 'voided') {
-					$return = false;
+					if ($force)
+						pines_error('There was an error while voiding the payment '.$cur_payment['label'].'. It is being ignored because the void is being forced.');
+					else
+						$return = false;
 				} else {
 					// Make a transaction entry.
 					$tx = com_sales_tx::factory('payment_tx');

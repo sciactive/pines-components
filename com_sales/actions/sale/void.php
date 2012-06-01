@@ -26,7 +26,7 @@ if (!isset($entity->guid)) {
 if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) ) {
 	pines_notice('You can only void your own sales.');
 } else {
-	if ($entity->void() && $entity->save()) {
+	if ($entity->void($_REQUEST['force'] == 'true') && $entity->save()) {
 		pines_notice('The sale has been voided.');
 	} elseif ($entity->save()) {
 		pines_notice('The sale could not be voided.');

@@ -26,7 +26,8 @@ return array(
 		'component' => 'com_bootstrap'
 	),
 	'abilities' => array(
-		array('show', 'About Page', 'User can see the about page.')
+		array('show', 'About Page', 'User can see the about page.'),
+		array('pinesfeed', 'Pines Feed', 'User can see the Pines News Feed widget.')
 	),
 );
 

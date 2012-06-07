@@ -105,6 +105,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'google_categories',
+		'cname' => 'Require Corresponding Google Category on Categories',
+		'description' => 'Requires a corresponding google category for use with google shopping and merchant center.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'autocomplete_product',
 		'cname' => 'Autocomplete Product',
 		'description' => 'Use a product autocomplete selector on sales and returns.',

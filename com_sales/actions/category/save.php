@@ -44,6 +44,8 @@ if ($pines->config->com_sales->com_storefront) {
 		if (isset($cur_page->guid))
 			$category->show_pages[] = $cur_page;
 	}
+	if ($pines->config->com_sales->google_categories)
+		$category->google_category = $_REQUEST['google_category'];
 	$category->show_products = ($_REQUEST['show_products'] == 'ON');
 	$category->description = $_REQUEST['description'];
 	$category->specs = array();
@@ -168,6 +170,23 @@ foreach ($category->children as $key => &$cur_child) {
 		unset($category->children[$key]);
 }
 unset($cur_child);
+
+// Check google category.
+if ($pines->config->com_sales->google_categories) {
+	if (empty($category->google_category)) {
+		$category->print_form();
+		pines_notice('Please specify a corresponding Google Shopping category.');
+		return;
+	}
+
+	$googlecategories = file_get_contents("components/com_sales/includes/googlecategories.txt");
+
+	if (!preg_match('/^'.preg_quote($category->google_category, '/').'$/m', $googlecategories)) {
+		$category->print_form();
+		pines_notice('Please choose a google category the autocomplete list.');
+		return;
+	}
+}
 
 if ($category->save()) {
 	pines_notice('Saved category ['.$category->name.']');

@@ -263,11 +263,13 @@ if ($pines->config->com_sales->com_storefront) {
 					</select>
 				</label>
 			</div>
+			<?php if ($pines->config->com_sales->google_categories) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Google Category</span>
 					<span class="pf-note">Corresponding category for Google Shopping.</span>
-					<input id="p_muid_google_category" class="pf-field" type="text" name="term" value="<?php echo htmlspecialchars($this->entity->google_category); ?>"/>
+					<input id="p_muid_google_category" class="pf-field" type="text" name="google_category" value="<?php echo htmlspecialchars($this->entity->google_category); ?>"/>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<span class="pf-label">Products</span>
 				<span class="pf-note">These products are assigned to this category.</span>

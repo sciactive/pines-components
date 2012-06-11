@@ -122,6 +122,34 @@ class com_sales_category extends entity {
 	}
 
 	/**
+	 * Get the ancestors of this category.
+	 * @return array Ancestor categories.
+	 */
+	public function get_ancestors() {
+		$ancestors = array();
+		$cur_cat = $this;
+		while (isset($cur_cat->parent->guid)) {
+			$ancestors[] = $cur_cat->parent;
+			$cur_cat = $cur_cat->parent;
+		}
+		return $ancestors;
+	}
+
+	/**
+	 * Get the descendants of this category.
+	 * @return array Descendant categories.
+	 */
+	public function get_descendants() {
+		$descendants = array_merge(array(), (array) $this->children);
+		foreach ((array) $this->children as $cur_child) {
+			if (!isset($cur_child->guid))
+				continue;
+			$descendants = array_merge($descendants, $cur_child->get_descendants());
+		}
+		return $descendants;
+	}
+
+	/**
 	 * Get all specs from ancestors.
 	 * @return array Array of specs.
 	 */

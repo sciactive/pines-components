@@ -225,14 +225,10 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Manufacturer SKU</span>
 					<input class="pf-field" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlspecialchars($this->entity->manufacturer_sku); ?>" /></label>
 			</div>
-			<div class="pf-element pf-full-width">
+			<div class="pf-element">
 				<label><span class="pf-label">Receipt Description</span>
 					<span class="pf-note">A short description to be shown on receipts.</span>
-					<span class="pf-group pf-full-width">
-						<span class="pf-field" style="display: block;">
-							<textarea style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo htmlspecialchars($this->entity->receipt_description); ?></textarea>
-						</span>
-					</span></label>
+					<input class="pf-field" type="text" name="receipt_description" size="40" value="<?php echo htmlspecialchars($this->entity->receipt_description); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Short Description</span><br />
@@ -272,6 +268,16 @@ $pines->com_ptags->load();
 							pgrid_child_prefix: "ch_",
 							pgrid_paginate: false,
 							pgrid_view_height: "300px"
+						}).on("change", ":checkbox", function(e){
+							var box = $(this),
+								row = box.closest("tr"),
+								desc = row.pgrid_add_descendant_rows().not(row);
+							if (box.is(":checked") && desc.find(":checkbox:checked").length && !confirm("You have already selected a descendant of this category, which puts the product\nin this category in the storefront. Are you sure you want to add this category\ntoo?")) {
+								box.removeAttr("checked");
+								e.preventDefault();
+								e.stopPropagation();
+								e.stopImmediatePropagation();
+							}
 						});
 					});
 				</script>
@@ -291,7 +297,7 @@ $pines->com_ptags->load();
 						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo (int) $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
-							<td><?php echo htmlspecialchars($cur_category->name); ?></td>
+							<td><a data-entity="<?php echo htmlspecialchars($cur_category->guid); ?>" data-entity-context="com_sales_category"><?php echo htmlspecialchars($cur_category->name); ?></a></td>
 							<td><?php echo count($cur_category->products); ?></td>
 						</tr>
 						<?php } ?>
@@ -377,7 +383,7 @@ $pines->com_ptags->load();
 							<tbody>
 								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
 								<tr title="<?php echo (int) $cur_vendor['entity']->guid; ?>">
-									<td><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></td>
+									<td><a data-entity="<?php echo htmlspecialchars($cur_vendor['entity']->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></a></td>
 									<td><?php echo htmlspecialchars($cur_vendor['sku']); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['cost']); ?></td>
 									<td><a href="<?php echo htmlspecialchars($cur_vendor['link']); ?>" target="_blank"><?php echo htmlspecialchars($cur_vendor['link']); ?></a></td>
@@ -405,7 +411,7 @@ $pines->com_ptags->load();
 						<tbody>
 							<?php foreach ($this->vendors as $cur_vendor) { ?>
 							<tr title="<?php echo (int) $cur_vendor->guid; ?>">
-								<td><?php echo htmlspecialchars($cur_vendor->name); ?></td>
+								<td><a data-entity="<?php echo htmlspecialchars($cur_vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($cur_vendor->name); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_vendor->email); ?></td>
 								<td><?php echo htmlspecialchars(format_phone($cur_vendor->phone_work)); ?></td>
 								<td><?php echo htmlspecialchars(format_phone($cur_vendor->fax)); ?></td>
@@ -916,9 +922,7 @@ $pines->com_ptags->load();
 						} while (cur_spec.length);
 					});
 				};
-				category_grid.delegate(":checkbox", "change", function(){
-					show_specs();
-				});
+				category_grid.on("change", ":checkbox", show_specs);
 				show_specs();
 
 				$(".combobox", "#p_muid_tab_storefront").each(function(){

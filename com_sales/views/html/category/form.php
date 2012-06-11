@@ -257,7 +257,7 @@ if ($pines->config->com_sales->com_storefront) {
 				<div class="pf-group">
 					<div class="pf-field well" style="padding: 1em; min-width: 300px; max-height: 200px; overflow: auto;">
 						<?php foreach ($this->entity->products as $cur_product) { ?>
-						<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo htmlspecialchars("{$cur_product->sku} : {$cur_product->name}"); ?></a><br />
+						<a data-entity="<?php echo htmlspecialchars($cur_product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars("[{$cur_product->sku}] {$cur_product->name}"); ?></a><br />
 						<?php } ?>
 					</div>
 				</div>

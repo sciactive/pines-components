@@ -28,8 +28,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'category/edit', array('id' => '__title__'))); ?>},
 				{type: 'button', text: 'Move Up', extra_class: 'picon picon-arrow-up', url: <?php echo json_encode(pines_url('com_sales', 'category/move', array('id' => '__title__', 'dir' => 'up'))); ?>},
 				{type: 'button', text: 'Move Down', extra_class: 'picon picon-arrow-down', url: <?php echo json_encode(pines_url('com_sales', 'category/move', array('id' => '__title__', 'dir' => 'down'))); ?>},
-				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
+				<?php if (gatekeeper('com_sales/editproduct')) { ?>
+				{type: 'button', text: 'Fix Products', title: 'Fix products that are listed in ancestors of their categories.', extra_class: 'picon picon-games-solve', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'category/fixhier')); ?>},
+				<?php } } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecategory')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'category/delete', array('id' => '__title__'))); ?>, delimiter: ','},

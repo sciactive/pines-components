@@ -180,6 +180,18 @@ if ($pines->config->com_sales->com_storefront) {
 			$("#p_muid_menu_position").autocomplete({
 				source: <?php echo json_encode($pines->info->template->positions); ?>
 			});
+			
+			$("#p_muid_google_category").autocomplete({
+				source: <?php echo json_encode(pines_url('com_sales','category/googlecategories_autocomplete')); ?>,
+				minLength: 4
+			}).each(function(){
+				$(this).data( "autocomplete" )._renderItem = function(ul, item){
+					return $("<li></li>")
+						.data("item.autocomplete", item)
+						.append("<a>"+item.label+"</a>")
+						.appendTo(ul);
+				};
+			});
 			<?php } ?>
 		});
 	</script>
@@ -251,6 +263,13 @@ if ($pines->config->com_sales->com_storefront) {
 					</select>
 				</label>
 			</div>
+			<?php if ($pines->config->com_sales->google_categories) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Google Category</span>
+					<span class="pf-note">Corresponding category for Google Shopping.</span>
+					<input id="p_muid_google_category" class="pf-field" type="text" name="google_category" value="<?php echo htmlspecialchars($this->entity->google_category); ?>"/>
+			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<span class="pf-label">Products</span>
 				<span class="pf-note">These products are assigned to this category.</span>

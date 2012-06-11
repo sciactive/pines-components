@@ -25,6 +25,17 @@ return array(
 			),
 		),
 	),
+	'goalcalculator' => array(
+		'cname' => 'Goal Calculator',
+		'description' => 'Calculates monthly sales goal.',
+		'image' => 'includes/goal_calculator_widget_screen.png',
+		'view' => 'modules/goalcalculator',
+		'form' => 'modules/goalcalculator_form',
+		'type' => 'module widget',
+		'widget' => array(
+			'default' => false,
+		),
+	),
 );
 
 ?>

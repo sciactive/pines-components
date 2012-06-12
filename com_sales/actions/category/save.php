@@ -171,7 +171,7 @@ foreach ($category->children as $key => &$cur_child) {
 }
 unset($cur_child);
 
-// Check google category.
+// Check Google category.
 if ($pines->config->com_sales->google_categories) {
 	if (empty($category->google_category)) {
 		$category->print_form();
@@ -183,7 +183,7 @@ if ($pines->config->com_sales->google_categories) {
 
 	if (!preg_match('/^'.preg_quote($category->google_category, '/').'$/m', $googlecategories)) {
 		$category->print_form();
-		pines_notice('Please choose a google category the autocomplete list.');
+		pines_notice('Please choose a Google category from the autocomplete list.');
 		return;
 	}
 }

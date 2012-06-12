@@ -106,8 +106,8 @@ return array(
 	),
 	array(
 		'name' => 'google_categories',
-		'cname' => 'Require Corresponding Google Category on Categories',
-		'description' => 'Requires a corresponding google category for use with google shopping and merchant center.',
+		'cname' => 'Require Google Category on Categories',
+		'description' => 'Requires a corresponding Google Category for use with Google Shopping and Merchant Center.',
 		'value' => false,
 		'peruser' => true,
 	),

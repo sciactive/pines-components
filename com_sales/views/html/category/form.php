@@ -183,9 +183,9 @@ if ($pines->config->com_sales->com_storefront) {
 			
 			$("#p_muid_google_category").autocomplete({
 				source: <?php echo json_encode(pines_url('com_sales','category/googlecategories_autocomplete')); ?>,
-				minLength: 4
+				minLength: 3
 			}).each(function(){
-				$(this).data( "autocomplete" )._renderItem = function(ul, item){
+				$(this).data("autocomplete")._renderItem = function(ul, item){
 					return $("<li></li>")
 						.data("item.autocomplete", item)
 						.append("<a>"+item.label+"</a>")
@@ -267,7 +267,10 @@ if ($pines->config->com_sales->com_storefront) {
 			<div class="pf-element">
 				<label><span class="pf-label">Google Category</span>
 					<span class="pf-note">Corresponding category for Google Shopping.</span>
-					<input id="p_muid_google_category" class="pf-field" type="text" name="google_category" value="<?php echo htmlspecialchars($this->entity->google_category); ?>"/>
+					<span class="pf-group">
+						<input id="p_muid_google_category" class="pf-field" type="text" name="google_category" value="<?php echo htmlspecialchars($this->entity->google_category); ?>" />
+						<a class="pf-field" href="http://support.google.com/merchants/bin/answer.py?hl=en-GB&amp;answer=1705911" target="_blank">See the full list.</a>
+					</span></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">

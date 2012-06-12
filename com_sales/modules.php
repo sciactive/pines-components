@@ -34,6 +34,9 @@ return array(
 		'type' => 'module widget',
 		'widget' => array(
 			'default' => false,
+			'depends' => array(
+				'ability' => 'com_sales/newsale',
+			),
 		),
 	),
 );

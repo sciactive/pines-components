@@ -921,14 +921,17 @@ if (!window.localStorage) {
 						from_alias = Strophe.getNodeFromJid(from);
 
 					if (type == "chat" && elems.length > 0) {
-						pchat.pchat_display_message({
+						var message = {
 							from_jid: from,
 							from_alias: from_alias,
 							to_jid: to,
 							to_alias: "Me",
 							date: new Date().getTime(),
 							content: $(body).text()
-						});
+						};
+						if (opts.onmessage_in)
+							opts.onmessage_in.call(pchat, message);
+						pchat.pchat_display_message(message);
 					} else if (type == "headline" && elems.length > 0)
 						alert(from_alias+": "+$(body).text());
 
@@ -1399,6 +1402,8 @@ if (!window.localStorage) {
 			 * @param message The message to send.
 			 */
 			pchat.pchat_send_message = function(message){
+				if (opts.onmessage_out)
+					opts.onmessage_out.call(pchat, message);
 				var msg = $msg({to: message.to_jid, from: message.from_jid, type: 'chat'}).c('body').t(message.content).up();
 				connection.send(msg.tree());
 				pchat.pchat_display_message(message);
@@ -1553,9 +1558,9 @@ if (!window.localStorage) {
 		// Callback for when pchat connects.
 		onconnect: function(){},
 		// Callback for when pchat receives a message.
-		onmessage_in: function(){},
+		onmessage_in: function(message){},
 		// Callback for when pchat sends a message.
-		onmessage_out: function(){},
+		onmessage_out: function(message){},
 		// Whether to show the debug log.
 		show_log: false
 	};

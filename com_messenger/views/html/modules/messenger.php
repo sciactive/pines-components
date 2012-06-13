@@ -75,6 +75,14 @@ if ($this->interface == 'floating') {
 				}, 500, this);
 			},
 			<?php } ?>
+			onmessage_in: function(msg){
+				//console.log("Message In:");
+				//console.log(msg);
+			},
+			onmessage_out: function(msg){
+				//console.log("Message Out:");
+				//console.log(msg);
+			},
 			//show_log: true,
 			<?php if ($this->interface == 'floating') { ?>
 			title: pines.safe(<?php echo json_encode($this->title); ?>),

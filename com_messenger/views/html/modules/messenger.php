@@ -18,6 +18,8 @@ if (!empty($this->widget_title))
 
 if (!isset($this->interface))
 	$this->interface = 'inline';
+if (!isset($this->sounds))
+	$this->sounds = 'true';
 
 $this->roster_max_len = isset($this->roster_max_len) ? (int) $this->roster_max_len : 20;
 
@@ -51,18 +53,20 @@ if ($this->interface == 'floating') {
 		localStorage.setItem("pchat-presence-status", status);
 		<?php } ?>
 		var pchat = $("#p_muid_main").pchat({
-			pchat_bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
-			pchat_domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
-			pchat_jid: <?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
-			pchat_password: <?php echo json_encode($xmpp_pass); ?>,
-			pchat_sound: true,
-			pchat_sounds: {
+			bosh_url: <?php echo json_encode($pines->config->com_messenger->use_proxy ? pines_url('com_messenger', 'xmpp_proxy') : $pines->config->com_messenger->xmpp_bosh_url); ?>,
+			domain: <?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
+			jid: <?php echo json_encode($xmpp_user); ?>+"@"+<?php echo json_encode($pines->config->com_messenger->xmpp_server); ?>,
+			password: <?php echo json_encode($xmpp_pass); ?>,
+			sound: <?php echo json_encode($this->sounds == 'true'); ?>,
+			sounds: {
+				<?php if ($this->presence_sounds == 'true') { ?>
 				offline: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/offline.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/offline.mp3"],
 				online: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/online.mp3"],
+				<?php } ?>
 				received: ["<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.ogg", "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/pchat/sounds/received.mp3"]
 			},
 			<?php if ($this->status_url == 'true') { ?>
-			pchat_onconnect: function(){
+			onconnect: function(){
 				setTimeout(function(c){
 					var pres = localStorage.getItem("pchat-presence");
 					if (!pres)
@@ -71,16 +75,16 @@ if ($this->interface == 'floating') {
 				}, 500, this);
 			},
 			<?php } ?>
-			//pchat_show_log: true,
+			//show_log: true,
 			<?php if ($this->interface == 'floating') { ?>
-			pchat_title: pines.safe(<?php echo json_encode($this->title); ?>),
+			title: pines.safe(<?php echo json_encode($this->title); ?>),
 			<?php } elseif ($this->interface == 'inline') { ?>
-			pchat_interface_container: false,
-			pchat_widget_box: false,
-			pchat_title: false,
+			interface_container: false,
+			widget_box: false,
+			title: false,
 			<?php } ?>
-			pchat_status_input: <?php echo json_encode($this->hide_status_box != 'true'); ?>,
-			pchat_roster_max_len: <?php echo json_encode($this->roster_max_len); ?>
+			status_input: <?php echo json_encode($this->hide_status_box != 'true'); ?>,
+			roster_max_len: <?php echo json_encode($this->roster_max_len); ?>
 		});
 		<?php if ($this->interface == 'floating') { ?>
 		// Remove the module frame.

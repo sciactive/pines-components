@@ -25,6 +25,14 @@ defined('P_RUN') or die('Direct access prohibited');
 			</select></label>
 	</div>
 	<div class="pf-element">
+		<span class="pf-label">Sounds</span>
+		<label class="pf-field"><input type="checkbox" name="sounds" value="true"<?php echo !isset($this->sounds) || $this->sounds == 'true' ? ' checked="checked"' : ''; ?>> Play sounds.</label>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Presence Sounds</span>
+		<label class="pf-field"><input type="checkbox" name="presence_sounds" value="true"<?php echo $this->presence_sounds == 'true' ? ' checked="checked"' : ''; ?>> Play sounds when a contact logs on or off.</label>
+	</div>
+	<div class="pf-element">
 		<label><span class="pf-label">Roster Max Length</span>
 			<span class="pf-note">The max length of a displayed name in the roster (Longer names will show &hellip;).</span>
 			<input class="pf-field" type="text" name="roster_max_len" size="5" value="<?php echo isset($this->roster_max_len) ? htmlspecialchars((int) $this->roster_max_len) : '20'; ?>" /></label>

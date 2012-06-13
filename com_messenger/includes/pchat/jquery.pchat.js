@@ -94,26 +94,34 @@ if (!window.localStorage) {
 
 			// Add the pchat class.
 			pchat.addClass("ui-pchat");
+
+			// Build main options.
+			var opts = $.extend({}, $.fn.pchat.defaults, options);
+			// Translate old pchat_ style options.
+			for (var i in opts) {
+				if (typeof i == "string" && i.match(/^pchat_/))
+					opts[i.replace(/^pchat_/, "")] = opts[i];
+			}
 			// Import the options.
-			pchat.extend(pchat, opts);
+			pchat.opts = opts;
 			// An object for open conversation windows.
 			pchat.pchat_conversations = {};
 
 			// Add widget classes.
-			if (pchat.pchat_widget_box)
+			if (opts.widget_box)
 				pchat.addClass("ui-pchat-widget ui-widget ui-widget-content");
 
 			// Set up the user interface.
-			if (pchat.pchat_title)
-				$('<div class="ui-pchat-header ui-widget-header ui-helper-clearfix"></div>').html(pchat.pchat_title).wrapInner('<span class="ui-pchat-main-title"></span>').appendTo(pchat);
+			if (opts.title)
+				$('<div class="ui-pchat-header ui-widget-header ui-helper-clearfix"></div>').html(opts.title).wrapInner('<span class="ui-pchat-main-title"></span>').appendTo(pchat);
 
 			// Move the main interface, if required.
-			switch (pchat.pchat_interface_container) {
+			switch (opts.interface_container) {
 				case "conversation":
-					if (pchat.pchat_conversation_placement == "prepend")
-						pchat.prependTo(pchat.pchat_conversation_container.call(pchat));
+					if (opts.conversation_placement == "prepend")
+						pchat.prependTo(opts.conversation_container.call(pchat));
 					else
-						pchat.appendTo(pchat.pchat_conversation_container.call(pchat));
+						pchat.appendTo(opts.conversation_container.call(pchat));
 					pchat.wrap($('<div class="ui-pchat-main-container"></div>'))
 					.find(".ui-pchat-header")
 					.append($('<span class="ui-pchat-controls"><i class="ui-icon ui-icon-circle-minus"></i></span>'))
@@ -146,7 +154,7 @@ if (!window.localStorage) {
 			var update_groups = function(){
 				// Hide contacts whose group(s) are not selected.
 				var contacts = roster_elem.find(".ui-pchat-contact").hide();
-				if (pchat.pchat_hide_offline)
+				if (opts.hide_offline)
 					contacts = contacts.filter(':not([data-status=offline])');
 				if (show_ungrouped)
 					contacts.filter(':not(:has(.ui-pchat-contact-groups *))').show();
@@ -173,14 +181,14 @@ if (!window.localStorage) {
 			}).hide();
 
 			var presence_text = {
-				"working": '<i class="'+pchat.pchat_presence_icons.working+'"></i>Updating...',
-				"available": '<i class="'+pchat.pchat_presence_icons.available+'"></i>Available',
-				"chat": '<i class="'+pchat.pchat_presence_icons.available+'"></i>Chatty',
-				"away": '<i class="'+pchat.pchat_presence_icons.away+'"></i>Away',
-				"xa": '<i class="'+pchat.pchat_presence_icons.away_extended+'"></i>Extended Away',
-				"dnd": '<i class="'+pchat.pchat_presence_icons.busy+'"></i>Busy',
-				"offline": '<i class="'+pchat.pchat_presence_icons.offline+'"></i>Offline',
-				"disconnected": '<i class="'+pchat.pchat_presence_icons.offline+'"></i>Not Connected'
+				"working": '<i class="'+opts.presence_icons.working+'"></i>Updating...',
+				"available": '<i class="'+opts.presence_icons.available+'"></i>Available',
+				"chat": '<i class="'+opts.presence_icons.available+'"></i>Chatty',
+				"away": '<i class="'+opts.presence_icons.away+'"></i>Away',
+				"xa": '<i class="'+opts.presence_icons.away_extended+'"></i>Extended Away',
+				"dnd": '<i class="'+opts.presence_icons.busy+'"></i>Busy',
+				"offline": '<i class="'+opts.presence_icons.offline+'"></i>Offline',
+				"disconnected": '<i class="'+opts.presence_icons.offline+'"></i>Not Connected'
 			};
 			var action_bar = $('<div class="ui-pchat-action-bar ui-helper-clearfix"></div>').appendTo(pchat);
 
@@ -219,7 +227,7 @@ if (!window.localStorage) {
 			.append(logout_button);
 			// Status input:
 			var presence_status;
-			if (pchat.pchat_status_input) {
+			if (opts.status_input) {
 				action_bar.append($('<label class="ui-pchat-status-container"><input type="text" size="15" class="ui-pchat-status" title="Status" /></label>'));
 				presence_status = action_bar.find(".ui-pchat-status").change(function(){
 					pchat.pchat_set_presence(localStorage.getItem("pchat-presence"), presence_status.val());
@@ -247,7 +255,7 @@ if (!window.localStorage) {
 					var field = $(this);
 					var cur_val = field.val();
 					if (!cur_val.match(/@.*$/))
-						field.val(cur_val+"@"+pchat.pchat_domain);
+						field.val(cur_val+"@"+opts.domain);
 				}).end().end()
 				.end().append('<br/>')
 				.dialog({
@@ -296,22 +304,22 @@ if (!window.localStorage) {
 					blocked_user_dialog.dialog("open");
 			}))
 			.append($('<li><a href="javascript:void(0);"><i class="icon-eye-open"></i>Offline Contacts</a></li>').each(function(){
-				if (pchat.pchat_hide_offline)
+				if (opts.hide_offline)
 					$(this).find('i').removeClass('icon-eye-open').addClass('icon-eye-close');
 			}).on("click", "a", function(){
-				pchat.pchat_hide_offline = !pchat.pchat_hide_offline;
-				$(this).find('i').removeClass('icon-eye-open icon-eye-close').addClass(pchat.pchat_hide_offline ? 'icon-eye-close' : 'icon-eye-open');
+				opts.hide_offline = !opts.hide_offline;
+				$(this).find('i').removeClass('icon-eye-open icon-eye-close').addClass(opts.hide_offline ? 'icon-eye-close' : 'icon-eye-open');
 				update_groups();
 			}));
-			if (pchat.pchat_sounds) {
+			if (opts.sounds) {
 				if (!soundManager) {
-					pchat.pchat_sound = false;
-					if (pchat.pchat_sound)
+					opts.sound = false;
+					if (opts.sound)
 						log("ERROR: Sound is enabled, but the soundManager library was not found!");
 				} else {
 					pchat.SMSounds = {};
 					soundManager.onready(function(){
-						$.each(pchat.pchat_sounds, function(sound, files){
+						$.each(opts.sounds, function(sound, files){
 							pchat.SMSounds[sound] = soundManager.createSound({
 								id: 'pchat-'+sound,
 								url: files
@@ -322,14 +330,14 @@ if (!window.localStorage) {
 				// Remember a saved sound preference.
 				var prev_sound_setting = localStorage.getItem("pchat-sounds");
 				if (prev_sound_setting === "true")
-					pchat.pchat_sound = true;
+					opts.sound = true;
 				if (prev_sound_setting === "false")
-					pchat.pchat_sound = false;
+					opts.sound = false;
 				// A button to disable/enable sounds.
-				main_menu.append($('<li><a href="javascript:void(0);">'+(pchat.pchat_sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute')+'</a></li>').on("click", "a", function(){
-					pchat.pchat_sound = !pchat.pchat_sound;
-					$(this).html(pchat.pchat_sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute');
-					localStorage.setItem("pchat-sounds", pchat.pchat_sound ? "true" : "false");
+				main_menu.append($('<li><a href="javascript:void(0);">'+(opts.sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute')+'</a></li>').on("click", "a", function(){
+					opts.sound = !opts.sound;
+					$(this).html(opts.sound ? '<i class="icon-volume-off"></i>Mute' : '<i class="icon-volume-up"></i>Unmute');
+					localStorage.setItem("pchat-sounds", opts.sound ? "true" : "false");
 				}));
 			}
 			// Blocked users dialog.
@@ -345,7 +353,7 @@ if (!window.localStorage) {
 
 			// The log function only does anything if the log is enabled.
 			var log;
-			if (pchat.pchat_show_log) {
+			if (opts.show_log) {
 				var log_elem = $('<div class="ui-pchat-log"></div>').appendTo(pchat);
 				log = function(msg, escape){
 					log_elem.append('<br />').append(escape === false ? msg : document.createTextNode(msg)).scrollTop(999999);
@@ -385,7 +393,7 @@ if (!window.localStorage) {
 				// Save the list of shown groups.
 				localStorage.setItem("pchat-showngroups", JSON.stringify(shown_groups));
 				localStorage.setItem("pchat-showungrouped", JSON.stringify(show_ungrouped));
-				localStorage.setItem("pchat-hideoffline", JSON.stringify(pchat.pchat_hide_offline));
+				localStorage.setItem("pchat-hideoffline", JSON.stringify(opts.hide_offline));
 				// Save the blocklist.
 				localStorage.setItem("pchat-blocksupport", JSON.stringify(connection.blocking.blocking_support));
 				localStorage.setItem("pchat-blocklist", JSON.stringify(connection.blocking.blocklist));
@@ -506,7 +514,7 @@ if (!window.localStorage) {
 									show_ungrouped = JSON.parse(showungrouped);
 									if (!show_ungrouped)
 										group_elem.children(".ui-pchat-ungrouped").removeClass("label-success");
-									pchat.pchat_hide_offline = JSON.parse(hideoffline);
+									opts.hide_offline = JSON.parse(hideoffline);
 									update_groups();
 								}
 								// Rebuild the blocklist.
@@ -525,8 +533,8 @@ if (!window.localStorage) {
 									connection.roster.get(null, ver, roster);
 								save_state();
 							}
-							if (pchat.pchat_onconnect)
-								pchat.pchat_onconnect.call(pchat);
+							if (opts.onconnect)
+								opts.onconnect.call(pchat);
 							//console.log("Connection:");
 							//console.log(connection);
 							break;
@@ -652,25 +660,25 @@ if (!window.localStorage) {
 									return 1;
 								return 0;
 							})[0];
-						var icon_class = pchat.pchat_presence_icons.offline;
+						var icon_class = opts.presence_icons.offline;
 						var cur_status = "offline";
 						if (contact.subscription == "to" || contact.subscription == "both") {
 							switch (presence.show) {
 								case "":
 								case "chat":
-									icon_class = pchat.pchat_presence_icons.available;
+									icon_class = opts.presence_icons.available;
 									cur_status = "online";
 									break;
 								case "dnd":
-									icon_class = pchat.pchat_presence_icons.busy;
+									icon_class = opts.presence_icons.busy;
 									cur_status = "online";
 									break;
 								case "away":
-									icon_class = pchat.pchat_presence_icons.away;
+									icon_class = opts.presence_icons.away;
 									cur_status = "online";
 									break;
 								case "xa":
-									icon_class = pchat.pchat_presence_icons.away_extended;
+									icon_class = opts.presence_icons.away_extended;
 									cur_status = "online";
 									break;
 							}
@@ -682,7 +690,7 @@ if (!window.localStorage) {
 						contact_elem.attr("data-status", cur_status);
 						// Name, presence, status.
 						var name = (contact.name && contact.name != "") ? contact.name : contact.jid,
-							sname = name.replace(new RegExp('^(.{0,'+pchat.pchat_roster_max_len+'}).*$'), '$1');
+							sname = name.replace(new RegExp('^(.{0,'+opts.roster_max_len+'}).*$'), '$1');
 						if (name != sname)
 							sname += '\u2026';
 						contact_display.append($('<span class="ui-pchat-contact-presence">&nbsp;</span>').addClass(icon_class))
@@ -703,40 +711,40 @@ if (!window.localStorage) {
 							contact_status.children('a').html('<em>Not Authorized</em>').end().appendTo(contact_elem);
 						// Display contact features. (And info about their client.)
 						if (presence.identity) {
-							var client_icon = pchat.pchat_client_icons.unknown,
+							var client_icon = opts.client_icons.unknown,
 								client_desc = "The client this contact is using can't be interpreted.";
 							if (presence.identity.category == "client") {
 								switch (presence.identity.type) {
 									case "bot":
-										client_icon = pchat.pchat_client_icons.bot;
+										client_icon = opts.client_icons.bot;
 										client_desc = "Contact appears to be an automated client.";
 										break;
 									case "console":
-										client_icon = pchat.pchat_client_icons.console;
+										client_icon = opts.client_icons.console;
 										client_desc = "Contact appears to be using a text-mode client.";
 										break;
 									case "game":
-										client_icon = pchat.pchat_client_icons.game;
+										client_icon = opts.client_icons.game;
 										client_desc = "Contact appears to be using a gaming console.";
 										break;
 									case "handheld":
-										client_icon = pchat.pchat_client_icons.handheld;
+										client_icon = opts.client_icons.handheld;
 										client_desc = "Contact appears to be using a PDA or other handheld.";
 										break;
 									case "pc":
-										client_icon = pchat.pchat_client_icons.pc;
+										client_icon = opts.client_icons.pc;
 										client_desc = "Contact appears to be using a regular desktop client.";
 										break;
 									case "phone":
-										client_icon = pchat.pchat_client_icons.phone;
+										client_icon = opts.client_icons.phone;
 										client_desc = "Contact appears to be using a mobile phone.";
 										break;
 									case "sms":
-										client_icon = pchat.pchat_client_icons.sms;
+										client_icon = opts.client_icons.sms;
 										client_desc = "Contact appears to be using an SMS service. Messages sent to this contact will be delivered as text messages.";
 										break;
 									case "web":
-										client_icon = pchat.pchat_client_icons.web;
+										client_icon = opts.client_icons.web;
 										client_desc = "Contact appears to be using a web-based client.";
 										break;
 								}
@@ -1123,10 +1131,10 @@ if (!window.localStorage) {
 			};
 
 			// The BOSH connection.
-			connection = new Strophe.Connection(pchat.pchat_bosh_url);
+			connection = new Strophe.Connection(opts.bosh_url);
 			pchat.pchat_connection = connection;
 
-			if (pchat.pchat_show_log) {
+			if (opts.show_log) {
 				connection.rawInput = function (data) {log('RECV: ' + data);};
 				connection.rawOutput = function (data) {log('SEND: ' + data);};
 				Strophe.log = function (level, msg) {log('LOG: ' + msg);};
@@ -1144,11 +1152,11 @@ if (!window.localStorage) {
 			connection.xmlOutput = save_rid;
 
 			// Load the SID and RID if they were initially provided.
-			if (pchat.pchat_sid && pchat.pchat_rid) {
+			if (opts.sid && opts.rid) {
 				attaching_from_storage = false;
-				localStorage.setItem("pchat-jid", pchat.pchat_jid);
-				localStorage.setItem("pchat-sid", pchat.pchat_sid);
-				localStorage.setItem("pchat-rid", pchat.pchat_rid);
+				localStorage.setItem("pchat-jid", opts.jid);
+				localStorage.setItem("pchat-sid", opts.sid);
+				localStorage.setItem("pchat-rid", opts.rid);
 			}
 
 			/**
@@ -1157,11 +1165,11 @@ if (!window.localStorage) {
 			pchat.pchat_connect = function(){
 				// Check for an already active BOSH connection.
 				var bosh_jid = localStorage.getItem("pchat-jid"), bosh_sid = localStorage.getItem("pchat-sid"), bosh_rid = localStorage.getItem("pchat-rid");
-				if (bosh_jid && bosh_sid && bosh_rid)
-					connection.attach(bosh_jid, bosh_sid, bosh_rid, handlers.onConnect, 60, pchat.pchat_hold, 1);
+				if (Strophe.getBareJidFromJid(bosh_jid) == Strophe.getBareJidFromJid(opts.jid) && bosh_sid && bosh_rid)
+					connection.attach(bosh_jid, bosh_sid, bosh_rid, handlers.onConnect, 60, opts.hold, 1);
 				else {
 					attaching_from_storage = false;
-					connection.connect(pchat.pchat_jid, pchat.pchat_password, handlers.onConnect, 60, pchat.pchat_hold);
+					connection.connect(opts.jid, opts.password, handlers.onConnect, 60, opts.hold);
 				}
 			};
 			/**
@@ -1237,7 +1245,7 @@ if (!window.localStorage) {
 			 * @param sound The sound to play.
 			 */
 			pchat.pchat_play_sound = function(sound){
-				if (!pchat.pchat_sound || !pchat.SMSounds[sound])
+				if (!opts.sound || !pchat.SMSounds[sound])
 					return;
 				pchat.SMSounds[sound].play();
 			};
@@ -1269,10 +1277,10 @@ if (!window.localStorage) {
 			};
 			var get_conv_window = function(contact_jid){
 				var convo_window = $('<div class="ui-pchat-conversation"></div>').attr("data-jid", Strophe.getBareJidFromJid(contact_jid));
-				if (pchat.pchat_conversation_placement == "prepend")
-					convo_window.prependTo(pchat.pchat_conversation_container.call(pchat, contact_jid));
+				if (opts.conversation_placement == "prepend")
+					convo_window.prependTo(opts.conversation_container.call(pchat, contact_jid));
 				else
-					convo_window.appendTo(pchat.pchat_conversation_container.call(pchat, contact_jid));
+					convo_window.appendTo(opts.conversation_container.call(pchat, contact_jid));
 				// Get the contact text.
 				var bare_jid = Strophe.getBareJidFromJid(contact_jid),
 					roster_lookup = roster_elem.find(".ui-pchat-contact[data-jid=\""+Strophe.xmlescape(bare_jid)+"\"] .brand");
@@ -1364,8 +1372,8 @@ if (!window.localStorage) {
 					$('<div class="ui-pchat-message ui-widget-content"></div>')
 					.addClass(incoming ? 'ui-pchat-incoming' : 'ui-pchat-outgoing')
 					.append($('<div class="ui-pchat-name"></div>').text(message.from_alias))
-					.append($('<div class="ui-pchat-time"></div>').text(pchat.pchat_format_date(new Date(message.date))))
-					.append($('<div class="ui-pchat-content"></div>').text(message.content))
+					.append($('<div class="ui-pchat-time"></div>').text(opts.format_date(new Date(message.date))))
+					.append($('<div class="ui-pchat-content"></div>').html(opts.format_content(new String(message.content))))
 				);
 				if (!noui) {
 					if (!convo.element.is(":focus") && !convo.element.find(":focus").length)
@@ -1427,7 +1435,7 @@ if (!window.localStorage) {
 				}
 			}, 1000);
 
-			if (pchat.pchat_auto_login)
+			if (opts.auto_login)
 				pchat.pchat_connect();
 
 			// Save the pchat object in the DOM, so we can access it.
@@ -1439,36 +1447,36 @@ if (!window.localStorage) {
 
 	$.fn.pchat.defaults = {
 		// The BOSH URL to connect to.
-		pchat_bosh_url: "",
+		bosh_url: "",
 		// The domain for XMPP users.
-		pchat_domain: "example.com",
+		domain: "example.com",
 		// The JID to use to login.
-		pchat_jid: "user@example.com",
+		jid: "user@example.com",
 		// The password to use to login.
-		pchat_password: "",
+		password: "",
 		// OR
 		// The SID of an already open BOSH session.
-		pchat_sid: false,
+		sid: false,
 		// And the RID of an already open BOSH session.
-		pchat_rid: false,
+		rid: false,
 		// Automatically log in.
-		pchat_auto_login: true,
+		auto_login: true,
 		// How many open connections to hold. This is requested from the server, but the server might not allow it.
-		pchat_hold: 10,
+		hold: 10,
 		// Whether to play sounds on events. The user can still enable this feature unless pchat_sounds is set to false as well.
-		pchat_sound: false,
+		sound: false,
 		// The location of the sounds to play. Each entry should be an array of URL(s). The first one determined to be playable will be used.
-		pchat_sounds: {
+		sounds: {
 			offline: ["sounds/offline.ogg", "sounds/offline.mp3"],
 			online: ["sounds/online.ogg", "sounds/online.mp3"],
 			received: ["sounds/received.ogg", "sounds/received.mp3"]
 		},
 		// Whether to wrap the main interface in a widget box (with border and padding).
-		pchat_widget_box: true,
+		widget_box: true,
 		// The title to show. If set to false, no title will be shown.
-		pchat_title: "Chat",
+		title: "Chat",
 		// Icons for showing the type of client a contact is using.
-		pchat_client_icons: {
+		client_icons: {
 			unknown: "picon-im-user",
 			bot: "picon-application-x-executable",
 			console: "picon-utilities-terminal",
@@ -1480,7 +1488,7 @@ if (!window.localStorage) {
 			web: "picon-internet-web-browser"
 		},
 		// Icons for showing a contact's presence.
-		pchat_presence_icons: {
+		presence_icons: {
 			working: "picon-throbber",
 			offline: "picon-user-offline",
 			available: "picon-user-online",
@@ -1489,24 +1497,24 @@ if (!window.localStorage) {
 			away_extended: "picon-user-away-extended"
 		},
 		// Whether to show the status input box.
-		pchat_status_input: true,
+		status_input: true,
 		// The maximum length of a name displayed in the roster.
-		pchat_roster_max_len: 10,
+		roster_max_len: 10,
 		// Whether to hide contacts who are offline.
-		pchat_hide_offline: true,
+		hide_offline: true,
 		// Where to put new conversation windows. Can be a selector or a function which takes the (full) JID of the contact and "this" refers to the pchat element.
-		pchat_conversation_container: function(){
+		conversation_container: function(){
 			if (this.convo_container)
 				return this.convo_container;
 			this.convo_container = $('<div class="ui-pchat-conversations"></div>').appendTo("body");
 			return this.convo_container;
 		},
 		// Where to place new conversations. "prepend" or "append".
-		pchat_conversation_placement: "prepend",
+		conversation_placement: "prepend",
 		// Where to put the main interface. "conversation" = in the conversation container. Anything else and it won't be moved from where it is.
-		pchat_interface_container: "conversation",
+		interface_container: "conversation",
 		// Format a date/time into a string.
-		pchat_format_date: function(timestamp){
+		format_date: function(timestamp){
 			var month = timestamp.getMonth(),
 				date = timestamp.getDate(),
 				hours = timestamp.getHours() == 0 ? 12 : (timestamp.getHours() % 12),
@@ -1518,8 +1526,37 @@ if (!window.localStorage) {
 			else
 				return (month+"/"+date+" "+hours+":"+(minutes < 10 ? '0'+minutes : minutes)+ap);
 		},
-		pchat_onconnect: function(){},
+		// Format message content.
+		format_content: function(content){
+			return Strophe.xmlescape(content)
+				// Match URLs with a protocol. (http://example.com/wow)
+				.replace(
+					/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%]))(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi,
+					'<a href="$1" target="_blank">$1<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match things that look like URLs. (example.co.uk/wow) (No lookbehind support. Grr.)
+				.replace(
+					/(^|[^\/\w.@])\b((?:www\d{0,3}[.]|[a-z0-9.\-]{2,}[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi,
+					'$1<a href="http://$2" target="_blank">$2<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match simple domain names. (example.com) (I didn't use the above one, because things might look like TLDs, so I used only common ones for this.)
+				.replace(
+					/(^|[^\/\w.@])\b([a-z0-9.\-]{2,}[.](com|net|org|edu|gov|mil|info|biz))\b(?!\/)/gi,
+					'$1<a href="http://$2" target="_blank">$2<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match email addresses. (me@example.com)
+				.replace(
+					/\b([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})\b/gi,
+					'<a href="mailto://$1" target="_blank">$1<i class="icon-envelope" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				);
+		},
+		// Callback for when pchat connects.
+		onconnect: function(){},
+		// Callback for when pchat receives a message.
+		onmessage_in: function(){},
+		// Callback for when pchat sends a message.
+		onmessage_out: function(){},
 		// Whether to show the debug log.
-		pchat_show_log: false
+		show_log: false
 	};
 })(jQuery);

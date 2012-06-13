@@ -16,6 +16,7 @@ pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>componen
 <?php if ($pines->config->com_bootstrap->responsive && file_exists('components/com_bootstrap/includes/themes/'.clean_filename($pines->config->com_bootstrap->theme).'/css/'.($pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css'))) { ?>
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/themes/<?php echo htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)); ?>/css/<?php echo $pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css'; ?>");
 <?php } ?>
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/fontawesome/css/font-awesome.css");
 pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/themes/<?php echo htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)); ?>/js/<?php echo $pines->config->debug_mode ? 'bootstrap.js' : 'bootstrap.min.js'; ?>");
 // Get the current number of columns in the CSS grid.
 pines.com_bootstrap_get_columns = function(){
@@ -33,6 +34,11 @@ pines(function(){
 });
 */ ?>
 </script>
+<!--[if IE 7]>
+<script type="text/javascript">
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_bootstrap/includes/fontawesome/css/font-awesome-ie7.css");
+</script>
+<![endif]-->
 <style type="text/css">
 input, textarea, select {
 margin-bottom: 0;

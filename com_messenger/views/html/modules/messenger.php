@@ -97,12 +97,13 @@ if ($this->interface == 'floating') {
 		<?php if ($this->interface == 'floating') { ?>
 		// Remove the module frame.
 		$(<?php echo json_encode(".$frame_class"); ?>).remove();
-		<?php } ?>
+		<?php }
 		/*var subscribe = pchat.get(0).pines_chat.pchat_connection.roster.subscribe;
 		pchat.get(0).pines_chat.pchat_connection.roster.subscribe = function(){
 			alert('You hit subscribe! You win!');
 			subscribe.apply(this, arguments);
 		};*/
+		?>
 	});
 </script>
 <div id="p_muid_main"></div>

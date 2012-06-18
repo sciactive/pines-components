@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Configure Components';
+$this->title = 'Component Configuration';
 ?>
 <style type="text/css">
 	#p_muid_form {
@@ -127,6 +127,19 @@ $this->title = 'Configure Components';
 		</p>
 		<?php } ?>
 	</div>
+	<?php } else { ?>
+	<div>
+		<p class="lead">
+			You can change configuration options for components and templates
+			here. Below is a list of installed components and templates. Click
+			on one to see the available actions.
+		</p>
+		<div class="alert">
+			<h4 class="alert-heading">Warning</h4>
+			If you disable a component, any components that depend on it
+			may stop working.
+		</div>
+	</div>
 	<?php } ?>
 	<div id="p_muid_components" class="accordion">
 		<?php foreach($this->components as $cur_component) {
@@ -147,14 +160,13 @@ $this->title = 'Configure Components';
 						<?php if ($cur_component->is_configurable()) { ?>
 						<input class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'edit', array('component' => $cur_component->name)))); ?>);" value="Configure" />
 						<input class="btn" type="button" onclick="pines.com_configure_go(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'view', array('component' => $cur_component->name)))); ?>);" value="View Config" />
-						<?php } ?>
-						<?php if (!$this->per_user && !$this->per_condition) { ?>
-							<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
+						<?php } if (!$this->per_user && !$this->per_condition) {
+							if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
 							<input class="btn btn-success" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'enable', array('component' => $cur_component->name)))); ?>);" value="Enable" />
 							<?php } else { ?>
 							<input class="btn btn-danger" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_configure', 'disable', array('component' => $cur_component->name)))); ?>);" value="Disable" />
-							<?php } } ?>
-						<?php } ?>
+							<?php } }
+						} ?>
 					</div>
 					<div class="short_description"><?php echo htmlspecialchars($cur_component->info->short_description); ?></div>
 					<?php if (is_array($cur_component->info->services)) { ?>

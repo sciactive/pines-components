@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/system/emails",
+		"text": "Emails",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/system/emails/templates",
+			"text": "Templates",
+			"href": ["com_mailer","template/list"],
+			"depend": {
+				"ability": "com_mailer/listtemplates"
+			}
+		},
+		{
+			"path": "main_menu/system/emails/newtemplate",
+			"text": "New Template",
+			"href": ["com_mailer","template/edit"],
+			"depend": {
+				"ability": "com_mailer/newtemplate"
+			}
+		}
+]

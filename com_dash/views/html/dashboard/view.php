@@ -74,8 +74,6 @@ $pines->com_bootstrap->load();
 		#p_muid_dashboard .column {
 			min-height: 20px;
 			padding-bottom: 20px;
-			/*margin-bottom: -100%;
-			padding-bottom: 100%; */
 		}
 		#p_muid_dashboard .object, #p_muid_dashboard .placeholder {
 			margin-bottom: 1em;
@@ -85,8 +83,11 @@ $pines->com_bootstrap->load();
 			position: absolute;
 			left: 0;
 			top: 0;
-			width: 100% !important;
-			height: 100% !important;
+			right: 0;
+			bottom: 0;
+			width: auto !important;
+			height: auto !important;
+			margin: 0 !important;
 			z-index: 500;
 		}
 		#p_muid_dashboard .object.maximized .controls .move_widget {

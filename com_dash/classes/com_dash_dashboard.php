@@ -96,15 +96,15 @@ class com_dash_dashboard extends entity {
 				'buttons_size' => 'large',
 				'columns' => array(
 					uniqid() => array(
-						'size' => 1/2,
+						'size' => 3/12,
 						'widgets' => $default_widgets[0]
 					),
 					uniqid() => array(
-						'size' => 1/4,
+						'size' => 4/12,
 						'widgets' => $default_widgets[1]
 					),
 					uniqid() => array(
-						'size' => 1/4,
+						'size' => 5/12,
 						'widgets' => $default_widgets[2]
 					)
 				)

@@ -362,7 +362,7 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		});
 	});
 </script>
-<div id="p_muid_tab">
+<div id="p_muid_tab" class="clearfix">
 	<div class="buttons well <?php echo htmlspecialchars($this->tab['buttons_size']); ?>">
 		<?php if ($this->editable) { ?>
 		<div class="controls">

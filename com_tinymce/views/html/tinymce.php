@@ -104,7 +104,7 @@ $content_css = array_merge($pines->editor->get_css(), array(htmlspecialchars($pi
 					height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,
 					resizable : false,
 					getFileCallback: function(file) {
-						$("input[name="+field_name+"]", win.document).val(file.url);
+						$("input[name="+field_name+"]", win.document).val(file);
 						elfdlg.dialog("close");
 					}
 				});

@@ -55,6 +55,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'theme',
+		'cname' => 'Use Theme',
+		'description' => 'Use the elFinder theme CSS to make it look better. This may look ugly with some jQuery UI themes, so you might want to disable it.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'default_height',
 		'cname' => 'Default Height',
 		'description' => 'The default height of the file manager interface.',

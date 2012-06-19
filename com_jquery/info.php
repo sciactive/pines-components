@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'jQuery',
 	'author' => 'SciActive',
-	'version' => '1.7.1-1.8.17-1.1.0dev',
+	'version' => '1.7.2-1.8.21-1.1.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'jQuery JavaScript library',

@@ -3,10 +3,7 @@
  * elFinderConnector class.
  *
  * @package Components\elfinder
- * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright SciActive.com
- * @link http://sciactive.com/
+ * @author Dmitry (dio) Levashov
  */
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
@@ -37,7 +34,8 @@ class elFinderConnector {
 	 *
 	 * @var string
 	 **/
-	protected $header = 'Content-Type: text/html' /*'Content-Type: application/json'*/;
+	protected $header = 'Content-Type: application/json';
+	
 	
 	/**
 	 * Constructor
@@ -45,8 +43,12 @@ class elFinderConnector {
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 **/
-	public function __construct($elFinder) {
+	public function __construct($elFinder, $debug=false) {
+		
 		$this->elFinder = $elFinder;
+		if ($debug) {
+			$this->header = 'Content-Type: text/html; charset=utf-8';
+		}
 	}
 	
 	/**
@@ -67,12 +69,12 @@ class elFinderConnector {
 		}
 		
 		if (!$this->elFinder->loaded()) {
-			$this->output(array('error' => $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL)));
+			$this->output(array('error' => $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->elFinder->mountErrors));
 		}
 		
 		// telepat_mode: on
 		if (!$cmd && $isPost) {
-			$this->output(array('error' => $this->elFinder->error(elFinder::ERROR_UPLOAD_COMMON, elFinder::ERROR_UPLOAD_FILES_SIZE), 'header' => 'Content-Type: text/html'));
+			$this->output(array('error' => $this->elFinder->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html'));
 		}
 		// telepat_mode: off
 		
@@ -89,7 +91,7 @@ class elFinderConnector {
 			if (!is_array($arg)) {
 				$arg = trim($arg);
 			}
-			if ($req && empty($arg)) {
+			if ($req && (!isset($arg) || $arg === '')) {
 				$this->output(array('error' => $this->elFinder->error(elFinder::ERROR_INV_PARAMS, $cmd)));
 			}
 			$args[$name] = $arg;
@@ -108,10 +110,8 @@ class elFinderConnector {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function output(array $data) {
-		$header = isset($data['header']) ? $data['header'] : 'Content-Type: text/html; charset=utf-8' /*'Content-Type: application/json'*/;
+		$header = isset($data['header']) ? $data['header'] : $this->header;
 		unset($data['header']);
-		// debug($header);
-		// exit();
 		if ($header) {
 			if (is_array($header)) {
 				foreach ($header as $h) {
@@ -140,5 +140,3 @@ class elFinderConnector {
 	}
 	
 }// END class 
-
-?>

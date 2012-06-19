@@ -12,9 +12,23 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_elfinder/includes/js/<?php echo $pines->config->debug_mode ? 'elfinder.full.js' : 'elfinder.min.js'; ?>");
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_elfinder/includes/css/<?php echo $pines->config->debug_mode ? 'elfinder.full.css' : 'elfinder.min.css'; ?>");
-	pines(function(){
-		elFinder.prototype.options.cookie = {expires: <?php $params = session_get_cookie_params(); echo (int) $params['lifetime']; ?>, domain: '', path: '/', secure: false};
-	});
+pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_elfinder/includes/js/elfinder.min.js");
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_elfinder/includes/css/elfinder.min.css");
+<?php if ($pines->config->com_elfinder->theme) { ?>
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_elfinder/includes/css/theme.css");
+<?php } ?>
+pines(function(){
+elFinder.prototype._options.cookie = {expires: <?php $params = session_get_cookie_params(); echo (int) $params['lifetime']; ?>, domain: '', path: <?php echo json_encode($pines->config->rela_location); ?>, secure: false};
+});
 </script>
+<style type="text/css">
+.elfinder-dialog label {
+display: inline;
+}
+<?php if (!$pines->config->com_elfinder->theme) { ?>
+.elfinder-cwd-wrapper .elfinder-cwd-file.ui-selected {
+outline-width: 1px;
+outline-style: dotted;
+}
+<?php } ?>
+</style>

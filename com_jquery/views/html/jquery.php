@@ -12,5 +12,5 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery-1.7.1.js' : 'jquery-1.7.1.min.js'; ?>");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery-1.7.2.js' : 'jquery-1.7.2.min.js'; ?>");
 </script>

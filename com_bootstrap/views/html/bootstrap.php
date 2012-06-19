@@ -40,11 +40,8 @@ pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>componen
 </script>
 <![endif]-->
 <style type="text/css">
-input, textarea, select {
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
 margin-bottom: 0;
 width: auto;
-}
-.tab-content {
-display: block; /* Fix for tables in tabs, pgrids were too wide. */
 }
 </style>

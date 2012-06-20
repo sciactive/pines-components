@@ -329,6 +329,7 @@ class com_myentity extends component implements entity_manager_interface {
 
 		$entities = array();
 		$class = isset($options['class']) ? $options['class'] : entity;
+		$sort = isset($options['sort']) ? $options['sort'] : 'guid';
 		$count = $ocount = 0;
 
 		// Check if the requested entity is cached.
@@ -476,17 +477,32 @@ class com_myentity extends component implements entity_manager_interface {
 		}
 		unset($cur_selector);
 
+		switch ($sort) {
+			case 'cdate':
+				// This should ensure that two entities with the same cdate get
+				// sorted correctly.
+				$sort = 'e.`cdate`+(e.`guid`*0.000000000001)';
+				break;
+			case 'mdate':
+				$sort = 'e.`mdate`+(e.`guid`*0.000000000001)';
+				break;
+			case 'guid':
+			default:
+				$sort = 'e.`guid`';
+				break;
+			
+		}
 		if ($query_parts) {
 			$query = sprintf("SELECT e.`guid`, e.`tags`, e.`cdate`, e.`mdate`, d.`name`, d.`value`, e.`varlist` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')',
-				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
+				$options['reverse'] ? $sort.' DESC' : $sort);
 		} else {
 			$query = sprintf("SELECT e.`guid`, e.`tags`, e.`cdate`, e.`mdate`, d.`name`, d.`value` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
-				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
+				$options['reverse'] ? $sort.' DESC' : $sort);
 		}
 		if ( !($result = @mysql_query($query, $pines->com_mysql->link)) ) {
 			// If the tables don't exist yet, create them.

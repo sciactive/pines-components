@@ -63,12 +63,12 @@ $missing_stock = array();
 									data: {"code": code},
 									beforeSend: function(){
 										loader = $.pnotify({
-											pnotify_title: 'Product Search',
-											pnotify_text: 'Retrieving product from server...',
-											pnotify_notice_icon: 'picon picon-throbber',
-											pnotify_nonblock: true,
-											pnotify_hide: false,
-											pnotify_history: false
+											title: 'Product Search',
+											text: 'Retrieving product from server...',
+											icon: 'picon picon-throbber',
+											nonblock: true,
+											hide: false,
+											history: false
 										});
 									},
 									complete: function(){
@@ -169,12 +169,12 @@ $missing_stock = array();
 							data: {"id": row.attr("title")},
 							beforeSend: function(){
 								loader = $.pnotify({
-									pnotify_title: 'Product Search',
-									pnotify_text: 'Retrieving products from server...',
-									pnotify_notice_icon: 'picon picon-throbber',
-									pnotify_nonblock: true,
-									pnotify_hide: false,
-									pnotify_history: false
+									title: 'Product Search',
+									text: 'Retrieving products from server...',
+									icon: 'picon picon-throbber',
+									nonblock: true,
+									hide: false,
+									history: false
 								});
 							},
 							complete: function(){

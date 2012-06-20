@@ -66,12 +66,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				data: {"q": search_string, "location": location, "descendants": descendants, "all_time": all_time, "start_date": start_date, "end_date": end_date},
 				beforeSend: function(){
 					loader = $.pnotify({
-						pnotify_title: 'Search',
-						pnotify_text: 'Searching the database...',
-						pnotify_notice_icon: 'picon picon-throbber',
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false
+						title: 'Search',
+						text: 'Searching the database...',
+						icon: 'picon picon-throbber',
+						nonblock: true,
+						hide: false,
+						history: false
 					});
 					customer_grid.pgrid_get_all_rows().pgrid_delete();
 				},
@@ -140,12 +140,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						},
 						beforeSend: function(){
 							loader = $.pnotify({
-								pnotify_title: 'Logging',
-								pnotify_text: 'Documenting customer interaction...',
-								pnotify_notice_icon: 'picon picon-throbber',
-								pnotify_nonblock: true,
-								pnotify_hide: false,
-								pnotify_history: false
+								title: 'Logging',
+								text: 'Documenting customer interaction...',
+								icon: 'picon picon-throbber',
+								nonblock: true,
+								hide: false,
+								history: false
 							});
 						},
 						complete: function(){

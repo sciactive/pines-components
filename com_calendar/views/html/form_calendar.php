@@ -450,12 +450,12 @@ if ($pines->config->com_calendar->com_customer)
 						},
 						beforeSend: function(){
 							loader = $.pnotify({
-								pnotify_title: 'Saving',
-								pnotify_text: 'Creating customer interaction...',
-								pnotify_notice_icon: 'picon picon-throbber',
-								pnotify_nonblock: true,
-								pnotify_hide: false,
-								pnotify_history: false
+								title: 'Saving',
+								text: 'Creating customer interaction...',
+								icon: 'picon picon-throbber',
+								nonblock: true,
+								hide: false,
+								history: false
 							});
 						},
 						complete: function(){
@@ -513,12 +513,12 @@ if ($pines->config->com_calendar->com_customer)
 						},
 						beforeSend: function(){
 							loader = $.pnotify({
-								pnotify_title: 'Updating',
-								pnotify_text: 'Processing customer interaction...',
-								pnotify_notice_icon: 'picon picon-throbber',
-								pnotify_nonblock: true,
-								pnotify_hide: false,
-								pnotify_history: false
+								title: 'Updating',
+								text: 'Processing customer interaction...',
+								icon: 'picon picon-throbber',
+								nonblock: true,
+								hide: false,
+								history: false
 							});
 						},
 						complete: function(){

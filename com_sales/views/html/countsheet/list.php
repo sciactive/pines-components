@@ -123,12 +123,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							data: {"id": row.attr("title")},
 							beforeSend: function(){
 								loader = $.pnotify({
-									pnotify_title: 'Uncommit Countsheet',
-									pnotify_text: 'Uncommitting countsheet...',
-									pnotify_notice_icon: 'picon picon-throbber',
-									pnotify_nonblock: true,
-									pnotify_hide: false,
-									pnotify_history: false
+									title: 'Uncommit Countsheet',
+									text: 'Uncommitting countsheet...',
+									icon: 'picon picon-throbber',
+									nonblock: true,
+									hide: false,
+									history: false
 								});
 							},
 							error: function(XMLHttpRequest, textStatus){
@@ -140,18 +140,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									return;
 								if (!data[0]) {
 									loader.pnotify({
-										pnotify_type: 'error',
-										pnotify_text: pines.safe(data[1]),
-										pnotify_hide: true,
-										pnotify_history: true
+										type: 'error',
+										text: pines.safe(data[1]),
+										hide: true,
+										history: true
 									});
 									return;
 								}
 								loader.pnotify({
-									pnotify_notice_icon: 'picon picon-task-complete',
-									pnotify_text: pines.safe(data[1]),
-									pnotify_hide: true,
-									pnotify_history: true
+									icon: 'picon picon-task-complete',
+									text: pines.safe(data[1]),
+									hide: true,
+									history: true
 								});
 								row.pgrid_set_value(6, 'No');
 							}

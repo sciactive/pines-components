@@ -1,7 +1,7 @@
 pines(function(){
 if ($.pnotify) {
-	$.pnotify.defaults.pnotify_opacity = .9;
-	$.pnotify.defaults.pnotify_delay = 15000;
+	$.pnotify.defaults.opacity = .9;
+	$.pnotify.defaults.delay = 15000;
 }
 
 // Get the loaded page ready. (Styling, etc.)

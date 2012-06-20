@@ -161,34 +161,34 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			});
 		};
 		p_muid_notice = $.pnotify({
-			pnotify_title: "Information",
-			pnotify_text: "",
-			pnotify_hide: false,
-			pnotify_closer: false,
-			pnotify_sticker: false,
-			pnotify_history: false,
-			pnotify_animation: "none",
-			pnotify_animate_speed: 0,
-			pnotify_opacity: 1,
-			pnotify_notice_icon: "",
+			title: "Information",
+			text: "",
+			hide: false,
+			closer: false,
+			sticker: false,
+			history: false,
+			animation: "none",
+			animate_speed: 0,
+			opacity: 1,
+			icon: false,
 			// Setting stack to false causes Pines Notify to ignore this notice when positioning.
-			pnotify_stack: false,
-			pnotify_after_init: function(pnotify){
+			stack: false,
+			after_init: function(pnotify){
 				// Remove the notice if the user mouses over it.
 				pnotify.mouseout(function(){
 					pnotify.pnotify_remove();
 				});
 			},
-			pnotify_before_open: function(pnotify){
+			before_open: function(pnotify){
 				// This prevents the notice from displaying when it's created.
 				pnotify.pnotify({
-					pnotify_before_open: null
+					before_open: null
 				});
 				return false;
 			}
 		});
 		$("tbody", "#p_muid_grid").mouseenter(function(){
-			if (p_muid_notice.pnotify_text)
+			if (p_muid_notice.text)
 				p_muid_notice.pnotify_display();
 		}).mouseleave(function(){
 			p_muid_notice.pnotify_remove();
@@ -197,7 +197,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			if (info == null) {
 				info = '';
 			} else {
-				p_muid_notice.pnotify({ pnotify_title: pines.safe(title), pnotify_text: pines.safe(info) });
+				p_muid_notice.pnotify({ title: pines.safe(title), text: pines.safe(info) });
 				p_muid_notice.pnotify_display();
 				if (!p_muid_notice.is(":visible"))
 					p_muid_notice.pnotify_display();

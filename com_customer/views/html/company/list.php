@@ -34,12 +34,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				data: {"q": search_string},
 				beforeSend: function(){
 					loader = $.pnotify({
-						pnotify_title: 'Search',
-						pnotify_text: 'Searching the database...',
-						pnotify_notice_icon: 'picon picon-throbber',
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false
+						title: 'Search',
+						text: 'Searching the database...',
+						icon: 'picon picon-throbber',
+						nonblock: true,
+						hide: false,
+						history: false
 					});
 					company_grid.pgrid_get_all_rows().pgrid_delete();
 				},

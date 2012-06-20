@@ -6,11 +6,11 @@ pines(function(){
 		dataType: "html",
 		beforeSend: function(){
 			notice = $.pnotify({
-				pnotify_text: "Loading login page...",
-				pnotify_title: "Switch User",
-				pnotify_notice_icon: "picon picon-throbber",
-				pnotify_hide: false,
-				pnotify_history: false
+				text: "Loading login page...",
+				title: "Switch User",
+				icon: "picon picon-throbber",
+				hide: false,
+				history: false
 			});
 		},
 		error: function(XMLHttpRequest, textStatus){
@@ -19,10 +19,10 @@ pines(function(){
 		},
 		success: function(data){
 			notice.pnotify({
-				pnotify_title: "Switch User",
-				pnotify_text: data,
-				pnotify_notice_icon: "picon picon-dialog-password",
-				pnotify_insert_brs: false
+				title: "Switch User",
+				text: data,
+				icon: "picon picon-dialog-password",
+				insert_brs: false
 			}).find("input").eq(0).focus();
 		}
 	});

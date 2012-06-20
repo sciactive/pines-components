@@ -75,12 +75,12 @@ $pines->com_jstree->load();
 					beforeSend: function(){
 						result_totals.hide("normal");
 						loader = $.pnotify({
-							pnotify_title: 'Sales Totals',
-							pnotify_text: 'Retrieving totals from server...',
-							pnotify_notice_icon: 'picon picon-throbber',
-							pnotify_nonblock: true,
-							pnotify_hide: false,
-							pnotify_history: false
+							title: 'Sales Totals',
+							text: 'Retrieving totals from server...',
+							icon: 'picon picon-throbber',
+							nonblock: true,
+							hide: false,
+							history: false
 						});
 					},
 					complete: function(){

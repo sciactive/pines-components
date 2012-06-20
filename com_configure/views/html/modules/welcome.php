@@ -119,8 +119,35 @@ $this->title = 'Welcome to '.htmlspecialchars($pines->info->name);
 		<a href="http://pinesframework.org/content/page/a-support/" target="_blank" class="btn">Ask for Help</a>
 	</div>
 </div>
-<p>To help you get started, you can use the <a>guided setup</a>.</p>
-<p>
-	You can also choose from a list of common actions:
-	
-</p>
+<div>
+	To help you get started with Pines, here are some important areas in the
+	<a href="<?php echo htmlspecialchars(pines_url('com_configure', 'list')); ?>">configuration</a>:
+	<h4 style="text-align: center;">Settings and Preferences</h4>
+	<dl style="margin-top: 0;">
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'system'))); ?>">Pines Config</a></dt>
+		<dd>Main system config includes things like names, default templates and component, timezone, etc.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_user'))); ?>">User Manager</a></dt>
+		<dd>The user manager provides user and group abilities. You can tune it to work just how you'd like here.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_content'))); ?>">CMS</a></dt>
+		<dd>The CMS, or Content Management System is what builds the pages in your website. You can set defaults and options here.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_timeoutnotice'))); ?>">Timeout Notice</a></dt>
+		<dd>The timeout notice will log users out after they've been idle for a while. You can set up its features here.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_logger'))); ?>">Logger</a></dt>
+		<dd>The logger keeps a log of important things that happen on your website. You can set up how and where it logs information here.</dd>
+	</dl>
+	<h4 style="text-align: center;">Appearance</h4>
+	<dl style="margin-top: 0;">
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'system'))); ?>">Pines Config</a></dt>
+		<dd>The main system config lets you choose default templates, which change the whole site's appearance.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_bootstrap'))); ?>">Bootstrap</a> and <a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'com_jquery'))); ?>">jQuery</a></dt>
+		<dd>Bootstrap provides theming for most of the form inputs, buttons, and other various elements. jQuery UI provides theming for many of the widgets, like the data grids, and the tpl_pines template. Try different combinations of Bootstrap and jQuery UI themes.</dd>
+
+		<dt><a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'tpl_pinescms'))); ?>">Pines CMS Template</a> and <a href="<?php echo htmlspecialchars(pines_url('com_configure', 'edit', array('component' => 'tpl_pines'))); ?>">Pines Template</a></dt>
+		<dd>These are the default templates for Pines. You can configure a lot of options for each of them, including changing their layout.</dd>
+	</dl>
+</div>

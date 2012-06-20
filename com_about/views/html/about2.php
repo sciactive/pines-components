@@ -32,9 +32,10 @@ libraries to make development of even very complex systems easy.
 by using a database abstraction system called an Entity Manager. Choosing the
 right database is as simple as installing a new component.
 </p>
-<p class="btn-group" style="float: right;">
-	<button type="button" class="btn btn-primary" onclick="pines.get('http://pinesframework.org/', null, '_blank');">Pines Framework</button>
-	<button type="button" class="btn" onclick="pines.get('http://sourceforge.net/projects/pines/', null, '_blank');">Pines on SourceForge</button>
-	<button type="button" class="btn" onclick="pines.get('http://sourceforge.net/donate/index.php?group_id=264165', null, '_blank');">Donate</button>
-</p>
+<div class="btn-group pull-right">
+	<a class="btn btn-primary" href="http://pinesframework.org/" target="_blank">Pines Framework</a>
+	<a class="btn" href="https://github.com/sciactive" target="_blank">Pines on GitHub</a>
+	<?php /* <a class="btn" href="http://sourceforge.net/projects/pines/" target="_blank">Pines on SourceForge</a> */ ?>
+	<a class="btn" href="http://sourceforge.net/donate/index.php?group_id=264165" target="_blank">Donate</a>
+</div>
 <br style="clear: both; height: 1px;" />

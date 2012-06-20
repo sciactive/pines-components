@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'elFinder File Manager',
 	'author' => 'SciActive (Component), Studio 42 Ltd. (elFinder JS and PHP)',
-	'version' => '2.0rc1-1.1.0dev',
+	'version' => '2.0rc1-1.1.0beta',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'elFinder file manager and widget',

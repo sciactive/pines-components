@@ -57,12 +57,12 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 					data: {"product": current_item.children(".product").text(), "serial": serial, "location": location, "quantity": quantity},
 					beforeSend: function(){
 						loader = $.pnotify({
-							pnotify_title: 'Stock Search',
-							pnotify_text: 'Retrieving stock from server...',
-							pnotify_notice_icon: 'picon picon-throbber',
-							pnotify_nonblock: true,
-							pnotify_hide: false,
-							pnotify_history: false
+							title: 'Stock Search',
+							text: 'Retrieving stock from server...',
+							icon: 'picon picon-throbber',
+							nonblock: true,
+							hide: false,
+							history: false
 						});
 					},
 					complete: function(){

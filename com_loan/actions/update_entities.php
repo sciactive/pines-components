@@ -2,11 +2,11 @@
 /**
  * Update loan entities.
  *
- * @package com_loan
- * @license none
- * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright Smart Industries, LLC
- * @link http://smart108.com/
+ * @package Components\loan
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Angela Murrell <angela@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
 

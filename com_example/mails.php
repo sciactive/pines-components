@@ -16,6 +16,7 @@ return array(
 		'cname' => 'Saved Foobar',
 		'description' => 'This email is sent when a foobar is saved.',
 		'view' => 'mails/save_foobar',
+		'has_recipient' => false, // Does the email already have a place to be sent?
 		'macros' => array(
 			'foobar_name' => 'Name of the foobar that has been saved.',
 		),

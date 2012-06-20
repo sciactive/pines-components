@@ -7,6 +7,14 @@
 		}
 	},
 		{
+			"path": "main_menu/system/emails/instructions",
+			"text": "Instructions",
+			"href": ["com_mailer","instructions"],
+			"depend": {
+				"ability": "com_mailer/listtemplates"
+			}
+		},
+		{
 			"path": "main_menu/system/emails/templates",
 			"text": "Templates",
 			"href": ["com_mailer","template/list"],

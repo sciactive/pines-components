@@ -1,10 +1,10 @@
 pines(function(){
 	if ($.pnotify) {
-		$.pnotify.defaults.pnotify_opacity = 1;
-		$.pnotify.defaults.pnotify_nonblock = false;
-		$.pnotify.defaults.pnotify_closer_hover = false;
-		$.pnotify.defaults.pnotify_sticker_hover = false;
-		$.pnotify.defaults.pnotify_history = false;
+		$.pnotify.defaults.opacity = 1;
+		$.pnotify.defaults.nonblock = false;
+		$.pnotify.defaults.closer_hover = false;
+		$.pnotify.defaults.sticker_hover = false;
+		$.pnotify.defaults.history = false;
 	}
 	if ($.fn.pgrid)
 		$.fn.pgrid.defaults.pgrid_stateful_height = false;

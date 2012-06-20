@@ -38,15 +38,15 @@ var load_page_ajax = function(url, type, data){
 			// TODO: Detect redirects.
 			if (!loader)
 				loader = $.pnotify({
-					pnotify_text: "Loading...",
-					pnotify_notice_icon: "picon picon-throbber",
-					pnotify_width: "120px",
-					pnotify_opacity: .6,
-					pnotify_animate_speed: 20,
-					pnotify_nonblock: true,
-					pnotify_hide: false,
-					pnotify_history: false,
-					pnotify_stack: {"dir1": "down","dir2": "right"}
+					text: "Loading...",
+					icon: "picon picon-throbber",
+					width: "120px",
+					opacity: .6,
+					animate_speed: 20,
+					nonblock: true,
+					hide: false,
+					history: false,
+					stack: {"dir1": "down","dir2": "right"}
 				}).css("top", "-.6em");
 			loader.css("left", (j_window.width() / 2) - (loader.width() / 2));
 			loader.pnotify_display();

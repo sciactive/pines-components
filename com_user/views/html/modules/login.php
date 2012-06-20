@@ -391,17 +391,17 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 <script type="text/javascript">
 	pines(function(){
 		var notice = $.pnotify({
-			pnotify_title: <?php echo json_encode($this->title); ?>,
-			pnotify_text: $("#p_muid_form").detach().show().append("<br style=\"clear: both;\" />"),
-			pnotify_notice_icon: '',
-			pnotify_width: 'auto',
-			pnotify_hide: false,
-			pnotify_history: false,
-			pnotify_insert_brs: false,
-			pnotify_before_open: function(pnotify){
+			title: <?php echo json_encode($this->title); ?>,
+			text: $("#p_muid_form").detach().show().append("<br style=\"clear: both;\" />"),
+			icon: '',
+			width: 'auto',
+			hide: false,
+			history: false,
+			insert_brs: false,
+			before_open: function(pnotify){
 				// This prevents the notice from displaying when it's created.
 				pnotify.pnotify({
-					pnotify_before_open: null
+					before_open: null
 				});
 				return false;
 			}

@@ -54,12 +54,12 @@ $pines->icons->load();
 					data: {"id": "self", "pin": pin, "comments": $("#p_muid_comments").val()},
 					beforeSend: function(){
 						loader = $.pnotify({
-							pnotify_title: 'Timeclock',
-							pnotify_text: 'Communicating with server...',
-							pnotify_notice_icon: 'picon picon-throbber',
-							pnotify_nonblock: true,
-							pnotify_hide: false,
-							pnotify_history: false
+							title: 'Timeclock',
+							text: 'Communicating with server...',
+							icon: 'picon picon-throbber',
+							nonblock: true,
+							hide: false,
+							history: false
 						});
 					},
 					complete: function(){

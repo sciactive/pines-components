@@ -189,12 +189,12 @@ if ($this->entity->final)
 					data: {"q": search_string, "enabled": "true"},
 					beforeSend: function(){
 						loader = $.pnotify({
-							pnotify_title: 'Search',
-							pnotify_text: 'Searching the database...',
-							pnotify_notice_icon: 'picon picon-throbber',
-							pnotify_nonblock: true,
-							pnotify_hide: false,
-							pnotify_history: false
+							title: 'Search',
+							text: 'Searching the database...',
+							icon: 'picon picon-throbber',
+							nonblock: true,
+							hide: false,
+							history: false
 						});
 					},
 					complete: function(){

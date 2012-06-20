@@ -268,12 +268,12 @@ if ($pines->config->com_sales->com_esp) {
 									data: {"code": code},
 									beforeSend: function(){
 										loader = $.pnotify({
-											pnotify_title: 'Product Search',
-											pnotify_text: 'Retrieving product from server...',
-											pnotify_notice_icon: 'picon picon-throbber',
-											pnotify_nonblock: true,
-											pnotify_hide: false,
-											pnotify_history: false
+											title: 'Product Search',
+											text: 'Retrieving product from server...',
+											icon: 'picon picon-throbber',
+											nonblock: true,
+											hide: false,
+											history: false
 										});
 									},
 									complete: function(){
@@ -775,12 +775,12 @@ if ($pines->config->com_sales->com_esp) {
 							data: {"id": row.attr("title")},
 							beforeSend: function(){
 								loader = $.pnotify({
-									pnotify_title: 'Product Search',
-									pnotify_text: 'Retrieving products from server...',
-									pnotify_notice_icon: 'picon picon-throbber',
-									pnotify_nonblock: true,
-									pnotify_hide: false,
-									pnotify_history: false
+									title: 'Product Search',
+									text: 'Retrieving products from server...',
+									icon: 'picon picon-throbber',
+									nonblock: true,
+									hide: false,
+									history: false
 								});
 							},
 							complete: function(){
@@ -935,12 +935,12 @@ if ($pines->config->com_sales->com_esp) {
 			products_table.pgrid_get_all_rows().each(function(){
 				if (!loader)
 					loader = $.pnotify({
-						pnotify_title: 'Loading Products',
-						pnotify_text: 'Retrieving product information from server...',
-						pnotify_notice_icon: 'picon picon-throbber',
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false
+						title: 'Loading Products',
+						text: 'Retrieving product information from server...',
+						icon: 'picon picon-throbber',
+						nonblock: true,
+						hide: false,
+						history: false
 					});
 				var cur_row = $(this);
 				var cur_export = cur_row.pgrid_export_rows();

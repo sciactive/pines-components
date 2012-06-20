@@ -7,11 +7,11 @@ pines(function(){
 			dataType: "html",
 			beforeSend: function(){
 				notice = $.pnotify({
-					pnotify_text: "Loading login page...",
-					pnotify_title: "Login",
-					pnotify_notice_icon: "picon picon-throbber",
-					pnotify_hide: false,
-					pnotify_history: false
+					text: "Loading login page...",
+					title: "Login",
+					icon: "picon picon-throbber",
+					hide: false,
+					history: false
 				});
 			},
 			error: function(XMLHttpRequest, textStatus){
@@ -115,12 +115,12 @@ pines(function(){
 								session_notice.pnotify_display();
 						} else {
 							session_notice = $.pnotify({
-								pnotify_title: "Session Timeout",
-								pnotify_text: "Your session is about to expire. <a href=\"javascript:void(0)\" class=\"extend_session\">Click here to stay logged in.</a>",
-								pnotify_notice_icon: "picon picon-user-away",
-								pnotify_hide: false,
-								pnotify_history: false,
-								pnotify_mouse_reset: false
+								title: "Session Timeout",
+								text: "Your session is about to expire. <a href=\"javascript:void(0)\" class=\"extend_session\">Click here to stay logged in.</a>",
+								icon: "picon picon-user-away",
+								hide: false,
+								history: false,
+								mouse_reset: false
 							});
 							session_notice.find("a.extend_session").click(function(){
 								$.ajax({

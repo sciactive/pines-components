@@ -115,12 +115,12 @@ $pines->com_pgrid->load();
 				data: {"id": new_location},
 				beforeSend: function(){
 					loader = $.pnotify({
-						pnotify_title: 'Loading',
-						pnotify_text: 'Loading location...',
-						pnotify_notice_icon: 'picon picon-throbber',
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false
+						title: 'Loading',
+						text: 'Loading location...',
+						icon: 'picon picon-throbber',
+						nonblock: true,
+						hide: false,
+						history: false
 					});
 					goal_grid.pgrid_get_all_rows().pgrid_delete();
 				},

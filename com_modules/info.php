@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Module Manager',
 	'author' => 'SciActive',
-	'version' => '1.1.0dev',
+	'version' => '1.1.0beta',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'A module management system',

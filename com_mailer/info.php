@@ -25,6 +25,10 @@ return array(
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),
 	'abilities' => array(
+		array('listrenditions', 'List Renditions', 'User can see renditions.'),
+		array('newrendition', 'Create Renditions', 'User can create new renditions.'),
+		array('editrendition', 'Edit Renditions', 'User can edit current renditions.'),
+		array('deleterendition', 'Delete Renditions', 'User can delete current renditions.'),
 		array('listtemplates', 'List Templates', 'User can see templates.'),
 		array('newtemplate', 'Create Templates', 'User can create new templates.'),
 		array('edittemplate', 'Edit Templates', 'User can edit current templates.'),

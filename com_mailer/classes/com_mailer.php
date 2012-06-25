@@ -44,6 +44,28 @@ class com_mailer extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists renditions.
+	 * @return module The module.
+	 */
+	public function list_renditions() {
+		global $pines;
+
+		$module = new module('com_mailer', 'rendition/list', 'content');
+
+		$module->renditions = $pines->entity_manager->get_entities(
+				array('class' => com_mailer_rendition),
+				array('&',
+					'tag' => array('com_mailer', 'rendition')
+				)
+			);
+
+		if ( empty($module->renditions) )
+			pines_notice('No renditions found.');
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which lists templates.
 	 * @return module The module.
 	 */
@@ -91,12 +113,20 @@ class com_mailer extends component {
 
 	/**
 	 * Send a system registered email.
-	 * @param array $mail The mail entry array.
+	 * @param array|string $mail The mail entry array, or a string representation ("com_example/save_foobar").
 	 * @param array $macros An associative array of the macros available for the email.
 	 * @param mixed $recipient A user, customer, employee, etc. that has user info and an email address.
-	 * @return bool True on success, false on failure.
+	 * @param bool $send If this is set to false, the com_mailer_mail object is returned before being sent. Allows for adding attachments, etc.
+	 * @return bool|com_mailer_mail True on success, false on failure. If $send is false, returns the mail instead.
 	 */
-	public function send_mail($mail, $macros, $recipient = null) {
+	public function send_mail($mail, $macros = array(), $recipient = null, $send = true) {
+		if ((array) $mail !== $mail) {
+			list($component, $defname) = explode('/', $_REQUEST['type'], 2);
+			$mail = array(
+				'component' => $component,
+				'mail' => $defname
+			);
+		}
 		$def = $this->get_mail_def($mail);
 		// TODO: Finish this.
 	}

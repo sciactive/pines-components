@@ -15,6 +15,22 @@
 			}
 		},
 		{
+			"path": "main_menu/system/emails/renditions",
+			"text": "Renditions",
+			"href": ["com_mailer","rendition/list"],
+			"depend": {
+				"ability": "com_mailer/listrenditions"
+			}
+		},
+		{
+			"path": "main_menu/system/emails/newrendition",
+			"text": "New Rendition",
+			"href": ["com_mailer","rendition/edit"],
+			"depend": {
+				"ability": "com_mailer/newrendition"
+			}
+		},
+		{
 			"path": "main_menu/system/emails/templates",
 			"text": "Templates",
 			"href": ["com_mailer","template/list"],

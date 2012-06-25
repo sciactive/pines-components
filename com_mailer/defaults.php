@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'additional_parameters',
-		'cname' => 'Additional Parameters',
-		'description' => 'If your emails are not being sent correctly, try removing this option.',
-		'value' => '-femail@example.com',
+		'name' => 'master_address',
+		'cname' => 'Master Address',
+		'description' => 'The master address receives all mails that don\'t have a To address. This includes system information emails.',
+		'value' => '',
 	),
 	array(
 		'name' => 'testing_mode',
@@ -29,6 +29,12 @@ return array(
 		'cname' => 'Testing Email',
 		'description' => 'In testing mode, if this is not empty, all emails are sent here instead. "*Test* " is prepended to their subject line.',
 		'value' => '',
+	),
+	array(
+		'name' => 'additional_parameters',
+		'cname' => 'Additional Parameters',
+		'description' => 'If your emails are not being sent correctly, try removing this option.',
+		'value' => '-femail@example.com',
 	),
 );
 

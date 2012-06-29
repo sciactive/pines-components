@@ -1473,6 +1473,9 @@ if ($pines->config->com_sales->com_esp) {
 				// Update the products input element.
 				products.val(JSON.stringify(rows.pgrid_export_rows()));
 
+				// Trigger custom event that the total has been updated.
+				$('#p_muid_total').trigger('update.com_sales');
+				
 				update_payments();
 			};
 
@@ -1808,7 +1811,7 @@ if ($pines->config->com_sales->com_esp) {
 				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
 				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />
 				<hr /><br />
-				<span class="pf-label">Total</span><span class="pf-field" id="p_muid_total">0.00</span>
+				<span class="pf-label">Total</span><span class="pf-field com_sales_total" id="p_muid_total">0.00</span>
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>

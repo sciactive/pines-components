@@ -124,6 +124,7 @@ $pines->com_pgrid->load();
 	</script>
 	<ul class="nav nav-tabs" style="clear: both;">
 		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_document" data-toggle="tab">Document</a></li>
 		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
 	</ul>
 	<div id="p_muid_template_tabs" class="tab-content">
@@ -151,7 +152,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element pf-full-width">
 				Put the text "#content#" (without quotes) where you want the content of the email to go.<br />
-				<textarea rows="20" cols="35" class="peditor" style="width: 100%;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
+				<textarea rows="20" cols="35" class="peditor-email" style="width: 100%;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
 			</div>
 			<div class="pf-element">
 				Macros let you replace a string with a value that can change. To
@@ -172,6 +173,12 @@ $pines->com_pgrid->load();
 								</tr>
 							</thead>
 							<tbody>
+								<tr>
+									<td></td>
+									<td>#subject#</td>
+									<td>The email subject.</td>
+									<td>N/A</td>
+								</tr>
 								<tr>
 									<td rowspan="2">Links</td>
 									<td>#site_link#</td>
@@ -283,6 +290,21 @@ $pines->com_pgrid->load();
 						<p>Also, the recipient info will only be available if the message is being sent to a registered user/customer.</p>
 					</div>
 				</div>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div class="tab-pane" id="p_muid_tab_document">
+			<div class="pf-element pf-heading">
+				<h3>Email Document</h3>
+				<p>The email document is the HTML portion surrounding the actual
+					email. It doesn't provide any visual styling, so normally it
+					doesn't need to be customized. It can't be edited with a
+					WYSIWYG editor. The default document is based on the email
+					boilerplate from <a href="http://www.emailology.org/#1" target="_blank">Emailology</a>.</p>
+			</div>
+			<div class="pf-element pf-full-width">
+				Put the text "#content#" (without quotes) where you want the template content to go.<br />
+				<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="20" cols="35" name="document"><?php echo htmlspecialchars($this->entity->document); ?></textarea></div>
 			</div>
 			<br class="pf-clearing" />
 		</div>

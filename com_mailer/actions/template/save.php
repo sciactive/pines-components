@@ -30,6 +30,9 @@ $template->name = $_REQUEST['name'];
 $template->enabled = ($_REQUEST['enabled'] == 'ON');
 $template->content = $_REQUEST['content'];
 
+// Document
+$template->document = $_REQUEST['document'];
+
 // Conditions
 $conditions = (array) json_decode($_REQUEST['conditions']);
 $template->conditions = array();

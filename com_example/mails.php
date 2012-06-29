@@ -16,7 +16,8 @@ return array(
 		'cname' => 'Saved Foobar',
 		'description' => 'This email is sent when a foobar is saved.',
 		'view' => 'mails/save_foobar',
-		'has_recipient' => false, // Does the email already have a place to be sent?
+		'has_recipient' => false, // Does the email already have a place to be sent? (Like to a customer or user.)
+		'unsubscribe' => true, // Should this email obey the unsubscribed status of an address.
 		'macros' => array(
 			'foobar_name' => 'Name of the foobar that has been saved.',
 		),

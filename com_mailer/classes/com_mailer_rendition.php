@@ -107,6 +107,27 @@ class com_mailer_rendition extends entity {
 
 		return $module;
 	}
+
+	/**
+	 * Determine if this rendition is ready to use.
+	 *
+	 * This function will check the conditions of the rendition.
+	 *
+	 * @return bool True if the rendition is ready, false otherwise.
+	 */
+	public function ready() {
+		if (!$this->enabled)
+			return false;
+		if (!$this->conditions)
+			return true;
+		global $pines;
+		// Check that all conditions are met.
+		foreach ($this->conditions as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value))
+				return false;
+		}
+		return true;
+	}
 }
 
 ?>

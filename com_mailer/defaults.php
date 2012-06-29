@@ -15,8 +15,16 @@ return array(
 	array(
 		'name' => 'master_address',
 		'cname' => 'Master Address',
-		'description' => 'The master address receives all mails that don\'t have a To address. This includes system information emails.',
+		'description' => 'The master address receives all mails that don\'t have a recipient. This includes system information emails.',
 		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'from_address',
+		'cname' => 'From Address',
+		'description' => 'The address used when sending emails.',
+		'value' => 'noreply@'.$_SERVER['SERVER_NAME'],
+		'peruser' => true,
 	),
 	array(
 		'name' => 'testing_mode',
@@ -35,6 +43,7 @@ return array(
 		'cname' => 'Additional Parameters',
 		'description' => 'If your emails are not being sent correctly, try removing this option.',
 		'value' => '-femail@example.com',
+		'peruser' => true,
 	),
 );
 

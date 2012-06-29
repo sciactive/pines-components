@@ -287,11 +287,7 @@ class com_mailer_mail {
 		$message = $this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
 
 		// Now send the mail.
-		if (!mail($to, $subject, $message, $headers, $pines->config->com_mailer->additional_parameters)) {
-			pines_error('Error sending email.');
-			return false;
-		}
-		return true;
+		return mail($to, $subject, $message, $headers, $pines->config->com_mailer->additional_parameters);
 	}
 }
 

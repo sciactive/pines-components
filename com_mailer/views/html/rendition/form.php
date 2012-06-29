@@ -19,7 +19,7 @@ $pines->com_pgrid->load();
 	<script type="text/javascript">
 		pines(function(){
 			// Mail Definitions
-			$("#p_muid_form").on("change", "[name=type]", function(){
+			$("#p_muid_form").on("change", "[name=type]", function(e, loading){
 				var type = $(this);
 				if (!type.is(":checked"))
 					return;
@@ -33,6 +33,8 @@ $pines->com_pgrid->load();
 					$("#p_muid_recipient").show();
 				else
 					$("#p_muid_recipient").hide();
+				if (loading)
+					return;
 				// Get the default content and subject through AJAX.
 				$.ajax({
 					url: <?php echo json_encode(pines_url('com_mailer', 'rendition/def_content')); ?>,
@@ -59,7 +61,7 @@ $pines->com_pgrid->load();
 						}
 					}
 				});
-			}).find("[name=type]:checked").change();
+			}).find("[name=type]:checked").trigger('change', [true]);
 
 			// Validate address fields.
 			$("[name=to],[name=cc],[name=bcc]", "#p_muid_form").change(function(){
@@ -276,7 +278,7 @@ $pines->com_pgrid->load();
 					<input class="pf-field" type="text" name="subject" size="40" value="<?php echo htmlspecialchars($this->entity->subject); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
-				<textarea rows="20" cols="35" class="peditor" style="width: 100%;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
+				<textarea rows="20" cols="35" class="peditor-email" style="width: 100%;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
 			</div>
 			<div class="pf-element">
 				Macros let you replace a string with a value that can change. To
@@ -306,6 +308,12 @@ $pines->com_pgrid->load();
 								</tr>
 							</thead>
 							<tbody>
+								<tr>
+									<td></td>
+									<td>#subject#</td>
+									<td>The email subject.</td>
+									<td>N/A</td>
+								</tr>
 								<tr>
 									<td rowspan="2">Links</td>
 									<td>#site_link#</td>

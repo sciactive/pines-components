@@ -27,6 +27,12 @@ $pines->editor->load();
 		</div>
 	</div>
 	<div class="pf-element">
+		<span class="pf-label">Email Editor</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor-email"></textarea></div>
+		</div>
+	</div>
+	<div class="pf-element">
 		<span class="pf-label">Textarea</span>
 		<div class="pf-group">
 			<div class="pf-field"><textarea rows="3" cols="35"></textarea></div>

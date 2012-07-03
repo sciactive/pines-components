@@ -29,6 +29,7 @@ if ( isset($_REQUEST['id']) ) {
 $rendition->name = $_REQUEST['name'];
 $rendition->enabled = ($_REQUEST['enabled'] == 'ON');
 $rendition->type = $_REQUEST['type'];
+$rendition->from = $_REQUEST['from'];
 $rendition->to = $_REQUEST['to'];
 $rendition->cc = $_REQUEST['cc'];
 $rendition->bcc = $_REQUEST['bcc'];
@@ -59,6 +60,11 @@ list($component, $defname) = explode('/', $rendition->type, 2);
 if (!$pines->com_mailer->get_mail_def(array('component' => $component, 'mail' => $defname))) {
 	$rendition->print_form();
 	pines_notice('The specified mail definition doesn\'t exist.');
+	return;
+}
+if (!empty($rendition->from) && !preg_match('/^(?:(?:"[^"]*" )?<)?\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b>?$/i', $rendition->from)) {
+	$rendition->print_form();
+	pines_notice('The From field is not formatted correctly.');
 	return;
 }
 if (!empty($rendition->to) && !preg_match('/^(?:(?:(?:"[^"]*" )?<)?\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b>?(?:, ?)?)+$/i', $rendition->to)) {

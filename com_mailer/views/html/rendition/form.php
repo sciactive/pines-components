@@ -64,9 +64,11 @@ $pines->com_pgrid->load();
 			}).find("[name=type]:checked").trigger('change', [true]);
 
 			// Validate address fields.
-			$("[name=to],[name=cc],[name=bcc]", "#p_muid_form").change(function(){
-				var addr = $(this), val = addr.val();
-				if (val != "" && !val.match(/^(?:(?:(?:"[^"]*" )?<)?\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b>?(?:, ?)?)+$/i))
+			$("[name=from],[name=to],[name=cc],[name=bcc]", "#p_muid_form").change(function(){
+				var addr = $(this),
+					val = addr.val(),
+					regex = (addr.attr('name') == 'from') ? /^(?:(?:"[^"]*" )?<)?\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b>?$/i : /^(?:(?:(?:"[^"]*" )?<)?\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b>?(?:, ?)?)+$/i;
+				if (val != "" && !val.match(regex))
 					addr.next('.label').show();
 				else
 					addr.next('.label').hide();
@@ -250,7 +252,36 @@ $pines->com_pgrid->load();
 			</div>
 			<?php } ?>
 			<div class="pf-element pf-heading">
-				<h3>Addressing</h3>
+				<h3>Addressing <small><a href="#p_muid_address_help" data-toggle="modal">(?)</a></small></h3>
+			</div>
+			<div class="modal hide" id="p_muid_address_help">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Address Formats</h3>
+				</div>
+				<div class="modal-body">
+					<p>Addresses can use the following formats:</p>
+					<h4>Single Address (Sender must be a single address.)</h4>
+					<ul>
+						<li>email@example.com</li>
+						<li>"John McPerson" &lt;email@example.com&gt;</li>
+					</ul>
+					<h4>Multiple Addresses</h4>
+					<ul>
+						<li>email@example.com, another@example.net</li>
+						<li>"John McPerson" &lt;email@example.com&gt;, another@example.net</li>
+						<li>"John McPerson" &lt;email@example.com&gt;, "Another User" &lt;another@example.net&gt;</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+				</div>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Sender (From Address)</span>
+					<span class="pf-note">Leave blank to use the default address (see config).</span>
+					<input class="pf-field" type="text" name="from" size="40" value="<?php echo htmlspecialchars($this->entity->from); ?>" />
+					<span class="label label-important hide">Incorrect Format</span></label>
 			</div>
 			<div class="pf-element" id="p_muid_recipient" style="display: none;">
 				<label><span class="pf-label">Recipient (To Address)</span>

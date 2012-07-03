@@ -59,7 +59,7 @@ if ($pines->config->com_example->global_foobars)
 
 if ($foobar->save()) {
 	pines_notice('Saved foobar ['.$foobar->name.']');
-	$pines->com_mailer->send_mail('com_example/save_foobar', $macros = array('foobar_name' => htmlspecialchars($foobar->name)));
+	$pines->com_mailer->send_mail('com_example/save_foobar', array('foobar_name' => htmlspecialchars($foobar->name)));
 } else {
 	pines_error('Error saving foobar. Do you have permission?');
 }

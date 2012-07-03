@@ -133,6 +133,8 @@ class com_mailer extends component {
 		if (!$def)
 			return false;
 
+		$from = $pines->config->com_mailer->from_address;
+
 		// Format recipient.
 		if ($recipient && is_string($recipient))
 			$recipient = (object) array('email' => $recipient);
@@ -160,6 +162,8 @@ class com_mailer extends component {
 		// Get the email contents.
 		$body = array();
 		if ($rendition) {
+			if (!empty($rendition->from))
+				$from = $rendition->from;
 			if (!$recipient) {
 				if ($def['has_recipient'])
 					return false;
@@ -288,7 +292,7 @@ class com_mailer extends component {
 		unset($cur_field);
 
 		// Build the mail object.
-		$email = new com_mailer_mail($pines->config->com_mailer->from_address, isset($recipient->name) ? "\"".str_replace('"', '', $recipient->name)."\" <{$recipient->email}>" : $recipient->email, $body['subject'], $body['content']);
+		$email = com_mailer_mail::factory($from, isset($recipient->name) ? "\"".str_replace('"', '', $recipient->name)."\" <{$recipient->email}>" : $recipient->email, $body['subject'], $body['content']);
 		if ($rendition) {
 			if ($rendition->cc)
 				$email->addHeader('CC', $rendition->cc);

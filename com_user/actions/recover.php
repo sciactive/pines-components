@@ -50,45 +50,20 @@ if (!$user->save()) {
 }
 
 // Send the recovery email.
-$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'recoverpassword', array('id' => $user->guid, 'secret' => $user->secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'recoverpassword', array('id' => $user->guid, 'secret' => $user->secret), true)).'</a>';
-$search = array(
-	'{page_title}',
-	'{site_name}',
-	'{site_address}',
-	'{link}',
-	'{minutes}',
-	'{username}',
-	'{name}',
-	'{email}',
-	'{phone}',
-	'{fax}',
-	'{timezone}',
-	'{address}'
+$link = htmlspecialchars(pines_url('com_user', 'recoverpassword', array('id' => $user->guid, 'secret' => $user->secret), true));
+$macros = array(
+	'recover_link' => $link,
+	'minutes' => htmlspecialchars($pines->config->com_user->pw_recovery_minutes),
+	'to_phone' => htmlspecialchars(format_phone($user->phone)),
+	'to_fax' => htmlspecialchars(format_phone($user->fax)),
+	'to_timezone' => htmlspecialchars($user->timezone),
+	'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
 );
-$replace = array(
-	$pines->config->page_title,
-	$pines->config->system_name,
-	$pines->config->full_location,
-	$link,
-	$pines->config->com_user->pw_recovery_minutes,
-	htmlspecialchars($user->username),
-	htmlspecialchars($user->name),
-	htmlspecialchars($user->email),
-	format_phone($user->phone),
-	format_phone($user->fax),
-	htmlspecialchars($user->timezone),
-	htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
-);
-$subject = str_replace($search, $replace, $pines->config->com_user->pw_recovery_email_subject);
-$content = str_replace($search, $replace, $pines->config->com_user->pw_recovery_email_content);
-$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject, $content);
-if ($mail->send()) {
+if ($pines->com_mailer->send_mail('com_user/recover_account', $macros, $user))
 	pines_notice('We have sent an email to your registered email address. Please check your email to continue with account recovery.');
-	pines_redirect(pines_url());
-	return;
-} else {
+else
 	pines_error('Couldn\'t send recovery email.');
-	return;
-}
+
+pines_redirect(pines_url());
 
 ?>

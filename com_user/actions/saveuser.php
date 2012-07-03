@@ -46,16 +46,20 @@ if (in_array('email', $pines->config->com_user->user_fields)) {
 	// Only send an email if they don't have the ability to edit all users.
 	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
 		if ($user->email != $_REQUEST['email']) {
-			$user->new_email_address = $_REQUEST['email'];
-			$user->new_email_secret = uniqid('', true);
-			// Save the old email in case the verification link is clicked.
-			// TODO: Code a way to prevent the cancel email from being overwritten for a time.
-			$user->cancel_email_address = $user->email;
-			$user->cancel_email_secret = uniqid('', true);
+			if (isset($user->email_change_date) && $user->email_change_date > strtotime('-1 week'))
+				pines_notice('You already changed your email address recently. Please wait until '.format_date(strtotime('+1 week', $user->email_change_date), 'full_short').' to change your email address again.');
+			else {
+				$user->new_email_address = $_REQUEST['email'];
+				$user->new_email_secret = uniqid('', true);
+				// Save the old email in case the verification link is clicked.
+				$user->cancel_email_address = $user->email;
+				$user->cancel_email_secret = uniqid('', true);
+				$user->email_change_date = time();
+				$confirm_email = true;
+			}
 		}
-	} else {
+	} else
 		$user->email = $_REQUEST['email'];
-	}
 }
 if (in_array('phone', $pines->config->com_user->user_fields))
 	$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
@@ -143,11 +147,10 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		}
 	}
 	foreach ($secondary_groups as $cur_group) {
-		if (in_array($cur_group->guid, $groups)) {
+		if (in_array($cur_group->guid, $groups))
 			$user->add_group($cur_group);
-		} else {
+		else
 			$user->del_group($cur_group);
-		}
 	}
 	// What if the user can't assign the current primary group, so it defaults to null?
 	//if ($_REQUEST['group'] == 'null' || $_REQUEST['no_primary_group'] == 'ON' )
@@ -158,21 +161,18 @@ if ( gatekeeper('com_user/assigngroup') ) {
 if ( gatekeeper('com_user/abilities') ) {
 	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON');
 	$sections = array('system');
-	foreach ($pines->components as $cur_component) {
+	foreach ($pines->components as $cur_component)
 		$sections[] = $cur_component;
-	}
 	foreach ($sections as $cur_section) {
-		if ($cur_section == 'system') {
+		if ($cur_section == 'system')
 			$section_abilities = (array) $pines->info->abilities;
-		} else {
+		else
 			$section_abilities = (array) $pines->info->$cur_section->abilities;
-		}
 		foreach ($section_abilities as $cur_ability) {
-			if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability[0], $_REQUEST[$cur_section]) !== false) ) {
+			if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability[0], $_REQUEST[$cur_section]) !== false) )
 				$user->grant($cur_section.'/'.$cur_ability[0]);
-			} else {
+			else
 				$user->revoke($cur_section.'/'.$cur_ability[0]);
-			}
 		}
 	}
 }
@@ -233,75 +233,44 @@ if (in_array('pin', $pines->config->com_user->user_fields) && gatekeeper('com_us
 if ($user->save()) {
 	pines_notice('Saved user ['.$user->username.']');
 	pines_log('Saved user ['.$user->username.']');
-	if ($pines->config->com_user->confirm_email && in_array('email', $pines->config->com_user->user_fields) && !gatekeeper('com_user/edituser') && $user->email != $_REQUEST['email']) {
+	if ($pines->config->com_user->confirm_email && $confirm_email) {
 		// Send the verification email.
-		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'</a>';
-		$link2 = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'</a>';
-		$search = array(
-			'{page_title}',
-			'{site_name}',
-			'{site_address}',
-			'{link}',
-			'{username}',
-			'{name}',
-			'{email}',
-			'{phone}',
-			'{fax}',
-			'{timezone}',
-			'{address}'
+		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true));
+		$link2 = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true));
+		$macros = array(
+			'old_email' => htmlspecialchars($user->email),
+			'new_email' => htmlspecialchars($user->new_email_address),
+			'to_phone' => htmlspecialchars(format_phone($user->phone)),
+			'to_fax' => htmlspecialchars(format_phone($user->fax)),
+			'to_timezone' => htmlspecialchars($user->timezone),
+			'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
 		);
-		$replace = array(
-			$pines->config->page_title,
-			$pines->config->system_name,
-			$pines->config->full_location,
-			$link,
-			htmlspecialchars($user->username),
-			htmlspecialchars($user->name),
-			htmlspecialchars($user->new_email_address),
-			htmlspecialchars(format_phone($user->phone)),
-			htmlspecialchars(format_phone($user->fax)),
-			htmlspecialchars($user->timezone),
-			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
-		);
-		// Have to have a new array because the second link is different.
-		$replace2 = array(
-			$pines->config->page_title,
-			$pines->config->system_name,
-			$pines->config->full_location,
-			$link2,
-			htmlspecialchars($user->username),
-			htmlspecialchars($user->name),
-			htmlspecialchars($user->new_email_address),
-			htmlspecialchars(format_phone($user->phone)),
-			htmlspecialchars(format_phone($user->fax)),
-			htmlspecialchars($user->timezone),
-			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
-		);
+		$macros2 = $macros;
+		$macros['verify_link'] = $link;
+		$macros2['cancel_link'] = $link2;
 		// Two emails, first goes to the new address for verification.
 		// Second goes to the old email address to cancel the change.
-		$subject = str_replace($search, $replace, $pines->config->com_user->email_subject_change);
-		$subject2 = str_replace($search, $replace2, $pines->config->com_user->email_subject_cancel_change);
-		$content = str_replace($search, $replace, $pines->config->com_user->email_content_change);
-		$content2 = str_replace($search, $replace2, $pines->config->com_user->email_content_cancel_change);
-		$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->new_email_address, $subject, $content);
-		$mail2 = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject2, $content2);
-		if ($mail->send() && $mail2->send())
+		$recipient = (object) array(
+			'email' => $user->new_email_address,
+			'username' => $user->username,
+			'name' => $user->name,
+			'name_first' => $user->name_first,
+			'name_last' => $user->name_last,
+		);
+		if ($pines->com_mailer->send_mail('com_user/verify_email_change', $macros, $recipient) && $pines->com_mailer->send_mail('com_user/cancel_email_change', $macros2, $user))
 			pines_notice('A confirmation has been sent to your new email address. Please click the link provided to verify your address.');
 		else
 			pines_error('Couldn\'t send confirmation email.');
 	}
-} else {
+} else
 	pines_error('Error saving user. Do you have permission?');
-}
 
 if (gatekeeper('com_user/listusers')) {
-	if ($user->has_tag('enabled')) {
+	if ($user->has_tag('enabled'))
 		pines_redirect(pines_url('com_user', 'listusers'));
-	} else {
+	else
 		pines_redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
-	}
-} else {
+} else
 	pines_redirect(pines_url());
-}
 
 ?>

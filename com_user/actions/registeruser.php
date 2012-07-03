@@ -113,37 +113,15 @@ if ($user->save()) {
 	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.
-		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
-		$search = array(
-			'{page_title}',
-			'{site_name}',
-			'{site_address}',
-			'{link}',
-			'{username}',
-			'{name}',
-			'{email}',
-			'{phone}',
-			'{fax}',
-			'{timezone}',
-			'{address}'
+		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true));
+		$macros = array(
+			'verify_link' => $link,
+			'to_phone' => htmlspecialchars(format_phone($user->phone)),
+			'to_fax' => htmlspecialchars(format_phone($user->fax)),
+			'to_timezone' => htmlspecialchars($user->timezone),
+			'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
 		);
-		$replace = array(
-			$pines->config->page_title,
-			$pines->config->system_name,
-			$pines->config->full_location,
-			$link,
-			htmlspecialchars($user->username),
-			htmlspecialchars($user->name),
-			htmlspecialchars($user->email),
-			format_phone($user->phone),
-			format_phone($user->fax),
-			htmlspecialchars($user->timezone),
-			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
-		);
-		$subject = str_replace($search, $replace, $pines->config->com_user->email_subject);
-		$content = str_replace($search, $replace, $pines->config->com_user->email_content);
-		$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject, $content);
-		if ($mail->send()) {
+		if ($pines->com_mailer->send_mail('com_user/verify_email', $macros, $user)) {
 			$note = new module('com_user', 'note_verify_email', 'content');
 			$note->entity = $user;
 		} else {

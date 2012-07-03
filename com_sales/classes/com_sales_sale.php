@@ -375,21 +375,15 @@ class com_sales_sale extends entity {
 		global $pines;
 		if (empty($this->customer->email))
 			return false;
-		$module = new module('com_sales', 'sale/receipt');
+		$module = new module('com_sales', 'sale/receipt_email');
 		$module->entity = $this;
-		// TODO: Allow more customization for email subject/content.
-		$subject = 'Receipt for ' . $this->customer->name;
-		$content = "<style type=\"text/css\">\n";
-		$content .= file_get_contents('components/com_pform/includes/pform.css');
-		$content .= "\n</style>";
-		$content .= $module->render();
 
-		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, $subject, $content);
-		if ($mail->send()) {
-			return true;
-		} else {
-			return false;
-		}
+		$macros = array(
+			'receipt' => $module->render(),
+			'sale_id' => htmlspecialchars($this->id),
+			'sale_total' => htmlspecialchars($this->total),
+		);
+		return $pines->com_mailer->send_mail('com_sales/sale_receipt', $macros, $this->customer);
 	}
 
 	/**

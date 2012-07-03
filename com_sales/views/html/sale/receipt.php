@@ -284,7 +284,7 @@ switch ($this->entity->status) {
 	<div class="pf-element pf-full-width">
 		<?php if (is_array($this->entity->payments) && ($this->entity->status == 'paid' || $this->entity->status == 'processed' || $this->entity->status == 'voided')) { ?>
 		<div class="left_side">
-			<div><strong>Payments<?php if (!$sale) echo ' Returned' ?>:</strong></div>
+			<div><strong><?php if (!$sale) echo 'Returned ' ?>Payment Details:</strong></div>
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>

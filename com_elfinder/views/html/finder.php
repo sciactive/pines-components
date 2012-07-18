@@ -31,7 +31,7 @@ $pines->com_elfinder->load();
 			height: <?php echo json_encode((int) $pines->config->com_elfinder->default_height); ?>,
 			lang: langCode,
 			getFileCallback: function(file){
-				window.opener.CKEDITOR.tools.callFunction(funcNum, file);
+				window.opener.CKEDITOR.tools.callFunction(funcNum, <?php echo json_encode($this->absolute ? preg_replace('/^(https?:\/\/[^\/]+).*$/i', '$1', $pines->config->full_location) : ''); ?>+file);
 				window.close();
 			}
 		});

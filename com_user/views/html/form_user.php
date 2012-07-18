@@ -143,7 +143,12 @@ if ($pines->config->com_user->check_username)
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
-			<?php } if (in_array('phone', $pines->config->com_user->user_fields)) { ?>
+			<?php if (isset($pines->com_mailer)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Mailing List</span>
+					<input class="pf-field" type="checkbox" name="mailing_list" value="ON"<?php echo $pines->com_mailer->unsubscribe_query($this->entity->email) ? '' : ' checked="checked"'; ?> /> Subscribe to the mailing list.</label>
+			</div>
+			<?php } } if (in_array('phone', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
 					<input class="pf-field" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
@@ -177,11 +182,12 @@ if ($pines->config->com_user->check_username)
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
-					<?php if (!isset($this->entity->guid)) {
+					<?php
+					if (!isset($this->entity->guid))
 						echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : '');
-					} else {
+					else
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
-					} ?>
+					?>
 					<input class="pf-field" type="password" name="password" size="24" /></label>
 			</div>
 			<div class="pf-element">

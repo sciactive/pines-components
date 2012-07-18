@@ -235,6 +235,12 @@ $pines->uploader->load();
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
+			<?php if (isset($pines->com_mailer)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Mailing List</span>
+					<input class="pf-field" type="checkbox" name="mailing_list" value="ON"<?php echo $pines->com_mailer->unsubscribe_query($this->entity->email) ? '' : ' checked="checked"'; ?> /> Subscribe to the mailing list.</label>
+			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone 1</span>
 					<input class="pf-field" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>

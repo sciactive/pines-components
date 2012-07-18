@@ -35,6 +35,13 @@ if (gatekeeper('com_user/enabling')) {
 		$group->remove_tag('enabled');
 }
 $group->email = $_REQUEST['email'];
+if ($group->email && $_REQUEST['mailing_list'] != 'ON' && !$pines->com_mailer->unsubscribe_query($group->email)) {
+	if (!$pines->com_mailer->unsubscribe_add($group->email))
+		pines_error('Your email could not be removed from the mailing list. Please try again, and if the problem persists, contact an administrator.');
+} elseif ($group->email && $_REQUEST['mailing_list'] == 'ON' && $pines->com_mailer->unsubscribe_query($group->email)) {
+	if (!$pines->com_mailer->unsubscribe_remove($group->email))
+		pines_error('Your email could not be added to the mailing list. Please try again, and if the problem persists, contact an administrator.');
+}
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $group->phone2 = preg_replace('/\D/', '', $_REQUEST['phone2']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);

@@ -60,6 +60,13 @@ if (in_array('email', $pines->config->com_user->user_fields)) {
 		}
 	} else
 		$user->email = $_REQUEST['email'];
+	if ($user->email && $_REQUEST['mailing_list'] != 'ON' && !$pines->com_mailer->unsubscribe_query($user->email)) {
+		if (!$pines->com_mailer->unsubscribe_add($user->email))
+			pines_error('Your email could not be removed from the mailing list. Please try again, and if the problem persists, contact an administrator.');
+	} elseif ($user->email && $_REQUEST['mailing_list'] == 'ON' && $pines->com_mailer->unsubscribe_query($user->email)) {
+		if (!$pines->com_mailer->unsubscribe_remove($user->email))
+			pines_error('Your email could not be added to the mailing list. Please try again, and if the problem persists, contact an administrator.');
+	}
 }
 if (in_array('phone', $pines->config->com_user->user_fields))
 	$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);

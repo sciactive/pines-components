@@ -23,6 +23,12 @@ class com_mailer extends component {
 	 * @access private
 	 */
 	private $mail_include_cache = array();
+	/**
+	 * A (readonly) SQLite database connection for the unsubscribed DB.
+	 * @var mixed
+	 * @access private
+	 */
+	private $db;
 
 	/**
 	 * Get a mail's definition array.
@@ -112,13 +118,173 @@ class com_mailer extends component {
 	}
 
 	/**
+	 * Add an email address to the unsubscribed DB.
+	 *
+	 * @param string $email The email address to add.
+	 * @return bool True on success, false on failure, 0 if the database hasn't been set up.
+	 */
+	public function unsubscribe_add($email) {
+		global $pines;
+		// Validate and lowercase email address.
+		if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+			return false;
+		$email = strtolower($email);
+
+		// Get the DB.
+		$filename = $pines->config->com_mailer->unsubscribe_db;
+		if (!$filename) {
+			pines_log('Unsubscribed user database has not been set up yet. Please edit the config for com_mailer.', 'error');
+			return 0;
+		}
+		if (file_exists($filename) && !is_readable($filename)) {
+			pines_log('Unsubscribed user database file cannot be read!', 'error');
+			return false;
+		}
+		// Build the queries.
+		$create_table = 'CREATE TABLE IF NOT EXISTS "unsubscribed" ("email" text NOT NULL UNIQUE);';
+		$insert_email = 'INSERT OR REPLACE INTO "unsubscribed" VALUES ("'.$email.'");';
+		// Now run the SQL.
+		if (class_exists('SQLite3')) {
+			$db = new SQLite3($filename);
+			if (!$db->query($create_table)) {
+				pines_error("SQL Create Table error: ".$db->lastErrorMsg());
+				return false;
+			}
+			if (!$db->query($insert_email)) {
+				pines_error("SQL Insert error: ".$db->lastErrorMsg());
+				return false;
+			}
+			$id = $db->lastInsertRowID();
+			if (!$id && $id !== 0) {
+				pines_error("SQL Insert error: ".$db->lastErrorMsg());
+				return false;
+			}
+			$db->close();
+		} elseif (function_exists('sqlite_open')) {
+			$db = sqlite_open($filename);
+			if (!sqlite_query($db, $create_table, SQLITE_NUM, $error)) {
+				pines_error("SQL Create Table error: $error");
+				return false;
+			}
+			if (!sqlite_query($db, $insert_email, SQLITE_NUM, $error)) {
+				pines_error("SQL Insert error: $error");
+				return false;
+			}
+			$id = sqlite_last_insert_rowid($db);
+			if (!$id && $id !== 0) {
+				pines_error("SQL Insert error: $error");
+				return false;
+			}
+			sqlite_close($db);
+		} else {
+			pines_log('SQLite is not available! Please install the SQLite PHP extension.', 'error');
+			pines_error('SQLite is not available! Please install the SQLite PHP extension.');
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Determine if an email address is unsubscribed.
+	 * 
+	 * Returning false if the database hasn't been set up allows emails to be
+	 * sent without an unsubscribe DB. Returning true on error ensures no emails
+	 * are sent to unsubscribed users if the DB can't be queried.
+	 *
+	 * @param string $email The email address in question.
+	 * @return bool True if the address is unsubscribed or on failure, false if it isn't or the database hasn't been set up.
+	 */
+	public function unsubscribe_query($email) {
+		global $pines;
+		// Validate and lowercase email address.
+		if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+			return false;
+		$email = strtolower($email);
+
+		// Get the DB.
+		$filename = $pines->config->com_mailer->unsubscribe_db;
+		if (!file_exists($filename) || !is_readable($filename)) {
+			pines_log('Unsubscribed user database has not been set up yet. Please edit the config for com_mailer.', 'error');
+			return false;
+		}
+		// Build the queries.
+		$select_email = 'SELECT * FROM "unsubscribed" WHERE email="'.$email.'";';
+		// Now run the SQL.
+		if (class_exists('SQLite3')) {
+			if (!$this->db)
+				$this->db = new SQLite3($filename, SQLITE3_OPEN_READONLY);
+			if (($result = $this->db->query($select_email)) === false) {
+				pines_error("SQL Query error: ".$this->db->lastErrorMsg());
+				return true;
+			}
+			$row = $result->fetchArray();
+		} elseif (function_exists('sqlite_open')) {
+			if (!$this->db)
+				$this->db = sqlite_open($filename);
+			if (($result = sqlite_query($this->db, $select_email, SQLITE_NUM, $error)) === false) {
+				pines_error("SQL Query error: $error");
+				return true;
+			}
+			$row = sqlite_fetch_array($result, SQLITE_NUM);
+		} else {
+			pines_log('SQLite is not available! Please install the SQLite PHP extension.', 'error');
+			pines_error('SQLite is not available! Please install the SQLite PHP extension.');
+			return false;
+		}
+		return ($email == $row[0]);
+	}
+
+	/**
+	 * Remove an email address from the unsubscribed DB.
+	 *
+	 * @param string $email The email address to remove.
+	 * @return bool True on success, false on failure.
+	 */
+	public function unsubscribe_remove($email) {
+		global $pines;
+		// Validate and lowercase email address.
+		if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+			return false;
+		$email = strtolower($email);
+
+		// Get the DB.
+		$filename = $pines->config->com_mailer->unsubscribe_db;
+		if (!file_exists($filename) || !is_readable($filename)) {
+			pines_log('Unsubscribed user database has not been set up yet. Please edit the config for com_mailer.', 'error');
+			return false;
+		}
+		// Build the queries.
+		$delete_email = 'DELETE FROM "unsubscribed" WHERE email="'.$email.'";';
+		// Now run the SQL.
+		if (class_exists('SQLite3')) {
+			$db = new SQLite3($filename);
+			if (!$db->query($delete_email)) {
+				pines_error("SQL Delete error: ".$db->lastErrorMsg());
+				return false;
+			}
+			$db->close();
+		} elseif (function_exists('sqlite_open')) {
+			$db = sqlite_open($filename);
+			if (!sqlite_query($db, $delete_email, SQLITE_NUM, $error)) {
+				pines_error("SQL Delete error: $error");
+				return false;
+			}
+			sqlite_close($db);
+		} else {
+			pines_log('SQLite is not available! Please install the SQLite PHP extension.', 'error');
+			pines_error('SQLite is not available! Please install the SQLite PHP extension.');
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Send a system registered email.
 	 * @param array|string $mail The mail entry array, or a string representation ("com_example/save_foobar").
 	 * @param array $macros An associative array of the macros available for the email. They have to be the same as in the mail definition. Remember to use htmlspecialchars!
-	 * @param mixed $recipient A user, customer, employee, etc. that has user info and an email address.
+	 * @param mixed $recipient A user, group, customer, employee, etc. that has user/group info and an email address.
 	 * @param bool $send If this is set to false, the com_mailer_mail object is returned before being sent. Allows for adding attachments, etc.
 	 * @return bool|com_mailer_mail True on success, false on failure. If $send is false, returns the mail instead.
-	 * @todo Unsubscribe code.
 	 */
 	public function send_mail($mail, $macros = array(), $recipient = null, $send = true) {
 		global $pines;
@@ -159,45 +325,99 @@ class com_mailer extends component {
 		}
 		unset($renditions, $cur_rendition);
 
-		// Get the email contents.
-		$body = array();
+		// Get the email recipient(s).
 		if ($rendition) {
 			if (!empty($rendition->from))
 				$from = $rendition->from;
 			if (!$recipient) {
+				// If it's supposed to have a recipient already, report failure.
 				if ($def['has_recipient'])
 					return false;
 				if ($rendition->to) {
-					$user = (array) $pines->entity_manager->get_entities(
-							array('class' => user),
-							array('&',
-								'tag' => array('com_user', 'user'),
-								'strict' => array('email', $rendition->to)
-							)
-						);
-					if ($user)
-						$recipient = $user;
-					else
+					if (strpos($rendition->to, ',') === false) {
+						if (preg_match('/<.+@.+>/', $rendition->to))
+							$check_email = trim(preg_replace('/^.*<(.+@.+)>.*$/', '$1', $rendition->to));
+						else
+							$check_email = trim($rendition->to);
+						// Check for a user or group with that email.
+						$user = $pines->entity_manager->get_entity(
+								array('class' => user),
+								array('&',
+									'tag' => array('com_user', 'user'),
+									'strict' => array('email', $check_email)
+								)
+							);
+						if ($user)
+							$recipient = $user;
+						else {
+							$group = $pines->entity_manager->get_entity(
+									array('class' => group),
+									array('&',
+										'tag' => array('com_user', 'group'),
+										'strict' => array('email', $check_email)
+									)
+								);
+							if ($group)
+								$recipient = $group;
+						}
+					}
+					if (!$recipient)
 						$recipient = (object) array('email' => $rendition->to);
 				} else {
+					// Send to the master address if there's no recipient.
 					if (!$pines->config->com_mailer->master_address)
 						return false;
 					$recipient = (object) array('email' => $pines->config->com_mailer->master_address);
 				}
 			}
+		} elseif (!$recipient) {
+			if ($def['has_recipient'] || !$pines->config->com_mailer->master_address)
+				return false;
+			$recipient = (object) array('email' => $pines->config->com_mailer->master_address);
+		}
+
+		// Remove emails that are on the unsubscribed list if the definition
+		// obeys it.
+		if ($def['unsubscribe']) {
+			if (strpos($recipient->email, ',') !== false)
+				$emails = explode(',', $recipient->email);
+			else
+				$emails = array($recipient->email);
+
+			$changed = false;
+			foreach ($emails as $key => &$cur_email) {
+				$cur_email = trim($cur_email);
+				if (preg_match('/<.+@.+>/', $cur_email))
+					$check_email = trim(preg_replace('/^.*<(.+@.+)>.*$/', '$1', $cur_email));
+				else
+					$check_email = $cur_email;
+				if ($this->unsubscribe_query($check_email)) {
+					unset($emails[$key]);
+					$changed = true;
+				}
+			}
+			unset($cur_email);
+
+			if ($changed)
+				$recipient->email = implode(', ', $emails);
+			// If every user is unsubscribed, report a success without sending
+			// an email.
+			if (!$recipient->email && $send)
+				return true;
+		}
+
+		// Get the email contents.
+		$body = array();
+		if ($rendition) {
 			$body['subject'] = $rendition->subject;
 			$body['content'] = $rendition->content;
 		} else {
-			if (!$recipient) {
-				if ($def['has_recipient'] || !$pines->config->com_mailer->master_address)
-					return false;
-				$recipient = (object) array('email' => $pines->config->com_mailer->master_address);
-			}
 			$view = $def['view'];
 			$view_callback = $def['view_callback'];
 			if (!isset($view) && !isset($view_callback))
 				return false;
 
+			// Make a module from the view.
 			if (isset($view))
 				$module = new module($component, $view);
 			else {
@@ -206,6 +426,7 @@ class com_mailer extends component {
 					return false;
 			}
 
+			// The contents of the module become the body of the email.
 			$body['content'] = $module->render();
 			$body['subject'] = $module->title;
 		}
@@ -215,12 +436,11 @@ class com_mailer extends component {
 				array('class' => com_mailer_template),
 				array('&',
 					'tag' => array('com_mailer', 'template'),
-					'strict' => array(
-						array('enabled', true)
-					)
+					'strict' => array('enabled', true)
 				)
 			);
 		$template = null;
+		// Get the first template that's ready.
 		foreach ($templates as $cur_template) {
 			if ($cur_template->ready()) {
 				$template = $cur_template;
@@ -228,11 +448,16 @@ class com_mailer extends component {
 			}
 		}
 		unset($templates, $cur_template);
+		// If there is no template, use a default one.
 		if (!$template)
 			$template = com_mailer_template::factory();
 
 		// Build the body of the email.
 		$body['content'] = str_replace('#content#', $body['content'], str_replace('#content#', $template->content, $template->document));
+
+		// Protects users from being unsubscribed by anyone.
+		$unsubscribe_secret = md5($recipient->email.$pines->config->com_mailer->unsubscribe_key);
+		$unsubscribe_url = pines_url('com_mailer', 'unsubscribe', array('email' => $recipient->email, 'verify' => $unsubscribe_secret), true);
 
 		// Replace macros.
 		foreach ($body as &$cur_field) {
@@ -242,10 +467,10 @@ class com_mailer extends component {
 			if (strpos($cur_field, '#site_link#') !== false)
 				$cur_field = str_replace('#site_link#', htmlspecialchars($pines->config->full_location), $cur_field);
 			if (strpos($cur_field, '#unsubscribe_link#') !== false)
-				$cur_field = str_replace('#unsubscribe_link#', htmlspecialchars(pines_url('com_mailer', 'unsubscribe', array('email' => $recipient->email), true)), $cur_field);
+				$cur_field = str_replace('#unsubscribe_link#', htmlspecialchars($unsubscribe_url), $cur_field);
 			// Recipient
 			if (strpos($cur_field, '#to_username#') !== false)
-				$cur_field = str_replace('#to_username#', htmlspecialchars($recipient->username), $cur_field);
+				$cur_field = str_replace('#to_username#', htmlspecialchars($recipient->username ? $recipient->username : $recipient->groupname), $cur_field);
 			if (strpos($cur_field, '#to_name#') !== false)
 				$cur_field = str_replace('#to_name#', htmlspecialchars($recipient->name), $cur_field);
 			if (strpos($cur_field, '#to_first_name#') !== false)

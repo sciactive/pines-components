@@ -359,7 +359,7 @@ $pines->com_pgrid->load();
 								<tr>
 									<td rowspan="5">Recipient</td>
 									<td>#to_username#</td>
-									<td>The recipient's username.</td>
+									<td>The recipient's username (or groupname).</td>
 									<td>N/A</td>
 								</tr>
 								<tr>

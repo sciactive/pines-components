@@ -43,7 +43,7 @@ return array(
 		'name' => 'custom_plugins',
 		'cname' => 'Custom Plugins',
 		'description' => 'The plugins to use when custom features is enabled.',
-		'value' => 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
+		'value' => 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,youtube',
 		'peruser' => true,
 	),
 	array(
@@ -64,7 +64,7 @@ return array(
 		'name' => 'custom_bar_3',
 		'cname' => 'Custom Toolbar 3',
 		'description' => 'The button layout for the third toolbar when custom features is enabled.',
-		'value' => 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen',
+		'value' => 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,youtube,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen',
 		'peruser' => true,
 	),
 	array(

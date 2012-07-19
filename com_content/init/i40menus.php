@@ -11,25 +11,6 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ($pines->config->com_content->show_page_menus) {
-	$pages = (array) $pines->entity_manager->get_entities(
-			array('class' => com_content_page),
-			array('&',
-				'tag' => array('com_content', 'page'),
-				'strict' => array('enabled', true),
-				'isset' => 'com_menueditor_entries'
-			)
-		);
-
-	// Add menus for all pages that have menu entries.
-	foreach ($pages as $cur_page) {
-		if (!$cur_page->ready() || !$cur_page->com_menueditor_entries)
-			continue;
-		$pines->com_menueditor->add_entries($cur_page->com_menueditor_entries, array('link' => array('com_content', 'page', array('a' => $cur_page->alias))));
-	}
-	unset($pages, $cur_page);
-}
-
 if ($pines->config->com_content->show_cat_menus) {
 	$categories = (array) $pines->entity_manager->get_entities(
 			array('class' => com_content_category),
@@ -121,6 +102,25 @@ if ($pines->config->com_content->show_cat_menus) {
 		}
 	}
 	unset($categories, $cur_category, $paths, $menu_arrays);
+}
+
+if ($pines->config->com_content->show_page_menus) {
+	$pages = (array) $pines->entity_manager->get_entities(
+			array('class' => com_content_page),
+			array('&',
+				'tag' => array('com_content', 'page'),
+				'strict' => array('enabled', true),
+				'isset' => 'com_menueditor_entries'
+			)
+		);
+
+	// Add menus for all pages that have menu entries.
+	foreach ($pages as $cur_page) {
+		if (!$cur_page->ready() || !$cur_page->com_menueditor_entries)
+			continue;
+		$pines->com_menueditor->add_entries($cur_page->com_menueditor_entries, array('link' => array('com_content', 'page', array('a' => $cur_page->alias))));
+	}
+	unset($pages, $cur_page);
 }
 
 ?>

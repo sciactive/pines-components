@@ -413,7 +413,9 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 						<span class="min_widget w_icon icon-chevron-up" title="Minimize this Widget"></span>
 						<?php if ($this->editable) { ?>
 						<ul class="edit_widget_menu dropdown-menu">
+							<?php if (isset($cur_def['form']) || isset($cur_def['form_callback'])) { ?>
 							<li><a href="javascript:void(0);" class="widget_options">Edit Options</a></li>
+							<?php } ?>
 							<li><a href="javascript:void(0);" class="widget_refresh">Refresh Widget</a></li>
 							<li class="divider"></li>
 							<li><a href="javascript:void(0);" class="widget_remove">Remove Widget</a></li>

@@ -36,7 +36,13 @@ if (!preg_match($pines->config->com_user->valid_regex, $_REQUEST['username'])) {
 	$pines->page->override_doc(json_encode(array('result' => false, 'message' => $pines->config->com_user->valid_regex_notice)));
 	return;
 }
-$test = user::factory($_REQUEST['username']);
+$test = $pines->entity_manager->get_entity(
+		array('class' => user, 'skip_ac' => true),
+		array('&',
+			'tag' => array('com_user', 'user'),
+			'match' => array('username', '/^'.preg_quote($_REQUEST['username'], '/').'$/i')
+		)
+	);
 if (isset($test->guid) && (!isset($id) || $id <= 0 || $test->guid != $id)) {
 	$pines->page->override_doc(json_encode(array('result' => false, 'message' => 'That username is taken.')));
 	return;

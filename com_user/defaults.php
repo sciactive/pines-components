@@ -82,7 +82,7 @@ return array(
 	array(
 		'name' => 'confirm_email',
 		'cname' => 'Confirm User Email Addresses',
-		'description' => 'Confirm users\' email addresses upon registration/email change before allowing them to login/change it.',
+		'description' => 'Confirm users\' email addresses upon registration/email change before allowing them to log in/change it.',
 		'value' => false,
 		'peruser' => true,
 	),
@@ -151,7 +151,7 @@ return array(
 		'name' => 'login_menu_text',
 		'cname' => 'Login Menu Text',
 		'description' => 'The text of the login button in the menu.',
-		'value' => 'Login',
+		'value' => 'Log In',
 		'peruser' => true,
 	),
 	array(

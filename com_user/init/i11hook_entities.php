@@ -135,9 +135,9 @@ unset ($cur_hook);
 $pines->hook->add_callback('$pines->entity_manager->save_entity', -100, 'com_user__add_access');
 $pines->hook->add_callback('$pines->entity_manager->save_entity', -99, 'com_user__check_permissions_save');
 
-foreach (array('$pines->entity_manager->delete_entity', '$pines->entity_manager->delete_entity_by_id') as $cur_hook) {
+foreach (array('$pines->entity_manager->delete_entity', '$pines->entity_manager->delete_entity_by_id') as $cur_hook)
 	$pines->hook->add_callback($cur_hook, -99, 'com_user__check_permissions_delete');
-}
+
 unset ($cur_hook);
 
 ?>

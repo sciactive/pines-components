@@ -48,7 +48,7 @@
 	},
 	{
 		"path": "main_menu/~account/logout",
-		"text": "Logout",
+		"text": "Log Out",
 		"href": ["com_user","logout"],
 		"depend": {
 			"ability": null

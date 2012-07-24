@@ -194,14 +194,26 @@ if ($pines->config->com_user->max_username_length > 0 && strlen($user->username)
 	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
 	return;
 }
-$test = user::factory($_REQUEST['username']);
+$test = $pines->entity_manager->get_entity(
+		array('class' => user, 'skip_ac' => true),
+		array('&',
+			'tag' => array('com_user', 'user'),
+			'match' => array('username', '/^'.preg_quote($_REQUEST['username'], '/').'$/i')
+		)
+	);
 if (isset($test->guid) && !$user->is($test)) {
 	$user->print_form();
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
 if (in_array('email', $pines->config->com_user->user_fields)) {
-	$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
+	$test = $pines->entity_manager->get_entity(
+			array('class' => user, 'skip_ac' => true),
+			array('&',
+				'tag' => array('com_user', 'user'),
+				'match' => array('email', '/^'.preg_quote($user->email, '/').'$/i')
+			)
+		);
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
 		pines_notice('There is already a user with that email address. Please use a different email.');

@@ -68,7 +68,13 @@ if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
 	return;
 }
 if (in_array('email', $pines->config->com_user->reg_fields)) {
-	$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
+	$test = $pines->entity_manager->get_entity(
+			array('class' => user, 'skip_ac' => true),
+			array('&',
+				'tag' => array('com_user', 'user'),
+				'match' => array('email', '/^'.preg_quote($user->email, '/').'$/i')
+			)
+		);
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
 		pines_notice('There is already a user with that email address. Please use a different email.');

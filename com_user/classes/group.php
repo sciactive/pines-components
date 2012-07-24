@@ -40,11 +40,10 @@ class group extends able_object implements group_interface {
 		$this->attributes = array();
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
-			if ((int) $id === $id) {
+			if ((int) $id === $id)
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'group')));
-			} else {
+			else
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'group'), 'data' => array('groupname', $id)));
-			}
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -209,11 +208,10 @@ class group extends able_object implements group_interface {
 
 	public function get_users($descendants = false) {
 		global $pines;
-		if ($descendants) {
+		if ($descendants)
 			$groups = $this->get_descendants();
-		} else {
+		else
 			$groups = array();
-		}
 		$groups[] = $this;
 		$return = $pines->entity_manager->get_entities(
 				array('class' => user),
@@ -241,9 +239,8 @@ class group extends able_object implements group_interface {
 		$module->display_conditions = gatekeeper('com_user/conditions');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_groups();
-		foreach ($pines->components as $cur_component) {
+		foreach ($pines->components as $cur_component)
 			$module->sections[] = $cur_component;
-		}
 
 		return $module;
 	}

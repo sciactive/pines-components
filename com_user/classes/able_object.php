@@ -18,19 +18,17 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class able_object extends entity implements able_object_interface {
 	public function grant($ability) {
-		if ( !in_array($ability, $this->abilities) ) {
+		if (!in_array($ability, $this->abilities))
 			return $this->abilities = array_merge(array($ability), $this->abilities);
-		} else {
+		else
 			return true;
-		}
 	}
 
 	public function revoke($ability) {
-		if ( in_array($ability, $this->abilities) ) {
+		if (in_array($ability, $this->abilities))
 			return $this->abilities = array_values(array_diff($this->abilities, array($ability)));
-		} else {
+		else
 			return true;
-		}
 	}
 }
 

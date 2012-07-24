@@ -48,11 +48,10 @@ class user extends able_object implements user_interface {
 		$this->attributes = array();
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
-			if ((int) $id === $id) {
+			if ((int) $id === $id)
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user')));
-			} else {
+			else
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('username', (string) $id)));
-			}
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -138,34 +137,31 @@ class user extends able_object implements user_interface {
 		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->sections = array('system');
 		$highest_parent = $pines->config->com_user->highest_primary;
-		if ($highest_parent == 0) {
+		if ($highest_parent == 0)
 			$module->group_array_primary = $pines->user_manager->get_groups();
-		} elseif ($highest_parent < 0) {
+		elseif ($highest_parent < 0)
 			$module->group_array_primary = array();
-		} else {
+		else {
 			$highest_parent = group::factory($highest_parent);
-			if (!isset($highest_parent->guid)) {
+			if (!isset($highest_parent->guid))
 				$module->group_array_primary = array();
-			} else {
+			else
 				$module->group_array_primary = $highest_parent->get_descendants();
-			}
 		}
 		$highest_parent = $pines->config->com_user->highest_secondary;
-		if ($highest_parent == 0) {
+		if ($highest_parent == 0)
 			$module->group_array_secondary = $pines->user_manager->get_groups();
-		} elseif ($highest_parent < 0) {
+		elseif ($highest_parent < 0)
 			$module->group_array_secondary = array();
-		} else {
+		else {
 			$highest_parent = group::factory($highest_parent);
-			if (!isset($highest_parent->guid)) {
+			if (!isset($highest_parent->guid))
 				$module->group_array_secondary = array();
-			} else {
+			else
 				$module->group_array_secondary = $highest_parent->get_descendants();
-			}
 		}
-		foreach ($pines->components as $cur_component) {
+		foreach ($pines->components as $cur_component)
 			$module->sections[] = $cur_component;
-		}
 
 		return $module;
 	}
@@ -189,9 +185,8 @@ class user extends able_object implements user_interface {
 		if ( !$group->in_array((array) $this->groups) ) {
 			$this->groups[] = $group;
 			return $this->groups;
-		} else {
+		} else
 			return true;
-		}
 	}
 
 	public function check_password($password) {
@@ -252,9 +247,8 @@ class user extends able_object implements user_interface {
 					unset($this->groups[$key]);
 			}
 			return $this->groups;
-		} else {
+		} else
 			return true;
-		}
 	}
 
 	public function in_group($group = null) {

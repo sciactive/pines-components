@@ -30,7 +30,7 @@ return array(
 		'component' => 'com_modules'
 	),
 	'abilities' => array(
-		array('login', 'Login', 'User can login to the system.'),
+		array('login', 'Log In', 'User can log in to the system.'),
 		array('self', 'Change Info', 'User can change his own information. Email address changes may be subject to confirmation.'),
 		array('listusers', 'List Users', 'User can see users.'),
 		array('newuser', 'Create Users', 'User can create new users.'),

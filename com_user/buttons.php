@@ -23,8 +23,8 @@ return array(
 		),
 	),
 	'logout' => array(
-		'description' => 'Logout.',
-		'text' => 'Logout',
+		'description' => 'Log out.',
+		'text' => 'Log Out',
 		'class' => 'picon-system-log-out',
 		'href' => pines_url('com_user', 'logout'),
 		'default' => true,

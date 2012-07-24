@@ -122,7 +122,13 @@ if ($pines->config->com_user->max_groupname_length > 0 && strlen($group->groupna
 	pines_notice("Groupnames must not exceed {$pines->config->com_user->max_groupname_length} characters.");
 	return;
 }
-$test = group::factory($_REQUEST['groupname']);
+$test = $pines->entity_manager->get_entity(
+		array('class' => group, 'skip_ac' => true),
+		array('&',
+			'tag' => array('com_user', 'group'),
+			'match' => array('groupname', '/^'.preg_quote($_REQUEST['groupname'], '/').'$/i')
+		)
+	);
 if (isset($test->guid) && !$group->is($test)) {
 	$group->print_form();
 	pines_notice('There is already a group with that groupname. Please choose a different groupname.');
@@ -139,7 +145,13 @@ if (!preg_match($pines->config->com_user->valid_regex, $group->groupname)) {
 	return;
 }
 if (!empty($group->email)) {
-	$test = $pines->entity_manager->get_entity(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'strict' => array('email', $group->email)));
+	$test = $pines->entity_manager->get_entity(
+			array('class' => group, 'skip_ac' => true),
+			array('&',
+				'tag' => array('com_user', 'group'),
+				'match' => array('email', '/^'.preg_quote($group->email, '/').'$/i')
+			)
+		);
 	if (isset($test) && !$group->is($test)) {
 		$group->print_form();
 		pines_notice('There is already a group with that email address. Please use a different email.');

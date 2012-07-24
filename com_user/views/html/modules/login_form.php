@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Style</span>
-			<div class="pf-note">Use small to put the form in a very narrow column. Use compact to provide a link to bring up the form in a dialog.</div>
+			<span class="pf-note">Use small to put the form in a very narrow column. Use compact to provide a link to bring up the form in a dialog.</span>
 			<select class="pf-field" name="style">
 				<option value="normal"<?php echo $this->style == 'normal' ? ' selected="selected"' : ''; ?>>Normal</option>
 				<option value="small"<?php echo $this->style == 'small' ? ' selected="selected"' : ''; ?>>Small</option>

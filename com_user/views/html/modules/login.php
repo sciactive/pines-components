@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to login.
+ * Provides a form for the user to log in.
  *
  * @package Components\user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -11,7 +11,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
-	$this->title = 'Login to '.htmlspecialchars($pines->config->system_name);
+	$this->title = 'Log in to '.htmlspecialchars($pines->config->system_name);
 $this->check_username = ($pines->config->com_user->allow_registration && $pines->config->com_user->check_username);
 if ($this->check_username)
 	$pines->icons->load();
@@ -35,8 +35,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		line-height: 16px;
 	}
 </style>
-<?php } ?>
-<?php if ($this->sawasc || ($this->style != 'compact' && $this->style != 'small')) { ?>
+<?php } if ($this->sawasc || ($this->style != 'compact' && $this->style != 'small')) { ?>
 <script type="text/javascript">
 	<?php if ($this->sawasc) { ?>
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_user/includes/hash.js");
@@ -47,7 +46,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		<?php } if ($this->sawasc) { ?>
 		$("#p_muid_form").submit(function(){
 			// SAWASC code
-			if ($("input[name=login_register][value=register]:checked", "#p_muid_form").length)
+			if ($("input[name=existing]:checked", "#p_muid_form").length)
 				return true;
 			var password_box = $("input[name=password]", "#p_muid_form");
 			var password = password_box.val();
@@ -66,26 +65,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 <?php } ?>
 <div id="p_muid_form" class="clearfix"<?php echo ($this->style == 'compact') ? ' style="display: none; max-height: 500px; overflow-y: auto; overflow-x: hidden;"' : ''; ?>>
 	<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
-		<div class="pf-element">
-			<label><span class="pf-label">Username</span>
-				<?php if ($this->style != 'small') { ?>
-				<span class="pf-group" style="display: block;">
-				<?php } ?>
-					<input class="pf-field" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" />
-					<?php if ($this->check_username) { echo ($this->style == 'compact') ? '<br class="pf-clearing" />' : ''; ?>
-					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
-					<span class="pf-field picon" id="p_muid_username_message" style="display: none;"></span>
-					<?php } ?>
-				<?php if ($this->style != 'small') { ?>
-				</span>
-				<?php } ?>
-			</label>
-		</div>
-		<div class="pf-element">
-			<label><span class="pf-label">Password</span>
-				<?php echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : ''); ?>
-				<input class="pf-field" type="password" name="password" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
-		</div>
 		<?php if ($pines->config->com_user->allow_registration) { ?>
 		<div class="pf-element">
 			<script type="text/javascript">
@@ -154,41 +133,56 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 					var pass_reenter = $("#p_muid_register_form");
 					var recovery = $("#p_muid_recovery");
 					var submit_btn = $("[name=submit]", "#p_muid_form");
-					$("[name=login_register]", "#p_muid_form").change(function(){
-						if ($(this).val() == "register") {
-							if ($(this).is(":checked")) {
-								new_account = true;
-								pass_reenter.show();
-								recovery.hide();
-								submit_btn.val("Sign Up");
-								username.change();
-							}
+					$("[name=existing]", "#p_muid_form").change(function(){
+						if ($(this).is(":checked")) {
+							new_account = false;
+							pass_reenter.hide();
+							recovery.show();
+							submit_btn.val("Log In");
+							username.change();
 						} else {
-							if ($(this).is(":checked")) {
-								new_account = false;
-								pass_reenter.hide();
-								recovery.show();
-								submit_btn.val("Login");
-								username.change();
-							}
+							new_account = true;
+							pass_reenter.show();
+							recovery.hide();
+							submit_btn.val("Sign Up");
+							username.change();
 						}
 					}).change();
 					$(":reset", "#p_muid_form").click(function(){
 						new_account = false;
 						pass_reenter.hide();
-						recovery.hide();
-						submit_btn.val("Login");
+						recovery.show();
+						submit_btn.val("Log In");
 						username.change();
 					});
 				});
 			</script>
-			<?php if ($this->style != 'small') { ?>
-			<span class="pf-label">Register</span>
-			<?php } ?>
-			<label><input class="pf-field" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
-			<?php echo ($this->style == 'small') ? '<br />' : ''; ?>
-			<label><input class="pf-field" type="radio" name="login_register" value="register" /> I'm new.</label>
+			<?php if ($this->style != 'small') { ?><div class="pf-group"><?php } ?>
+				<label><input class="pf-field" type="checkbox" name="existing" value="ON" checked="checked" /> I have an account.</label>
+			<?php if ($this->style != 'small') { ?></div><?php } ?>
 		</div>
+		<?php } ?>
+		<div class="pf-element">
+			<label><span class="pf-label">Username</span>
+				<?php if ($this->style != 'small') { ?>
+				<span class="pf-group" style="display: block;">
+				<?php } ?>
+					<input class="pf-field" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" />
+					<?php if ($this->check_username) { echo ($this->style == 'compact') ? '<br class="pf-clearing" />' : ''; ?>
+					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
+					<span class="pf-field picon" id="p_muid_username_message" style="display: none;"></span>
+					<?php } ?>
+				<?php if ($this->style != 'small') { ?>
+				</span>
+				<?php } ?>
+			</label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Password</span>
+				<?php echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : ''); ?>
+				<input class="pf-field" type="password" name="password" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+		</div>
+		<?php if ($pines->config->com_user->allow_registration) { ?>
 		<div id="p_muid_register_form" style="display: none;">
 			<div class="pf-element">
 				<label><span class="pf-label">Re-enter Password</span>
@@ -364,13 +358,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 			<?php	} 
 			} ?>
 		</div>
-		<?php } if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
-		<div class="pf-element" id="p_muid_recovery">
-			<?php if ($this->style != 'small') { ?>
-			<span class="pf-label" style="height: 1px;">&nbsp;</span>
-			<?php } ?>
-			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_user', 'recover')); ?>">I can't access my account.</a>
-		</div>
 		<?php } ?>
 		<div class="pf-element<?php echo ($this->style == 'small') ? '' : ' pf-buttons'; ?>">
 			<input type="hidden" name="option" value="com_user" />
@@ -380,22 +367,32 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 			<?php } if ( !empty($this->url) ) { ?>
 			<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 			<?php } ?>
-			<input class="pf-button btn btn-primary" type="submit" name="submit" value="Login" />
+			<input class="pf-button btn btn-primary" type="submit" name="submit" value="Log In" />
 			<?php if ($this->style != 'small') { ?>
 			<input class="pf-button btn" type="reset" name="reset" value="Reset" />
 			<?php } ?>
 		</div>
+		<?php if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
+		<div class="pf-element" id="p_muid_recovery">
+			<?php if ($this->style != 'small') { ?>
+			<span class="pf-label" style="height: 1px;">&nbsp;</span>
+			<?php } ?>
+			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_user', 'recover')); ?>">I can't access my account.</a>
+		</div>
+		<?php } ?>
 	</form>
 </div>
 <?php if ($this->style == 'compact') { ?>
 <script type="text/javascript">
 	pines(function(){
 		var notice = $.pnotify({
+			type: 'info',
 			title: <?php echo json_encode($this->title); ?>,
-			text: $("#p_muid_form").detach().show().append("<br style=\"clear: both;\" />"),
-			icon: '',
+			text: $("#p_muid_form").detach().show().append("<br style=\"clear: both; height: 0; line-height: 0;\" />"),
+			icon: 'icon-key',
 			width: 'auto',
 			hide: false,
+			sticker: false,
 			history: false,
 			insert_brs: false,
 			before_open: function(pnotify){

@@ -11,23 +11,24 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( empty($_REQUEST['username']) ) {
-	$pines->user_manager->print_login();
+if (empty($_REQUEST['username'])) {
+	$pines->user_manager->print_login('content', $_REQUEST['url']);
 	return;
 }
 
-if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register'] == 'register' ) {
-	if (empty($_REQUEST['username'])) {
-		pines_notice('Username is a required field.');
-		$pines->user_manager->print_login('content', $_REQUEST['url']);
-		return;
-	}
+if ($pines->config->com_user->allow_registration && $_REQUEST['existing'] != 'ON') {
 	if (empty($_REQUEST['password']) && !$pines->config->com_user->pw_empty) {
 		pines_notice('Password is a required field.');
 		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;
 	}
-	$test = user::factory($_REQUEST['username']);
+	$test = $pines->entity_manager->get_entity(
+			array('class' => user, 'skip_ac' => true),
+			array('&',
+				'tag' => array('com_user', 'user'),
+				'match' => array('username', '/^'.preg_quote($_REQUEST['username'], '/').'$/i')
+			)
+		);
 	if (isset($test->guid)) {
 		pines_notice('The username you requested is already taken. Please choose a different username.');
 		$pines->user_manager->print_login('content', $_REQUEST['url']);
@@ -49,7 +50,7 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 	return;
 }
 
-if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
+if (gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username) {
 	pines_notice('You are already logged in.');
 	pines_redirect(pines_url());
 	return;
@@ -93,7 +94,7 @@ if (!$pines->user_manager->login($user)) {
 }
 
 // Login was successful.
-if ( !empty($_REQUEST['url']) ) {
+if (!empty($_REQUEST['url'])) {
 	pines_redirect(urldecode($_REQUEST['url']));
 	return;
 }

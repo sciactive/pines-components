@@ -69,11 +69,10 @@ class com_user extends component implements user_manager_interface {
 			return true;
 
 		// Load access control, since we need it now...
-		if ((object) $entity->ac === $entity->ac) {
+		if ((object) $entity->ac === $entity->ac)
 			$ac = $entity->ac;
-		} else {
+		else
 			$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
-		}
 
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
@@ -100,16 +99,14 @@ class com_user extends component implements user_manager_interface {
 				return;
 			}
 			unset($_SESSION['user']);
-		} else {
+		} else
 			$tmp_user = user::factory($_SESSION['user_id']);
-		}
 		$_SESSION['user_timezone'] = $tmp_user->get_timezone();
 		date_default_timezone_set($_SESSION['user_timezone']);
 		if (isset($tmp_user->group))
 			$_SESSION['descendants'] = (array) $tmp_user->group->get_descendants();
-		foreach ($tmp_user->groups as $cur_group) {
+		foreach ($tmp_user->groups as $cur_group)
 			$_SESSION['descendants'] = array_merge((array) $_SESSION['descendants'], (array) $cur_group->get_descendants());
-		}
 		if ($tmp_user->inherit_abilities) {
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
 			foreach ($tmp_user->groups as $cur_group) {
@@ -155,17 +152,17 @@ class com_user extends component implements user_manager_interface {
 	 * marked to inherit the abilities of its group.
 	 */
 	public function gatekeeper($ability = null, $user = null) {
-		if ( !isset($user) ) {
+		if (!isset($user)) {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
-			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
+			if ((object) $_SESSION['user'] === $_SESSION['user']) {
 				if ( !isset($ability) || empty($ability) )
 					return true;
 				$user =& $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.
-				if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
+				if (isset($this->gatekeeper_cache[$_SESSION['user_id']]))
 					$abilities =& $this->gatekeeper_cache[$_SESSION['user_id']];
-				} else {
+				else {
 					$abilities = $user->abilities;
 					if (isset($_SESSION['inherited_abilities']))
 						$abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
@@ -175,15 +172,14 @@ class com_user extends component implements user_manager_interface {
 		} else {
 			// If the user isn't logged in, their abilities need to be set up.
 			// Check the cache to see if we've already checked this user.
-			if (isset($this->gatekeeper_cache[$user->guid])) {
+			if (isset($this->gatekeeper_cache[$user->guid]))
 				$abilities =& $this->gatekeeper_cache[$user->guid];
-			} else {
+			else {
 				$abilities = $user->abilities;
 				// TODO: Decide if group conditions should be checked if the user is not logged in.
 				if ($user->inherit_abilities) {
-					foreach ($user->groups as &$cur_group) {
+					foreach ($user->groups as &$cur_group)
 						$abilities = array_merge($abilities, $cur_group->abilities);
-					}
 					unset($cur_group);
 					if (isset($user->group))
 						$abilities = array_merge($abilities, $user->group->abilities);
@@ -191,7 +187,7 @@ class com_user extends component implements user_manager_interface {
 				$this->gatekeeper_cache[$user->guid] = $abilities;
 			}
 		}
-		if ( !isset($user) || ((array) $abilities !== $abilities) )
+		if (!isset($user) || ((array) $abilities !== $abilities))
 			return false;
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
@@ -248,7 +244,7 @@ class com_user extends component implements user_manager_interface {
 		else
 			$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')), array('!&', 'tag' => 'enabled'));
 
-		if ( empty($module->groups) )
+		if (empty($module->groups))
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
 
 		return $module;
@@ -271,7 +267,7 @@ class com_user extends component implements user_manager_interface {
 		else
 			$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user')), array('!&', 'tag' => 'enabled'));
 
-		if ( empty($module->users) )
+		if (empty($module->users))
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');
 
 		return $module;
@@ -286,9 +282,8 @@ class com_user extends component implements user_manager_interface {
 			$this->fill_session();
 			pines_session('close');
 			return true;
-		} else {
+		} else
 			return false;
-		}
 	}
 
 	public function logout() {
@@ -301,7 +296,6 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function print_login($position = 'content', $url = null) {
-		global $pines;
 		$module = new module('com_user', 'modules/login', $position);
 		$module->url = $url;
 		if (isset($_REQUEST['url']))
@@ -323,11 +317,10 @@ class com_user extends component implements user_manager_interface {
 			$message = isset($_SESSION['user']) ? 'You don\'t have necessary permission.' : 'Please log in first.';
 		if (!empty($message))
 			pines_notice($message);
-		if ($query_part) {
+		if ($query_part)
 			pines_redirect(pines_url('com_user', 'exit', $query_part));
-		} else {
+		else
 			pines_redirect(pines_url('com_user', 'exit'));
-		}
 		exit($message);
 	}
 }

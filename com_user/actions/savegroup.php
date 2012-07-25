@@ -49,6 +49,7 @@ $group->timezone = $_REQUEST['timezone'];
 if (gatekeeper('com_user/defaultgroups')) {
 	$group->default_primary = $_REQUEST['default_primary'] == 'ON';
 	$group->default_secondary = $_REQUEST['default_secondary'] == 'ON';
+	$group->unconfirmed_secondary = $_REQUEST['unconfirmed_secondary'] == 'ON';
 }
 // Location
 $group->address_type = $_REQUEST['address_type'];

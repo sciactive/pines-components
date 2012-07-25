@@ -87,6 +87,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'unconfirmed_access',
+		'cname' => 'Unconfirmed User Access',
+		'description' => 'Unconfirmed users will be able to log in, but will only have the "unconfirmed users" secondary group(s) until they confirm their email. If set to false, their account will instead be disabled until they confirm.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'pw_recovery',
 		'cname' => 'Allow Account Recovery',
 		'description' => 'Allow users to recover their username and/or password through their registered email.',

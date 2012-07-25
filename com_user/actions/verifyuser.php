@@ -26,6 +26,8 @@ switch ($_REQUEST['type']) {
 		if (!isset($user->secret) || $_REQUEST['secret'] != $user->secret)
 			punt_user('The secret code given does not match this user.');
 
+		if ($pines->config->com_user->unconfirmed_access)
+			$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_secondary', true)));
 		$user->enable();
 		unset($user->secret);
 		break;

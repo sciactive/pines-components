@@ -15,6 +15,11 @@ $this->note = 'The next step is to verify the email address you entered.';
 ?>
 <div>
 	An email has been sent to <?php echo htmlspecialchars($this->entity->email); ?> with a
-	verification link. Please click the link to verify your email address and
-	log in.
+	verification link.
+	<?php if ($pines->config->com_user->unconfirmed_access) { ?>
+	You will have limited access until you verify your email address by clicking
+	the link.
+	<?php } else { ?>
+	Please click the link to verify your email address and log in.
+	<?php } ?>
 </div>

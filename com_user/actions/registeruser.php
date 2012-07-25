@@ -90,22 +90,26 @@ if (empty($user->password) && !$pines->config->com_user->pw_empty) {
 $user->group = $pines->entity_manager->get_entity(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_primary', true)));
 if (!isset($user->group->guid))
 	unset($user->group);
-$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_secondary', true)));
+if ($pines->config->com_user->confirm_email && $pines->config->com_user->unconfirmed_access)
+	$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'data' => array('unconfirmed_secondary', true)));
+else
+	$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_secondary', true)));
 
 if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.
-	$user->disable();
+	if (!$pines->config->com_user->unconfirmed_access)
+		$user->disable();
 	$user->secret = uniqid('', true);
-} else {
+} else
 	$user->enable();
-}
 
 // If create_admin is true and there are no other users, grant "system/all".
 if ($pines->config->com_user->create_admin) {
-	$other_users = $pines->entity_manager->get_entities(array('class' => user, 'limit' => 1), array('&', 'tag' => array('com_user', 'user')));
+	$other_users = $pines->entity_manager->get_entities(array('class' => user, 'skip_ac' => true, 'limit' => 1), array('&', 'tag' => array('com_user', 'user')));
 	// Make sure it's not just null, cause that means an error.
 	if ($other_users === array()) {
 		$user->grant('system/all');
+		$user->enable();
 		pines_notice("Welcome to {$pines->config->system_name}. Since this is the first user account, your account has been granted all abilities.");
 	}
 }
@@ -130,6 +134,13 @@ if ($user->save()) {
 		if ($pines->com_mailer->send_mail('com_user/verify_email', $macros, $user)) {
 			$note = new module('com_user', 'note_verify_email', 'content');
 			$note->entity = $user;
+			if ($pines->config->com_user->unconfirmed_access) {
+				$pines->user_manager->login($user);
+				if ( !empty($_REQUEST['url']) ) {
+					pines_redirect(urldecode($_REQUEST['url']));
+					return;
+				}
+			}
 		} else {
 			pines_error('Couldn\'t send registration email.');
 			return;

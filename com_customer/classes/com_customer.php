@@ -154,14 +154,30 @@ class com_customer extends component {
 	/**
 	 * Make new users customers as well.
 	 *
-	 * @param array &$arguments Arguments.
+	 * @param array &$array Arguments.
 	 * @param string $name Hook name.
 	 * @param object &$object The user being saved.
 	 */
-	function save_user(&$arguments, $name, &$object) {
-		if ($object->has_tag('com_customer', 'customer'))
-			return;
+	function save_user(&$array, $name, &$object) {
 		global $pines;
+		if ($object->has_tag('com_customer', 'customer')) {
+			// If the secret is unset, it means they verified their email address.
+			if (!isset($object->secret)) {
+				if ($object->com_customer__unconfirmed_groups) {
+					// We should put them in the default customer groups.
+					$object->groups = (array) $pines->entity_manager->get_entities(
+							array('class' => group, 'skip_ac' => true),
+							array('&',
+								'tag' => array('com_user', 'group'),
+								'data' => array('default_customer_secondary', true)
+							)
+						);
+					unset($object->com_customer__unconfirmed_groups);
+				}
+				unset($object->com_customer__unconfirmed);
+			}
+			return;
+		}
 		if (
 				$pines->config->com_customer->new_users ||
 				(

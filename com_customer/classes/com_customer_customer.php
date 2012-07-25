@@ -25,6 +25,19 @@ class com_customer_customer extends user {
 		parent::__construct();
 		$this->add_tag('com_user', 'user', 'com_customer', 'customer');
 		$this->remove_tag('enabled');
+		if ($id > 0 || (string) $id === $id) {
+			global $pines;
+			if ((int) $id === $id)
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user', 'com_customer', 'customer')));
+			else
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user', 'com_customer', 'customer'), 'data' => array('username', $id)));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults.
 		$this->abilities = array();
 		$this->groups = array();
@@ -35,24 +48,10 @@ class com_customer_customer extends user {
 		$this->address_type = 'us';
 		$this->addresses = array();
 		$this->attributes = array();
-		if ($id > 0 || (string) $id === $id) {
-			global $pines;
-			if ((int) $id === $id) {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user', 'com_customer', 'customer')));
-			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user', 'com_customer', 'customer'), 'data' => array('username', $id)));
-			}
-			if (isset($entity)) {
-				$this->guid = $entity->guid;
-				$this->tags = $entity->tags;
-				$this->put_data($entity->get_data(), $entity->get_sdata());
-				return;
-			}
-		}
 		// Load default groups.
 		global $pines;
 		$group = $pines->entity_manager->get_entity(
-				array('class' => group),
+				array('class' => group, 'skip_ac' => true),
 				array('&',
 					'tag' => array('com_user', 'group'),
 					'data' => array('default_customer_primary', true)
@@ -60,8 +59,29 @@ class com_customer_customer extends user {
 			);
 		if (isset($group->guid))
 			$this->group = $group;
+		if ($pines->config->com_customer->follow_um_rules && $pines->config->com_user->confirm_email) {
+			if ($pines->config->com_user->unconfirmed_access) {
+				// Use unconfirmed user groups.
+				$groups = $pines->entity_manager->get_entities(
+						array('class' => group, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_user', 'group'),
+							'data' => array('unconfirmed_secondary', true)
+						)
+					);
+				$this->com_customer__unconfirmed = true;
+				$this->com_customer__unconfirmed_groups = true;
+				if ($groups)
+					$this->groups = $groups;
+				$this->add_tag('enabled');
+				return;
+			}
+			$this->com_customer__unconfirmed = true;
+			$this->remove_tag('enabled');
+		} else
+			$this->add_tag('enabled');
 		$groups = $pines->entity_manager->get_entities(
-				array('class' => group),
+				array('class' => group, 'skip_ac' => true),
 				array('&',
 					'tag' => array('com_user', 'group'),
 					'data' => array('default_customer_secondary', true)
@@ -231,9 +251,31 @@ class com_customer_customer extends user {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
+		global $pines;
 		if (!isset($this->name))
 			return false;
-		return parent::save();
+		if (!isset($this->guid) && $this->com_customer__unconfirmed) {
+			// Remember to send the verification email.
+			$this->secret = uniqid('', true);
+			$send_verification = true;
+		}
+		$return = parent::save();
+		if ($return && $send_verification) {
+			// Now send the verification email.
+			$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'register', 'secret' => $this->secret), true));
+			$macros = array(
+				'verify_link' => $link,
+				'to_phone' => htmlspecialchars(format_phone($this->phone)),
+				'to_fax' => htmlspecialchars(format_phone($this->fax)),
+				'to_timezone' => htmlspecialchars($this->timezone),
+				'to_address' => $this->address_type == 'US' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
+			);
+			if ($pines->com_mailer->send_mail('com_user/verify_email', $macros, $this))
+				pines_notice('A link was emailed to the provided address for verification. The new account will be limited until the address is verified.');
+			else
+				pines_error('Couldn\'t send verification email.');
+		}
+		return $return;
 	}
 
 	/**

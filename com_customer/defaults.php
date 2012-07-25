@@ -48,6 +48,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'follow_um_rules',
+		'cname' => 'Use User Manager Verification',
+		'description' => 'Follow the configuration from the user manager about email verification.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'hide_customers',
 		'cname' => 'Hide Customers in Users',
 		'description' => 'Hide customers when viewing user list in the user manager.',

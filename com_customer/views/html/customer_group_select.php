@@ -64,7 +64,7 @@ $pines->com_pgrid->load();
 							<td><input type="radio" name="group" value="<?php echo (int) $cur_group->guid; ?>" <?php echo $cur_group->default_customer_primary ? 'checked="checked" ' : ''; ?>/></td>
 							<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid; ?>" <?php echo $cur_group->default_customer_secondary ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_group->name); ?></td>
-							<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
+							<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->groupname); ?></a></td>
 						</tr>
 					<?php } ?>
 					</tbody>

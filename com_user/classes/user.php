@@ -36,9 +36,31 @@ defined('P_RUN') or die('Direct access prohibited');
  * @property bool $inherit_abilities Whether the user should inherit the abilities of his groups.
  */
 class user extends able_object implements user_interface {
+	/**
+	 * Used to save the current email to resend verification if it changes.
+	 * @var string
+	 * @access private
+	 */
+	private $verify_email = '';
+
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'user', 'enabled');
+		if ($id > 0 || (string) $id === $id) {
+			global $pines;
+			if ((int) $id === $id)
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user')));
+			else
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('username', (string) $id)));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				if (isset($this->secret))
+					$this->verify_email = $this->email;
+				return;
+			}
+		}
 		// Defaults.
 		$this->abilities = array();
 		$this->groups = array();
@@ -46,18 +68,6 @@ class user extends able_object implements user_interface {
 		$this->address_type = 'us';
 		$this->addresses = array();
 		$this->attributes = array();
-		if ($id > 0 || (string) $id === $id) {
-			global $pines;
-			if ((int) $id === $id)
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user')));
-			else
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('username', (string) $id)));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**
@@ -123,7 +133,43 @@ class user extends able_object implements user_interface {
 	public function save() {
 		if (!isset($this->username))
 			return false;
-		return parent::save();
+		if (isset($this->guid) && isset($this->secret) && !empty($this->verify_email) && $this->verify_email != $this->email)
+			$send_verification = true;
+		$return = parent::save();
+		if ($return && $send_verification) {
+			// The email has changed, so send a new verification email.
+			if ($this->send_email_verification())
+				pines_notice('New verification email sent to the new email address.');
+			else
+				pines_error('Couldn\'t send verification email to new email address.');
+		}
+		return $return;
+	}
+
+	/**
+	 * Send the user an email verification link.
+	 * 
+	 * The user must be a new user, with a GUID and a secret.
+	 * 
+	 * @param string $url The URL that the user is taken to after verification.
+	 * @return bool True on success, false on failure.
+	 */
+	public function send_email_verification($url = '') {
+		global $pines;
+		if (!isset($this->guid) || !isset($this->secret))
+			return false;
+		$params = array('id' => $this->guid, 'type' => 'register', 'secret' => $this->secret);
+		if (!empty($url))
+			$params['url'] = $url;
+		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', $params, true));
+		$macros = array(
+			'verify_link' => $link,
+			'to_phone' => htmlspecialchars(format_phone($this->phone)),
+			'to_fax' => htmlspecialchars(format_phone($this->fax)),
+			'to_timezone' => htmlspecialchars($this->timezone),
+			'to_address' => $this->address_type == 'US' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
+		);
+		return $pines->com_mailer->send_mail('com_user/verify_email', $macros, $this);
 	}
 
 	public function print_form() {

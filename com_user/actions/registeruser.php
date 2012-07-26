@@ -123,15 +123,7 @@ if ($user->save()) {
 	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.
-		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true));
-		$macros = array(
-			'verify_link' => $link,
-			'to_phone' => htmlspecialchars(format_phone($user->phone)),
-			'to_fax' => htmlspecialchars(format_phone($user->fax)),
-			'to_timezone' => htmlspecialchars($user->timezone),
-			'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
-		);
-		if ($pines->com_mailer->send_mail('com_user/verify_email', $macros, $user)) {
+		if ($user->send_email_verification($_REQUEST['url'])) {
 			$note = new module('com_user', 'note_verify_email', 'content');
 			$note->entity = $user;
 			if ($pines->config->com_user->unconfirmed_access) {

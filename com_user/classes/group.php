@@ -33,23 +33,24 @@ class group extends able_object implements group_interface {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'group', 'enabled');
-		// Defaults.
-		$this->abilities = array();
-		$this->conditions = array();
-		$this->address_type = 'us';
-		$this->attributes = array();
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
 			if ((int) $id === $id)
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'group')));
 			else
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'group'), 'data' => array('groupname', $id)));
-			if (!isset($entity))
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
 				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
+			}
 		}
+		// Defaults.
+		$this->abilities = array();
+		$this->conditions = array();
+		$this->address_type = 'us';
+		$this->attributes = array();
 	}
 
 	/**

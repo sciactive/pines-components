@@ -45,17 +45,26 @@ if (gatekeeper('com_user/enabling')) {
 if (in_array('email', $pines->config->com_user->user_fields)) {
 	// Only send an email if they don't have the ability to edit all users.
 	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
-		if ($user->email != $_REQUEST['email']) {
+		if (isset($user->guid) && $user->email != $_REQUEST['email']) {
 			if (isset($user->email_change_date) && $user->email_change_date > strtotime('-1 week'))
 				pines_notice('You already changed your email address recently. Please wait until '.format_date(strtotime('+1 week', $user->email_change_date), 'full_short').' to change your email address again.');
 			else {
-				$user->new_email_address = $_REQUEST['email'];
-				$user->new_email_secret = uniqid('', true);
-				// Save the old email in case the verification link is clicked.
-				$user->cancel_email_address = $user->email;
-				$user->cancel_email_secret = uniqid('', true);
-				$user->email_change_date = time();
-				$confirm_email = true;
+				if (isset($user->secret)) {
+					// The user hasn't verified their previous email, so just update it.
+					$user->email = $_REQUEST['email'];
+					// This will cause a new verification email to be sent when
+					// the user is saved. We need to change the secret, so the
+					// old link doesn't verify the new address.
+					$user->secret = uniqid('', true);
+				} else {
+					$user->new_email_address = $_REQUEST['email'];
+					$user->new_email_secret = uniqid('', true);
+					// Save the old email in case the verification link is clicked.
+					$user->cancel_email_address = $user->email;
+					$user->cancel_email_secret = uniqid('', true);
+					$user->email_change_date = time();
+					$confirm_email = true;
+				}
 			}
 		}
 	} else

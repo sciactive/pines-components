@@ -262,15 +262,7 @@ class com_customer_customer extends user {
 		$return = parent::save();
 		if ($return && $send_verification) {
 			// Now send the verification email.
-			$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'register', 'secret' => $this->secret), true));
-			$macros = array(
-				'verify_link' => $link,
-				'to_phone' => htmlspecialchars(format_phone($this->phone)),
-				'to_fax' => htmlspecialchars(format_phone($this->fax)),
-				'to_timezone' => htmlspecialchars($this->timezone),
-				'to_address' => $this->address_type == 'US' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
-			);
-			if ($pines->com_mailer->send_mail('com_user/verify_email', $macros, $this))
+			if ($this->send_email_verification())
 				pines_notice('A link was emailed to the provided address for verification. The new account will be limited until the address is verified.');
 			else
 				pines_error('Couldn\'t send verification email.');

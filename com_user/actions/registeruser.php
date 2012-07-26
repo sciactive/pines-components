@@ -116,6 +116,19 @@ if ($pines->config->com_user->create_admin) {
 
 if ($user->save()) {
 	pines_log('Registered user ['.$user->username.']');
+	// Send the new user registered email.
+	$macros = array(
+		'user_username' => htmlspecialchars($user->username),
+		'user_name' => htmlspecialchars($user->name),
+		'user_first_name' => htmlspecialchars($user->name_first),
+		'user_last_name' => htmlspecialchars($user->name_last),
+		'user_email' => htmlspecialchars($user->email),
+		'user_phone' => htmlspecialchars(format_phone($user->phone)),
+		'user_fax' => htmlspecialchars(format_phone($user->fax)),
+		'user_timezone' => htmlspecialchars($user->timezone),
+		'user_address' => $user->address_type == 'us' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
+	);
+	$pines->com_mailer->send_mail('com_user/user_registered', $macros);
 	pines_session('write');
 	unset($_SESSION['com_user__tmpusername']);
 	unset($_SESSION['com_user__tmppassword']);

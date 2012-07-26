@@ -284,8 +284,8 @@ $pines->com_pgrid->load();
 					<span class="label label-important hide">Incorrect Format</span></label>
 			</div>
 			<div class="pf-element" id="p_muid_recipient" style="display: none;">
-				<label><span class="pf-label">Recipient (To Address)</span>
-					<span class="pf-note">This mailing doesn't have a To address specified. Leave blank to use the master address (see config).</span>
+				<label><strong class="pf-label">Recipient (To Address)</strong>
+					<span class="pf-note"><strong>This mailing doesn't have a To address specified.</strong> Leave blank to use the master address (see config).</span>
 					<input class="pf-field" type="text" name="to" size="40" value="<?php echo htmlspecialchars($this->entity->to); ?>" />
 					<span class="label label-important hide">Incorrect Format</span></label>
 			</div>

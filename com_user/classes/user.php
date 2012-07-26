@@ -167,7 +167,7 @@ class user extends able_object implements user_interface {
 			'to_phone' => htmlspecialchars(format_phone($this->phone)),
 			'to_fax' => htmlspecialchars(format_phone($this->fax)),
 			'to_timezone' => htmlspecialchars($this->timezone),
-			'to_address' => $this->address_type == 'US' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
+			'to_address' => $this->address_type == 'us' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
 		);
 		return $pines->com_mailer->send_mail('com_user/verify_email', $macros, $this);
 	}

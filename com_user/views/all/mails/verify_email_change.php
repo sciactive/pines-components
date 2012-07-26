@@ -22,5 +22,5 @@ Please confirm your new email by clicking on the following link:<br />
 Once you verify this email address, we will no longer send emails to
 #old_email#. If you didn't make this request, you can ignore this message.<br />
 <br />
-Thank You,<br />
+Regards,<br />
 #system_name#

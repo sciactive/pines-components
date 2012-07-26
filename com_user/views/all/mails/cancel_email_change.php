@@ -23,5 +23,5 @@ this link:<br />
 If you did make this request, you can complete the change by clicking the link
 emailed to #new_email#.<br />
 <br />
-Thank You,<br />
+Regards,<br />
 #system_name#

@@ -271,7 +271,7 @@ if ($user->save()) {
 			'to_phone' => htmlspecialchars(format_phone($user->phone)),
 			'to_fax' => htmlspecialchars(format_phone($user->fax)),
 			'to_timezone' => htmlspecialchars($user->timezone),
-			'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
+			'to_address' => $user->address_type == 'us' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
 		);
 		$macros2 = $macros;
 		$macros['verify_link'] = $link;

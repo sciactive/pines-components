@@ -20,5 +20,5 @@ account:<br />
 <br />
 <a href="#verify_link#" target="_blank">#verify_link#</a><br />
 <br />
-Thank You,<br />
+Regards,<br />
 #system_name#

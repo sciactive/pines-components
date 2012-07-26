@@ -57,7 +57,7 @@ $macros = array(
 	'to_phone' => htmlspecialchars(format_phone($user->phone)),
 	'to_fax' => htmlspecialchars(format_phone($user->fax)),
 	'to_timezone' => htmlspecialchars($user->timezone),
-	'to_address' => $user->address_type == 'US' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
+	'to_address' => $user->address_type == 'us' ? htmlspecialchars("{$user->address_1} {$user->address_2}").'<br />'.htmlspecialchars("{$user->city}, {$user->state} {$user->zip}") : '<pre>'.htmlspecialchars($user->address_international).'</pre>'
 );
 if ($pines->com_mailer->send_mail('com_user/recover_account', $macros, $user))
 	pines_notice('We have sent an email to your registered email address. Please check your email to continue with account recovery.');

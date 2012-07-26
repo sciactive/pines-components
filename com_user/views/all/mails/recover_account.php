@@ -24,5 +24,5 @@ link:<br />
 As a safety measure, this link will only work for the next #minutes# minutes. If
 you didn't make this request, you can ignore this email.<br />
 <br />
-Thank You,<br />
+Regards,<br />
 #system_name#

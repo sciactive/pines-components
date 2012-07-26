@@ -73,6 +73,24 @@ return array(
 			'to_address' => 'The recipient\'s address.',
 		),
 	),
+	'user_registered' => array(
+		'cname' => 'New User Registered',
+		'description' => 'This email is sent when a new user registers himself on the site.',
+		'view' => 'mails/user_registered',
+		'has_recipient' => false,
+		'unsubscribe' => true,
+		'macros' => array(
+			'user_username' => 'The user\'s username.',
+			'user_name' => 'The user\'s full name.',
+			'user_first_name' => 'The user\'s first name.',
+			'user_last_name' => 'The user\'s last name.',
+			'user_email' => 'The user\'s email.',
+			'user_phone' => 'The user\'s phone number.',
+			'user_fax' => 'The user\'s fax number.',
+			'user_timezone' => 'The user\'s timezone.',
+			'user_address' => 'The user\'s address.',
+		),
+	),
 );
 
 ?>

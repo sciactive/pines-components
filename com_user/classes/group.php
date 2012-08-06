@@ -86,6 +86,8 @@ class group extends able_object implements group_interface {
 				break;
 			case 'icon':
 				return 'picon-system-users';
+			default:
+				return parent::info($type);
 		}
 		return null;
 	}

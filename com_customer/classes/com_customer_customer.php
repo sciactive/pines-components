@@ -35,6 +35,8 @@ class com_customer_customer extends user {
 				$this->guid = $entity->guid;
 				$this->tags = $entity->tags;
 				$this->put_data($entity->get_data(), $entity->get_sdata());
+				if (isset($this->secret))
+					$this->verify_email = $this->email;
 				return;
 			}
 		}
@@ -132,6 +134,8 @@ class com_customer_customer extends user {
 				break;
 			case 'icon':
 				return 'picon-x-office-contact';
+			default:
+				return parent::info($type);
 		}
 		return null;
 	}

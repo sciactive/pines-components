@@ -19,6 +19,9 @@ echo $module->render();
 if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 <div style="clear:both;">
 	<hr />
+	<div class="thumbnail pull-right" style="margin-bottom: .2em;">
+		<img style="vertical-align: bottom;" src="<?php echo htmlspecialchars($this->entity->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" />
+	</div>
 	<h3 style="margin:10px 0;">Properties</h3>
 	<table class="table table-bordered" style="clear:both;">
 		<tbody>

@@ -38,10 +38,10 @@ defined('P_RUN') or die('Direct access prohibited');
 class user extends able_object implements user_interface {
 	/**
 	 * Used to save the current email to resend verification if it changes.
-	 * @var string
-	 * @access private
+	 * @access protected
+	 * @var string $verify_email
 	 */
-	private $verify_email = '';
+	protected $verify_email = '';
 
 	public function __construct($id = 0) {
 		parent::__construct();
@@ -103,6 +103,13 @@ class user extends able_object implements user_interface {
 				break;
 			case 'icon':
 				return 'picon-user-identity';
+			case 'avatar':
+				$proto = $_SERVER['HTTPS'] ? 'https' : 'http';
+				if (!isset($this->email) || empty($this->email))
+					return $proto.'://secure.gravatar.com/avatar/?d=mm&s=40';
+				return $proto.'://secure.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?d=identicon&s=40';
+			default:
+				return parent::info($type);
 		}
 		return null;
 	}

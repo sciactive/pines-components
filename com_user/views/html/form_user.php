@@ -103,12 +103,18 @@ if ($pines->config->com_user->check_username)
 	</ul>
 	<div id="p_muid_tabs" class="tab-content">
 		<div class="tab-pane active" id="p_muid_tab_general">
-			<?php if (isset($this->entity->guid)) { ?>
-			<div class="date_info" style="float: right; text-align: right;">
-				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
-				<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
+			<div style="float: right; text-align: right;">
+				<?php if (isset($this->entity->guid)) { ?>
+				<div class="date_info" style="margin-bottom: 1em;">
+					<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
+					<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
+				</div>
+				<?php } ?>
+				<div class="thumbnail pull-right">
+					<img src="<?php echo htmlspecialchars($this->entity->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" />
+				</div>
 			</div>
-			<?php } if ($this->display_username) { ?>
+			<?php if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<span class="pf-group" style="display: block;">

@@ -102,6 +102,8 @@ class com_hrm_employee extends user {
 				break;
 			case 'icon':
 				return 'picon-meeting-participant';
+			default:
+				return parent::info($type);
 		}
 		return null;
 	}

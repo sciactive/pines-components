@@ -1247,7 +1247,7 @@ class com_sales extends component {
 		$sales = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_sale),
 				array('&',
-					'tag' => array('com_sales', 'sale'),
+					'tag' => array('com_sales', 'sale', 'shipping_pending'),
 					'data' => array(
 						array('warehouse', true),
 						array('warehouse_assigned', true)

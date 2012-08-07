@@ -260,7 +260,7 @@ class com_sales_shipment extends entity {
 			}
 		}
 		$this->shipped = true;
-		return $no_errors;
+		return $no_errors && $this->ref->save();
 	}
 }
 

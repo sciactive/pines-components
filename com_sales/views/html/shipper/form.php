@@ -182,7 +182,7 @@ $this->note = 'Provide shipper details in this form.';
 					var tracking = $(this);
 					if (tracking.is(":checked")) {
 						if (tracking.val() == "custom") {
-							tracking_url.val("").removeAttr("readonly");
+							tracking_url.val(tracking_url.attr("data-intial-value")).removeAttr("readonly");
 							$("#p_muid_url_howto").show();
 						} else {
 							tracking_url.val(tracking.attr("data-predef-url")).attr("readonly", "readonly");
@@ -203,7 +203,7 @@ $this->note = 'Provide shipper details in this form.';
 				<label><input type="radio" name="tracking" value="ontrac"<?php echo $this->entity->tracking == 'ontrac' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['ontrac']); ?>" /> OnTrac</label>
 				<label><input type="radio" name="tracking" value="custom"<?php echo $this->entity->tracking == 'custom' ? ' checked="checked"' : ''; ?> /> Custom</label>
 			</div>
-			<input class="pf-field" type="text" id="p_muid_tracking_url" name="tracking_url" size="40" value="<?php echo htmlspecialchars($this->entity->tracking_url); ?>" />
+			<input class="pf-field" type="text" id="p_muid_tracking_url" name="tracking_url" size="40" value="<?php echo htmlspecialchars($this->entity->tracking_url); ?>" data-intial-value="<?php echo htmlspecialchars($this->entity->tracking_url); ?>" />
 			<div class="pf-field" style="display: none;" id="p_muid_url_howto">
 				In the URL, where you want the tracking number to go, put
 				<code>#tracking_number#</code>.

@@ -18,18 +18,18 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 <form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/assignstocksave')); ?>">
 	<style type="text/css">
 		#p_muid_form .products .entry {
-			padding: .4em;
 			float: left;
-			margin: 0 .4em .4em 0;
+			font-size: .8em;
+			padding: .5em;
+			margin: 0 1em 1em 0;
 		}
 		#p_muid_form .products .entry > div {
 			margin-right: 2em;
 		}
-		#p_muid_form .products .entry a.remove {
+		#p_muid_form .products .entry .remove {
+			cursor: pointer;
+			font-weight: bold;
 			float: right;
-			font-size: 0.8em;
-			line-height: 1em;
-			padding: 0.2em;
 		}
 	</style>
 	<script type="text/javascript">
@@ -49,12 +49,16 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			});
 
 			var add_entry = function(serial, location, quantity){
+				var guids = [];
+				$("#p_muid_form .products .guid").each(function(){
+					guids.push($(this).text());
+				});
 				var loader;
 				$.ajax({
 					url: <?php echo json_encode(pines_url('com_sales', 'stock/search')); ?>,
 					type: "POST",
 					dataType: "json",
-					data: {"product": current_item.children(".product").text(), "serial": serial, "location": location, "quantity": quantity},
+					data: {"not_guids": JSON.stringify(guids), "product": current_item.children(".product").text(), "serial": serial, "location": location, "quantity": quantity},
 					beforeSend: function(){
 						loader = $.pnotify({
 							title: 'Stock Search',
@@ -84,7 +88,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 							alert("Only "+data.length+" items were found that matched your query.");
 						var entries = current_item.find(".entries");
 						$.each(data, function(i, entry){
-							entries.append("<div class=\"ui-widget-content ui-corner-all entry\"><a href=\"javascript:void(0);\" class=\"remove btn btn-mini btn-danger\">&times;</a><div>Location: "+pines.safe(entry.location_name)+"</div><span class=\"location\" style=\"display: none\">"+pines.safe(entry.location)+"</span><span class=\"product\" style=\"display: none\">"+pines.safe(entry.product)+"</span><div"+(entry.serial ? "" : " style=\"display: none\"")+">Serial: <span class=\"serial\">"+(entry.serial ? pines.safe(entry.serial) : "")+"</span></div></div>");
+							entries.append('<div class="well entry"><a href="javascript:void(0);" class="remove btn btn-mini btn-danger">&nbsp;X&nbsp;</a><div>Stock Entry: <a data-entity="'+pines.safe(entry.guid)+'" data-entity-context="com_sales_stock" class="guid">'+pines.safe(entry.guid)+'</a></div><div>Location: <a data-entity="'+pines.safe(entry.location)+'" data-entity-context="group">'+pines.safe(entry.location_name)+'</a></div><span class="location" style="display: none">'+pines.safe(entry.location)+'</span><span class="product" style="display: none">'+pines.safe(entry.product)+'</span><div'+(entry.serial ? '' : ' style="display: none"')+'>Serial: <span class="serial">'+(entry.serial ? pines.safe(entry.serial) : '')+'</span></div></div>');
 						});
 						refresh_entries();
 					}
@@ -110,9 +114,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 						entries.push({
 							"sale": sale,
 							"key": key,
-							"location": cur_entry.find(".location").text(),
-							"product": cur_entry.find(".product").text(),
-							"serial": cur_entry.find(".serial").text()
+							"guid": cur_entry.find(".guid").text()
 						});
 					})
 				});
@@ -226,12 +228,12 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 	</script>
 	<?php foreach ($this->items as $cur_item) { ?>
 	<div class="pf-element pf-heading">
-		<h3>Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></h3>
+		<h3><a data-entity="<?php echo htmlspecialchars($cur_item['sale']->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></a></h3>
 		<p>
-			<div style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo htmlspecialchars(format_date($cur_item['sale']->tender_date, 'full_long')); ?>.</div>
-			<div style="float: left; padding-right: 2em;">Location: <?php echo htmlspecialchars("{$cur_item['sale']->group->name} [{$cur_item['sale']->group->groupname}]"); ?>.</div>
-			<div style="float: left; padding-right: 2em;">Salesperson: <?php echo htmlspecialchars("{$cur_item['sale']->user->name} [{$cur_item['sale']->user->username}]"); ?>.</div>
-			<div style="float: left;">Customer: <?php echo htmlspecialchars("{$cur_item['sale']->customer->guid}: {$cur_item['sale']->customer->name}"); ?>.</div>
+			<span style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo htmlspecialchars(format_date($cur_item['sale']->tender_date, 'full_long')); ?>.</span>
+			<span style="float: left; padding-right: 2em;">Location: <a data-entity="<?php echo htmlspecialchars($cur_item['sale']->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_item['sale']->group->name} [{$cur_item['sale']->group->groupname}]"); ?></a>.</span>
+			<span style="float: left; padding-right: 2em;">Salesperson: <a data-entity="<?php echo htmlspecialchars($cur_item['sale']->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars("{$cur_item['sale']->user->name} [{$cur_item['sale']->user->username}]"); ?></a>.</span>
+			<span style="float: left;">Customer: <a data-entity="<?php echo htmlspecialchars($cur_item['sale']->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_item['sale']->customer->name); ?></a>.</span>
 		</p>
 	</div>
 	<div class="ui-helper-clearfix products">
@@ -248,8 +250,8 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			?>
 		<div class="pf-element pf-full-width product_entry <?php echo $cur_product['entity']->serialized ? 'serial' : 'nonserial'; ?>">
 			<span class="pf-label">
-				<?php echo htmlspecialchars($cur_product['entity']->name); ?> <small>x <span class="qty"><?php echo htmlspecialchars($quantity); ?></span><span class="qty_left" style="display: none;"><?php echo $quantity - $assigned; ?></span> (<span class="qty_done"><?php echo $assigned; ?></span> already assigned)</small>
-				<span class="pf-note">SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>, <?php echo $cur_product['entity']->serialized ? 'Serialized' : 'Non-Serialized'; ?></span>
+				<a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]
+				<span class="pf-note"><small>x <span class="qty"><?php echo htmlspecialchars($quantity); ?></span><span class="qty_left" style="display: none;"><?php echo $quantity - $assigned; ?></span> (<span class="qty_done"><?php echo $assigned; ?></span> already assigned)</small></span>
 			</span>
 			<a href="javascript:void(0);" class="pf-field assign">Assign</a>
 			<div class="pf-field pf-full-width ui-helper-clearfix entries"></div>

@@ -10,35 +10,47 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Editing Shipment ['.((int) $this->entity->guid).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Shipment' : 'Editing ['.htmlspecialchars($this->entity->id).']';
 $this->note = 'Provide shipment details in this form.';
+
+if ($this->entity->ref->has_tag('sale'))
+	$ref_class = 'com_sales_sale';
+elseif ($this->entity->ref->has_tag('transfer'))
+	$ref_class = 'com_sales_transfer';
+else
+	$ref_class = 'entity';
+
 ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/saveship')); ?>">
-	<style type="text/css">
-		#p_muid_packing_list .number_box {
-			cursor: pointer;
-		}
-	</style>
+<style type="text/css" scoped="scoped">
+	#p_muid_packing_list .item_box {
+		float: left;
+		font-size: .8em;
+		padding: .5em;
+		margin: 0 1em 1em 0;
+	}
+	#p_muid_packing_list .number_box {
+		cursor: pointer;
+		font-weight: bold;
+		float: right;
+	}
+</style>
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'shipment/save')); ?>">
 	<script type="text/javascript">
 		pines(function(){
 			var packing_list = $("#p_muid_packing_list");
 			var packing_list_input = packing_list.children("input[name=packing_list]");
 
-			packing_list.delegate(".item_box", "mouseenter", function(){
+			packing_list.on("mouseenter", ".item_box", function(){
 				var number_box = $(this).find(".number_box");
-				number_box.addClass("ui-state-default").data("text", number_box.html()).html("&nbsp;X&nbsp;");
-			}).delegate(".item_box", "mouseleave", function(){
+				number_box.addClass("btn-danger").data("text", number_box.html()).html("&nbsp;X&nbsp;");
+			}).on("mouseleave", ".item_box", function(){
 				var number_box = $(this).find(".number_box");
-				number_box.removeClass("ui-state-default").html(number_box.data("text"));
-			}).delegate(".number_box", "mouseenter", function(){
-				$(this).addClass("ui-state-hover");
-			}).delegate(".number_box", "mouseleave", function(){
-				$(this).removeClass("ui-state-hover");
-			}).delegate(".number_box", "click", function(){
-				var item_box = $(this).closest(".item_box");
-				var product = item_box.closest(".product");
-				var ship_qty = product.find(".ship_quantity");
-				var cur_qty = parseInt(ship_qty.text());
+				number_box.removeClass("btn-danger").html(number_box.data("text"));
+			}).on("click", ".number_box", function(){
+				var item_box = $(this).closest(".item_box"),
+					product = item_box.closest(".product"),
+					ship_qty = product.find(".ship_quantity"),
+					cur_qty = parseInt(ship_qty.text());
 				if (cur_qty == 1) {
 					if (product.siblings(".product").length == 0) {
 						alert("This is the last product on the packing list. If it is removed, there will be nothing to ship.");
@@ -59,14 +71,14 @@ $this->note = 'Provide shipment details in this form.';
 			var update_packing_list = function(){
 				var new_value = {};
 				packing_list.find(".product").each(function(){
-					var product = $(this);
-					var key = product.children(".key").text();
-					var ship_qty = product.find(".ship_quantity");
-					var items = product.find(".item_box");
+					var product = $(this),
+						key = product.children(".key").text(),
+						ship_qty = product.find(".ship_quantity"),
+						items = product.find(".item_box"),
+						stock_entries = [];
 					ship_qty.html(items.length);
-					var stock_entries = [];
 					items.each(function(){
-						stock_entries.push($(this).children(".key").text());
+						stock_entries.push($(this).children(".guid").text());
 					});
 					new_value[key] = stock_entries;
 				});
@@ -101,7 +113,6 @@ $this->note = 'Provide shipment details in this form.';
 			</select></label>
 	</div>
 	<div class="pf-element">
-		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			pines(function(){
 				$("#p_muid_eta").datepicker({
@@ -111,7 +122,6 @@ $this->note = 'Provide shipment details in this form.';
 				});
 			});
 		</script>
-		<?php } ?>
 		<label><span class="pf-label">ETA</span>
 			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" /></label>
 	</div>
@@ -120,92 +130,65 @@ $this->note = 'Provide shipment details in this form.';
 			<span class="pf-note">One per line.</span>
 			<span class="pf-group pf-full-width">
 				<span class="pf-field" style="display: block;">
-					<textarea style="width: 100%;" rows="3" cols="35" name="tracking_numbers"><?php echo isset($this->entity->tracking_numbers) ? implode("\n", $this->entity->tracking_numbers) : ''; ?></textarea>
+					<textarea style="width: 100%;" rows="3" cols="35" name="tracking_numbers"><?php echo isset($this->entity->tracking_numbers) ? htmlspecialchars(implode("\n", $this->entity->tracking_numbers)) : ''; ?></textarea>
 				</span>
 			</span></label>
 	</div>
-	<div class="pf-element">
-		<label><span class="pf-label">Shipped</span>
-			<span class="pf-note">Check this to ship the packing list below.</span>
-			<input class="pf-field" type="checkbox" name="shipped" value="ON" /></label>
-	</div>
-	<?php switch ($this->type) {
-		case 'sale':
-		default: 
-			?>
 	<div class="pf-element pf-heading">
-		<h3><a data-entity="<?php echo htmlspecialchars($this->entity->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($this->entity->id); ?></a> Packing List</h3>
-		<?php if ($this->entity->warehouse_pending) { ?>
-		<p><strong>There are still unassigned warehouse items on this sale. It can only be partially shipped.</strong></p>
-		<?php } if (!empty($this->entity->comments)) { ?>
+		<h3>New Packing List - <a data-entity="<?php echo htmlspecialchars($this->entity->ref->guid); ?>" data-entity-context="<?php echo htmlspecialchars($ref_class); ?>"><?php echo htmlspecialchars($this->entity->ref->info('name')); ?></a></h3>
+		<?php if (!empty($this->entity->ref->comments)) { ?>
 		<p>
 			<a href="javascript:void(0);" onclick="$(this).parent().next().slideToggle(); return false;">Comments</a>
 		</p>
 		<p style="display: none;">
-			<small><?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->comments)); ?></small>
+			<small><?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->ref->comments)); ?></small>
 		</p>
 		<?php } ?>
 	</div>
 	<div id="p_muid_packing_list">
-			<?php foreach ($this->entity->products as $key => $cur_product) {
-				if (!in_array($cur_product['delivery'], array('shipped', 'warehouse')))
-					continue;
-				// Calculate included stock entries.
-				$stock_entries = $cur_product['stock_entities'];
-				$shipped_stock_entries = (array) $cur_product['shipped_entities'];
-				foreach ((array) $cur_product['returned_stock_entities'] as $cur_stock_entity) {
-					$i = $cur_stock_entity->array_search($stock_entries);
-					if (isset($i))
-						unset($stock_entries[$i]);
-					// If it's still in there, it was entered on the sale twice (fulfilled after returned once), so don't remove it from shipped.
-					if (!$cur_stock_entity->in_array($stock_entries)) {
-						$i = $cur_stock_entity->array_search($shipped_stock_entries);
-						if (isset($i))
-							unset($shipped_stock_entries[$i]);
-					}
-				}
-				// Is the product already shipped?
-				if (count($shipped_stock_entries) >= count($stock_entries))
-					continue;
-				?>
+		<?php foreach ($this->entity->products as $key => $cur_product) { ?>
 		<div class="pf-element product">
 			<div class="key" style="display: none"><?php echo htmlspecialchars($key); ?></div>
 			<span class="pf-label"><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
-			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars(count($stock_entries) - count($shipped_stock_entries)); ?></span></span>
+			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars(count($cur_product['stock_entities'])); ?></span></span>
 			<div class="pf-group">
 				<div class="pf-field">
 					<?php if (!empty($cur_product['entity']->receipt_description)) { ?>
 					<div><?php echo htmlspecialchars($cur_product['entity']->receipt_description); ?></div>
 					<?php } ?>
 					<div style="font-size: .9em;">Itemized Breakdown:</div>
-					<?php $i = 1; foreach ($stock_entries as $stock_key => $cur_stock) {
-						if ($cur_stock->in_array($shipped_stock_entries))
-							continue;
-						?>
-					<div class="ui-widget-content ui-corner-all item_box" style="float: left; font-size: .8em; padding: .4em; margin: 0 .4em .4em 0;">
-						<div class="key" style="display: none"><?php echo htmlspecialchars($stock_key); ?></div>
-						<div class="ui-widget-content ui-corner-all number_box" style="font-weight: bold; float: right;">#<?php echo $i; ?></div>
+					<?php foreach ($cur_product['stock_entities'] as $stock_key => $cur_stock) { ?>
+					<div class="well item_box">
+						<div class="guid" style="display: none"><?php echo htmlspecialchars($cur_stock->guid); ?></div>
+						<button type="button" class="btn btn-mini number_box">#<?php echo (int) ($stock_key+1); ?></button>
 						<div>Stock Entry: <a data-entity="<?php echo htmlspecialchars($cur_stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_stock->guid); ?></a></div>
 						<div>Shipped From: <a data-entity="<?php echo htmlspecialchars($cur_stock->location->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_stock->location->name); ?></a></div>
 						<?php if ($cur_product['entity']->serialized) { ?>
-						<div>Serial Number: <?php echo htmlspecialchars($cur_stock->serial); ?></div>
+						<div>Serial: <?php echo htmlspecialchars($cur_stock->serial); ?></div>
 						<?php } ?>
 					</div>
-					<?php $i++; } ?>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
-			<?php }
-			break;
-	} ?>
+		<?php } ?>
 		<input type="hidden" name="packing_list" value="" />
+	</div>
+	<div class="pf-element pf-full-width">
+		<label><span class="pf-label">Notes</span>
+			<span class="pf-group pf-full-width">
+				<span class="pf-field" style="display: block;">
+					<textarea style="width: 100%;" rows="3" cols="35" name="notes"><?php echo htmlspecialchars($this->entity->notes); ?></textarea>
+				</span>
+			</span></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="type" value="<?php echo htmlspecialchars($this->type); ?>" />
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<?php } else { ?>
+		<input type="hidden" name="ref_id" value="<?php echo (int) $this->entity->ref->guid ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" />
-		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'stock/shipments'))); ?>);" value="Cancel" />
+		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'shipment/list'))); ?>);" value="Cancel" />
 	</div>
 </form>

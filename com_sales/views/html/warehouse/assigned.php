@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/warehouse/assigned']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -26,7 +25,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/edit', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/transfer', array('id' => '__title__'))); ?>, delimiter: ','},
-				{type: 'button', text: 'Edit/Ship Sale', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/ship', array('type' => 'Sale', 'id' => '__col_1__'))); ?>},
+				{type: 'button', text: 'Ship Sale', extra_class: 'picon picon-mail-send', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'shipment/ship', array('id' => '__col_1__'))); ?>},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

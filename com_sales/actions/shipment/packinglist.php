@@ -1,6 +1,6 @@
 <?php
 /**
- * List pending shipments.
+ * Show a shipment's packing list.
  *
  * @package Components\sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -12,12 +12,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/managestock') )
-	punt_user(null, pines_url('com_sales', 'stock/shipments'));
+	punt_user(null, pines_url('com_sales', 'shipment/packinglist', array('id' => $_REQUEST['id'])));
 
-if (!empty($_REQUEST['location']))
-	$location = group::factory((int) $_REQUEST['location']);
+$entity = com_sales_shipment::factory((int) $_REQUEST['id']);
+if (!isset($entity->guid)) {
+	pines_error('Requested shipment id is not accessible.');
+	return;
+}
 
-$descendants = ($_REQUEST['descendants'] == 'true');
+$entity->print_packing_list();
 
-$pines->com_sales->list_shipments($_REQUEST['removed'] == 'true', $location, $descendants);
 ?>

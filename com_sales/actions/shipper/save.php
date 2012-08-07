@@ -40,6 +40,13 @@ $shipper->account_number = $_REQUEST['account_number'];
 $shipper->terms = $_REQUEST['terms'];
 $shipper->comments = $_REQUEST['comments'];
 
+// Shipment Tracking
+$shipper->tracking = $_REQUEST['tracking'];
+if ($shipper->tracking == 'custom')
+	$shipper->tracking_url = $_REQUEST['tracking_url'];
+else
+	unset($shipper->tracking_url);
+
 if (empty($shipper->name)) {
 	$shipper->print_form();
 	pines_notice('Please specify a name.');

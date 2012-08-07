@@ -21,6 +21,7 @@ $product = com_sales_product::factory((int) $_REQUEST['product']);
 $serial = $_REQUEST['serial'];
 $location = empty($_REQUEST['location']) ? null : group::factory((int) $_REQUEST['location']);
 $quantity = (int) $_REQUEST['quantity'];
+$not_guids = (array) json_decode($_REQUEST['not_guids']);
 
 if (!isset($product->guid) || (empty($serial) && (empty($location) || !isset($location->guid))) || $quantity < 1) {
 	$pines->page->override_doc('false');
@@ -43,10 +44,21 @@ if (!empty($serial))
 if (!empty($location) && isset($location->guid))
 	$selector['ref'][] = array('location', $location);
 
-$stock = (array) $pines->entity_manager->get_entities(
-		array('class' => com_sales_stock, 'limit' => $quantity),
-		$selector
-	);
+if ($not_guids) {
+	$not_guids = array_map('intval', $not_guids);
+	$stock = (array) $pines->entity_manager->get_entities(
+			array('class' => com_sales_stock, 'limit' => $quantity),
+			$selector,
+			array('!&',
+				'guid' => $not_guids
+			)
+		);
+} else {
+	$stock = (array) $pines->entity_manager->get_entities(
+			array('class' => com_sales_stock, 'limit' => $quantity),
+			$selector
+		);
+}
 
 foreach ($stock as &$cur_stock) {
 	$cur_stock = array(

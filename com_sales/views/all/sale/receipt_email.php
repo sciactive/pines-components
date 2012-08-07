@@ -74,11 +74,11 @@ switch ($this->entity->status) {
 			<td width="50%" valign="top" align="right">
 				<table cellspacing="4" cellpadding="">
 					<tr>
-						<td align="right" style="text-align: right;"><?php echo $sale ? 'Sale' : 'Return'; ?> #:</td>
+						<td align="right" valign="top" style="text-align: right;"><?php echo $sale ? 'Sale' : 'Return'; ?> #:</td>
 						<td><?php echo htmlspecialchars($this->entity->id); ?></td>
 					</tr>
 					<tr>
-						<td align="right" style="text-align: right;">Date:</td>
+						<td align="right" valign="top" style="text-align: right;">Date:</td>
 						<td><?php switch($this->entity->status) {
 							case 'invoiced':
 								echo '<span>'.htmlspecialchars(format_date($this->entity->invoice_date, 'date_short')).'</span>';
@@ -98,7 +98,7 @@ switch ($this->entity->status) {
 						} ?></td>
 					</tr>
 					<tr>
-						<td align="right" style="text-align: right;">Time:</td>
+						<td align="right" valign="top" style="text-align: right;">Time:</td>
 						<td><?php switch($this->entity->status) {
 							case 'invoiced':
 								echo '<span>'.htmlspecialchars(format_date($this->entity->invoice_date, 'time_short')).'</span>';
@@ -119,13 +119,16 @@ switch ($this->entity->status) {
 					</tr>
 					<?php if (!$sale && isset($this->entity->sale)) { ?>
 					<tr>
-						<td align="right" style="text-align: right;">Sale:</td>
+						<td align="right" valign="top" style="text-align: right;">Sale:</td>
 						<td><?php echo htmlspecialchars($this->entity->sale->id); ?></td>
 					</tr>
 					<?php } if (isset($sales_rep->guid)) { ?>
 					<tr>
-						<td align="right" style="text-align: right;">Sales Rep:</td>
-						<td><?php echo htmlspecialchars($sales_rep->name); ?></td>
+						<td align="right" valign="top" style="text-align: right;">Sales Rep:</td>
+						<td>
+							<span style="display: block; margin-right: .5em; float: left; border: 1px solid #DDDDDD; border-radius: 4px 4px 4px 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075); line-height: 1; padding: 4px;"><img src="<?php echo htmlspecialchars($sales_rep->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" /></span>
+							<?php echo htmlspecialchars($sales_rep->name); ?>
+						</td>
 					</tr>
 					<?php } ?>
 				</table>
@@ -149,17 +152,26 @@ switch ($this->entity->status) {
 			<?php } if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
 			<td width="50%" valign="top" align="left">
 				<h3>Bill To:</h3>
-				<strong>
-					<?php echo htmlspecialchars($this->entity->customer->name);
-					if (isset($this->entity->customer->company->name))
-						echo htmlspecialchars(" ( {$this->entity->customer->company->name} )"); ?>
-				</strong><br />
-				<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
-				<?php echo htmlspecialchars($this->entity->customer->address_1).'<br />'.htmlspecialchars($this->entity->customer->address_2); ?><br />
-				<?php echo htmlspecialchars($this->entity->customer->city); ?>, <?php echo htmlspecialchars($this->entity->customer->state); ?> <?php echo htmlspecialchars($this->entity->customer->zip); ?>
-				<?php } } else {?>
-				<pre><?php echo htmlspecialchars($this->entity->customer->address_international); ?></pre>
-				<?php } ?>
+				<table>
+					<tr>
+						<td valign="top" style="padding-right: .5em;">
+							<span style="display: block; float: left; border: 1px solid #DDDDDD; border-radius: 4px 4px 4px 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075); line-height: 1; padding: 4px;"><img src="<?php echo htmlspecialchars($this->entity->customer->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" /></span>
+						</td>
+						<td>
+							<strong>
+								<?php echo htmlspecialchars($this->entity->customer->name);
+								if (isset($this->entity->customer->company->name))
+									echo htmlspecialchars(" ( {$this->entity->customer->company->name} )"); ?>
+							</strong><br />
+							<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
+							<?php echo htmlspecialchars($this->entity->customer->address_1).'<br />'.htmlspecialchars($this->entity->customer->address_2); ?><br />
+							<?php echo htmlspecialchars($this->entity->customer->city); ?>, <?php echo htmlspecialchars($this->entity->customer->state); ?> <?php echo htmlspecialchars($this->entity->customer->zip); ?>
+							<?php } } else {?>
+							<pre><?php echo htmlspecialchars($this->entity->customer->address_international); ?></pre>
+							<?php } ?>
+						</td>
+					</tr>
+				</table>
 			</td>
 			<?php } ?>
 		</tr>

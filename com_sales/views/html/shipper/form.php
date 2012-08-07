@@ -170,6 +170,46 @@ $this->note = 'Provide shipper details in this form.';
 				</span>
 			</span></label>
 	</div>
+	<div class="pf-element pf-heading">
+		<h3>Shipment Tracking</h3>
+		<p>Tracking links can be generated and emailed to customers.</p>
+	</div>
+	<div class="pf-element pf-full-width">
+		<script type="text/javascript">
+			pines(function(){
+				var tracking_url = $("#p_muid_tracking_url");
+				$("#p_muid_form [name=tracking]").change(function(){
+					var tracking = $(this);
+					if (tracking.is(":checked")) {
+						if (tracking.val() == "custom") {
+							tracking_url.val("").removeAttr("readonly");
+							$("#p_muid_url_howto").show();
+						} else {
+							tracking_url.val(tracking.attr("data-predef-url")).attr("readonly", "readonly");
+							$("#p_muid_url_howto").hide();
+						}
+					}
+				}).change();
+			});
+		</script>
+		<label for="p_muid_tracking_url"><span class="pf-label">Tracking URL</span></label>
+		<div class="pf-group">
+			<div class="pf-field">
+				Choose a predefined URL or use a custom one:<br />
+				<label><input type="radio" name="tracking" value="usps"<?php echo $this->entity->tracking == 'usps' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['usps']); ?>" /> USPS</label>
+				<label><input type="radio" name="tracking" value="ups"<?php echo $this->entity->tracking == 'ups' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['ups']); ?>" /> UPS</label>
+				<label><input type="radio" name="tracking" value="fedex"<?php echo $this->entity->tracking == 'fedex' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['fedex']); ?>" /> FedEx</label>
+				<label><input type="radio" name="tracking" value="dhl"<?php echo $this->entity->tracking == 'dhl' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['dhl']); ?>" /> DHL</label>
+				<label><input type="radio" name="tracking" value="ontrac"<?php echo $this->entity->tracking == 'ontrac' ? ' checked="checked"' : ''; ?> data-predef-url="<?php echo htmlspecialchars($pines->com_sales->tracking_urls['ontrac']); ?>" /> OnTrac</label>
+				<label><input type="radio" name="tracking" value="custom"<?php echo $this->entity->tracking == 'custom' ? ' checked="checked"' : ''; ?> /> Custom</label>
+			</div>
+			<input class="pf-field" type="text" id="p_muid_tracking_url" name="tracking_url" size="40" value="<?php echo htmlspecialchars($this->entity->tracking_url); ?>" />
+			<div class="pf-field" style="display: none;" id="p_muid_url_howto">
+				In the URL, where you want the tracking number to go, put
+				<code>#tracking_number#</code>.
+			</div>
+		</div>
+	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />

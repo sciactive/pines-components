@@ -18,15 +18,14 @@ $items = (array) json_decode($_REQUEST['items'], true);
 
 foreach ($items as $cur_item) {
 	$cur_sale = com_sales_sale::factory((int) $cur_item['sale']);
-	$cur_location = group::factory((int) $cur_item['location']);
-	$cur_product = com_sales_product::factory((int) $cur_item['product']);
+	$stock = com_sales_stock::factory((int) $cur_item['guid']);
 	$key = (int) $cur_item['key'];
-	if (!isset($cur_sale->guid) || !isset($cur_location->guid) || !isset($cur_product->guid)) {
+	if (!isset($cur_sale->guid) || !isset($stock->guid) || !$stock->available) {
 		pines_notice('Bad information provided, skipping this item...');
 		continue;
 	}
 	// Check that the product matches the sale.
-	if (!isset($cur_sale->products[$key]) || !$cur_product->is($cur_sale->products[$key]['entity'])) {
+	if (!isset($cur_sale->products[$key]) || !$stock->product->is($cur_sale->products[$key]['entity'])) {
 		pines_notice('Product doesn\'t match sale, skipping this item...');
 		continue;
 	}
@@ -39,30 +38,6 @@ foreach ($items as $cur_item) {
 		pines_notice('Stock is already assigned, skipping this item...');
 		continue;
 	}
-	$selector = array('&',
-			'tag' => array('com_sales', 'stock'),
-			'data' => array('available', true),
-			'ref' => array(
-				array('product', $cur_product),
-				array('location', $cur_location)
-			)
-		);
-	if ($cur_product->serialized) {
-		if (empty($cur_item['serial'])) {
-			pines_notice('No serial provided for serialized product, skipping this item...');
-			continue;
-		}
-		$selector['strict'] = array('serial', $cur_item['serial']);
-	}
-	// Find the stock entity.
-	$stock = $pines->entity_manager->get_entity(
-			array('class' => com_sales_stock),
-			$selector
-		);
-	if (!isset($stock->guid)) {
-		pines_notice('Couldn\'t find matching available stock, skipping this item...');
-		continue;
-	}
 	// Remove the stock.
 	if (!($stock->remove('sold_pending_shipping', $cur_sale, $stock->location) && $stock->save())) {
 		pines_notice('Stock could not be removed, skipping this item...');
@@ -70,7 +45,7 @@ foreach ($items as $cur_item) {
 	}
 	pines_log("Setting stock entry $stock->guid to unavailable. It is being assigned to a warehouse order on sale $cur_sale->id.", 'info');
 	$cur_sale->products[$key]['stock_entities'][] = $stock;
-	if ($cur_product->serialized)
+	if ($stock->product->serialized)
 		$cur_sale->products[$key]['serial'] = $stock->serial;
 	if (!$cur_sale->save()) {
 		pines_error('Sale could not be saved, returning stock to inventory and skipping this item...');

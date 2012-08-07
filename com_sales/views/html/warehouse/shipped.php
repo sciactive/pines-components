@@ -16,7 +16,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/warehouse/shipped']);
 ?>
 <script type="text/javascript">
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -25,7 +24,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/edit', array('id' => '__title__'))); ?>, delimiter: ','},
-				{type: 'button', text: 'Edit/Ship Sale', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/ship', array('type' => 'Sale', 'id' => '__col_1__'))); ?>},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -38,9 +36,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 				}}
 			],
-			pgrid_sort_col: 2,
+			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
-			pgrid_hidden_cols: [1],
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
@@ -55,11 +52,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="p_muid_grid">
 	<thead>
 		<tr>
-			<th>Sale GUID</th>
 			<th>Date</th>
 			<th>Product</th>
 			<th>Serial</th>
-			<th>Sale ID</th>
+			<th>Sale</th>
 			<th>Sale Location</th>
 			<th>Customer</th>
 		</tr>
@@ -75,13 +71,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					continue;
 		?>
 		<tr title="<?php echo (int) $cur_stock->guid ?>">
-			<td><?php echo (int) $sale->guid ?></td>
 			<td><?php echo htmlspecialchars(format_date($sale->tender_date, 'full_sort')); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_stock->serial); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></a></td>
-			<td><a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($sale->customer->name); ?></a></td>
 		</tr>
 	<?php } } } ?>
 	</tbody>

@@ -154,7 +154,10 @@ switch ($this->entity->status) {
 					break;
 			} ?>
 			<?php if (!$sale && isset($this->entity->sale)) { ?><span><?php echo htmlspecialchars($this->entity->sale->id); ?></span><?php } ?>
-			<?php if (isset($sales_rep->guid)) { ?><span><?php echo htmlspecialchars($sales_rep->name); ?></span><?php } ?>
+			<?php if (isset($sales_rep->guid)) { ?><span>
+				<span class="thumbnail pull-left" style="display: block; margin-right: .5em;"><img src="<?php echo htmlspecialchars($sales_rep->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" /></span>
+				<a data-entity="<?php echo htmlspecialchars($sales_rep->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($sales_rep->name); ?></a>
+			</span><?php } ?>
 		</div>
 	</div>
 	<?php if (isset($this->entity->shipping_address) && ($this->entity->has_tag('shipping_pending') || $this->entity->has_tag('shipping_shipped') || $this->entity->warehouse)) { ?>
@@ -180,18 +183,27 @@ switch ($this->entity->status) {
 			<span>Bill To:</span>
 		</div>
 		<div class="data_col">
-			<span><strong>
-				<?php echo htmlspecialchars($this->entity->customer->name); ?>
-				<?php if (isset($this->entity->customer->company->name)) {
-					echo htmlspecialchars(" ( {$this->entity->customer->company->name} )");
-				} ?>
-			</strong></span>
-			<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
-			<span><?php echo htmlspecialchars($this->entity->customer->address_1.' '.$this->entity->customer->address_2); ?></span>
-			<span><?php echo htmlspecialchars($this->entity->customer->city); ?>, <?php echo htmlspecialchars($this->entity->customer->state); ?> <?php echo htmlspecialchars($this->entity->customer->zip); ?></span>
-			<?php } } else {?>
-			<span><?php echo htmlspecialchars($this->entity->customer->address_international); ?></span>
-			<?php } ?>
+			<table>
+				<tr>
+					<td style="padding-right: .5em;">
+						<span class="thumbnail pull-left" style="display: block;"><img src="<?php echo htmlspecialchars($this->entity->customer->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" /></span>
+					</td>
+					<td>
+						<span><strong>
+							<a data-entity="<?php echo htmlspecialchars($this->entity->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($this->entity->customer->name); ?></a>
+							<?php if (isset($this->entity->customer->company->name)) {
+								echo htmlspecialchars(" ( {$this->entity->customer->company->name} )");
+							} ?>
+						</strong></span>
+						<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
+						<span><?php echo htmlspecialchars($this->entity->customer->address_1.' '.$this->entity->customer->address_2); ?></span>
+						<span><?php echo htmlspecialchars($this->entity->customer->city); ?>, <?php echo htmlspecialchars($this->entity->customer->state); ?> <?php echo htmlspecialchars($this->entity->customer->zip); ?></span>
+						<?php } } else {?>
+						<span><?php echo htmlspecialchars($this->entity->customer->address_international); ?></span>
+						<?php } ?>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 	<?php } ?>

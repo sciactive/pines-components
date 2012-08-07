@@ -36,6 +36,7 @@ class com_sales_shipper extends entity {
 		}
 		// Defaults.
 		$this->address_type = 'us';
+		$this->tracking = 'custom';
 	}
 
 	/**
@@ -111,6 +112,18 @@ class com_sales_shipper extends entity {
 		$module->entity = $this;
 
 		return $module;
+	}
+
+	/**
+	 * Get the tracking URL.
+	 * @param string $number The tracking number.
+	 * @return string The tracking URL.
+	 */
+	public function tracking_url($number) {
+		if ($this->tracking == 'custom')
+			return str_replace('#tracking_number#', urlencode($number), $this->tracking_url);
+		global $pines;
+		return str_replace('#tracking_number#', urlencode($number), $pines->com_sales->tracking_urls[$this->tracking]);
 	}
 }
 

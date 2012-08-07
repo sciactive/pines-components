@@ -996,7 +996,7 @@ class com_sales_sale extends entity {
 				$this->add_tag('shipping_shipped');
 			}
 		}
-		
+
 		if (empty($this->products)) {
 			pines_log("Sale {$this->id} has no products. Cannot be saved.", 'error');
 			return false;
@@ -1095,12 +1095,12 @@ class com_sales_sale extends entity {
 						);
 					if ($last_tx) {
 						if (!$old_stock->receive('sale_swapped', $this, $last_tx->old_location)) {
-							pines_notice('Could not recieve item ['.$cur_product['serial'].'] back into inventory.');
+							pines_notice('Could not receive item ['.$cur_product['serial'].'] back into inventory.');
 							return false;
 						}
 					} else {
 						if (!$old_stock->receive('sale_swapped', $this)) {
-							pines_notice('Could not recieve item ['.$cur_product['serial'].'] back into inventory.');
+							pines_notice('Could not receive item ['.$cur_product['serial'].'] back into inventory.');
 							return false;
 						}
 					}

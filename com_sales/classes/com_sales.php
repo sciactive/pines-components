@@ -31,6 +31,17 @@ class com_sales extends component {
 	 * @var array $product_cache
 	 */
 	private $product_cache = array();
+	/**
+	 * Predefined tracking URLs.
+	 * @var array $tracking_urls
+	 */
+	public $tracking_urls = array(
+		'usps' => 'https://tools.usps.com/go/TrackConfirmAction.action?tLabels=#tracking_number#&FindTrackLabelorReceiptNumber=Find',
+		'ups' => 'http://wwwapps.ups.com/WebTracking/track?HTMLVersion=5.0&loc=en_US&trackNums=#tracking_number#&track.x=Track',
+		'fedex' => 'http://www.fedex.com/Tracking?cntry_code=us&tracknumber_list=#tracking_number#&language=english',
+		'dhl' => 'http://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=#tracking_number#%0D%0A',
+		'ontrac' => 'http://www.ontrac.com/tracking.asp?trackingres=submit&tracking_number=#tracking_number#&trackBtn.x=18&trackBtn.y=12&trackBtn=trackingres_submit',
+	);
 
 	/**
 	 * Calls the first payment process which matches the given arguments.
@@ -613,12 +624,12 @@ class com_sales extends component {
 	public function list_shipments($removed = false, $location = null, $descendants = false) {
 		global $pines;
 
-		$module = new module('com_sales', 'stock/shipments', 'content');
+		$module = new module('com_sales', 'shipment/list', 'content');
 
 		if ($removed) {
 			$module->removed = true;
 			// Second selector doesn't work when it's just an empty array.
-			$selector2 = array('&', 'tag' => 'shipping_shipped');
+			$selector2 = array('&', 'tag' => 'com_sales');
 		} else {
 			if (!isset($location))
 				$location = $_SESSION['user']->group;
@@ -630,25 +641,37 @@ class com_sales extends component {
 			$module->descendants = $descendants;
 			$module->removed = false;
 		}
-		if ($pines->config->com_sales->ready_to_ship == 'invoice') {
-			$selector = array('|',
-					'data' => array(
-						array('status', 'invoiced'),
-						array('status', 'paid')
-					)
-				);
-		} else {
-			$selector = array('&',
-					'data' => array('status', 'paid')
+
+		if ($removed) {
+			// Show shipments from the old system.
+			if ($pines->config->com_sales->ready_to_ship == 'invoice') {
+				$selector = array('|',
+						'data' => array(
+							array('status', 'invoiced'),
+							array('status', 'paid')
+						)
+					);
+			} else {
+				$selector = array('&',
+						'data' => array('status', 'paid')
+					);
+			}
+			$module->sales = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'tag' => array('com_sales', 'sale', 'shipping_shipped'),
+					),
+					$selector,
+					$selector2
 				);
 		}
 
-		$module->sales = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_sale),
+		$module->shipments = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_shipment),
 				array('&',
-					'tag' => array('com_sales', 'sale', $removed ? 'shipping_shipped' : 'shipping_pending')
+					'tag' => array('com_sales', 'shipment'),
+					'strict' => array('delivered', (bool) $removed)
 				),
-				$selector,
 				$selector2
 			);
 

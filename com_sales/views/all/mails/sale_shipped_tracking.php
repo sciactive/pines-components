@@ -50,6 +50,7 @@ specified below via #shipper#. This now completes your order.<br />
 <h2>Shipment Contents</h2>
 <div>
 	#packing_list#
+	<p>#notes#</p>
 </div><br />
 <br />
 Regards,<br />

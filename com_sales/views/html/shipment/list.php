@@ -173,7 +173,7 @@ $pines->com_jstree->load();
 				} else
 					echo htmlspecialchars(isset($shipment->tracking_numbers) ? implode(', ', $shipment->tracking_numbers) : '');
 			?></td>
-			<td><?php echo isset($shipment->eta) ? htmlspecialchars(format_date($shipment->eta, 'date_sort')) : '' ; ?></td>
+			<td><?php echo $shipment->eta ? htmlspecialchars(format_date($shipment->eta, 'date_sort')) : '' ; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -38,6 +38,7 @@ return array(
 			'tracking_link' => 'The shipment tracking link(s). Separated by line breaks.',
 			'eta' => 'The date the shipment is expected to arrive.',
 			'address' => 'The shipping address to which the order was shipped.',
+			'notes' => 'Any notes on the shipment.',
 		),
 	),
 	'sale_shipped' => array(
@@ -53,6 +54,7 @@ return array(
 			'shipper' => 'The shipper used to ship the order.',
 			'eta' => 'The date the shipment is expected to arrive.',
 			'address' => 'The shipping address to which the order was shipped.',
+			'notes' => 'Any notes on the shipment.',
 		),
 	),
 );

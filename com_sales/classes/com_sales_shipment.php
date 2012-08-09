@@ -110,9 +110,14 @@ class com_sales_shipment extends entity {
 		$module->entity = $this;
 
 		$tracking_links = array();
-		foreach ($this->tracking_numbers as $cur_number) {
-			$url = htmlspecialchars($this->shipper->tracking_url($cur_number));
-			$tracking_links[] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+		if (isset($this->shipper->id)) {
+			foreach ($this->tracking_numbers as $cur_number) {
+				$url = htmlspecialchars($this->shipper->tracking_url($cur_number));
+				$tracking_links[] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+			}
+		} else {
+			foreach ($this->tracking_numbers as $cur_number)
+				$tracking_links[] = htmlspecialchars($cur_number);
 		}
 		$address = '<strong>'.htmlspecialchars($this->shipping_address->name).'</strong><br />';
 		if ($this->shipping_address->address_type == 'us') {
@@ -131,6 +136,7 @@ class com_sales_shipment extends entity {
 			'tracking_link' => implode('<br />', $tracking_links),
 			'eta' => htmlspecialchars(format_date($this->eta, 'date_long')),
 			'address' => $address,
+			'notes' => htmlspecialchars($this->notes),
 		);
 		return $pines->com_mailer->send_mail($this->tracking_numbers ? 'com_sales/sale_shipped_tracking' : 'com_sales/sale_shipped', $macros, $this->ref->customer);
 	}

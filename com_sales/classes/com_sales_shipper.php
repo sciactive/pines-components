@@ -120,8 +120,12 @@ class com_sales_shipper extends entity {
 	 * @return string The tracking URL.
 	 */
 	public function tracking_url($number) {
-		if ($this->tracking == 'custom')
-			return str_replace('#tracking_number#', urlencode($number), $this->tracking_url);
+		if ($this->tracking == 'custom') {
+			if (!empty($this->tracking_url))
+				return str_replace('#tracking_number#', urlencode($number), $this->tracking_url);
+			else
+				return $number;
+		}
 		global $pines;
 		return str_replace('#tracking_number#', urlencode($number), $pines->com_sales->tracking_urls[$this->tracking]);
 	}

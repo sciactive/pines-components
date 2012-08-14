@@ -122,7 +122,9 @@ $("textarea.peditor").tinymce({
 	// Template's editor CSS
 	content_css: <?php echo json_encode(implode(',', $content_css)); ?>,
 	preformatted: <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>,
-	schema: "html5"
+	schema: "html5",
+	onchange_callback: function(i){var el=i.getElement();if(el)$(el).triggerHandler('change');},
+	handle_event_callback: function(e, i){var el=i.getElement();if(el)$(el).triggerHandler(e.type);return true;}
 });
 $("textarea.peditor-simple").tinymce({
 	script_url: '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
@@ -155,7 +157,9 @@ $("textarea.peditor-simple").tinymce({
 	} ?>
 	content_css: <?php echo json_encode(implode(',', $content_css)); ?>,
 	preformatted: <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>,
-	schema: "html5"
+	schema: "html5",
+	onchange_callback: function(i){var el=i.getElement();if(el)$(el).triggerHandler('change');},
+	handle_event_callback: function(e, i){var el=i.getElement();if(el)$(el).triggerHandler(e.type);return true;}
 });
 $("textarea.peditor-email").tinymce({
 	script_url : '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
@@ -232,7 +236,9 @@ $("textarea.peditor-email").tinymce({
 	// No CSS for emails.
 	content_css : [],
 	preformatted : true,
-	verify_html: false
+	verify_html: false,
+	onchange_callback: function(i){var el=i.getElement();if(el)$(el).triggerHandler('change');},
+	handle_event_callback: function(e, i){var el=i.getElement();if(el)$(el).triggerHandler(e.type);return true;}
 });
 // tinymce.execCommand('mceToggleEditor',false,'content');
 });

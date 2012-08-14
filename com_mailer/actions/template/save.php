@@ -30,6 +30,18 @@ $template->name = $_REQUEST['name'];
 $template->enabled = ($_REQUEST['enabled'] == 'ON');
 $template->content = $_REQUEST['content'];
 
+// Replace
+$template->replacements = (array) json_decode($_REQUEST['replacements']);
+foreach ($template->replacements as &$cur_string) {
+	$array = array(
+		'search' => $cur_string->values[1],
+		'replace' => $cur_string->values[2],
+		'macros' => ($cur_string->values[3] == 'Yes' ? true : false)
+	);
+	$cur_string = $array;
+}
+unset($cur_string);
+
 // Document
 $template->document = $_REQUEST['document'];
 

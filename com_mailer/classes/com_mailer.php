@@ -459,8 +459,14 @@ class com_mailer extends component {
 		$unsubscribe_secret = md5($recipient->email.$pines->config->com_mailer->unsubscribe_key);
 		$unsubscribe_url = pines_url('com_mailer', 'unsubscribe', array('email' => $recipient->email, 'verify' => $unsubscribe_secret), true);
 
-		// Replace macros.
+		// Replace macros and search strings.
 		foreach ($body as &$cur_field) {
+			foreach ((array) $template->replacements as $cur_string) {
+				if (!$cur_string['macros'])
+					continue;
+				if (strpos($cur_field, $cur_string['search']) !== false)
+					$cur_field = str_replace($cur_string['search'], $cur_string['replace'], $cur_field);
+			}
 			if (strpos($cur_field, '#subject#') !== false)
 				$cur_field = str_replace('#subject#', htmlspecialchars($body['subject']), $cur_field);
 			// Links
@@ -512,6 +518,12 @@ class com_mailer extends component {
 			foreach ($def['macros'] as $cur_name => $cur_desc) {
 				if (isset($macros[$cur_name]) && strpos($cur_field, "#$cur_name#") !== false)
 					$cur_field = str_replace("#$cur_name#", $macros[$cur_name], $cur_field);
+			}
+			foreach ((array) $template->replacements as $cur_string) {
+				if ($cur_string['macros'])
+					continue;
+				if (strpos($cur_field, $cur_string['search']) !== false)
+					$cur_field = str_replace($cur_string['search'], $cur_string['replace'], $cur_field);
 			}
 		}
 		unset($cur_field);

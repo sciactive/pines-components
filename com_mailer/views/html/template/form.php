@@ -18,6 +18,138 @@ $pines->com_pgrid->load();
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_mailer', 'template/save')); ?>">
 	<script type="text/javascript">
 		pines(function(){
+			// Strings
+			var strings = $("#p_muid_form [name=replacements]");
+			var strings_table = $("#p_muid_form .strings_table");
+			var string_dialog = $("#p_muid_form .string_dialog");
+			var cur_string = null;
+
+			strings_table.pgrid({
+				pgrid_paginate: false,
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents : [
+					{
+						type: 'button',
+						text: 'Add String',
+						extra_class: 'picon picon-edit-text-frame-update',
+						selection_optional: true,
+						click: function(){
+							cur_string = null;
+							string_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Edit String',
+						extra_class: 'picon picon-edit-rename',
+						double_click: true,
+						click: function(e, rows){
+							cur_string = rows;
+							string_dialog.find("[name=cur_string_search]").val(pines.unsafe(rows.pgrid_get_value(2)));
+							string_dialog.find("[name=cur_string_replace]").val(pines.unsafe(rows.pgrid_get_value(3)));
+							if (rows.pgrid_get_value(4) == "Yes")
+								string_dialog.find("[name=cur_string_macros]").attr("checked", true);
+							else
+								string_dialog.find("[name=cur_string_macros]").removeAttr("checked");
+							string_dialog.dialog('open');
+						}
+					},
+					{type: 'button', text: 'Move Up', extra_class: 'picon picon-arrow-up', click: function(e, row){
+						if (!row.prev().length)
+							return;
+						row.prev().pgrid_set_value(1, parseInt(row.prev().pgrid_get_value(1))+1);
+						row.pgrid_set_value(1, parseInt(row.pgrid_get_value(1))-1);
+						update_strings();
+					}},
+					{type: 'button', text: 'Move Down', extra_class: 'picon picon-arrow-down', click: function(e, row){
+						if (!row.next().length)
+							return;
+						row.next().pgrid_set_value(1, parseInt(row.next().pgrid_get_value(1))-1);
+						row.pgrid_set_value(1, parseInt(row.pgrid_get_value(1))+1);
+						update_strings();
+					}},
+					{type: 'separator'},
+					{
+						type: 'button',
+						text: 'Remove String',
+						extra_class: 'picon picon-edit-delete',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_strings();
+						}
+					}
+				],
+				pgrid_view_height: "300px"
+			});
+
+			// String Dialog
+			string_dialog.dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 500,
+				buttons: {
+					"Done": function(){
+						var cur_string_search = string_dialog.find("[name=cur_string_search]").val();
+						var cur_string_replace = string_dialog.find("[name=cur_string_replace]").val();
+						var cur_string_macros = string_dialog.find("[name=cur_string_macros]").is(":checked");
+						if (cur_string_search == "") {
+							alert("Please provide a string.");
+							return;
+						}
+						if (cur_string == null) {
+							// Is this a duplicate?
+							var dupe = false;
+							// Get the next index.
+							var index = 0;
+							strings_table.pgrid_get_all_rows().each(function(){
+								var cur_row = $(this);
+								if (parseInt(cur_row.pgrid_get_value(1)) == index)
+									index++;
+								if (dupe) return;
+								if (cur_row.pgrid_get_value(2) == cur_string_search && cur_row.pgrid_get_value(3) == cur_string_replace && cur_row.pgrid_get_value(4) == (cur_string_macros ? "Yes" : "No"))
+									dupe = true;
+							});
+							if (dupe) {
+								pines.notice('There is already a string just like this.');
+								return;
+							}
+							var new_string = [{
+								key: null,
+								values: [
+									pines.safe(index),
+									pines.safe(cur_string_search),
+									pines.safe(cur_string_replace),
+									(cur_string_macros ? "Yes" : "No")
+								]
+							}];
+							strings_table.pgrid_add(new_string);
+						} else {
+							cur_string.pgrid_set_value(2, pines.safe(cur_string_search));
+							cur_string.pgrid_set_value(3, pines.safe(cur_string_replace));
+							cur_string.pgrid_set_value(4, (cur_string_macros ? "Yes" : "No"));
+						}
+						$(this).dialog('close');
+					}
+				},
+				close: function(){
+					update_strings();
+				}
+			});
+
+			var update_strings = function(){
+				strings_table.pgrid_import_state({pgrid_sort_col: 1, pgrid_sort_ord: 'asc'});
+				strings_table.pgrid_get_all_rows().each(function(i){
+					$(this).pgrid_set_value(1, pines.safe(i));
+				});
+				string_dialog.find("[name=cur_string_search]").val("");
+				string_dialog.find("[name=cur_string_replace]").val("");
+				string_dialog.find("[name=cur_string_macros]").removeAttr("checked");
+				strings.val(JSON.stringify(strings_table.pgrid_get_all_rows().pgrid_export_rows()));
+			};
+
+			update_strings();
+
 			// Conditions
 			var conditions = $("#p_muid_form [name=conditions]");
 			var conditions_table = $("#p_muid_form .conditions_table");
@@ -124,6 +256,7 @@ $pines->com_pgrid->load();
 	</script>
 	<ul class="nav nav-tabs" style="clear: both;">
 		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
+		<li><a href="#p_muid_tab_replace" data-toggle="tab">Replace</a></li>
 		<li><a href="#p_muid_tab_document" data-toggle="tab">Document</a></li>
 		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
 	</ul>
@@ -290,6 +423,58 @@ $pines->com_pgrid->load();
 						<p>Also, the recipient info will only be available if the message is being sent to a registered user/customer.</p>
 					</div>
 				</div>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div class="tab-pane" id="p_muid_tab_replace">
+			<div class="pf-element pf-heading">
+				<h3>Search and Replace Strings</h3>
+				<p>These strings can be used to replace values in emails generated with this template.</p>
+			</div>
+			<div class="pf-element pf-full-width">
+				<table class="strings_table">
+					<thead>
+						<tr>
+							<th>Order</th>
+							<th>Search</th>
+							<th>Replace</th>
+							<th>Before Macros</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ((array) $this->entity->replacements as $key => $cur_string) { ?>
+						<tr>
+							<td><?php echo htmlspecialchars($key); ?></td>
+							<td><?php echo htmlspecialchars($cur_string['search']); ?></td>
+							<td><?php echo htmlspecialchars($cur_string['replace']); ?></td>
+							<td><?php echo $cur_string['macros'] ? 'Yes' : 'No'; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="replacements" />
+			</div>
+			<div class="string_dialog" title="Add a String" style="display: none;">
+				<div class="pf-form">
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Search For</span>
+							<textarea class="pf-field" name="cur_string_search" rows="3" cols="24"></textarea>
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Replace With</span>
+							<textarea class="pf-field" name="cur_string_replace" rows="3" cols="24"></textarea>
+						</label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Before Macros</span>
+							<span class="pf-note">You can replace the string either before or after macros have been processed.</span>
+							<input class="pf-field" type="checkbox" name="cur_string_macros" value="ON" /></label>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

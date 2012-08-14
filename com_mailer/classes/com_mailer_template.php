@@ -38,6 +38,7 @@ class com_mailer_template extends entity {
 		global $pines;
 		$this->enabled = true;
 		$this->conditions = array();
+		$this->replacements = array();
 		$full_location = htmlspecialchars($pines->config->full_location);
 		$this->content = <<<EOF
 <div style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; color: #3A3A3A;">

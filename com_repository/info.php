@@ -14,14 +14,14 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Package Repository',
 	'author' => 'SciActive',
-	'version' => '1.0.1beta',
+	'version' => '1.0.1beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Pines package repository',
 	'description' => 'Host a Pines repository of Slim packages. You can use the repository to distribute your components to other Pines users.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'user_manager',
+		'service' => 'user_manager&uploader',
 		'component' => 'com_slim&com_jquery&com_pgrid&com_pform',
 		'package' => 'com_repository-data',
 		'class' => 'Imagick',

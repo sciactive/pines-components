@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Upload a Package';
 
+$pines->uploader->load();
+
 // Find the max upload size.
 $upload_max = trim(ini_get('upload_max_filesize'));
 $post_max = ini_get('post_max_size');
@@ -48,9 +50,9 @@ $max = ($val1 < $val2) ? $upload_max : $post_max;
 		<p>Select the Slim archive to add to the repository.</p>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Upload Package File</span>
+		<label><span class="pf-label">Upload Package File(s)</span>
 			<span class="pf-note">Max Size: <?php echo htmlspecialchars($max); ?></span>
-			<input class="pf-field" type="file" name="package" /></label>
+			<input class="pf-field puploader puploader-temp puploader-multiple" type="text" name="package" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />

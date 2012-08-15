@@ -1,0 +1,162 @@
+/* Globals */
+.nosidegutters .container, .nosidegutters .container-fluid {
+	padding-left: 0;
+	padding-right: 0;
+}
+/* Bootstrap Min-height Fix */
+#page > .row-fluid,
+#page > .row-fluid > [class*="span"],
+#content_top_left,
+#content_top_right,
+#content_bottom_left,
+#content_bottom_right {
+	min-height: 0 !important;
+}
+/* Margins */
+#column_container {
+	padding-top: 8px;
+}
+#column_container .module {
+	margin: .4em 0 .6em;
+}
+/* Header */
+#header > .well {
+	padding: 0;
+}
+#nav .brand img {
+	margin: 0;
+	padding: 0;
+	border: none 0;
+	vertical-align: middle;
+	height: 20px;
+	width: auto;
+}
+#header .module {
+	float: left;
+	margin: 1em;
+}
+#header .module.right {
+	float: right;
+}
+#header .module .module_content, #footer .module .module_content {
+	font-weight: normal;
+}
+/* Breadcrumbs */
+#breadcrumbs .module {
+	padding: 0;
+}
+#breadcrumbs .breadcrumb {
+	margin: 0;
+}
+/* Footer */
+#footer {
+	border-left: 0 !important;
+	border-right: 0 !important;
+	border-top-width: 3px !important;
+	border-bottom-width: 3px !important;
+}
+#copyright {
+	text-align: center;
+	padding:10px;
+	margin:0;
+}
+/* Content */
+#column_container {
+	position: relative;
+}
+.module {
+	padding: 0;
+}
+.module.module_maximized {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: 0;
+	z-index: 1000;
+	overflow: auto;
+}
+.module .module_title .module_minimize, .module .module_title .module_maximize {
+	float: right;
+	margin-left: 2px;
+}
+.module .module_content {
+	padding: .4em 0;
+	overflow: visible;
+}
+/* Menus */
+#left ul.dropdown.dropdown-vertical, #right ul.dropdown.dropdown-vertical {
+	width: 100%;
+}
+
+/* Mobile CSS */
+@media (max-width: 720px){
+	#main_menu {
+		margin-left: 0;
+	}
+	/* Menus */
+	body ul.dropdown {
+		width: 100%;
+		float: none;
+	}
+	body ul.dropdown li {
+		float: none;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+	}
+	body ul.dropdown li a {
+		position: relative;
+		width: 80%;
+		padding: .7em 0;
+		line-height: 15px;
+	}
+	body ul.dropdown li:before {
+		content: "::";
+		line-height: 15px;
+		display: block;
+		float: right;
+		width: 15%;
+		background: #EEE;
+		color: black;
+		text-align: center;
+		padding: .7em 0;
+	}
+	body ul.dropdown a ul {
+		display: none;
+	}
+	body ul.dropdown li:hover > ul {
+		position: static;
+		min-width: inherit;
+		display: block;
+		visibility: visible;
+		z-index: 0;
+		padding: .4em;
+	}
+	/* Modules */
+	body .module, body .module .module_content {
+		padding: 0;
+		border-left: none 0;
+		border-right: none 0;
+	}
+	/* Pines Form */
+	body .pf-form div.pf-element.pf-full-width .pf-full-width {
+		padding-right: .2em; /* Keep padded inputs from pushing out of their box. */
+	}
+	body .pf-form div.pf-element .pf-label, .pf-form div.pf-element .pf-note {
+		float: none !important;
+		width: auto !important;
+		display: block !important;
+		margin-bottom: .1em !important;
+	}
+	body .pf-form div.pf-element .pf-group {
+		margin-left: 0 !important;
+		display: block;
+	}
+	body .pf-form div.pf-element .pf-field.pf-full-width {
+		margin-left: 0 !important;
+	}
+	body .pf-form div.pf-buttons {
+		padding-left: 0 !important;
+	}
+}

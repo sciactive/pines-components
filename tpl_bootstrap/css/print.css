@@ -1,0 +1,101 @@
+html, body {
+	height: auto !important;
+}
+body {
+	background: #fff !important;
+}
+input, select, textarea {
+	font-size:  100%;
+}
+pre {
+	margin: 0;
+	padding: .5em 0;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-left: none;
+	border-right: none;
+	background-color: inherit;
+}
+
+/* Print Fix Config */
+body,
+body.printfix #column_container,
+body.printfix #column_container > .container-fluid,
+body.printfix #column_container > .container-fluid > .row-fluid,
+body.printfix #column_container > .container-fluid > .row-fluid > div,
+body.printfix #content_container {
+	position: static !important;
+	float: none !important;
+	width: 100% !important;
+	height: auto !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 none !important;
+	overflow: visible !important;
+}
+body.printfix #top,
+body.printfix #header,
+body.printfix #main_menu,
+body.printfix #pre_content,
+body.printfix #post_content,
+body.printfix #footer,
+body.printfix #bottom,
+body.printfix #left,
+body.printfix #right {
+	display: none !important;
+}
+body.printheader #header,
+body.printheader #header > .container-fluid {
+	display: block !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+body.printheader #header {
+	margin: 0 0 1em !important;
+}
+body.printheader #page_title {
+	margin-left: 0!important;
+}
+
+/* Modules Fixes */
+.module {
+	margin: 0 0 1em !important;
+	padding: 0 !important;
+	border: none !important;
+}
+.module .module_title.ui-widget-header {
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	background-image: none;
+}
+.module .module_title, .module .module_content {
+    padding-left: 0;
+    padding-right: 0;
+}
+body.shadows .module.ui-widget-content {
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+}
+body.shadows .module_title.ui-widget-header {
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+}
+
+/* Titlebar Icons */
+.module_maximize, .module_minimize {
+	display: none !important;
+}
+/* Pines Notify */
+.ui-pnotify-history-container {
+	display: none !important;
+}
+html > body .ui-pnotify {
+	position: static !important; margin-bottom: 10px;
+}

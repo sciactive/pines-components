@@ -1,0 +1,29 @@
+<?php
+/**
+ * Template for a module.
+ *
+ * @package Templates\bootstrap
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+/* @var $pines pines */
+defined('P_RUN') or die('Direct access prohibited');
+?>
+<div class="module <?php echo htmlspecialchars(implode(' ', $this->classes)); ?>">
+	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
+	<div class="module_title page-header">
+		<button type="button" class="module_minimize btn btn-mini"><span class="icon-chevron-up"></span></button>
+		<?php if (!empty($this->title)) { ?>
+			<h3><?php echo $this->title;
+			if (!empty($this->note)) { ?>
+				<small><?php echo $this->note; ?></small>
+			<?php } ?></h3>
+		<?php } ?>
+	</div>
+	<?php } ?>
+	<div class="module_content">
+		<?php echo $this->content; ?>
+	</div>
+</div>

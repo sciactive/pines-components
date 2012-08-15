@@ -54,8 +54,8 @@ return array(
 		'description' => 'Use fancier styling modifications.',
 		'value' => array('printfix', 'printheader', 'shadows'),
 		'options' => array(
-			'Hide non-content positions.' => 'printfix',
-			'Show the page header when non-content positions are hidden.' => 'printheader',
+			'Hide non-content positions when printing.' => 'printfix',
+			'Show the page header when printing and non-content positions are hidden.' => 'printheader',
 			'Drop shadows.' => 'shadows',
 			'No gutters on the sides.' => 'nosidegutters',
 		),

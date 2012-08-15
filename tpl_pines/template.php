@@ -41,7 +41,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strp
 header('Content-Type: text/html');
 ?>
 <!DOCTYPE html>
-<html <?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
+<html>
 <head>
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>

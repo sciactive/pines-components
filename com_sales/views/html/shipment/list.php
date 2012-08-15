@@ -139,7 +139,7 @@ $pines->com_jstree->load();
 			<td><?php echo htmlspecialchars($sale->shipping_address->name); ?><?php if (isset($sale->customer->guid)) { ?> (<a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a>)<?php } ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($sale->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($sale->shipper->name); ?></a></td>
 			<td><?php echo htmlspecialchars(isset($sale->tracking_numbers) ? implode(', ', $sale->tracking_numbers) : ''); ?></td>
-			<td><?php echo isset($sale->eta) ? htmlspecialchars(format_date($sale->eta, 'date_sort')) : '' ; ?></td>
+			<td><?php echo $sale->eta ? htmlspecialchars(format_date($sale->eta, 'date_sort')) : '' ; ?></td>
 		</tr>
 	<?php } foreach((array) $this->shipments as $shipment) {
 		if ($shipment->ref->has_tag('sale'))

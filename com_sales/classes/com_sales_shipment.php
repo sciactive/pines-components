@@ -204,6 +204,71 @@ class com_sales_shipment extends entity {
 	}
 
 	/**
+	 * Load the remaining products from a transfer into this shipment.
+	 * @param com_sales_transfer $transfer The transfer.
+	 * @return bool True on success, false on failure.
+	 * @todo Finish this method.
+	 */
+	public function load_transfer($transfer) {
+		// Not functional yet.
+		return false;
+		if (isset($this->ref))
+			return false;
+
+		if ($transfer->status != 'invoiced' && $transfer->status != 'paid') {
+			pines_notice('Requested transfer has not been invoiced.');
+			return false;
+		}
+
+		$this->ref = $transfer;
+		$this->group = $transfer->group;
+
+		foreach ($transfer->products as $key => $cur_product) {
+			if (!in_array($cur_product['delivery'], array('shipped', 'warehouse')))
+				continue;
+			// Calculate included stock entries.
+			$stock_entries = $cur_product['stock_entities'];
+			$shipped_stock_entries = (array) $cur_product['shipped_entities'];
+			foreach ((array) $cur_product['returned_stock_entities'] as $cur_stock_entity) {
+				$i = $cur_stock_entity->array_search($stock_entries);
+				if (isset($i))
+					unset($stock_entries[$i]);
+				// If it's still in there, it was entered on the sale twice (fulfilled after returned once), so don't remove it from shipped.
+				if (!$cur_stock_entity->in_array($stock_entries)) {
+					$i = $cur_stock_entity->array_search($shipped_stock_entries);
+					if (isset($i))
+						unset($shipped_stock_entries[$i]);
+				}
+			}
+			// Is the product already shipped?
+			if (count($shipped_stock_entries) >= count($stock_entries))
+				continue;
+			$product_entry = array(
+				'ref' => $transfer,
+				'key' => $key,
+				'entity' => $cur_product['entity'],
+				'stock_entities' => array()
+			);
+			foreach ($stock_entries as $cur_stock) {
+				if ($cur_stock->in_array($shipped_stock_entries))
+					continue;
+				$product_entry['stock_entities'][] = $cur_stock;
+			}
+			if (!$product_entry['stock_entities'])
+				continue;
+			$this->products[] = $product_entry;
+		}
+
+		if (!$this->products) {
+			unset($this->ref);
+			return false;
+		}
+
+		$this->shipping_address = $transfer->shipping_address;
+		return true;
+	}
+
+	/**
 	 * Print a form to edit the shipment.
 	 * @return module The form's module.
 	 */

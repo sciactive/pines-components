@@ -73,6 +73,13 @@ $pines->icons->load();
 	<script type="text/javascript">
 		function p_muid_load_threads() {
 			var thread_box = $("#p_muid_current_threads");
+			thread_box.add_item = function(item){
+				<?php if ($pines->config->com_notes->editor_sort_order == 'asc') { ?>
+				return thread_box.append(item);
+				<?php } else { ?>
+				return thread_box.prepend(item);
+				<?php } ?>
+			};
 			// Load current threads.
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_notes', 'thread/get')); ?>,
@@ -99,16 +106,16 @@ $pines->icons->load();
 						// Show only the 5 latest modified threads.
 						threads = threads.slice(-5);
 						// A link to show all the threads.
-						thread_box.append($("<div class=\"show_more\"></div>").append($("<a href=\"javascript:void(0);\">... Show all threads.</a>").click(function(){
+						thread_box.add_item($('<div class="show_more"></div>').append($('<a href="javascript:void(0);">&hellip; Show all threads.</a>').click(function(){
 							thread_box.empty();
 							$.each(data, function(i, thread){
-								thread_box.append(p_muid_format_thread(thread));
+								thread_box.add_item(p_muid_format_thread(thread));
 							});
 							thread_box.find("textarea").change();
 						})));
 					}
 					$.each(threads, function(i, thread){
-						thread_box.append(p_muid_format_thread(thread));
+						thread_box.add_item(p_muid_format_thread(thread));
 					});
 					thread_box.find("textarea").change();
 				}
@@ -116,19 +123,19 @@ $pines->icons->load();
 		}
 
 		function p_muid_format_thread(thread) {
-			var html = $("<div class=\"thread ui-widget-content\"></div>").data("thread", thread);
-			html.append("<div class=\"ui-widget-header\"><div class=\"privacy\"><i class=\""+(thread.privacy == "everyone" ? "icon-globe" : (thread.privacy == "my-group" ? "icon-lock" : "icon-user"))+"\" title=\""+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+"\"></i></div>\n\
-			<div class=\"date\">"+pines.safe(thread.date)+"</div>\n\
-			<div class=\"user\">"+pines.safe(thread.user)+"</div></div>");
-			var note_div = $("<div class=\"notes\"></div>");
-			var notes = thread.notes;
+			var html = $('<div class="thread ui-widget-content"></div>').data("thread", thread);
+			html.append('<div class="ui-widget-header"><div class="privacy"><i class="'+(thread.privacy == "everyone" ? "icon-globe" : (thread.privacy == "my-group" ? "icon-lock" : "icon-user"))+'" title="'+(thread.privacy == "everyone" ? "This thread is viewable to everyone." : (thread.privacy == "my-group" ? "This thread is viewable to the author's group." : "This thread is only viewable to the author."))+'"></i></div>\n\
+			<div class="date">'+pines.safe(thread.date)+'</div>\n\
+			<div class="user">'+pines.safe(thread.user)+'</div></div>');
+			var note_div = $('<div class="notes"></div>'),
+				notes = thread.notes;
 			if (notes.length > 4) {
 				// Show the first comment.
 				note_div.append(p_muid_format_note(notes[0]));
 				// Then the last two after the link.
 				notes = notes.slice(-2);
 				// A link to show all the notes.
-				note_div.append($("<div class=\"show_more\"></div>").append($("<a href=\"javascript:void(0);\">... Show entire thread.</a>").click(function(){
+				note_div.append($('<div class="show_more"></div>').append($('<a href="javascript:void(0);">&hellip; Show entire thread.</a>').click(function(){
 					note_div.empty();
 					$.each(thread.notes, function(i, note){
 						note_div.append(p_muid_format_note(note));
@@ -138,14 +145,35 @@ $pines->icons->load();
 			$.each(notes, function(i, note){
 				note_div.append(p_muid_format_note(note));
 			});
-			html.append(note_div).append($("<div class=\"reply-box\"><textarea class=\"ui-widget-content\" rows=\"1\" cols=\"12\" style=\"font-style: italic;\">Reply</textarea></div>"))
+			html.append(note_div).append('<div class="reply-box"><textarea class="ui-widget-content" rows="1" cols="12" style="font-style: italic;">Reply</textarea></div>')
 			return html;
 		}
 
 		function p_muid_format_note(note) {
-			var html = $("<div class=\"note\"></div>");
-			html.append("<div class=\"note-text\">"+pines.safe(note.text).replace(/\n/g, "<br />")+"</div>\n\
-			<div class=\"footer\">- <strong>"+pines.safe(note.user)+"</strong> on <span title=\""+pines.safe(note.time)+"\">"+pines.safe(note.date)+"</span></div>");
+			var html = $('<div class="note"></div>'),
+				text = pines.safe(note.text).replace(/\n/g, '<br />')
+				// Match URLs with a protocol. (http://example.com/wow)
+				.replace(
+					/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%]))(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi,
+					'<a href="$1" target="_blank">$1<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match things that look like URLs. (example.co.uk/wow) (No lookbehind support. Grr.)
+				.replace(
+					/(^|[^\/\w.@])\b((?:www\d{0,3}[.]|[a-z0-9.\-]{2,}[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi,
+					'$1<a href="http://$2" target="_blank">$2<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match simple domain names. (example.com) (I didn't use the above one, because things might look like TLDs, so I used only common ones for this.)
+				.replace(
+					/(^|[^\/\w.@])\b([a-z0-9.\-]{2,}[.](com|net|org|edu|gov|mil|info|biz))\b(?!\/)/gi,
+					'$1<a href="http://$2" target="_blank">$2<i class="icon-external-link" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				)
+				// Match email addresses. (me@example.com)
+				.replace(
+					/\b([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})\b/gi,
+					'<a href="mailto://$1" target="_blank">$1<i class="icon-envelope" style="text-decoration: none !important; font-size: 0.85em; margin-left: 3px;"></i></a>'
+				);
+			html.append('<div class="note-text">'+text+'</div>\n\
+			<div class="footer">- <strong>'+pines.safe(note.user)+'</strong> on <span title="'+pines.safe(note.time)+'">'+pines.safe(note.date)+'</span></div>');
 			return html;
 		}
 
@@ -166,8 +194,8 @@ $pines->icons->load();
 				if (e.keyCode != 13 || e.shiftKey)
 					return;
 				// Submit a reply.
-				var textarea = $(this);
-				var thread = textarea.closest(".thread").data("thread");
+				var textarea = $(this),
+					thread = textarea.closest(".thread").data("thread");
 				if (!thread) {
 					alert("Thread location is invalid.");
 					return;
@@ -234,8 +262,8 @@ $pines->icons->load();
 			var privacy_button = $("#p_muid_new_thread_privacy").data("thread-privacy", "everyone");
 			// Save the new thread.
 			var submit_button = $("#p_muid_new_thread_submit").click(function(){
-				var text = new_thread.val();
-				var privacy = privacy_button.data("thread-privacy");
+				var text = new_thread.val(),
+					privacy = privacy_button.data("thread-privacy");
 				if (text.match(/^\s*$/) || new_thread.css("font-style") == "italic") {
 					alert("Please enter a note first.");
 					return;

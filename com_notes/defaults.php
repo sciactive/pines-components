@@ -19,6 +19,17 @@ return array(
 		'value' => 'right',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'editor_sort_order',
+		'cname' => 'Editor Sort Order',
+		'description' => 'The sort order of the threads in the editor.',
+		'value' => 'desc',
+		'options' => array(
+			'Oldest first. (Ascending)' => 'asc',
+			'Newest first. (Descending)' => 'desc'
+		),
+		'peruser' => true,
+	),
 );
 
 ?>

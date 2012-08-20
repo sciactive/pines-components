@@ -63,11 +63,12 @@ pines(function(){$(".puploader").each(function(){
 					content += '<div style="margin-bottom: .5em;">Type: '+pines.safe(file.mime)+'</div><div style="margin-bottom: .5em;">Path: <tt>'+pines.safe(file.path)+'</tt></div><div>URL: <tt>'+pines.safe(file.url)+'</tt></div>';
 					value = file.url;
 				}
-				pfile.val(value).change().attr({
+				pfile.val(value).attr({
 					"data-original-title": title,
 					"data-content": content
 				}).popover({placement: "bottom"});
 				pfile.elfdlg.dialog("close");
+				pfile.change();
 			}
 		}).elfinder('instance');
 		pfile.elfdlg.css("overflow", "visible").dialog({
@@ -92,22 +93,26 @@ pines(function(){$(".puploader").each(function(){
 				.find(".elfinder-dialog").css("position", "static")
 				.find(".ui-dialog-titlebar-close").hide().end().end()
 				.dialog("option", "position", "center");
-			}).bind("open."+pfile.elf.namespace, function(e){
+			}).one("open."+pfile.elf.namespace, function(e){
+				// Click the file upload.
 				pfile.elfdlg.find(".elfinder-toolbar .elfinder-button input[type=file]").click();
-			}).bind("select."+pfile.elf.namespace, function(e){
+			}).one("select."+pfile.elf.namespace, function(e){
 				var i = setInterval(function(){
 					if (!pfile.elf.selected().length)
 						return;
 					clearInterval(i);
 					pfile.elf.exec("getfile").fail(function() {
-						pfile.elf.exec("open");
+						pfile.elfdlg.dialog("close");
 					});
 				}, 10);
 			});
 		}
 		pfile.elfdlg.dialog("open");
 	};
-	pfile.focus(show_finder).focus(function(){pfile.blur()});
+	pfile.focus(show_finder).focus(function(){pfile.blur()}).change(function(){
+		if (pfile.val() == '')
+			pfile.attr({"data-original-title": 'File Upload', "data-content": 'Click to upload files.'});
+	});
 	$('<button class="btn" type="button" style="margin-left: .5em">Browse&hellip;</button>')
 	.click(function(){pfile.focus()})
 	.insertAfter(pfile);

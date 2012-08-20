@@ -1064,10 +1064,6 @@ class com_sales extends component {
 	 */
 	public function process_product_image(&$image, $type = 'prod_img', $options = array()) {
 		global $pines;
-		if (isset($options['h']) && isset($options['w']) && isset($options['x']) && isset($options['y'])) {
-			$image->cropImage((int)$options['w'], (int)$options['h'], (int)$options['x'], (int)$options['y']);
-			$image->setImagePage((int)$options['w'], (int)$options['h'], 0, 0);
-		}
 		$image->setImageFormat('png');
 		switch ($type) {
 			case 'thumbnail':
@@ -1131,6 +1127,11 @@ class com_sales extends component {
 				$height = $image->getImageHeight();
 				if ($width > $pines->config->com_sales->product_images_max_width)
 					$image->thumbnailImage($pines->config->com_sales->product_images_max_width, $height, true);
+				// Process any additional crop options.
+				if (isset($options['h']) && isset($options['w']) && isset($options['x']) && isset($options['y'])) {
+					$image->cropImage((int)$options['w'], (int)$options['h'], (int)$options['x'], (int)$options['y']);
+					$image->setImagePage((int)$options['w'], (int)$options['h'], 0, 0);
+				}
 				// We're done with regular product images now.
 				if ($type != 'prod_tmb')
 					break;

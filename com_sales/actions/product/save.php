@@ -39,17 +39,178 @@ if (!isset($product->manufacturer->guid))
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Images
+// First remember all images, so we can check if they got removed when we're done.
+$prev_images = array();
+foreach ((array) $product->images as $cur_image) {
+	if (file_exists($cur_image['file']))
+		$prev_images[] = $cur_image['file'];
+	if (file_exists($cur_image['thumbnail']))
+		$prev_images[] = $cur_image['thumbnail'];
+}
+if (file_exists($product->thumbnail))
+	$prev_images[] = $product->thumbnail;
+
 $product->images = (array) json_decode($_REQUEST['images'], true);
+if (!isset($product->images_dir))
+	$product->images_dir = uniqid();
+$dir = $pines->config->upload_location.$pines->config->com_sales->product_images_directory.$product->images_dir.'/';
 foreach ($product->images as $key => &$cur_image) {
-	if ($cur_image['alt'] == 'Click to edit description...')
-		$cur_image['alt'] = '';
-	if (!$pines->uploader->check($cur_image['file']))
+	if ($cur_image['source'] == 'temp') {
+		$tmp_filename = uniqid();
+		// Save the main image.
+		$file = $pines->uploader->temp($cur_image['file']);
+		if ($file) {
+			if (!file_exists($file)) {
+				unset($product->images[$key]);
+				pines_error("Error reading image: {$cur_image['file']}");
+				continue;
+			}
+
+			$image = new Imagick($file);
+			if (!$image) {
+				unset($product->images[$key]);
+				pines_error("Error opening image: {$cur_image['file']}");
+				continue;
+			}
+
+			$pines->com_sales->process_product_image($image, 'prod_img', $cur_image['options']);
+
+			if (!file_exists($dir)) {
+				if (!mkdir($dir, 0755, true)) {
+					unset($product->images[$key]);
+					pines_error("Error making image directory for product {$product->name}: $dir.");
+					continue;
+				}
+			}
+
+			if (!$image->writeImage("{$dir}{$tmp_filename}.png")) {
+				unset($product->images[$key]);
+				pines_error("Error saving image: {$cur_image['file']}");
+				continue;
+			}
+			$cur_image['file'] = "{$dir}{$tmp_filename}.png";
+		}
+		// Now save the thumbnail copy.
+		$file = $pines->uploader->temp($cur_image['thumbnail']);
+		if ($file) {
+			if (!file_exists($file)) {
+				unset($product->images[$key]);
+				pines_error("Error reading image: {$cur_image['thumbnail']}");
+				continue;
+			}
+
+			$image = new Imagick($file);
+			if (!$image) {
+				unset($product->images[$key]);
+				pines_error("Error opening image: {$cur_image['thumbnail']}");
+				continue;
+			}
+
+			$pines->com_sales->process_product_image($image, 'prod_tmb', $cur_image['options']);
+
+			if (!file_exists($dir)) {
+				if (!mkdir($dir, 0755, true)) {
+					unset($product->images[$key]);
+					pines_error("Error making image directory for product {$product->name}: $dir.");
+					continue;
+				}
+			}
+
+			if (!$image->writeImage("{$dir}{$tmp_filename}_t.png")) {
+				unset($product->images[$key]);
+				pines_error("Error saving image: {$cur_image['file']}");
+				continue;
+			}
+			$cur_image['thumbnail'] = "{$dir}{$tmp_filename}_t.png";
+		}
+	} else {
+		$cur_image['file'] == clean_filename($cur_image['file']);
+		$cur_image['thumbnail'] == clean_filename($cur_image['thumbnail']);
+		$do_thumbnail = true;
+		// Only process files if the options are set.
+		if (is_numeric($cur_image['options']['x']) && is_numeric($cur_image['options']['y']) && is_numeric($cur_image['options']['w']) && is_numeric($cur_image['options']['h'])) {
+			// First make the thumbnail image.
+			$image = new Imagick($cur_image['file']);
+			if (!$image) {
+				pines_error("Error opening image for thumbnail: {$cur_image['file']}");
+				continue;
+			}
+
+			$pines->com_sales->process_product_image($image, 'prod_tmb', $cur_image['options']);
+			if (!$image->writeImage($cur_image['thumbnail']))
+				pines_error("Error saving thumbnail: {$cur_image['thumbnail']}");
+
+			// Now the main image.
+			$image = new Imagick($cur_image['file']);
+			if (!$image) {
+				pines_error("Error opening image: {$cur_image['file']}");
+				continue;
+			}
+
+			$pines->com_sales->process_product_image($image, 'prod_img', $cur_image['options']);
+			if (!$image->writeImage($cur_image['file'])) {
+				pines_error("Error saving image: {$cur_image['file']}");
+				continue;
+			}
+			// Don't redo the thumbnail cause the main image was cropped.
+			$do_thumbnail = false;
+		}
+		// Changing the thumbnail method must remake the thumbnail from the main image.
+		if ($do_thumbnail && $cur_image['options']['tmb_method']) {
+			$image = new Imagick($cur_image['file']);
+			if (!$image) {
+				pines_error("Error opening image for thumbnail: {$cur_image['file']}");
+				continue;
+			}
+
+			$pines->com_sales->process_product_image($image, 'prod_tmb', $cur_image['options']);
+			if (!$image->writeImage($cur_image['thumbnail'])) {
+				pines_error("Error saving thumbnail: {$cur_image['thumbnail']}");
+				continue;
+			}
+		}
+	}
+	if (!file_exists($cur_image['file']) && !file_exists($cur_image['thumbnail']))
 		unset($product->images[$key]);
 }
+unset($cur_image);
 $product->images = array_values($product->images);
 $product->thumbnail = $_REQUEST['thumbnail'];
-if (!$pines->uploader->check($product->thumbnail))
-	$product->thumbnail = null;
+$file = $pines->uploader->temp($product->thumbnail);
+while (true) {
+	if ($file) {
+		if (!file_exists($file)) {
+			unset($product->thumbnail);
+			pines_error("Error reading image: {$product->thumbnail}");
+			break;
+		}
+
+		$image = new Imagick($file);
+		if (!$image) {
+			unset($product->thumbnail);
+			pines_error("Error opening image: {$product->thumbnail}");
+			break;
+		}
+
+		$pines->com_sales->process_product_image($image, 'thumbnail');
+
+		if (!file_exists($dir)) {
+			if (!mkdir($dir, 0755, true)) {
+				unset($product->thumbnail);
+				pines_error("Error making image directory for product {$product->name}: $dir.");
+				break;
+			}
+		}
+
+		if (!$image->writeImage("{$dir}thumb.png")) {
+			unset($product->thumbnail);
+			pines_error("Error saving image: {$product->thumbnail}");
+			continue;
+		}
+		$product->thumbnail = "{$dir}thumb.png";
+	}
+	break;
+}
 
 // Purchasing
 $product->stock_type = $_REQUEST['stock_type'];
@@ -239,6 +400,25 @@ if ($product->save()) {
 		}
 	}
 	unset($cur_cat);
+	// Go through and delete any old product images that are no longer used.
+	foreach ($prev_images as $cur_file) {
+		if ($cur_file == $product->thumbnail)
+			continue;
+		foreach ($product->images as $cur_image) {
+			if ($cur_file == $cur_image['file'] || $cur_file == $cur_image['thumbnail'])
+				continue 2;
+		}
+		// This image is not used anymore, so delete it.
+		if (!unlink($cur_file)) {
+			pines_error("Can't delete old product image: $cur_file");
+			continue;
+		}
+		// Now check if the directory is empty. If it is, remove it too.
+		$cur_dir = dirname($cur_file);
+		$files = array_diff(@scandir($cur_dir), array('.', '..'));
+		if (!$files && !rmdir($cur_dir))
+			pines_error("Can't delete empty product image directory: $cur_dir");
+	}
 } else {
 	pines_error('Error saving product. Do you have permission?');
 }

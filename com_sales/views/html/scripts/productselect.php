@@ -12,6 +12,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_sales/includes/jquery.productselect.js");
-	pines.com_sales_autoproduct_url = <?php echo json_encode(pines_url('com_sales', 'product/autocomplete')); ?>;
+pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_sales/includes/jquery.productselect.js");
+pines.com_sales_autoproduct_url = <?php echo json_encode(pines_url('com_sales', 'product/autocomplete')); ?>;
 </script>

@@ -22,7 +22,8 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor&uploader',
-		'component' => 'com_barcode&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_ptags&com_jstree&com_pform'
+		'component' => 'com_barcode&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_ptags&com_jstree&com_pform',
+		'class' => 'Imagick'
 	),
 	'recommend' => array(
 		'component' => 'com_customer&com_hrm'

@@ -20,6 +20,12 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_sales extends component {
 	/**
+	 * Whether the Jcrop JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded_jcrop
+	 */
+	private $js_loaded_jcrop = false;
+	/**
 	 * Whether the product selector JavaScript has been loaded.
 	 * @access private
 	 * @var bool $js_loaded_product
@@ -286,7 +292,6 @@ class com_sales extends component {
 	 * @return module The notification's module.
 	 */
 	public function inform($title, $header, $note, $link = null) {
-		global $pines;
 		$module = new module('com_sales', 'show_note', 'right');
 		$module->title = $title;
 		$module->header = $header;
@@ -849,13 +854,26 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Load Jcrop.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	public function load_jcrop() {
+		if (!$this->js_loaded_jcrop) {
+			$module = new module('com_sales', 'scripts/jcrop', 'head');
+			$module->render();
+			$this->js_loaded_jcrop = true;
+		}
+	}
+
+	/**
 	 * Load the product selector.
 	 *
 	 * This will place the required scripts into the document's head section.
 	 */
-	function load_product_select() {
+	public function load_product_select() {
 		if (!$this->js_loaded_product) {
-			$module = new module('com_sales', 'product/select', 'head');
+			$module = new module('com_sales', 'scripts/product_select', 'head');
 			$module->render();
 			$this->js_loaded_product = true;
 		}
@@ -1028,6 +1046,133 @@ class com_sales extends component {
 		$module->show_all = gatekeeper('com_sales/totalothersales');
 
 		return $module;
+	}
+
+	/**
+	 * Process a product image.
+	 * 
+	 * Type can be:
+	 * - prod_img - A regular product image.
+	 * - prod_tmb - A regular product image thumbnail.
+	 * - thumbnail - The main product thumbnail.
+	 * 
+	 * This method alters the image passed to it.
+	 * 
+	 * @param Imagick &$image An Imagick image.
+	 * @param string $type The type of processing to perform.
+	 * @param array $options Options for cropping and thumbnail method.
+	 */
+	public function process_product_image(&$image, $type = 'prod_img', $options = array()) {
+		global $pines;
+		if (isset($options['h']) && isset($options['w']) && isset($options['x']) && isset($options['y'])) {
+			$image->cropImage((int)$options['w'], (int)$options['h'], (int)$options['x'], (int)$options['y']);
+			$image->setImagePage((int)$options['w'], (int)$options['h'], 0, 0);
+		}
+		$image->setImageFormat('png');
+		switch ($type) {
+			case 'thumbnail':
+				// Fit the image into the thumbnail size.
+				$image->thumbnailImage($pines->config->com_sales->product_thumbnail_width, $pines->config->com_sales->product_thumbnail_height, true);
+
+				// Create a transparent canvas.
+				$canvas = clone $image;
+				$canvas->newImage($pines->config->com_sales->product_thumbnail_width, $pines->config->com_sales->product_thumbnail_height, 'none', 'png');
+
+				// Get the image dimensions.
+				$width = $image->getImageWidth();
+				$height = $image->getImageHeight();
+
+				// Calculate position of the thumbnail on the canvas.
+				$x = ($pines->config->com_sales->product_thumbnail_width - $width) / 2;
+				$y = ($pines->config->com_sales->product_thumbnail_height - $height) / 2;
+
+				// Composite the image.
+				$canvas->compositeImage($image, imagick::COMPOSITE_OVER, $x, $y);
+
+				// Set the new image.
+				$image = $canvas;
+				break;
+			case 'prod_img':
+			case 'prod_tmb':
+			default:
+				if ($pines->config->com_sales->product_images_crop) {
+					// Figure out how much we need to crop by blurring it first.
+					$copy = clone $image;
+					// Adjust this for blur amount.
+					$copy->blurImage(8, 3);
+					// Adjust this for crop sensitivity.
+					$copy->trimImage($pines->config->com_sales->product_images_crop_sensitivity);
+					// Now that Imagick cropped a blurred copy, we can find where it should be cropped.
+					$page = $copy->getImagePage();
+					$width = $copy->getImageWidth();
+					$height = $copy->getImageHeight();
+					$x = $page['x'];
+					$y = $page['y'];
+					// Add a little padding to grab any edges we may have cut off.
+					$pad_x = ceil($width * $pad);
+					$pad_y = ceil($height * $pad);
+					$width += ($pad_x * 2);
+					$height += ($pad_y * 2);
+					$x -= $pad_x;
+					if ($x < 0) {
+						$width += $x;
+						$x = 0;
+					}
+					$y -= $pad_y;
+					if ($y < 0) {
+						$height += $y;
+						$y = 0;
+					}
+
+					// Now do the actual trimming, sizing, and rotating.
+					$image->cropImage($width, $height, $x, $y);
+				}
+				$width = $image->getImageWidth();
+				$height = $image->getImageHeight();
+				if ($width > $pines->config->com_sales->product_images_max_width)
+					$image->thumbnailImage($pines->config->com_sales->product_images_max_width, $height, true);
+				// We're done with regular product images now.
+				if ($type != 'prod_tmb')
+					break;
+				// Now make a product image thumbnail. Start by stripping metadata.
+				$image->stripImage();
+				// Thumbnail sizing method.
+				$tmb_method = $pines->config->com_sales->product_images_tmb_style;
+				if (isset($options['tmb_method']))
+					$tmb_method = $options['tmb_method'];
+				if ($tmb_method == 'crop') {
+					// Scale the image near the thumbnail size.
+					$width = $image->getImageWidth();
+					$height = $image->getImageHeight();
+					$fit_by_width = ($pines->config->com_sales->product_images_tmb_width / $width) > ($pines->config->com_sales->product_images_tmb_height / $height);
+					if ($fit_by_width)
+						$image->thumbnailImage($pines->config->com_sales->product_images_tmb_width, 0, false);
+					else
+						$image->thumbnailImage(0, $pines->config->com_sales->product_images_tmb_height, false);
+				} else
+					$image->thumbnailImage($pines->config->com_sales->product_images_tmb_width, $pines->config->com_sales->product_images_tmb_height, true);
+
+				// Now we need to overlay it into an image the right size,
+				// effectively cropping the extra or padding with transparency.
+				// Create a transparent canvas.
+				$canvas = clone $image;
+				$canvas->newImage($pines->config->com_sales->product_images_tmb_width, $pines->config->com_sales->product_images_tmb_height, 'none', 'png');
+
+				// Get the image dimensions.
+				$width = $image->getImageWidth();
+				$height = $image->getImageHeight();
+
+				// Calculate position of the thumbnail on the canvas.
+				$x = ($pines->config->com_sales->product_images_tmb_width - $width) / 2;
+				$y = ($pines->config->com_sales->product_images_tmb_height - $height) / 2;
+
+				// Composite the image.
+				$canvas->compositeImage($image, imagick::COMPOSITE_OVER, $x, $y);
+
+				// Set the new image.
+				$image = $canvas;
+				break;
+		}
 	}
 
 	/**

@@ -16,36 +16,8 @@ $pines->editor->load();
 $pines->uploader->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
+$pines->com_sales->load_jcrop();
 ?>
-<style type="text/css" >
-	#p_muid_sortable {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-	}
-	#p_muid_sortable li {
-		margin: 0.1em;
-		padding: 5px;
-		float: left;
-		width: 120px;
-		min-height: 120px;
-		text-align: center;
-		background-image: none;
-	}
-	#p_muid_sortable img {
-		width: 110px;
-		height: auto;
-		max-height: 110px;
-		vertical-align: middle;
-		margin: 0;
-		padding: 0;
-	}
-	#p_muid_sortable p, #p_muid_sortable textarea {
-		text-align: left;
-		margin: .4em 0 0;
-		padding: 0;
-	}
-</style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'product/save')); ?>">
 	<script type="text/javascript">
 		pines(function(){
@@ -755,69 +727,96 @@ $pines->com_ptags->load();
 		</div>
 		<?php } ?>
 		<div class="tab-pane" id="p_muid_tab_images">
+			<style type="text/css" scoped="scoped">
+				#p_muid_sortable {
+					list-style-type: none;
+					margin: 0;
+					padding: 0;
+				}
+				#p_muid_sortable li {
+					margin: 0.1em;
+					padding: 5px;
+					float: left;
+					width: 120px;
+					min-height: 120px;
+					text-align: center;
+					background-image: none;
+				}
+				#p_muid_sortable img {
+					width: 110px;
+					height: auto;
+					max-height: 110px;
+					vertical-align: middle;
+					margin: 0;
+					padding: 0;
+				}
+				#p_muid_sortable p, #p_muid_sortable textarea {
+					text-align: left;
+					margin: .4em 0 0;
+					padding: 0;
+					border: 0 none;
+					box-shadow: none;
+					-moz-box-shadow: none;
+					-webkit-box-shadow: none;
+					outline: none;
+					font-size: 1em;
+					line-height: 1;
+					white-space: pre-wrap;
+					height: 3em;
+					overflow: auto;
+					resize: none;
+				}
+			</style>
 			<script type="text/javascript">
 				pines(function(){
-					var last_image = "";
-
+					var tmp_url = <?php echo json_encode(pines_url('com_sales', 'product/temp_image', array('image' => '__image__', 'type' => '__type__', 'source' => '__source__', 'options' => '__options__'))); ?>;
 					var update_images = function(){
 						var images = [];
 						$("li", "#p_muid_sortable").each(function(){
-							var cur_entry = $(this);
-							images.push({
-								"file": cur_entry.find("img").attr("src"),
-								"alt": cur_entry.find("p").html()
-							});
+							var cur_entry = $(this),
+								alt = cur_entry.find("p").html(),
+								options = cur_entry.attr("data-options");
+							if (alt == 'Click to edit description...')
+								alt = '';
+							var struct = {
+								"file": cur_entry.attr("data-image"),
+								"thumbnail": cur_entry.attr("data-thumbnail"),
+								"source": cur_entry.attr("data-source"),
+								"alt": alt
+							};
+							if (options && JSON.parse(options))
+								struct.options = JSON.parse(options);
+							images.push(struct);
 						});
 						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
 					};
 					update_images();
-					
+
 					var add_image = function(image){
-						last_image = image;
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+pines.safe(image.replace(/.*\//, ''))+"\" src=\""+pines.safe(image)+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
-						update_images();
-					};
-					var auto_add = function(){
-						if (last_image == "")
-							return;
-						var last_file = last_image.replace(/.*\//, "");
-						var last_number = parseInt(last_file.match(/\d+/));
-						if (isNaN(last_number)) {
-							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
-							return;
-						}
-						var new_number = last_number + 1;
-						var new_file = last_file.replace(/\d+/, new_number);
-						var new_image = last_image.replace(last_file, new_file);
-						if (last_image == new_image) {
-							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
-							return;
-						}
-						$.ajax({
-							type: "GET",
-							url: new_image,
-							error: function(){
-								alert("No more files found.");
-							},
-							success: function(){
-								add_image(new_image);
-								auto_add();
-							}
-						});
+						$('<li class="thumbnail" data-source="temp"><a href="'+pines.safe(image.img_url)+'" target="_blank"><img alt="'+pines.safe(image.img.replace(/.*\//, ''))+'" src="'+pines.safe(image.tmb_url)+'" /></a><p>Click to edit description...</p></li>')
+						.attr("data-image", image.img).attr("data-thumbnail", image.tmb).appendTo("#p_muid_sortable");
 					};
 
 					$("#p_muid_image_upload").change(function(){
-						add_image($(this).val());
-						$(this).val("");
+						var input = $(this);
+						if (input.val() == "")
+							return;
+						var images = input.val().split('//');
+						$.each(images, function(i, v){
+							add_image({
+								"img": v,
+								"img_url": tmp_url.replace('__image__', escape(v)).replace('__type__', 'prod_img').replace('__source__', 'temp').replace('__options__', ''),
+								"tmb": v,
+								"tmb_url": tmp_url.replace('__image__', escape(v)).replace('__type__', 'prod_tmb').replace('__source__', 'temp').replace('__options__', '')
+							});
+						});
+						input.val("").change();
+						update_images();
 					});
-					$("#p_muid_auto_add").click(function(){
-						auto_add();
-					});
-					$("#p_muid_sortable")
-					.delegate("li p", "click", function(){
-						var cur_alt = $(this);
-						var desc = cur_alt.html();
-						var ta = $("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\">"+pines.safe(desc)+"</textarea>")
+					$("#p_muid_sortable").on("click", "li p", function(){
+						var cur_alt = $(this),
+							desc = cur_alt.html(),
+							ta = $('<textarea cols="4" rows="3" style="width: 100%">'+pines.safe(desc)+'</textarea>')
 						.insertAfter(cur_alt)
 						.focusin(function(){
 							$(this).focusout(function(){
@@ -829,13 +828,80 @@ $pines->com_ptags->load();
 						setTimeout(function(){
 							ta.focus().select();
 						}, 1);
-					})
-					.sortable({
+					}).on("click", "li a", function(e){
+						// Simple image editing...
+						var link = $(this),
+							li = link.closest("li"),
+							cur_href = link.attr("href"),
+							cur_source = li.attr("data-source"),
+							cur_img = li.attr("data-image"),
+							options = {};
+						if (li.attr("data-options") && JSON.parse(li.attr("data-options")))
+							options = JSON.parse(li.attr("data-options"));
+						var dialog = $('<div title="Crop Image and Thumbnail">You can crop the image to a smaller size:</div>').dialog({
+							bgiframe: true,
+							autoOpen: false,
+							modal: true,
+							width: 800,
+							position: "top",
+							buttons: {
+								"Save": function(){
+									li.attr("data-options", JSON.stringify(options));
+									$(this).dialog('close');
+									li.find("img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape(JSON.stringify(options))));
+									update_images();
+								},
+								"Cancel": function(){
+									$(this).dialog('close');
+								}
+							},
+							close: function(){
+								$(this).dialog('destroy').remove();
+							}
+						});
+						var canvas = $('<div class="well" style="overflow: auto; text-align: center;"><div style="display: inline-block;" class="thumbnail"></div></div>').appendTo(dialog);
+						var cropper = $('<img />', {"src": cur_href}).appendTo(canvas.children()).Jcrop({
+							onSelect: function(c){
+								thumbnails.find("a[data-method=crop] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape(JSON.stringify($.extend({}, c, {"tmb_method":"crop"})))))
+								.end().find("a[data-method=fit] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape(JSON.stringify($.extend({}, c, {"tmb_method":"fit"})))));
+								$.extend(options, c);
+							},
+							onRelease: function(){
+								thumbnails.find("a[data-method=crop] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape('{"tmb_method":"crop"}')))
+								.end().find("a[data-method=fit] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape('{"tmb_method":"fit"}')));
+								delete options.x; delete options.y; delete options.x2; delete options.y2; delete options.w; delete options.h;
+							}
+						});
+
+						var thumbnails = $('<div>You can choose the best thumbnail:<ul class="thumbnails"><li>'+
+						'<a href="javascript:void(0);" class="thumbnail" data-method="crop"><img src="" alt="Crop method." />'+
+						'<span style="display: block; width: <?php echo (int) $pines->config->com_sales->product_images_tmb_width; ?>px; text-align: center;" class="caption">Crop the scaled image to fit.</span></a></li>'+
+						'<li><a href="javascript:void(0);" class="thumbnail" data-method="fit"><img src="" alt="Fit method." />'+
+						'<span style="display: block; width: <?php echo (int) $pines->config->com_sales->product_images_tmb_width; ?>px; text-align: center;" class="caption">Pad the image to fit it all.</span></a></li></ul></div>')
+						.find("a[data-method=crop] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape('{"tmb_method":"crop"}'))).end()
+						.find("a[data-method=fit] img").attr("src", tmp_url.replace('__image__', escape(cur_img)).replace('__type__', 'prod_tmb').replace('__source__', cur_source).replace('__options__', escape('{"tmb_method":"fit"}'))).end()
+						.on("click", "a", function(){
+							var a = $(this);
+							a.toggleClass("alert-success").closest("ul").find("a").not(this).removeClass("alert-success");
+							if (a.hasClass("alert-success"))
+								$.extend(options, {"tmb_method":a.attr("data-method")});
+							else if (options.tmb_method)
+								delete options.tmb_method;
+						})
+						.appendTo(dialog);
+
+						if (options.x && options.y && options.x2 && options.y2)
+							cropper.Jcrop({setSelect: [options.x, options.y, options.x2, options.y2]});
+						if (options.tmb_method)
+							thumbnails.find("a[data-method="+options.tmb_method+"]").addClass("alert-success");
+
+						dialog.dialog("open");
+						e.preventDefault();
+					}).sortable({
 						placeholder: 'ui-state-highlight',
 						distance: 20,
 						update: function(){update_images();}
-					})
-					.draggable({
+					}).draggable({
 						distance: 20
 					});
 					$("#p_muid_image_trash").droppable({
@@ -846,32 +912,30 @@ $pines->com_ptags->load();
 							});
 						}
 					});
-					//$("#p_muid_sortable").disableSelection();
 
 					$("#p_muid_thumbnail").change(function(){
-						$("#p_muid_thumbnail_preview").attr("src", $(this).val());
+						$("#p_muid_thumbnail_preview").attr("src", tmp_url.replace('__image__', escape($(this).val())).replace('__type__', 'thumbnail').replace('__source__', 'temp').replace('__options__', ''));
 					});
 				});
 			</script>
 			<div class="pf-element">
-				<span class="pf-label">Add an Image</span>
-				<input class="pf-field puploader" id="p_muid_image_upload" type="text" value="" />
-				<button class="btn" type="button" id="p_muid_auto_add">Auto Add Last Directory</button>
+				<span class="pf-label">Add Image(s)</span>
+				<input class="pf-field puploader puploader-temp puploader-multiple" id="p_muid_image_upload" type="text" value="" />
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Images</span>
 				<span class="pf-note">The first image will be the default image.</span>
 				<div class="pf-note">
 					Drag image here to remove:
-					<div class="ui-widget-content ui-corner-all" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
+					<div class="thumbnail" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
 						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
 					</div>
 				</div>
 				<div class="pf-group">
 					<ul id="p_muid_sortable" class="pf-field">
 						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
-						<li class="ui-state-default ui-corner-all">
-							<img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['file']); ?>" />
+						<li data-source="file" data-image="<?php echo htmlspecialchars($cur_image['file']); ?>" data-thumbnail="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" class="thumbnail">
+							<a href="<?php echo htmlspecialchars($cur_image['file']); ?>" target="_blank"><img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" /></a>
 							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
 						</li>
 						<?php } } ?>
@@ -881,12 +945,16 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Thumbnail</span>
-				<input class="pf-field puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+				<input class="pf-field puploader puploader-temp" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Thumbnail Preview</span>
 				<div class="pf-group">
-					<img class="pf-field" alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+					<div class="pf-field">
+						<div class="thumbnail">
+							<img alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+						</div>
+					</div>
 				</div>
 			</div>
 			<input type="hidden" name="images" />

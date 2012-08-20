@@ -52,20 +52,6 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'image_thumbnails',
-		'cname' => 'Product Image Thumbnails',
-		'description' => 'Show product image thumbnails. (240px x 200px max)',
-		'value' => false,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'image_thumbnails_suffix',
-		'cname' => 'Product Image Thumbnails Suffix',
-		'description' => 'The suffix to append to image paths to find the thumbnail.',
-		'value' => '_t',
-		'peruser' => true,
-	),
-	array(
 		'name' => 'cart_prices',
 		'cname' => 'Show Prices in Cart Module',
 		'description' => 'Show prices for items in the cart module.',

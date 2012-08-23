@@ -86,7 +86,7 @@ $pines->com_sales->sort_specs($specs);
 		<ul class="ppy-imglist">
 			<?php $first = true; foreach ($this->entity->images as $cur_image) { ?>
 			<li style="<?php if (!$first) { ?>display: none;<?php } $first = false; ?>">
-				<a href="<?php echo htmlspecialchars($cur_image['file']); ?>"><img src="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" alt="" /></a>
+				<a href="<?php echo htmlspecialchars($pines->config->location.$cur_image['file']); ?>"><img src="<?php echo htmlspecialchars($pines->config->location.$cur_image['thumbnail']); ?>" alt="" /></a>
 				<span class="ppy-extcaption"><span style="white-space: pre-wrap;"><?php echo str_replace("\n", '<br />', htmlspecialchars($cur_image['alt'])); ?></span></span>
 			</li>
 			<?php } ?>

@@ -48,7 +48,7 @@ pines(function(){
 		<div class="product_alias" style="display: none;"><?php echo htmlspecialchars($cur_product->alias); ?></div>
 		<div class="product_main">
 			<?php if (isset($cur_product->thumbnail)) { ?>
-			<img class="thumb" alt="<?php echo htmlspecialchars($cur_product->name); ?>" src="<?php echo htmlspecialchars($cur_product->thumbnail); ?>" />
+			<img class="thumb" alt="<?php echo htmlspecialchars($cur_product->name); ?>" src="<?php echo htmlspecialchars($pines->config->location.$cur_product->thumbnail); ?>" />
 			<?php } ?>
 			<div class="name"><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'product', array('a' => $cur_product->alias))); ?>"><?php echo htmlspecialchars($cur_product->name); ?></a></div>
 			<div class="info">

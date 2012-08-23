@@ -66,13 +66,14 @@ foreach ($products as $cur_product) {
 	$link_dir = "$tmp_dir/".($cur_product->enabled ? 'enabled/' : 'disabled/');
 	$make_links = false;
 	// Copy the product thumbnail.
-	if ($cur_product->thumbnail && file_exists($cur_product->thumbnail)) {
+	$file = @substr($cur_product->thumbnail, 0, 1) == '/' ? ".{$cur_product->thumbnail}" : $cur_product->thumbnail;
+	if ($file && file_exists($file)) {
 		if (!file_exists($image_dir) && !mkdir($image_dir, 0700)) {
 			pines_error("Can't make product directory for {$cur_product->name}.");
 			continue;
 		}
-		$extension = pathinfo($cur_product->thumbnail, PATHINFO_EXTENSION);
-		if (!copy($cur_product->thumbnail, "$image_dir/thumb.$extension"))
+		$extension = pathinfo($file, PATHINFO_EXTENSION);
+		if (!copy($file, "$image_dir/thumb.$extension"))
 			pines_error("Can't copy thumbnail for {$cur_product->name}.");
 		$make_links = true;
 	}
@@ -80,23 +81,25 @@ foreach ($products as $cur_product) {
 	$i = 1;
 	foreach ($cur_product->images as $cur_image) {
 		$increment = false;
-		if ($cur_image['file'] && file_exists($cur_image['file'])) {
+		$file = @substr($cur_image['file'], 0, 1) == '/' ? ".{$cur_image['file']}" : $cur_image['file'];
+		if ($file && file_exists($file)) {
 			if (!file_exists($image_dir) && !mkdir($image_dir, 0700)) {
 				pines_error("Can't make product directory for {$cur_product->name}.");
 				continue;
 			}
-			$extension = pathinfo($cur_image['file'], PATHINFO_EXTENSION);
-			if (!copy($cur_image['file'], "$image_dir/image-$i.$extension"))
+			$extension = pathinfo($file, PATHINFO_EXTENSION);
+			if (!copy($file, "$image_dir/image-$i.$extension"))
 				pines_error("Can't copy image $i for {$cur_product->name}.");
 			$make_links = $increment = true;
 		}
-		if ($cur_image['thumbnail'] && file_exists($cur_image['thumbnail'])) {
+		$file = @substr($cur_image['thumbnail'], 0, 1) == '/' ? ".{$cur_image['thumbnail']}" : $cur_image['thumbnail'];
+		if ($file && file_exists($file)) {
 			if (!file_exists($image_dir) && !mkdir($image_dir, 0700)) {
 				pines_error("Can't make product directory for {$cur_product->name}.");
 				continue;
 			}
-			$extension = pathinfo($cur_image['thumbnail'], PATHINFO_EXTENSION);
-			if (!copy($cur_image['thumbnail'], "$image_dir/image-thumb-$i.$extension"))
+			$extension = pathinfo($file, PATHINFO_EXTENSION);
+			if (!copy($file, "$image_dir/image-thumb-$i.$extension"))
 				pines_error("Can't copy image thumb $i for {$cur_product->name}.");
 			$make_links = $increment = true;
 		}

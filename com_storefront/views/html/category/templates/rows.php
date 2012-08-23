@@ -60,7 +60,7 @@ pines(function(){
 		<?php if (isset($cur_product->thumbnail)) { ?>
 		<div class="product_left">
 			<div class="padding_box">
-				<img class="thumb" alt="<?php echo htmlspecialchars($cur_product->name); ?>" src="<?php echo htmlspecialchars($cur_product->thumbnail); ?>" />
+				<img class="thumb" alt="<?php echo htmlspecialchars($cur_product->name); ?>" src="<?php echo htmlspecialchars($pines->config->location.$cur_product->thumbnail); ?>" />
 			</div>
 		</div>
 		<?php } ?>

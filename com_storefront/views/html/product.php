@@ -117,7 +117,7 @@ $pines->com_sales->sort_specs($specs);
 			<div class="price"><?php echo $pines->com_storefront->format_price($this->entity->unit_price); ?></div>
 			<div class="info">
 				<?php if (!empty($this->entity->manufacturer_sku)) { ?>
-				<strong>Model:</strong> <?php echo format_content(htmlspecialchars($this->entity->manufacturer_sku)); ?> | 
+				<strong>Model:</strong> <?php echo format_content(htmlspecialchars($this->entity->manufacturer_sku)); ?><br />
 				<?php } ?>
 				<strong>SKU:</strong> <?php echo format_content(htmlspecialchars($this->entity->sku)); ?>
 			</div>

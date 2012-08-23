@@ -741,6 +741,12 @@ $pines->com_sales->load_jcrop();
 					min-height: 120px;
 					text-align: center;
 					background-image: none;
+					position: relative;
+				}
+				#p_muid_sortable .remove {
+					position: absolute;
+					top: .5em;
+					right: .5em;
 				}
 				#p_muid_sortable img {
 					width: 110px;
@@ -793,7 +799,7 @@ $pines->com_sales->load_jcrop();
 					update_images();
 
 					var add_image = function(image){
-						$('<li class="thumbnail" data-source="temp"><a href="'+pines.safe(image.img_url)+'" target="_blank"><img alt="'+pines.safe(image.img.replace(/.*\//, ''))+'" src="'+pines.safe(image.tmb_url)+'" /></a><p>Click to edit description...</p></li>')
+						$('<li class="thumbnail" data-source="temp"><button type="button" class="remove hide btn btn-mini btn-danger"><i class="icon-remove"></i></button><a href="'+pines.safe(image.img_url)+'" target="_blank"><img alt="'+pines.safe(image.img.replace(/.*\//, ''))+'" src="'+pines.safe(image.tmb_url)+'" /></a><p>Click to edit description...</p></li>')
 						.attr("data-image", image.img).attr("data-thumbnail", image.tmb).appendTo("#p_muid_sortable");
 					};
 
@@ -897,20 +903,23 @@ $pines->com_sales->load_jcrop();
 
 						dialog.dialog("open");
 						e.preventDefault();
+					}).on("hover", "li", function(){
+						$(".remove", this).toggleClass("hide");
+					}).on("click", ".remove", function(){
+						$(this).closest("li").fadeOut(300, function(){
+							$(this).remove();
+							update_images();
+						});
 					}).sortable({
 						placeholder: 'ui-state-highlight',
 						distance: 20,
 						update: function(){update_images();}
-					}).draggable({
-						distance: 20
 					});
-					$("#p_muid_image_trash").droppable({
-						drop: function(e, ui){
-							ui.draggable.hide("explode", {}, 500, function(){
-								ui.draggable.remove();
-								update_images();
-							});
-						}
+					$("#p_muid_clear").click(function(){
+						$("li", "#p_muid_sortable").fadeOut(300, function(){
+							$("li", "#p_muid_sortable").remove();
+							update_images();
+						});
 					});
 
 					$("#p_muid_thumbnail").change(function(){
@@ -926,16 +935,14 @@ $pines->com_sales->load_jcrop();
 				<span class="pf-label">Images</span>
 				<span class="pf-note">The first image will be the default image.</span>
 				<div class="pf-note">
-					Drag image here to remove:
-					<div class="thumbnail" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
-						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
-					</div>
+					<button type="button" class="btn btn-danger" id="p_muid_clear"><i class="icon-trash"></i> Clear</button>
 				</div>
 				<div class="pf-group">
 					<ul id="p_muid_sortable" class="pf-field">
 						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
 						<li data-source="file" data-image="<?php echo htmlspecialchars($cur_image['file']); ?>" data-thumbnail="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" class="thumbnail">
-							<a href="<?php echo htmlspecialchars($cur_image['file']); ?>" target="_blank"><img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" /></a>
+							<button type="button" class="remove hide btn btn-mini btn-danger"><i class="icon-remove"></i></button>
+							<a href="<?php echo htmlspecialchars($pines->config->location.$cur_image['file']); ?>" target="_blank"><img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($pines->config->location.$cur_image['thumbnail']); ?>" /></a>
 							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
 						</li>
 						<?php } } ?>
@@ -952,7 +959,7 @@ $pines->com_sales->load_jcrop();
 				<div class="pf-group">
 					<div class="pf-field">
 						<div class="thumbnail">
-							<img alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
+							<img alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlspecialchars($pines->config->location.$this->entity->thumbnail); ?>" />
 						</div>
 					</div>
 				</div>

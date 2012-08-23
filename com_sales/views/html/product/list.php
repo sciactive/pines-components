@@ -136,6 +136,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Enabled', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/list')); ?>},
 				<?php } ?>
 				{type: 'separator'},
+				{type: 'button', text: 'Image Archive', title: 'Generate an archive of all product images.', extra_class: 'picon picon-folder-image', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/image_archive')); ?>},
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},

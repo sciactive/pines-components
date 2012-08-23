@@ -19,12 +19,14 @@ defined('P_RUN') or die('Direct access prohibited');
 <script type="text/javascript">
 pines(function(){$(".puploader").each(function(){
 	var pfile = $(this),
-		unique_id = pfile.data("elfinder_unique_id");
+		unique_id = pfile.data("elfinder_unique_id"),
+		dialog_open = false;
 	if (!unique_id) {
 		unique_id = Math.floor(Math.random()*1000001);
 		pfile.data("elfinder_unique_id", unique_id);
 	}
 	var show_finder = function(){
+		dialog_open = true;
 		var url;
 		if (pfile.hasClass("puploader-temp"))
 			url = <?php echo json_encode(pines_url('com_elfinder', 'connector', array('temp' => 'true', 'request_id' => '__request_id__'))); ?>.replace("__request_id__", unique_id);
@@ -79,6 +81,9 @@ pines(function(){$(".puploader").each(function(){
 			title: "Choose File"+(pfile.hasClass("puploader-multiple") ? "(s)" : "")+(pfile.hasClass("puploader-folders") ? " or Folder"+(pfile.hasClass("puploader-multiple") ? "(s)" : "") : ""),
 			close: function(){
 				pfile.elfdlg.unbind("dialogopen").unbind("open."+pfile.elf.namespace).unbind("select."+pfile.elf.namespace).elfinder("destroy").dialog("destroy").remove();
+				delete pfile.elfdlg;
+				delete pfile.elf;
+				dialog_open = false;
 			}
 		});
 		pfile.elfdlg.dialog("widget").css("overflow", "visible");
@@ -109,7 +114,7 @@ pines(function(){$(".puploader").each(function(){
 		}
 		pfile.elfdlg.dialog("open");
 	};
-	pfile.focus(show_finder).focus(function(){pfile.blur()}).change(function(){
+	pfile.focus(function(){if (!dialog_open) show_finder(); pfile.blur()}).change(function(){
 		if (pfile.val() == '')
 			pfile.attr({"data-original-title": 'File Upload', "data-content": 'Click to upload files.'});
 	});

@@ -12,15 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css">
-.ui-selectable-helper {
-	z-index: 410000;
-}
+.ui-selectable-helper {z-index: 410000;}
 </style>
 <script type="text/javascript">
 pines(function(){$(".puploader").each(function(){
 	var pfile = $(this),
 		unique_id = pfile.data("elfinder_unique_id"),
-		dialog_open = false;
+		dialog_open = false, oi;
 	if (!unique_id) {
 		unique_id = Math.floor(Math.random()*1000001);
 		pfile.data("elfinder_unique_id", unique_id);
@@ -34,7 +32,20 @@ pines(function(){$(".puploader").each(function(){
 			var start_path = pfile.val().replace(/[^/]+$/, "");
 			url = <?php echo json_encode(pines_url('com_elfinder', 'connector', array('start_path' => '__start_path__'))); ?>.replace("__start_path__", start_path);
 		}
-		pfile.elfdlg = $('<div/>').appendTo("body");
+		pfile.elfdlg = $('<div/>').css("overflow", "visible").dialog({
+			width: 900,
+			modal: true,
+			zIndex: 400000,
+			title: "Choose File"+(pfile.hasClass("puploader-multiple") ? "(s)" : "")+(pfile.hasClass("puploader-folders") ? " or Folder"+(pfile.hasClass("puploader-multiple") ? "(s)" : "") : ""),
+			close: function(){
+				pfile.elfdlg.unbind("dialogopen").unbind("open."+pfile.elf.namespace).unbind("select."+pfile.elf.namespace).elfinder("destroy").dialog("destroy").remove();
+				delete pfile.elfdlg;
+				delete pfile.elf;
+				clearInterval(oi);
+				dialog_open = false;
+			}
+		});
+		pfile.elfdlg.dialog("widget").css("overflow", "visible");
 		pfile.elf = pfile.elfdlg.elfinder({
 			url: url,
 			height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,
@@ -48,7 +59,6 @@ pines(function(){$(".puploader").each(function(){
 			},
 			getFileCallback: function(file) {
 				var title, content = "", value = "";
-				// TODO: Should the URLs be encoded?
 				if ($.isArray(file)) {
 					title = "Multiple Selections";
 					$.each(file, function(i, file){
@@ -73,35 +83,9 @@ pines(function(){$(".puploader").each(function(){
 				pfile.change();
 			}
 		}).elfinder('instance');
-		pfile.elfdlg.css("overflow", "visible").dialog({
-			width: 900,
-			modal: true,
-			autoOpen: false,
-			zIndex: 400000,
-			title: "Choose File"+(pfile.hasClass("puploader-multiple") ? "(s)" : "")+(pfile.hasClass("puploader-folders") ? " or Folder"+(pfile.hasClass("puploader-multiple") ? "(s)" : "") : ""),
-			close: function(){
-				pfile.elfdlg.unbind("dialogopen").unbind("open."+pfile.elf.namespace).unbind("select."+pfile.elf.namespace).elfinder("destroy").dialog("destroy").remove();
-				delete pfile.elfdlg;
-				delete pfile.elf;
-				dialog_open = false;
-			}
-		});
-		pfile.elfdlg.dialog("widget").css("overflow", "visible");
 		if (pfile.hasClass("puploader-temp")) {
-			pfile.elfdlg.bind("dialogopen", function(e){
-				pfile.elfdlg.dialog("option", {"width": "auto", "resizable": false});
-				// Only open a new dialog if one isn't there already.
-				if (!pfile.elfdlg.find(".elfinder-upload-dialog-wrapper").length)
-					pfile.elf.exec("upload");
-				pfile.elfdlg.children(":not(.elfinder-dialog)").addClass("ui-helper-hidden-accessible").end()
-				.find(".elfinder-overlay").remove().end()
-				.find(".elfinder-dialog").css("position", "static")
-				.find(".ui-dialog-titlebar-close").hide().end().end()
-				.dialog("option", "position", "center");
-			}).one("open."+pfile.elf.namespace, function(e){
-				// Click the file upload.
-				pfile.elfdlg.find(".elfinder-toolbar .elfinder-button input[type=file]").click();
-			}).one("select."+pfile.elf.namespace, function(e){
+			pfile.elfdlg.append('<div class="alert alert-info">Direct file upload. To cancel, close this dialog.</div>')
+			.one("select."+pfile.elf.namespace, function(e){
 				var i = setInterval(function(){
 					if (!pfile.elf.selected().length)
 						return;
@@ -111,14 +95,30 @@ pines(function(){$(".puploader").each(function(){
 					});
 				}, 10);
 			});
+			// Hide the interface.
+			pfile.elfdlg.children(":not(.elfinder-dialog, .alert)").addClass("ui-helper-hidden-accessible").end()
+			.find(".elfinder-overlay").remove().end()
+			.find(".elfinder-dialog").css("position", "static")
+			.find(".ui-dialog-titlebar-close").hide().end().end()
+			.dialog("option", "position", "center");
+
+			// Click the upload button when ready.
+			oi = setInterval(function(){
+				var up = pfile.elfdlg.find(".elfinder-toolbar .elfinder-button:not(.ui-state-disabled) input[type=file]");
+				if (up.length) {
+					clearInterval(oi);
+					up.click();
+				}
+			}, 200);
+			pfile.elfdlg.dialog("option", {"width": "auto", "resizable": false});
 		}
-		pfile.elfdlg.dialog("open");
+		pfile.elfdlg.dialog("option", "position", "center");
 	};
 	pfile.focus(function(){if (!dialog_open) show_finder(); pfile.blur()}).change(function(){
 		if (pfile.val() == '')
 			pfile.attr({"data-original-title": 'File Upload', "data-content": 'Click to upload files.'});
 	});
-	$('<button class="btn" type="button" style="margin-left: .5em">Browse&hellip;</button>')
+	$('<button class="btn" type="button" style="margin-left: .5em">'+(pfile.hasClass("puploader-temp") ? 'Upload' : 'Browse')+'&hellip;</button>')
 	.click(function(){pfile.focus()})
 	.insertAfter(pfile);
 });});

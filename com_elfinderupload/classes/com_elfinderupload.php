@@ -59,6 +59,7 @@ class com_elfinderupload extends component implements uploader_interface {
 	}
 
 	public function temp($temp_string) {
+		$temp_string = rawurldecode($temp_string);
 		list($request_id, $temp_name) = explode('/', $temp_string, 2);
 		if (!isset($_SESSION['elfinder_request_id'][$request_id]))
 			return false;

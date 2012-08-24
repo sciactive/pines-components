@@ -1157,8 +1157,9 @@ class com_sales extends component {
 				// effectively cropping the extra or padding with transparency.
 				// Create a transparent canvas.
 				$canvas = clone $image;
-				$canvas->newImage($pines->config->com_sales->product_images_tmb_width, $pines->config->com_sales->product_images_tmb_height, 'none', 'png');
-
+				$canvas->newImage($pines->config->com_sales->product_images_tmb_width, $pines->config->com_sales->product_images_tmb_height, 'none');
+				$canvas->setImageFormat('png');
+				
 				// Get the image dimensions.
 				$width = $image->getImageWidth();
 				$height = $image->getImageHeight();

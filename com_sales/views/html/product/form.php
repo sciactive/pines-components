@@ -782,7 +782,7 @@ $pines->com_sales->load_jcrop();
 							var cur_entry = $(this),
 								alt = cur_entry.find("p").html(),
 								options = cur_entry.attr("data-options");
-							if (alt == 'Click to edit description...')
+							if (alt == 'Click to add description...')
 								alt = '';
 							var struct = {
 								"file": cur_entry.attr("data-image"),
@@ -799,7 +799,7 @@ $pines->com_sales->load_jcrop();
 					update_images();
 
 					var add_image = function(image){
-						$('<li class="thumbnail" data-source="temp"><button type="button" class="remove hide btn btn-mini btn-danger"><i class="icon-remove"></i></button><a href="'+pines.safe(image.img_url)+'" target="_blank"><img alt="'+pines.safe(image.img.replace(/.*\//, ''))+'" src="'+pines.safe(image.tmb_url)+'" /></a><p>Click to edit description...</p></li>')
+						$('<li class="thumbnail" data-source="temp"><button type="button" style="display: none;" class="remove btn btn-mini btn-danger"><i class="icon-remove"></i></button><a href="'+pines.safe(image.img_url)+'" target="_blank"><img alt="'+pines.safe(image.img.replace(/.*\//, ''))+'" src="'+pines.safe(image.tmb_url)+'" /></a><p>Click to add description...</p></li>')
 						.attr("data-image", image.img).attr("data-thumbnail", image.tmb).appendTo("#p_muid_sortable");
 					};
 
@@ -903,8 +903,10 @@ $pines->com_sales->load_jcrop();
 
 						dialog.dialog("open");
 						e.preventDefault();
-					}).on("hover", "li", function(){
-						$(".remove", this).toggleClass("hide");
+					}).on("mouseenter", "li", function(){
+						$(".remove", this).show();
+					}).on("mouseleave", "li", function(){
+						$(".remove", this).hide();
 					}).on("click", ".remove", function(){
 						$(this).closest("li").fadeOut(300, function(){
 							$(this).remove();
@@ -941,9 +943,9 @@ $pines->com_sales->load_jcrop();
 					<ul id="p_muid_sortable" class="pf-field">
 						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
 						<li data-source="file" data-image="<?php echo htmlspecialchars($cur_image['file']); ?>" data-thumbnail="<?php echo htmlspecialchars($cur_image['thumbnail']); ?>" class="thumbnail">
-							<button type="button" class="remove hide btn btn-mini btn-danger"><i class="icon-remove"></i></button>
+							<button type="button" style="display: none;" class="remove btn btn-mini btn-danger"><i class="icon-remove"></i></button>
 							<a href="<?php echo htmlspecialchars($pines->config->location.$cur_image['file']); ?>" target="_blank"><img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($pines->config->location.$cur_image['thumbnail']); ?>" /></a>
-							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
+							<p><?php echo empty($cur_image['alt']) ? 'Click to add description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
 						</li>
 						<?php } } ?>
 					</ul>

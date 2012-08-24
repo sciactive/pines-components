@@ -1072,8 +1072,9 @@ class com_sales extends component {
 
 				// Create a transparent canvas.
 				$canvas = clone $image;
-				$canvas->newImage($pines->config->com_sales->product_thumbnail_width, $pines->config->com_sales->product_thumbnail_height, 'none', 'png');
-
+				$canvas->newImage($pines->config->com_sales->product_thumbnail_width, $pines->config->com_sales->product_thumbnail_height, 'none');
+				$canvas->setImageFormat('png');
+				
 				// Get the image dimensions.
 				$width = $image->getImageWidth();
 				$height = $image->getImageHeight();

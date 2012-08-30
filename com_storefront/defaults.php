@@ -20,6 +20,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'storefront_location',
+		'cname' => 'Storefront Location',
+		'description' => 'If your storefront is accessible from a different domain, you can put that location here and storefront links will use it. End this path with a slash! (Ex. "https://example.com/")',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_categories',
 		'cname' => 'Show Category Menus',
 		'description' => 'Show category menus from com_sales.',

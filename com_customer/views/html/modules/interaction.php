@@ -33,11 +33,11 @@ echo $module->render();
 			$("#p_muid_customer_name").customerselect();
 			$("#p_muid_done").click(function(){
 				var customer_name = $("#p_muid_customer_name"),
-					customer_name_val = customer_name.val(),
+					name_id = customer_name.val(),
 					status_bar = $("#p_muid_status"),
-					interaction_type = $("[name=interaction_type]"),
-					comments = $("[name=interaction_comments]");
-				if (customer_name_val.match(/^\s*$/)) {
+					interaction_type = $("#p_muid_type"),
+					comments = $("#p_muid_comments");
+				if (name_id.match(/^\s*$/)) {
 					alert("Please enter a customer.");
 					return;
 				}
@@ -46,18 +46,21 @@ echo $module->render();
 					type: "POST",
 					dataType: "json",
 					data: {
-						customer: customer_name_val,
+						customer: name_id,
 						employee: <?php echo (int) $_SESSION['user']->guid; ?>,
 						type: interaction_type.val(),
 						status: 'open',
 						comments: comments.val()
+					},
+					beforeSend: function(){
+						status_bar.html('');
 					},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (data) {
-							status_bar.html('<div style="padding-bottom: 10px;"><i class="icon-ok-sign"></i> Success!<?php if (gatekeeper('com_customer/editcustomer')) { ?> <a data-entity="'+pines.safe(parseInt(customer_name_val))+'" data-entity-context="com_customer_customer">View Customer</a>.<?php } ?></div>');
+							status_bar.html('<div style="padding-bottom: 10px;"><i class="icon-ok-sign"></i> Success!<?php if (gatekeeper('com_customer/editcustomer')) { ?> <a data-entity="'+pines.safe(parseInt(name_id))+'" data-entity-context="com_customer_customer">View Customer</a>.<?php } ?></div>');
 							comments.val('');
 							customer_name.val('');
 							interaction_type.val('');
@@ -77,7 +80,7 @@ echo $module->render();
 		</div>
 		<div class="pf-element" style="clear:left;max-width:100%">
 			<label><span class="pf-label">Interaction Type</span>
-				<select name="interaction_type" style="width:140px;max-width:90%;">
+				<select id="p_muid_type" name="interaction_type" style="width:140px; max-width:90%;">
 					<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
 						$cur_type = explode(':', $cur_type);
 						echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
@@ -85,7 +88,7 @@ echo $module->render();
 				</select></label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<textarea rows="3" cols="30" style="width:95%;" name="interaction_comments"></textarea>
+			<textarea rows="3" cols="30" style="width:95%;" id="p_muid_comments" name="interaction_comments"></textarea>
 		</div>
 		<div class="pf-element pf-full-width" style="text-align: right;">
 			<button class="btn" type="button" id="p_muid_done">Add</button><br />

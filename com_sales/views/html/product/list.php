@@ -125,7 +125,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } if (gatekeeper('com_sales/editproduct')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'product/edit', array('id' => '__title__'))); ?>},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deleteproduct')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'product/delete', array('id' => '__title__'))); ?>, delimiter: ','},
@@ -136,6 +135,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Enabled', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/list')); ?>},
 				<?php } ?>
 				{type: 'separator'},
+				{type: 'button', text: 'Image Report', title: 'See products that have incomplete images.', extra_class: 'picon picon-graphics-viewer-document', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/reportimages')); ?>},
 				{type: 'button', text: 'Image Archive', title: 'Generate an archive of all product images.', extra_class: 'picon picon-folder-image', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'product/image_archive')); ?>},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

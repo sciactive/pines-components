@@ -596,7 +596,7 @@ if ($pines->config->com_user->check_username)
 								<?php foreach ($section_abilities as $cur_ability) { ?>
 								<label>
 									<input type="checkbox" name="<?php echo htmlspecialchars($cur_section); ?>[]" value="<?php echo htmlspecialchars($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
-									<?php echo htmlspecialchars($cur_ability[1]); ?>&nbsp;<small><?php echo htmlspecialchars($cur_ability[2]); ?></small>
+									<span title="<?php echo htmlspecialchars("{$cur_section}/{$cur_ability[0]}"); ?>" class="label label-info"><?php echo htmlspecialchars($cur_ability[1]); ?></span>&nbsp;<small><?php echo htmlspecialchars($cur_ability[2]); ?></small>
 								</label>
 								<br class="pf-clearing" />
 								<?php } ?>

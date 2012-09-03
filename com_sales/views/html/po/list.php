@@ -70,9 +70,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Reference Number</th>
 			<th>Vendor</th>
 			<th>Destination</th>
+			<th>Status</th>
 			<th>Shipper</th>
 			<th>ETA</th>
-			<th>Status</th>
+			<th>Tracking #</th>
 			<th>Products</th>
 			<th>Comments</th>
 		</tr>
@@ -84,9 +85,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($po->reference_number); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($po->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($po->vendor->name); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($po->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></a></td>
+			<td><?php echo $po->final ? ($po->finished ? 'Received' : (empty($po->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($po->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($po->shipper->name); ?></a></td>
 			<td><?php echo ($po->eta ? htmlspecialchars(format_date($po->eta, 'date_sort')) : ''); ?></td>
-			<td><?php echo $po->final ? ($po->finished ? 'Received' : (empty($po->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+			<td><?php
+				if (isset($po->shipper->guid)) {
+					$links = array();
+					foreach ((array) $po->tracking_numbers as $cur_number)
+						$links[] = '<a href="'.htmlspecialchars($po->shipper->tracking_url($cur_number)).'" target="_blank">'.htmlspecialchars($cur_number).'</a>';
+					echo implode(', ', $links);
+				} else
+					echo htmlspecialchars(isset($po->tracking_numbers) ? implode(', ', $po->tracking_numbers) : '');
+			?></td>
 			<td><?php
 			$names = array();
 			foreach ((array) $po->products as $cur_product) {

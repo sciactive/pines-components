@@ -131,6 +131,52 @@ class com_sales_po extends entity {
 	}
 
 	/**
+	 * Email a notification to the destination.
+	 * 
+	 * @return bool True on success, false on failure. 
+	 */
+	public function email() {
+		global $pines;
+		if (empty($this->destination->email))
+			return false;
+		$module = new module('com_sales', 'po/products_email');
+		$module->entity = $this;
+
+		$tracking_links = array();
+		if (isset($this->shipper->id)) {
+			foreach ($this->tracking_numbers as $cur_number) {
+				$url = htmlspecialchars($this->shipper->tracking_url($cur_number));
+				$tracking_links[] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+			}
+		} else {
+			foreach ($this->tracking_numbers as $cur_number)
+				$tracking_links[] = htmlspecialchars($cur_number);
+		}
+		$address = '';
+		if ($this->destination->address_type == 'us') {
+			if (!empty($this->destination->address_1)) {
+				$address .= htmlspecialchars($this->destination->address_1.' '.$this->destination->address_2).'<br />';
+				$address .= htmlspecialchars($this->destination->city).', '.htmlspecialchars($this->destination->state).' '.htmlspecialchars($this->destination->zip);
+			}
+		} else
+			$address .= str_replace("\n", '<br />', htmlspecialchars($this->destination->address_international));
+
+		$macros = array(
+			'products' => $module->render(),
+			'po_number' => htmlspecialchars($this->po_number),
+			'ref_number' => htmlspecialchars($this->reference_number),
+			'vendor' => htmlspecialchars($this->vendor->name),
+			'destination' => htmlspecialchars($this->destination->name),
+			'shipper' => htmlspecialchars($this->shipper->name),
+			'tracking_link' => implode('<br />', $tracking_links),
+			'eta' => htmlspecialchars($this->eta ? format_date($this->eta, 'date_long') : ''),
+			'address' => $address,
+			'comments' => htmlspecialchars($this->comments),
+		);
+		return $pines->com_mailer->send_mail('com_sales/po_committed', $macros, $this->destination);
+	}
+
+	/**
 	 * Print a form to edit the PO.
 	 * @return module The form's module.
 	 */

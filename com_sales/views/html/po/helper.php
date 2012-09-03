@@ -33,6 +33,10 @@ if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('c
 			</tr>
 			<?php } ?>
 			<tr>
+				<td style="font-weight:bold;">Status</td>
+				<td><?php echo $this->entity->final ? ($this->entity->finished ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+			</tr>
+			<tr>
 				<td style="font-weight:bold;">Vendor</td>
 				<td><a data-entity="<?php echo htmlspecialchars($this->entity->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($this->entity->vendor->name); ?></a></td>
 			</tr>
@@ -49,8 +53,16 @@ if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('c
 				<td><?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?></td>
 			</tr>
 			<tr>
-				<td style="font-weight:bold;">Status</td>
-				<td><?php echo $this->entity->final ? ($this->entity->finished ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+				<td style="font-weight:bold;">Tracking #</td>
+				<td><?php
+					if (isset($this->entity->shipper->guid)) {
+						$links = array();
+						foreach ((array) $this->entity->tracking_numbers as $cur_number)
+							$links[] = '<a href="'.htmlspecialchars($this->entity->shipper->tracking_url($cur_number)).'" target="_blank">'.htmlspecialchars($cur_number).'</a>';
+						echo implode('<br />', $links);
+					} else
+						echo str_replace("\n", '<br />', htmlspecialchars(isset($this->entity->tracking_numbers) ? implode("\n", $this->entity->tracking_numbers) : ''));
+				?></td>
 			</tr>
 		</tbody>
 	</table>

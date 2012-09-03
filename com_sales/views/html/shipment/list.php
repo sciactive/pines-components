@@ -124,8 +124,8 @@ $pines->com_jstree->load();
 			<th>Location</th>
 			<th>Destination</th>
 			<th>Shipper</th>
-			<th>Tracking #</th>
 			<th>ETA</th>
+			<th>Tracking #</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -138,8 +138,8 @@ $pines->com_jstree->load();
 			<td><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></a></td>
 			<td><?php echo htmlspecialchars($sale->shipping_address->name); ?><?php if (isset($sale->customer->guid)) { ?> (<a data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a>)<?php } ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($sale->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($sale->shipper->name); ?></a></td>
-			<td><?php echo htmlspecialchars(isset($sale->tracking_numbers) ? implode(', ', $sale->tracking_numbers) : ''); ?></td>
 			<td><?php echo $sale->eta ? htmlspecialchars(format_date($sale->eta, 'date_sort')) : '' ; ?></td>
+			<td><?php echo htmlspecialchars(isset($sale->tracking_numbers) ? implode(', ', $sale->tracking_numbers) : ''); ?></td>
 		</tr>
 	<?php } foreach((array) $this->shipments as $shipment) {
 		if ($shipment->ref->has_tag('sale'))
@@ -164,6 +164,7 @@ $pines->com_jstree->load();
 				}
 			?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($shipment->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($shipment->shipper->name); ?></a></td>
+			<td><?php echo $shipment->eta ? htmlspecialchars(format_date($shipment->eta, 'date_sort')) : '' ; ?></td>
 			<td><?php
 				if (isset($shipment->shipper->guid)) {
 					$links = array();
@@ -173,7 +174,6 @@ $pines->com_jstree->load();
 				} else
 					echo htmlspecialchars(isset($shipment->tracking_numbers) ? implode(', ', $shipment->tracking_numbers) : '');
 			?></td>
-			<td><?php echo $shipment->eta ? htmlspecialchars(format_date($shipment->eta, 'date_sort')) : '' ; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

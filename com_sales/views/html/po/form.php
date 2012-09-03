@@ -434,6 +434,15 @@ if ($this->entity->final)
 			<input class="pf-field" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? htmlspecialchars(format_date($this->entity->eta, 'date_sort')) : ''); ?>" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
+		<label><span class="pf-label">Tracking Number(s)</span>
+			<span class="pf-note">One per line.</span>
+			<span class="pf-group pf-full-width">
+				<span class="pf-field" style="display: block;">
+					<textarea style="width: 100%;" rows="3" cols="35" name="tracking_numbers"><?php echo isset($this->entity->tracking_numbers) ? htmlspecialchars(implode("\n", $this->entity->tracking_numbers)) : ''; ?></textarea>
+				</span>
+			</span></label>
+	</div>
+	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<div class="pf-group">
 			<div class="pf-field">

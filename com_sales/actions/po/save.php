@@ -47,6 +47,7 @@ if (!$po->final) {
 		$po->shipper = null;
 }
 $po->eta = strtotime($_REQUEST['eta']);
+$po->tracking_numbers = array_diff(array_map('trim', (array) explode("\n", trim($_REQUEST['tracking_numbers']))), array(''));
 
 // Products
 // Products can't be changed after items have been received.
@@ -89,8 +90,10 @@ if (!$po->final) {
 	}
 }
 
-if (!$po->final && $_REQUEST['save'] == 'commit')
+if (!$po->final && $_REQUEST['save'] == 'commit') {
 	$po->final = true;
+	$send_email = true;
+}
 // Only comments can be cahnged after it is commited.
 $po->comments = $_REQUEST['comments'];
 
@@ -99,6 +102,8 @@ if ($po->save()) {
 		pines_notice('Committed PO ['.$po->po_number.']');
 	else
 		pines_notice('Saved PO ['.$po->po_number.']');
+	if ($send_email)
+		$po->email();
 } else {
 	pines_error('Error saving PO. Do you have permission?');
 }

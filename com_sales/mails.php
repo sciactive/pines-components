@@ -57,6 +57,25 @@ return array(
 			'notes' => 'Any notes on the shipment.',
 		),
 	),
+	'po_committed' => array(
+		'cname' => 'PO Committed',
+		'description' => 'A notification of a purchase order that has been committed.',
+		'view' => 'mails/po_committed',
+		'has_recipient' => true,
+		'unsubscribe' => false,
+		'macros' => array(
+			'products' => 'The product list.',
+			'po_number' => 'The PO number.',
+			'ref_number' => 'The reference number.',
+			'vendor' => 'The vendor.',
+			'destination' => 'The name of the destination location.',
+			'shipper' => 'The shipper used to ship the order.',
+			'tracking_link' => 'The shipment tracking link(s). Separated by line breaks.',
+			'eta' => 'The date the shipment is expected to arrive.',
+			'address' => 'The address of the destination.',
+			'comments' => 'PO comments.',
+		),
+	),
 );
 
 ?>

@@ -134,7 +134,7 @@ class com_sales_shipment extends entity {
 			'sale_total' => htmlspecialchars($this->ref->total),
 			'shipper' => htmlspecialchars($this->shipper->name),
 			'tracking_link' => implode('<br />', $tracking_links),
-			'eta' => htmlspecialchars(format_date($this->eta, 'date_long')),
+			'eta' => htmlspecialchars($this->eta ? format_date($this->eta, 'date_long') : ''),
 			'address' => $address,
 			'notes' => htmlspecialchars($this->notes),
 		);

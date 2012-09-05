@@ -34,10 +34,45 @@ defined('P_RUN') or die('Direct access prohibited');
  * Uses simple_parse() to provide simple logic.
  *
  * @param string $value The value to check.
- * @return bool The result of the package check.
+ * @param bool $help Whether to return the help for this checker.
+ * @return bool|array The result of the check, or the help array.
  */
-function com_package__check_package($value) {
+function com_package__check_package($value, $help = false) {
 	global $pines;
+	if ($help) {
+		$return = array();
+		$return['cname'] = 'Package Checker';
+		$return['description'] = <<<'EOF'
+Check if a package is installed and check its version.
+EOF;
+		$return['syntax'] = <<<'EOF'
+You can either check only that the package is installed by using its name, or
+that the package's version matches a certain version/range.
+
+Operators should be placed between the package name and the version number to
+test. Such as, "cms-suite>=1.1.0". The available operators are:
+
+* `=`
+* `<`
+* `>`
+* `<=`
+* `>=`
+* `<>`
+
+com_user
+:	Check that the com_user package is installed.
+
+com_repository>=1.0.0&com_repository-data
+:	Check that the com_repository package is installed and that it is at least
+	version 1.0.0, and that the com_repository-data package is installed.
+
+com_customer&!com_storefront
+:	Check that the com_customer package is installed, and that the
+	com_storefront package is not.
+EOF;
+		$return['simple_parse'] = true;
+		return $return;
+	}
 	if (
 			strpos($value, '&') !== false ||
 			strpos($value, '|') !== false ||

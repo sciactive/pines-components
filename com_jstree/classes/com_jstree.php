@@ -38,7 +38,7 @@ class com_jstree extends component {
 			$this->js_loaded = true;
 		}
 	}
-	
+
 	/**
 	 * Transform an entity array into a JSON-ready structure.
 	 *

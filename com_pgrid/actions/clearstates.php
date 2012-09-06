@@ -24,12 +24,18 @@ if ($_REQUEST['all_users'] == 'true') {
 	$users = array($_SESSION['user']);
 }
 
+// Choose a specific view to clear states.
+$view = $_REQUEST['view'];
+
 $success = true;
 foreach ((array) $users as $cur_user) {
 	// If they have no guid, they're not valid.
 	if (!isset($cur_user->guid))
 		continue;
-	if (isset($cur_user->pgrid_saved_states)) {
+	if (!empty($view)) {
+		unset($cur_user->pgrid_saved_states[$view]);
+		$success = $success && $cur_user->save();
+	} elseif (isset($cur_user->pgrid_saved_states) && !isset($_REQUEST['view'])) {
 		unset($cur_user->pgrid_saved_states);
 		$success = $success && $cur_user->save();
 	}

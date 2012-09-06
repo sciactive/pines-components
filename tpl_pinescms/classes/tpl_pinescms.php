@@ -78,7 +78,7 @@ class tpl_pinescms extends template {
 			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
 			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '')
 			.'>'.htmlspecialchars($menu[0]['text']).'</a>';
-		if ($count > 0) {
+		if ($count > 1) {
 			$return .= '<ul>';
 			foreach ($menu as $key => &$value) {
 				if ((int) $key === $key) continue;

@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'A module management system',
 	'description' => 'A module management system, which allows you to place modules in different positions on the page.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_markdown&com_pform'
 	),

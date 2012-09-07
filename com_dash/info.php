@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Configurable dashboard',
 	'description' => 'Provides a dashboard with quick links and widgets.',
 	'depend' => array(
-		'pines' => '>=1.0.4&<2',
+		'pines' => '>=1.0.4&<3',
 		'service' => 'entity_manager&user_manager',
 		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),

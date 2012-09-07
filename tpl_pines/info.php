@@ -37,7 +37,7 @@ return array(
 	'short_description' => 'jQuery UI styled template',
 	'description' => 'A well integrated template, completely styled with jQuery UI.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_bootstrap'
 	),
 	'recommend' => array(

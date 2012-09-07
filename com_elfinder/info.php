@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'elFinder file manager and widget',
 	'description' => 'A file manager using the elFinder jQuery plugin. See the readme in the includes folder for elFinder\'s license information.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery'
 	),
 	'abilities' => array(

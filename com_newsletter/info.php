@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Manage newsletters to your users',
 	'description' => 'Create and send newsletters to your users.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&editor&uploader',
 		'component' => 'com_mailer&com_jquery&com_bootstrap&com_pgrid&com_jstree&com_pform',
 		'package' => 'com_newsletter-data'

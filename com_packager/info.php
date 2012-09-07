@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Pines package creator',
 	'description' => 'Package your components and templates into a Pines repository ready Slim archive. You can use these packages to distribute your component to other Pines users.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&uploader&editor&configurator',
 		'component' => 'com_slim&com_jquery&com_bootstrap&com_pgrid&com_ptags&com_pform',
 		'package' => 'com_packager-data'

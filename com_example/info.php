@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'An example component design',
 	'description' => 'This component functions as an example of how to use various features of the Pines framework.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&editor',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),

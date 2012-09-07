@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'TinyMCE editor widget',
 	'description' => 'TinyMCE based editor widget.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_pform'
 	),
 	'recommend' => array(

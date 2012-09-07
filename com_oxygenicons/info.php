@@ -14,14 +14,14 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Oxygen Icon Theme',
 	'author' => 'SciActive',
-	'version' => '4.8.2-1.0.1beta',
+	'version' => '4.8.2-1.0.1beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('icons'),
 	'short_description' => 'Pines Icon theme using Oxygen icons',
 	'description' => 'A Pines Icon theme using the Oxygen icon library.',
 	'depend' => array(
-		'pines' => '<2'
+		'pines' => '<3'
 	),
 );
 

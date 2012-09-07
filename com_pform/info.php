@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Pines Form CSS styling',
 	'description' => 'A standards compliant, clean, sensible CSS form styling system.',
 	'depend' => array(
-		'pines' => '<2'
+		'pines' => '<3'
 	),
 );
 

@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'elFinder file upload widget',
 	'description' => 'A standard file upload widget using the elFinder jQuery plugin.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_elfinder&com_jquery&com_bootstrap&com_pform'
 	),
 );

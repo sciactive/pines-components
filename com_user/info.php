@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'Entity based user manager',
 	'description' => 'Manages system users, groups, and abilities. Uses an entity manager as a storage backend.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&uploader&icons',
 		'component' => 'com_mailer&com_jquery&com_bootstrap&com_pgrid&com_markdown&com_pnotify&com_pform', //&com_jstree
 		'package' => 'com_user-data'

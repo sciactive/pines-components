@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Extended service plan manager',
 	'description' => 'Used to track and manage warranties on products.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&icons',
 		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform&com_sales'
 	),

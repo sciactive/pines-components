@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Bamboo Template',
 	'author' => 'SciActive (Template), Free CSS Templates (Design)',
-	'version' => '1.0.1beta',
+	'version' => '1.0.1beta2',
 	'license' => 'http://creativecommons.org/licenses/by/2.5/',
 	'website' => 'http://www.freecsstemplates.org',
 	'services' => array('template'),
@@ -31,7 +31,7 @@ return array(
 	'short_description' => 'A pretty bamboo style template',
 	'description' => 'An pretty bamboo style template.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery'
 	),
 	'recommend' => array(

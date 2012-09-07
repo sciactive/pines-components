@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Pines package libraries',
 	'description' => 'Package management functions. This component is meant to be used by other components.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_slim'
 	),
 );

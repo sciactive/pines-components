@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Bootstrap CSS and JS components',
 	'description' => "A collection of CSS and components, featuring mobile and tablet support, grid layout, typography enhancements, and plugin support.\n\nSee the Bootstrap website at http://twitter.github.com/bootstrap/",
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 	),
 );
 

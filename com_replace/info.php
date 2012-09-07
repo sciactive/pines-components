@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Content search replace',
 	'description' => 'Search and replace strings in content, such as pages.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_markdown&com_pform'
 	),

@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Customer account timer',
 	'description' => 'Allows the use of com_customer\'s membership and point tracking feature to run a service that requires customers to buy time, such as an internet cafe.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&uploader',
 		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform',
 		'package' => 'com_customertimer-data'

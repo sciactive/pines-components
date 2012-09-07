@@ -14,13 +14,13 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Entity Helper',
 	'author' => 'SciActive',
-	'version' => '1.0.0beta',
+	'version' => '1.0.0beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Entity interaction helper.',
 	'description' => "Provides a helpful dialog when you click on links to certain entities.\n\nUse the classcheck action to see whether classes have custom helpers.",
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),
 );

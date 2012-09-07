@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Customer relationship manager',
 	'description' => 'Manage your customers using accounts. Features include membership and point tracking.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager&editor',
 		'component' => 'com_user&com_jquery&com_bootstrap&com_pgrid&com_pnotify&com_pform'
 	),

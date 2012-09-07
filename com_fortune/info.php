@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Daily fortune',
 	'description' => 'Reminiscent of the "fortune" program in Unix, this prints a daily adage from a database of fortunes, quotes, riddles, etc.',
 	'depend' => array(
-		'pines' => '<2'
+		'pines' => '<3'
 	),
 );
 

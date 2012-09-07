@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'PostgreSQL based entity manager',
 	'description' => 'Provides an object relational mapper, which conforms to the Pines entity manager service standard and uses PostgreSQL as its backend.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_pgsql'
 	),
 );

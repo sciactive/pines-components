@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Content Management System',
 	'description' => 'Manage content pages.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'user_manager&entity_manager&editor',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_markdown&com_ptags&com_pform&com_menueditor'
 	),

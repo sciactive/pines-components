@@ -14,13 +14,13 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Switch User',
 	'author' => 'SciActive',
-	'version' => '1.1.0beta',
+	'version' => '1.1.0beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Switch to a different user',
 	'description' => 'Allow users to login as a different user quickly, without having to logout first.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'user_manager',
 		'component' => 'com_jquery&com_pnotify&com_pform'
 	),

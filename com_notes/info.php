@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'A global note system for threaded notes on entities',
 	'description' => 'A note system which allows note threads to be added to most entities. A thread is a collection of related notes.',
 	'depend' => array(
-		'pines' => '>=1.0.2&<2',
+		'pines' => '>=1.0.2&<3',
 		'service' => 'entity_manager&icons',
 		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),

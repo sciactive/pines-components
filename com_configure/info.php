@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'Manages system configuration',
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_bootstrap&com_ptags&com_pgrid&com_markdown&com_pform'
 	),
 	'recommend' => array(

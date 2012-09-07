@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'A simple contact form',
 	'description' => 'A contact form used to send messages from the website.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_bootstrap&com_pform'
 	),
 );

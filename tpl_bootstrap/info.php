@@ -37,7 +37,7 @@ return array(
 	'short_description' => 'Bootstrap styled template',
 	'description' => 'A well integrated template, completely styled with Twitter Bootstrap.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_bootstrap'
 	),
 	'recommend' => array(

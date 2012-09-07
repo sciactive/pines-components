@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Tools for testing and maintaining your entity manager',
 	'description' => 'Includes the following tools: test, benchmark, export, import.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'service' => 'entity_manager',
 		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),

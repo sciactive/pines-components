@@ -37,7 +37,7 @@ return array(
 	'short_description' => 'Joomla! template adapter',
 	'description' => 'An adapter that allows Joomla! templates to be used in Pines.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery'
 	),
 	'recommend' => array(

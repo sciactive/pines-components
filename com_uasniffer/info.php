@@ -20,7 +20,7 @@ return array(
 	'short_description' => 'Provides browser specific options',
 	'description' => 'Uses the client\'s user agent string to determine what browser they\'re using. You can provide browser specific configuration, including configuration for mobile browsers.',
 	'depend' => array(
-		'pines' => '<2'
+		'pines' => '<3'
 	),
 );
 

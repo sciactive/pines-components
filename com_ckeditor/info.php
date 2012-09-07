@@ -21,7 +21,7 @@ return array(
 	'short_description' => 'CKEditor editor widget',
 	'description' => 'CKEditor based editor widget.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '<3',
 		'component' => 'com_jquery&com_bootstrap&com_pform'
 	),
 	'recommend' => array(

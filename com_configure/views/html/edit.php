@@ -140,7 +140,7 @@ $pines->com_ptags->load();
 		<?php if ($this->entity->per_user) { ?>
 		<input type="hidden" name="<?php echo $this->entity->user->is_com_configure_condition ? 'percondition' : 'peruser'; ?>" value="1" />
 		<input type="hidden" name="type" value="<?php echo htmlspecialchars($this->entity->type); ?>" />
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->user->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->user->guid); ?>" />
 		<?php } ?>
 		<input type="hidden" name="component" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
 		<input class="pf-button btn btn-primary" type="submit" value="Save" name="save" />

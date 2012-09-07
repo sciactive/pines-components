@@ -28,7 +28,7 @@ if ($this->entity->final)
 				products_table = $("#p_muid_products_table"),
 				available_products_table = $("#p_muid_available_products_table"),
 				product_dialog = $("#p_muid_product_dialog"),
-				cur_vendor = <?php echo ($this->entity->vendor ? (int) $this->entity->vendor->guid : 'null'); ?>,
+				cur_vendor = <?php echo ($this->entity->vendor->guid ? json_encode($this->entity->vendor->guid) : 'null'); ?>,
 				dec = <?php echo (int) $pines->config->com_sales->dec; ?>; // Number of decimal places to round to.
 			var round_to_dec = function(value){
 				var rnd = Math.pow(10, dec);
@@ -334,7 +334,7 @@ if ($this->entity->final)
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $this->entity->destination->guid; ?>"]
+					"initially_select" : [<?php echo json_encode("{$this->entity->destination->guid}"); ?>]
 				}
 			});
 			<?php } ?>
@@ -377,7 +377,7 @@ if ($this->entity->final)
 				<?php
 				$pines->entity_manager->sort($this->vendors, 'name');
 				foreach ($this->vendors as $cur_vendor) { ?>
-				<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
+				<option value="<?php echo htmlspecialchars($cur_vendor->guid); ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
 				<?php } ?>
 			</select>
 			<?php } else { ?>
@@ -409,7 +409,7 @@ if ($this->entity->final)
 			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
+				<option value="<?php echo htmlspecialchars($cur_shipper->guid); ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
 			</select>
 			<?php } else { ?>
@@ -469,7 +469,7 @@ if ($this->entity->final)
 							if (!isset($missing_products[$cur_product['entity']->guid]))
 								$missing_products[$cur_product['entity']->guid] = array('entity' => $cur_product['entity'], 'quantity' => $cur_product['quantity']);
 							?>
-						<tr title="<?php echo (int) $cur_product['entity']->guid; ?>">
+						<tr title="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>">
 							<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
@@ -612,7 +612,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />

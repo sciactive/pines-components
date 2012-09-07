@@ -33,7 +33,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Date Defaults
 		var date = <?php echo $this->date ? json_encode(format_date($this->date, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid; ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -138,7 +138,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<?php foreach($this->attendance as $cur_attendance) { $timezone = $cur_attendance['employee']->get_timezone(); ?>
-		<tr title="<?php echo (int) $cur_attendance['employee']->guid; ?>">
+		<tr title="<?php echo htmlspecialchars($cur_attendance['employee']->guid); ?>">
 			<td><?php echo htmlspecialchars(format_date($this->date, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->group->name); ?></td>

@@ -35,7 +35,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		// Group Tree
@@ -276,8 +276,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->countsheets as $countsheet) { ?>
-		<tr title="<?php echo (int) $countsheet->guid ?>">
-			<td><a data-entity="<?php echo htmlspecialchars($countsheet->guid); ?>" data-entity-context="com_sales_countsheet"><?php echo (int) $countsheet->guid ?></a></td>
+		<tr title="<?php echo htmlspecialchars($countsheet->guid); ?>">
+			<td><a data-entity="<?php echo htmlspecialchars($countsheet->guid); ?>" data-entity-context="com_sales_countsheet"><?php echo htmlspecialchars($countsheet->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($countsheet->group->name); ?></td>
 			<td><?php echo htmlspecialchars($countsheet->user->name); ?></td>
 			<td><?php echo htmlspecialchars(format_date($countsheet->p_cdate)); ?></td>

@@ -101,7 +101,7 @@ foreach ($matches as $match) {
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid; ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 		// Grid
 		var state_xhr;

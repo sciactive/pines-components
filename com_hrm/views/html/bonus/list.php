@@ -107,7 +107,7 @@ $pines->com_hrm->load_employee_select();
 	</thead>
 	<tbody>
 	<?php foreach($this->bonuses as $cur_bonus) { ?>
-		<tr title="<?php echo (int) $cur_bonus->guid ?>">
+		<tr title="<?php echo htmlspecialchars($cur_bonus->guid); ?>">
 			<td><?php echo htmlspecialchars(format_date($cur_bonus->date)); ?></td>
 			<td><?php echo htmlspecialchars($cur_bonus->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_bonus->employee->guid.': '.$cur_bonus->employee->name); ?></td>

@@ -323,7 +323,7 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<?php if (gatekeeper('com_hrm/editapplication')) { ?>

@@ -71,7 +71,7 @@ $pines->com_pgrid->load();
 			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
 		}
 	?>
-		<tr title="<?php echo (int) $product->guid ?>">
+		<tr title="<?php echo htmlspecialchars($product->guid); ?>">
 			<td><?php echo htmlspecialchars($product->sku); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($product->name); ?></a></td>
 			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>

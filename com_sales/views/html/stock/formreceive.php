@@ -373,7 +373,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (!isset($_SESSION['user']->group) ? '' : (int) $_SESSION['user']->group->guid); ?>"]
+					"initially_select" : [<?php echo isset($_SESSION['user']->group->guid) ? json_encode("{$_SESSION['user']->group->guid}") : '""'; ?>]
 				}
 			});
 		});
@@ -397,7 +397,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo (int) $category->guid ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
+				<tr title="<?php echo htmlspecialchars($category->guid); ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -443,7 +443,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				</thead>
 				<tbody>
 				<?php foreach($this->pos as $cur_shipment) { ?>
-					<tr title="<?php echo (int) $cur_shipment->guid ?>">
+					<tr title="<?php echo htmlspecialchars($cur_shipment->guid); ?>">
 						<td>PO</td>
 						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_shipment->po_number); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
@@ -462,7 +462,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
 					</tr>
 				<?php } foreach($this->transfers as $cur_shipment) { ?>
-					<tr title="<?php echo (int) $cur_shipment->guid ?>">
+					<tr title="<?php echo htmlspecialchars($cur_shipment->guid); ?>">
 						<td>Transfer</td>
 						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_transfer"><?php echo htmlspecialchars($cur_shipment->guid); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>

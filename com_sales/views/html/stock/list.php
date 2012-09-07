@@ -40,7 +40,7 @@ $pines->com_jstree->load();
 		};
 
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -162,7 +162,7 @@ $pines->com_jstree->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
-		<tr title="<?php echo (int) $stock->guid ?>">
+		<tr title="<?php echo htmlspecialchars($stock->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($stock->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($stock->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($stock->product->name); ?></a></td>

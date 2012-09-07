@@ -92,7 +92,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 							un_message.removeClass("picon-task-complete").removeClass("picon-task-attempt").html("").hide();
 							return;
 						}
-						var id = "<?php echo (int) $this->entity->guid ?>";
+						var id = <?php echo json_encode("{$this->entity->guid}"); ?>;
 						$.ajax({
 							url: <?php echo json_encode(pines_url('com_user', 'checkusername')); ?>,
 							type: "POST",

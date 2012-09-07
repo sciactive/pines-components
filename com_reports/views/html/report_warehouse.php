@@ -39,7 +39,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 		
 		var state_xhr;
@@ -176,7 +176,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (!empty($cur_item['serial']) || $cur_item['delivery'] != 'warehouse' || !empty($cur_item['returned_quantity']))
 					continue;
 			?>
-			<tr title="<?php echo htmlspecialchars((int) $cur_tx->customer->guid); ?>">
+			<tr title="<?php echo htmlspecialchars($cur_tx->customer->guid); ?>">
 				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_tx->id); ?></a></td>
 				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate)); ?></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_tx->status)); ?></td>

@@ -11,13 +11,13 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = isset($this->entity->guid) ? 'Editing Sales Ranking ['.((int) $this->entity->guid).']' : 'New Sales Ranking';
+$this->title = isset($this->entity->guid) ? 'Editing Sales Ranking ['.htmlspecialchars($this->entity->guid).']' : 'New Sales Ranking';
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
 <script type='text/javascript'>
 	pines(function(){
-		var top_location = "<?php echo (int) $this->entity->top_location->guid; ?>";
+		var top_location = <?php echo json_encode("{$this->entity->top_location->guid}"); ?>;
 		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
@@ -235,7 +235,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if (isset($this->entity->guid)) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input type="hidden" name="top_location" />
 		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode((array) @array_combine(array_map('strval', array_keys($this->entity->sales_goals)), array_map('strval', $this->entity->sales_goals)))); ?>" />

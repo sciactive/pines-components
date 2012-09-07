@@ -53,7 +53,7 @@ $pines->com_pgrid->load();
 		};
 
 		// Payroll report settings
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var employees_grid = $("#p_muid_grid").pgrid({
@@ -288,7 +288,7 @@ $pines->com_pgrid->load();
 		}
 		foreach ($totals as $cur_total) {
 		?>
-		<tr title="<?php echo (int) $cur_total['employee']->guid ?>">
+		<tr title="<?php echo htmlspecialchars($cur_total['employee']->guid); ?>">
 			<td><?php echo htmlspecialchars($cur_total['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_total['employee']->group->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_total['employee']->pay_type); ?></td>

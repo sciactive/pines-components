@@ -65,7 +65,7 @@ foreach ($products as $key => &$product) {
 	$vendors = array();
 	foreach((array) $product->vendors as $cur_vendor) {
 		$vendors[] = (object) array(
-			'guid' => (int) $cur_vendor['entity']->guid,
+			'guid' => $cur_vendor['entity']->guid,
 			'name' => (string) $cur_vendor['entity']->name,
 			'sku' => $cur_vendor['sku'],
 			'cost' => '$'.$pines->com_sales->round($cur_vendor['cost'], true),

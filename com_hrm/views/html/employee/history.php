@@ -189,11 +189,11 @@ $pines->com_pgrid->load();
 								<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
 								<td><div class="p_muid_issue_actions">
 									<?php if ($cur_issue->status != 'resolved') { ?>
-									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
 									<?php } else { ?>
-									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
 									<?php } ?>
-									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+									<button class="btn btn-mini" type="button" onclick="pines.com_hrm_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
 								</div></td>
 								<?php } ?>
 							</tr>
@@ -224,7 +224,7 @@ $pines->com_pgrid->load();
 						</thead>
 						<tbody>
 						<?php foreach ($this->sales as $cur_sale) { ?>
-							<tr title="<?php echo (int) $cur_sale->guid ?>">
+							<tr title="<?php echo htmlspecialchars($cur_sale->guid); ?>">
 								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 								<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
 								<td><a data-entity="<?php echo htmlspecialchars($cur_sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
@@ -261,7 +261,7 @@ $pines->com_pgrid->load();
 						</thead>
 						<tbody>
 						<?php foreach ($this->returns as $cur_return) { ?>
-							<tr title="<?php echo (int) $cur_return->guid ?>">
+							<tr title="<?php echo htmlspecialchars($cur_return->guid); ?>">
 								<td><a data-entity="<?php echo htmlspecialchars($cur_return->guid); ?>" data-entity-context="com_sales_return"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
 								<td><a data-entity="<?php echo htmlspecialchars($cur_return->sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_return->sale->id); ?></a></td>
 								<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
@@ -300,7 +300,7 @@ $pines->com_pgrid->load();
 							foreach ($cur_paystub->payroll as $cur_payment) {
 								if ($cur_payment['employee']->guid != $this->entity->guid)
 									continue; ?>
-							<tr title="<?php echo (int) $cur_paystub->guid ?>">
+							<tr title="<?php echo htmlspecialchars($cur_paystub->guid); ?>">
 								<td><?php echo htmlspecialchars(format_date($cur_paystub->start)); ?></td>
 								<td><?php echo htmlspecialchars(format_date($cur_paystub->end)); ?></td>
 								<td>$<?php echo htmlspecialchars(number_format($cur_payment['total_pay'], 2, '.', '')); ?></td>

@@ -245,7 +245,7 @@ if ($pines->config->com_sales->com_storefront) {
 								if ($category->is($entity))
 									continue;
 								?>
-								<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
+								<option value="<?php echo htmlspecialchars($category->guid); ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
 								<?php
 								if ($category->children)
 									com_sales__category_form_children($category, $entity, "{$prefix}->");
@@ -255,7 +255,7 @@ if ($pines->config->com_sales->com_storefront) {
 							if ($category->is($this->entity))
 								continue;
 							?>
-							<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
+							<option value="<?php echo htmlspecialchars($category->guid); ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
 							<?php
 							if ($category->children)
 								com_sales__category_form_children($category, $this->entity);
@@ -364,7 +364,7 @@ if ($pines->config->com_sales->com_storefront) {
 					<span class="pf-note">Show content page(s) when browsing this category. You can use page conditions to control which page is shown.</span>
 					<select class="pf-field" id="p_muid_show_page_selector">
 						<?php foreach ($pages as $cur_page) { ?>
-						<option value="<?php echo (int) $cur_page->guid; ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_page->guid); ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
 						<?php } ?>
 					</select></label>
 				<button class="pf-field btn btn-success" id="p_muid_add_show_page" type="button">Add</button>
@@ -667,7 +667,7 @@ if ($pines->config->com_sales->com_storefront) {
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'category/list'))); ?>);" value="Cancel" />

@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Reviewing Countsheet ['.((int) $this->entity->guid).'] at '.htmlspecialchars($this->entity->group->name);
+$this->title = 'Reviewing Countsheet ['.htmlspecialchars($this->entity->guid).'] at '.htmlspecialchars($this->entity->group->name);
 $this->note = 'Created by '.htmlspecialchars($this->entity->user->name).' on '.htmlspecialchars(format_date($this->entity->p_cdate, 'full_long')).'.';
 if (isset($this->entity->run_count_date))
 	$this->note .= ' Run on '.htmlspecialchars(format_date($this->entity->run_count_date, 'full_long')).'.';
@@ -291,7 +291,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input name="approve" class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'countsheet/list'))); ?>);" value="Cancel" />

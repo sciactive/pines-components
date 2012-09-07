@@ -138,7 +138,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		else
 			$week_start = strtotime('last monday 12:00 AM');
 		?>
-		<tr title="<?php echo (int) $employee->guid ?>">
+		<tr title="<?php echo htmlspecialchars($employee->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($employee->timeclock->guid); ?>" data-entity-context="com_hrm_timeclock"><?php echo htmlspecialchars($employee->guid); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($employee->guid); ?>" data-entity-context="com_hrm_employee"><?php echo htmlspecialchars($employee->name); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($employee->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($employee->group->name); ?></a></td>

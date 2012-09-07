@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Cash-Out of Cash Count ['.((int) $this->entity->guid).']';
+$this->title = 'Cash-Out of Cash Count ['.htmlspecialchars($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . htmlspecialchars($this->entity->user->name) . ' on ' . htmlspecialchars(format_date($this->entity->p_cdate, 'date_short')) . ' - Last Modified on ' . htmlspecialchars(format_date($this->entity->p_mdate, 'date_short'));
 ?>
@@ -176,7 +176,7 @@ if (isset($this->entity->guid))
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } if (!$this->entity->cashed_out) { ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Cash Out" />

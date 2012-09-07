@@ -67,7 +67,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->dashboards as $dashboard) { ?>
-		<tr title="<?php echo (int) $dashboard->guid ?>">
+		<tr title="<?php echo htmlspecialchars($dashboard->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($dashboard->guid); ?>" data-entity-context="com_dash_dashboard"><?php echo htmlspecialchars($dashboard->guid); ?></a></td>
 			<td><?php echo htmlspecialchars("{$dashboard->user->name} [{$dashboard->user->username}]"); ?></td>
 			<td><?php echo $dashboard->is($dashboard->user->dashboard) ? 'Yes' : 'No'; ?></td>

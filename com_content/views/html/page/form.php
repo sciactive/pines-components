@@ -619,9 +619,9 @@ if (!$this->quickpage_options) {
 					else
 						$category_guids = $this->entity->get_categories_guid();
 					foreach($this->categories as $cur_category) { ?>
-						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
+						<tr title="<?php echo htmlspecialchars($cur_category->guid); ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
-							<td><input type="checkbox" name="categories[]" value="<?php echo (int) $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
+							<td><input type="checkbox" name="categories[]" value="<?php echo htmlspecialchars($cur_category->guid); ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->pages); ?></td>
 						</tr>
@@ -804,7 +804,7 @@ if (!$this->quickpage_options) {
 <?php } else { ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_content', 'page/list'))); ?>);" value="Cancel" />

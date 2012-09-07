@@ -42,7 +42,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			foreach ($this->employees as $cur_employee) {
 				if (!$cur_employee->in_group($this->location))
 					continue;
-				echo '<option value="'.((int) $cur_employee->guid).'">'.htmlspecialchars($cur_employee->name).'</option>"';
+				echo '<option value="'.htmlspecialchars($cur_employee->guid).'">'.htmlspecialchars($cur_employee->name).'</option>"';
 			} ?>
 		</select>
 	</div>
@@ -59,7 +59,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element pf-full-width">
 		<span id="p_muid_calendar"></span>
 	</div>
-	<input type="hidden" name="location" value="<?php echo (int) $this->location->guid; ?>" />
+	<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location->guid); ?>" />
 	<div class="pf-element pf-full-width">
 		<input type="hidden" name="shifts" value="" />
 	</div>

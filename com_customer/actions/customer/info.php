@@ -23,7 +23,7 @@ if (!isset($customer->guid))
 	return;
 
 $json_struct = (object) array(
-	'guid'			=> (int) $customer->guid,
+	'guid'			=> $customer->guid,
 	'username'		=> (string) $customer->username,
 	'name'			=> (string) $customer->name,
 	'name_first'	=> (string) $customer->name_first,

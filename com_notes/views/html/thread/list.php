@@ -79,7 +79,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			if (class_exists($guess))
 				$context = $guess;
 		} ?>
-		<tr title="<?php echo (int) $thread->guid ?>">
+		<tr title="<?php echo htmlspecialchars($thread->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($thread->guid); ?>" data-entity-context="com_notes_thread"><?php echo htmlspecialchars($thread->guid); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($thread->p_mdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($thread->p_cdate)); ?></td>

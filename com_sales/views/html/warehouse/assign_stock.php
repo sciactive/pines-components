@@ -221,7 +221,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $warehouse->guid; ?>"]
+					"initially_select" : [<?php echo json_encode("{$warehouse->guid}"); ?>]
 				}
 			});
 		});

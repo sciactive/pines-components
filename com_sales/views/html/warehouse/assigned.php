@@ -76,8 +76,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if ($cur_stock->in_array($cur_product['returned_stock_entities']) || $cur_stock->in_array($cur_product['shipped_entities']))
 					continue;
 		?>
-		<tr title="<?php echo (int) $cur_stock->guid; ?>">
-			<td><?php echo (int) $sale->guid; ?></td>
+		<tr title="<?php echo htmlspecialchars($cur_stock->guid); ?>">
+			<td><?php echo htmlspecialchars($sale->guid); ?></td>
 			<td><?php echo htmlspecialchars(format_date($sale->tender_date, 'full_sort')); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_stock->serial); ?></td>

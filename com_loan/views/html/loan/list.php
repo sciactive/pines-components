@@ -231,7 +231,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->loans as $loan) { ?>
-		<tr title="<?php echo (int) $loan->guid ?>">
+		<tr title="<?php echo htmlspecialchars($loan->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($loan->guid); ?>" data-entity-context="com_loan_loan"><?php echo htmlspecialchars($loan->id); ?></a></td>
 			<td><?php echo htmlspecialchars($loan->customer->name); ?></td>
 			<td><?php echo htmlspecialchars($loan->user->name); ?></td>

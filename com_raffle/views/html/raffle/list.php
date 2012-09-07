@@ -71,7 +71,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->raffles as $raffle) { ?>
-		<tr title="<?php echo (int) $raffle->guid ?>">
+		<tr title="<?php echo htmlspecialchars($raffle->guid); ?>">
 			<td><?php echo htmlspecialchars($raffle->id); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($raffle->guid); ?>" data-entity-context="com_raffle_raffle"><?php echo htmlspecialchars($raffle->name); ?></a></td>
 			<td><?php echo (count($raffle->contestants) + count($raffle->public_contestants)); ?></td>

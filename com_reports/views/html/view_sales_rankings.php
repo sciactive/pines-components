@@ -138,7 +138,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					$totals['goal'] += $cur_rank['goal'];
 					$totals['trend'] += $cur_rank['trend'];
 				?>
-				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo htmlspecialchars($cur_rank['entity']->guid); ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
 					<td><?php echo isset($cur_rank['manager']->guid) ? htmlspecialchars($cur_rank['manager']->name) : 'OPEN'; ?></td>
@@ -225,7 +225,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 						$class = 'red';
 					}
 				?>
-				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo htmlspecialchars($cur_rank['entity']->guid); ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars(empty($cur_rank['entity']->nickname) ? $cur_rank['entity']->name : $cur_rank['entity']->nickname); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
@@ -301,7 +301,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 						$class = 'red';
 					}
 				?>
-				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo htmlspecialchars($cur_rank['entity']->guid); ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars(empty($cur_rank['entity']->nickname) ? $cur_rank['entity']->name : $cur_rank['entity']->nickname); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>

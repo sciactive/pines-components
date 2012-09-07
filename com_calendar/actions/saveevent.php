@@ -49,7 +49,7 @@ date_default_timezone_set($_REQUEST['timezone']);
 
 $event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 if (!gatekeeper('com_calendar/managecalendar'))
-	$event->employee = com_hrm_employee::factory((int) $_SESSION['user']->guid);
+	$event->employee = com_hrm_employee::factory($_SESSION['user']->guid);
 
 $location = $event->employee->group;
 $event->title = $event->employee->name;

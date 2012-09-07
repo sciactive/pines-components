@@ -356,8 +356,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->employees as $employee) { ?>
-		<tr title="<?php echo (int) $employee->guid ?>">
-			<td><?php echo (int) $employee->guid ?></td>
+		<tr title="<?php echo htmlspecialchars($employee->guid); ?>">
+			<td><?php echo htmlspecialchars($employee->guid); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($employee->guid); ?>" data-entity-context="com_hrm_employee"><?php echo htmlspecialchars($employee->username); ?></a></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
 			<td><?php echo htmlspecialchars($employee->nickname); ?></td>

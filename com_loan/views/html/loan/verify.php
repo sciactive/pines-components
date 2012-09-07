@@ -165,7 +165,7 @@ $this->title = 'Loan Overview';
 			<input type="hidden" name="compound_frequency" value="<?php echo htmlspecialchars($this->entity->compound_frequency); ?>" />
 			<input type="hidden" name="payment_type" value="<?php echo ($this->entity->payment_type == 0) ? 'ending' : 'beginning'; ?>" />
 			<?php if ( isset($this->entity->guid) ) { ?>
-			<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+			<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 			<?php } ?>
 			<input id="p_muid_loan_process_type" type="hidden" name="loan_process_type" value="none" />
 			<input class="pf-button btn btn-primary" type="button" onclick="$('#p_muid_loan_process_type').val('submit'); $('#p_muid_loan_form').submit();" value="Yes, Continue." />

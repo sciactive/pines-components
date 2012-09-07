@@ -63,7 +63,7 @@ $pines->com_customer->load_customer_select();
 	pines(function(){
 		var station_layout = $("#p_muid_station_layout");
 		var station_floor = $("#p_muid_station_floor");
-		var floor_id = "<?php echo (int) $this->entity->guid; ?>";
+		var floor_id = <?php echo json_encode("{$this->entity->guid}"); ?>;
 		var sel_station;
 
 		var stations = <?php echo json_encode($this->entity->stations); ?>;

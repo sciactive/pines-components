@@ -50,8 +50,8 @@ unset($unsorted_entries);
 // Now we probably have the same set given to the user to edit.
 // TODO: Figure out how to prevent this from deleting the new entry if the employee clocks in while the user is editing.
 $clock = (array) json_decode($_REQUEST['clock']);
-foreach($clock as $cur_entry) {
-	$guid = (int) $cur_entry->guid;
+foreach ($clock as $cur_entry) {
+	$guid = $cur_entry->guid;
 	if ($guid > 0) {
 		if (isset($entries[$guid])) {
 			$entity = $entries[$guid];
@@ -59,9 +59,8 @@ foreach($clock as $cur_entry) {
 		} else
 			// The guid was provided, but not found, so assume it's already been deleted/altered.
 			continue;
-	} else {
+	} else
 		$entity = com_hrm_timeclock_entry::factory();
-	}
 	$entity->in = (int) $cur_entry->in;
 	$entity->out = (int) $cur_entry->out;
 	// Make sure the times are valid, else don't save.

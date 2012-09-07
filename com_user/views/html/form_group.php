@@ -170,7 +170,7 @@ $pines->uploader->load();
 						<?php
 						$pines->user_manager->group_sort($this->group_array, 'name');
 						foreach ($this->group_array as $cur_group) {
-							?><option value="<?php echo (int) $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+							?><option value="<?php echo htmlspecialchars($cur_group->guid); ?>"<?php echo $cur_group->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -431,7 +431,7 @@ $pines->uploader->load();
 
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_user', 'listgroups'))); ?>);" value="Cancel" />

@@ -189,7 +189,7 @@ $pines->com_sales->load_jcrop();
 					<select class="pf-field" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
-						<option value="<?php echo (int) $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_manufacturer->name); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_manufacturer->guid); ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_manufacturer->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -266,9 +266,9 @@ $pines->com_sales->load_jcrop();
 						<?php
 						$category_guids = $this->entity->get_categories_guid();
 						foreach($this->categories as $cur_category) { ?>
-						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
+						<tr title="<?php echo htmlspecialchars($cur_category->guid); ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
-							<td><input type="checkbox" name="categories[]" value="<?php echo (int) $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
+							<td><input type="checkbox" name="categories[]" value="<?php echo htmlspecialchars($cur_category->guid); ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><a data-entity="<?php echo htmlspecialchars($cur_category->guid); ?>" data-entity-context="com_sales_category"><?php echo htmlspecialchars($cur_category->name); ?></a></td>
 							<td><?php echo count($cur_category->products); ?></td>
 						</tr>
@@ -354,7 +354,7 @@ $pines->com_sales->load_jcrop();
 							</thead>
 							<tbody>
 								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-								<tr title="<?php echo (int) $cur_vendor['entity']->guid; ?>">
+								<tr title="<?php echo htmlspecialchars($cur_vendor['entity']->guid); ?>">
 									<td><a data-entity="<?php echo htmlspecialchars($cur_vendor['entity']->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></a></td>
 									<td><?php echo htmlspecialchars($cur_vendor['sku']); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['cost']); ?></td>
@@ -382,7 +382,7 @@ $pines->com_sales->load_jcrop();
 						</thead>
 						<tbody>
 							<?php foreach ($this->vendors as $cur_vendor) { ?>
-							<tr title="<?php echo (int) $cur_vendor->guid; ?>">
+							<tr title="<?php echo htmlspecialchars($cur_vendor->guid); ?>">
 								<td><a data-entity="<?php echo htmlspecialchars($cur_vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($cur_vendor->name); ?></a></td>
 								<td><?php echo htmlspecialchars($cur_vendor->email); ?></td>
 								<td><?php echo htmlspecialchars(format_phone($cur_vendor->phone_work)); ?></td>
@@ -488,7 +488,7 @@ $pines->com_sales->load_jcrop();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
-						<option value="<?php echo (int) $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tax_fee->name); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_tax_fee->guid); ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tax_fee->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -498,7 +498,7 @@ $pines->com_sales->load_jcrop();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field" name="return_checklists[]" size="6" multiple="multiple">
 						<?php foreach ($this->return_checklists as $cur_return_checklist) { ?>
-						<option value="<?php echo (int) $cur_return_checklist->guid; ?>"<?php echo ($cur_return_checklist->in_array($this->entity->return_checklists)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_return_checklist->name); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_return_checklist->guid); ?>"<?php echo ($cur_return_checklist->in_array($this->entity->return_checklists)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_return_checklist->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -1070,9 +1070,9 @@ $pines->com_sales->load_jcrop();
 			<fieldset class="pf-group">
 				<legend>Category Specs</legend>
 				<?php foreach($this->categories as $cur_category) { ?>
-				<div class="spec" id="p_muid_specs_<?php echo (int) $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
+				<div class="spec" id="p_muid_specs_<?php echo htmlspecialchars($cur_category->guid); ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
 					<?php if (isset($cur_category->parent)) { ?>
-					<div class="parent" style="display: none;"><?php echo (int) $cur_category->parent->guid; ?></div>
+					<div class="parent" style="display: none;"><?php echo htmlspecialchars($cur_category->parent->guid); ?></div>
 					<?php } ?>
 					<?php if (!empty($cur_category->specs)) { ?>
 					<div class="pf-element pf-heading">
@@ -1303,7 +1303,7 @@ $pines->com_sales->load_jcrop();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'product/list'))); ?>);" value="Cancel" />

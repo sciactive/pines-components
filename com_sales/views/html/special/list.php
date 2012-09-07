@@ -69,7 +69,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->specials as $special) { ?>
-		<tr title="<?php echo (int) $special->guid ?>">
+		<tr title="<?php echo htmlspecialchars($special->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($special->guid); ?>" data-entity-context="com_sales_special"><?php echo htmlspecialchars($special->code); ?></a></td>
 			<td><?php echo htmlspecialchars($special->name); ?></td>
 		</tr>

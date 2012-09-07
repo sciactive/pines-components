@@ -74,7 +74,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->pages as $page) { ?>
-		<tr title="<?php echo (int) $page->guid ?>">
+		<tr title="<?php echo htmlspecialchars($page->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($page->guid); ?>" data-entity-context="com_content_page"><?php echo htmlspecialchars($page->name); ?></a></td>
 			<td><?php echo htmlspecialchars($page->alias); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>

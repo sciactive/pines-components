@@ -64,7 +64,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->templates as $template) { ?>
-		<tr title="<?php echo (int) $template->guid ?>">
+		<tr title="<?php echo htmlspecialchars($template->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($template->guid); ?>" data-entity-context="com_mailer_template"><?php echo htmlspecialchars($template->name); ?></a></td>
 			<td><?php echo ($template->enabled ? 'Yes' : 'No'); ?></td>
 		</tr>

@@ -57,7 +57,7 @@ $pines->com_pgrid->load();
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid; ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var employees_grid = $("#p_muid_grid").pgrid({
@@ -252,7 +252,7 @@ $pines->com_pgrid->load();
 			foreach ((array) $totals as $cur_total) {
 				$cur_total['profit'] = ($cur_total['total_sold']-$cur_total['total_returned'])-$cur_total['cost'];
 			?>
-			<tr title="<?php echo (int) $cur_total['employee']->guid; ?>">
+			<tr title="<?php echo htmlspecialchars($cur_total['employee']->guid); ?>">
 				<td><?php echo htmlspecialchars($cur_total['employee']->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_total['qty_sold']); ?></td>
 				<td><?php echo htmlspecialchars($cur_total['qty_returned']); ?></td>

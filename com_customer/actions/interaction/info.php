@@ -33,7 +33,7 @@ if (!isset($interaction->sale->guid)) {
 	$sale_guid = '';
 } else {
 	$sale_title = (count($interaction->sale->products) == 1) ? $interaction->sale->products[0]['entity']->name : count($interaction->sale->products).' items';
-	$sale_guid = (int) $interaction->sale->guid;
+	$sale_guid = $interaction->sale->guid;
 }
 
 if ($interaction->type == 'Email')
@@ -46,13 +46,13 @@ elseif (!empty($interaction->customer->phone_work))
 	$contact_info = format_phone($interaction->customer->phone_work);
 
 $json_struct = (object) array(
-	'guid'				=> (int) $interaction->guid,
+	'guid'				=> $interaction->guid,
 	'customer'			=> (string) $interaction->customer->name,
-	'customer_guid'		=> (int) $interaction->customer->guid,
+	'customer_guid'		=> $interaction->customer->guid,
 	'sale'				=> $sale_title,
 	'sale_guid'			=> $sale_guid,
 	'employee'			=> (string) $interaction->employee->name,
-	'employee_guid'		=> (int) $interaction->employee->guid,
+	'employee_guid'		=> $interaction->employee->guid,
 	'type'				=> (string) $interaction->type,
 	'contact_info'		=> $contact_info,
 	'created_date'		=> format_date($interaction->p_cdate, 'full_sort'),

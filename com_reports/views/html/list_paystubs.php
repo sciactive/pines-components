@@ -63,8 +63,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->paystubs as $cur_stub) { ?>
-		<tr title="<?php echo (int) $cur_stub->guid ?>">
-			<td><?php echo (int) $cur_stub->guid ?></td>
+		<tr title="<?php echo htmlspecialchars($cur_stub->guid); ?>">
+			<td><?php echo htmlspecialchars($cur_stub->guid); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_stub->start, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_stub->end, 'date_sort')); ?></td>
 			<td>$<?php echo htmlspecialchars(number_format($cur_stub->total, 2, '.', '')); ?></td>

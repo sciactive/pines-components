@@ -72,7 +72,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->packages as $package) { ?>
-		<tr title="<?php echo (int) $package->guid ?>">
+		<tr title="<?php echo htmlspecialchars($package->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($package->guid); ?>" data-entity-context="com_packager_package"><?php echo htmlspecialchars($package->name); ?></a></td>
 			<td><?php switch($package->type) {
 				case 'component':

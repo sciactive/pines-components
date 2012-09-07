@@ -313,7 +313,7 @@ $missing_stock = array();
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $this->entity->origin->guid; ?>"]
+					"initially_select" : [<?php echo json_encode("{$this->entity->origin->guid}"); ?>]
 				}
 			});
 			$("#p_muid_form .location_tree_destination")
@@ -339,7 +339,7 @@ $missing_stock = array();
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $this->entity->destination->guid; ?>"]
+					"initially_select" : [<?php echo json_encode("{$this->entity->destination->guid}"); ?>]
 				}
 			});
 			<?php } ?>
@@ -408,7 +408,7 @@ $missing_stock = array();
 			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo (int) $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
+				<option value="<?php echo htmlspecialchars($cur_shipper->guid); ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
 			</select>
 			<?php } else { ?>
@@ -443,7 +443,7 @@ $missing_stock = array();
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo (int) $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
+				<tr title="<?php echo htmlspecialchars($category->guid); ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -577,7 +577,7 @@ $missing_stock = array();
 	<div class="pf-element pf-buttons">
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />

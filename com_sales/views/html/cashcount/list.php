@@ -146,8 +146,8 @@ $pines->com_jstree->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->counts as $cur_count) { ?>
-		<tr title="<?php echo (int) $cur_count->guid ?>">
-			<td><a data-entity="<?php echo htmlspecialchars($cur_count->guid); ?>" data-entity-context="com_sales_cashcount"><?php echo (int) $cur_count->guid ?></a></td>
+		<tr title="<?php echo htmlspecialchars($cur_count->guid); ?>">
+			<td><a data-entity="<?php echo htmlspecialchars($cur_count->guid); ?>" data-entity-context="com_sales_cashcount"><?php echo htmlspecialchars($cur_count->guid); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($cur_count->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_count->group->name); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($cur_count->p_cdate)); ?></td>
 			<td><?php echo $cur_count->final ? 'Yes' : 'No'; ?></td>

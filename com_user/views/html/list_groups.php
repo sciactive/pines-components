@@ -83,13 +83,13 @@ foreach($this->groups as $cur_group) {
 	</thead>
 	<tbody>
 	<?php foreach($this->groups as $group) { ?>
-		<tr title="<?php echo (int) $group->guid ?>" class="<?php
+		<tr title="<?php echo htmlspecialchars($group->guid); ?>" class="<?php
 		if (in_array($group->guid, $parents))
 			echo "parent ";
 		if (isset($group->parent) && $group->parent->in_array($this->groups))
 			echo htmlspecialchars("child ch_{$group->parent->guid}");
 		?>">
-			<td><?php echo (int) $group->guid ?></td>
+			<td><?php echo htmlspecialchars($group->guid); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($group->groupname); ?></a></td>
 			<td><?php echo htmlspecialchars($group->name); ?></td>
 			<td><a href="mailto:<?php echo htmlspecialchars($group->email); ?>"><?php echo htmlspecialchars($group->email); ?></a></td>

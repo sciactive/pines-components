@@ -55,8 +55,8 @@ $pines->com_pgrid->load();
 		};
 
 		// Payroll report settings
-		var paystub = '<?php echo (int) $this->entity->guid ?>';
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var paystub = <?php echo json_encode("{$this->entity->guid}"); ?>;
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var employees_grid = $("#p_muid_grid").pgrid({
@@ -144,7 +144,7 @@ $pines->com_pgrid->load();
 			if (!$this->entire_company && ($cur_payment['location']->guid != $this->location->guid))
 				continue;
 		?>
-		<tr title="<?php echo (int) $cur_payment['employee']->guid ?>">
+		<tr title="<?php echo htmlspecialchars($cur_payment['employee']->guid); ?>">
 			<td><?php echo htmlspecialchars($cur_payment['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_payment['location']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_payment['pay_type']); ?></td>

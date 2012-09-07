@@ -59,7 +59,7 @@ $pines->uploader->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="update" value="yes" />
-		<input type="hidden" name="mail_id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="mail_id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<input class="pf-button btn btn-primary" type="submit" value="Save Mail" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url($this->close_option, $this->close_action))); ?>);" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>

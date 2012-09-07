@@ -64,7 +64,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->renditions as $rendition) { ?>
-		<tr title="<?php echo (int) $rendition->guid ?>">
+		<tr title="<?php echo htmlspecialchars($rendition->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($rendition->guid); ?>" data-entity-context="com_mailer_rendition"><?php echo htmlspecialchars($rendition->name); ?></a></td>
 			<td><?php echo ($rendition->enabled ? 'Yes' : 'No'); ?></td>
 		</tr>

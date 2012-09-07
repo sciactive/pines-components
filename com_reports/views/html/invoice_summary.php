@@ -63,7 +63,7 @@ $pines->com_pgrid->load();
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var invoices_grid = $("#p_muid_grid").pgrid({
@@ -204,7 +204,7 @@ $pines->com_pgrid->load();
 					$total_cost += $cur_stock->cost;
 			}
 		?>
-		<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
+		<tr title="<?php echo htmlspecialchars($cur_invoice->customer->guid); ?>" class="<?php echo $type; ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($cur_invoice->guid); ?>" data-entity-context="<?php echo $cur_invoice->has_tag('return') ? 'com_sales_return' : 'com_sales_sale'; ?>"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
 			<td><?php echo ucwords($type); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_invoice->p_cdate, 'full_sort')); ?></td>

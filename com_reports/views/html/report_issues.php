@@ -51,7 +51,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -251,7 +251,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<?php foreach ($this->issues as $cur_issue) { ?>
-		<tr title="<?php echo (int) $cur_issue->employee->guid ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
+		<tr title="<?php echo htmlspecialchars($cur_issue->employee->guid); ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
 			<td><?php echo htmlspecialchars(format_date($cur_issue->date, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->location->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->employee->name); ?></td>
@@ -263,11 +263,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><div class="p_muid_issue_actions">
 				<?php if (gatekeeper('com_hrm/resolveissue')) {
 					if ($cur_issue->status != 'resolved') { ?>
-					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
 					<?php } else { ?>
-					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
 					<?php } ?>
-					<button class="btn" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+					<button class="btn" type="button" onclick="pines.com_reports_process_issue(<?php echo htmlspecialchars(json_encode("{$cur_issue->guid}")); ?>, 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
 				<?php } ?>
 				</div></td>
 		</tr>

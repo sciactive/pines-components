@@ -38,8 +38,8 @@ if ($pines->config->com_user->check_username)
 		<?php if ($this->display_username && $pines->config->com_user->check_username) { ?>
 		// Check usernames.
 		$("[name=username]", "#p_muid_form").change(function(){
-			var username = $(this);
-			var id = "<?php echo (int) $this->entity->guid ?>";
+			var username = $(this),
+				id = <?php echo json_encode("{$this->entity->guid}"); ?>;
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_user', 'checkusername')); ?>,
 				type: "POST",
@@ -77,8 +77,8 @@ if ($pines->config->com_user->check_username)
 		});
 		<?php } ?>
 
-		var password = $("#p_muid_form [name=password]");
-		var password2 = $("#p_muid_form [name=password2]");
+		var password = $("#p_muid_form [name=password]"),
+			password2 = $("#p_muid_form [name=password2]");
 		$("#p_muid_form").submit(function(){
 			if (password.val() != password2.val()) {
 				alert("Your passwords do not match.");
@@ -223,7 +223,7 @@ if ($pines->config->com_user->check_username)
 							<?php
 							$pines->user_manager->group_sort($this->group_array_primary, 'name');
 							foreach ($this->group_array_primary as $cur_group) {
-								?><option value="<?php echo (int) $cur_group->guid ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+								?><option value="<?php echo htmlspecialchars($cur_group->guid); ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 							} ?>
 						</select>
 					</label>
@@ -275,8 +275,8 @@ if ($pines->config->com_user->check_username)
 								</thead>
 								<tbody>
 								<?php foreach($this->group_array_secondary as $cur_group) { ?>
-									<tr title="<?php echo (int) $cur_group->guid ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
-										<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
+									<tr title="<?php echo htmlspecialchars($cur_group->guid); ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
+										<td><input type="checkbox" name="groups[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
 										<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 										<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->groupname); ?></a></td>
 									</tr>
@@ -713,7 +713,7 @@ if ($pines->config->com_user->check_username)
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<?php if (gatekeeper('com_user/listusers')) { ?>

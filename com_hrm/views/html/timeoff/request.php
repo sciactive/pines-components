@@ -143,13 +143,13 @@ defined('P_RUN') or die('Direct access prohibited');
 			<?php foreach ($this->requests as $cur_request) {
 			$style = ($cur_request->status == 'declined') ? 'ui-state-error' : 'ui-state-highlight'; ?>
 			<div class="pf-element" style="padding-bottom: 0;">
-				<span class="pf-note" style="width: auto;"><?php echo htmlspecialchars(format_date($cur_request->start, 'date_short')); ?></span><a class="pf-field <?php echo $style; ?>" onclick="pines.com_hrm_time_off_form(<?php echo (int) $cur_request->guid ?>); return false;" href="#"><?php echo htmlspecialchars($cur_request->reason); ?></a>
+				<span class="pf-note" style="width: auto;"><?php echo htmlspecialchars(format_date($cur_request->start, 'date_short')); ?></span><a class="pf-field <?php echo $style; ?>" onclick="pines.com_hrm_time_off_form(<?php echo htmlspecialchars(json_encode($cur_request->guid)); ?>); return false;" href="#"><?php echo htmlspecialchars($cur_request->reason); ?></a>
 			</div>
 			<?php } ?>
 		</div>
 	</div>
-	<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid ?>" />
+	<input type="hidden" name="employee" value="<?php echo htmlspecialchars($_SESSION['user']->guid); ?>" />
 	<?php if (isset($this->entity->guid)) { ?>
-	<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+	<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 	<?php } ?>
 </form>

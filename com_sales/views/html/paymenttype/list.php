@@ -73,7 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->payment_types as $payment_type) { ?>
-		<tr title="<?php echo (int) $payment_type->guid ?>">
+		<tr title="<?php echo htmlspecialchars($payment_type->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($payment_type->guid); ?>" data-entity-context="com_sales_payment_type"><?php echo htmlspecialchars($payment_type->name); ?></a></td>
 			<td><?php echo $payment_type->enabled ? 'Yes' : 'No'; ?></td>
 			<?php if ($pines->config->com_sales->com_storefront) { ?>

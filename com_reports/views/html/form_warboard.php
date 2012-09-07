@@ -85,10 +85,10 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 			<?php foreach($this->groups as $cur_group) { ?>
-				<tr title="<?php echo (int) $cur_group->guid ?>">
-					<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
-					<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
-					<td class="hq_label"><input type="radio" name="hq" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
+				<tr title="<?php echo htmlspecialchars($cur_group->guid); ?>">
+					<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
+					<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
+					<td class="hq_label"><input type="radio" name="hq" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
 					<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->name); ?></a></td>
 					<td><a data-entity="<?php echo htmlspecialchars($cur_group->parent->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->parent->name); ?></a></td>
 				</tr>
@@ -97,7 +97,7 @@ $pines->com_pgrid->load();
 		</table>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<input class="pf-button btn btn-primary" type="submit" value="Save" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_reports', 'warboard'))); ?>);" value="Cancel" />
 	</div>

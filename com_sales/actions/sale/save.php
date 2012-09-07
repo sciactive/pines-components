@@ -132,7 +132,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 	$added_specials = (array) json_decode($_REQUEST['specials']);
 	$sale->added_specials = array();
 	foreach ($added_specials as $cur_special_json) {
-		$cur_special = com_sales_special::factory((int) $cur_special_json->guid);
+		$cur_special = com_sales_special::factory($cur_special_json->guid);
 		if (!isset($cur_special->guid)) {
 			pines_notice("The special, {$cur_special_json->name}, was not found.");
 			continue;

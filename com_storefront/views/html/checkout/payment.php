@@ -80,7 +80,7 @@ $this->title = 'Payment Options';
 		</div>
 		<?php } ?>
 		<div class="pf-element pf-buttons">
-			<input type="hidden" name="com_storefront_payment_id" value="<?php echo (int) $cur_payment_type->guid ?>" />
+			<input type="hidden" name="com_storefront_payment_id" value="<?php echo htmlspecialchars($cur_payment_type->guid); ?>" />
 			<input class="pf-button btn btn-primary" type="submit" value="<?php echo $this->review_form ? htmlspecialchars($pines->config->com_storefront->complete_order_text) : 'Continue'; ?>" />
 		</div>
 	</form>

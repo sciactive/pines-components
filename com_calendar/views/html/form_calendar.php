@@ -612,7 +612,7 @@ if ($pines->config->com_calendar->com_customer)
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
 			if ( $this->location->guid == $cur_employee->group->guid || ($this->descendants && $cur_employee->is_descendant($this->location)) )
-				echo '<option value="'.((int) $cur_employee->guid).'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
+				echo '<option value="'.htmlspecialchars($cur_employee->guid).'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
 </div>
@@ -679,7 +679,7 @@ if ($pines->config->com_calendar->com_customer)
 				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
 					if ($cur_employee->in_group($this->location) || ($this->descendants && $cur_employee->is_descendant($this->location)))
-						echo '<option value="'.((int) $cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+						echo '<option value="'.htmlspecialchars($cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 				} ?>
 			</select></label>
 		</div>
@@ -688,7 +688,7 @@ if ($pines->config->com_calendar->com_customer)
 			<label><span class="pf-label">Employee</span>
 				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 		</div>
-		<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid; ?>" />
+		<input type="hidden" name="employee" value="<?php echo htmlspecialchars($_SESSION['user']->guid); ?>" />
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>

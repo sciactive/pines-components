@@ -105,6 +105,6 @@ defined('P_RUN') or die('Direct access prohibited');
 		<input type="hidden" name="dates" value="" />
 	</div>
 	<?php if (isset($this->entity->guid)) { ?>
-	<input type="hidden" name="employee" value="<?php echo (int) $this->entity->guid ?>" />
+	<input type="hidden" name="employee" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 	<?php } ?>
 </form>

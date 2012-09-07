@@ -54,7 +54,7 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 				<?php foreach ($this->pos as $cur_po) { ?>
-				<tr title="<?php echo (int) $cur_po->guid; ?>">
+				<tr title="<?php echo htmlspecialchars($cur_po->guid); ?>">
 					<td><?php echo htmlspecialchars($cur_po->po_number); ?></td>
 					<td><?php echo htmlspecialchars($cur_po->reference_number); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_po->destination->name} [{$cur_po->destination->groupname}]"); ?></td>

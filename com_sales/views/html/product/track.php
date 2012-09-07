@@ -58,7 +58,7 @@ $pines->com_jstree->load();
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -262,13 +262,13 @@ $pines->com_jstree->load();
 				break;
 		}
 	?>
-		<tr title="<?php echo (int) $cur_transaction->entity->guid ?>">
+		<tr title="<?php echo htmlspecialchars($cur_transaction->entity->guid); ?>">
 			<td><?php echo htmlspecialchars(format_date($cur_transaction->entity->p_cdate)); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($cur_transaction->stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($cur_transaction->stock->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->sku); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($cur_transaction->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_transaction->product->name); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$group->name} [{$group->groupname}]"); ?></a></td>
-			<td><a data-entity="<?php echo htmlspecialchars($link); ?>" data-entity-context="<?php echo htmlspecialchars($context); ?>"><?php echo (int) $cur_transaction->entity->guid ?></a></td>
+			<td><a data-entity="<?php echo htmlspecialchars($link); ?>" data-entity-context="<?php echo htmlspecialchars($context); ?>"><?php echo htmlspecialchars($cur_transaction->entity->guid); ?></a></td>
 			<td><?php echo htmlspecialchars(ucwords($cur_transaction->type)); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
 			<td><?php echo htmlspecialchars($quantity); ?></td>

@@ -71,7 +71,7 @@ $module_types = $pines->com_modules->module_types();
 	<tbody>
 	<?php foreach($this->modules as $module) {
 		list ($component, $name) = explode('/', $module->type, 2); ?>
-		<tr title="<?php echo (int) $module->guid ?>">
+		<tr title="<?php echo htmlspecialchars($module->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($module->guid); ?>" data-entity-context="com_modules_module"><?php echo htmlspecialchars($module->name); ?></a></td>
 			<td><?php echo htmlspecialchars($module->position); ?></td>
 			<td><?php echo htmlspecialchars($module->order); ?></td>

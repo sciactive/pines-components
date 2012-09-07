@@ -86,7 +86,7 @@ $pines->com_pgrid->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->types as $type) { ?>
-		<tr title="<?php echo (int) $type->guid ?>">
+		<tr title="<?php echo htmlspecialchars($type->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($type->guid); ?>" data-entity-context="com_hrm_issue_type"><?php echo htmlspecialchars($type->name); ?></a></td>
 			<td>$<?php echo htmlspecialchars($type->penalty); ?></td>
 			<td><?php echo htmlspecialchars($type->description); ?></td>

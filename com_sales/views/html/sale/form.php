@@ -461,8 +461,8 @@ if ($pines->config->com_sales->com_esp) {
 
 								var insured_item = $(this);
 								var insured_guid = insured_item.attr("title");
-								if (insured_guid == "<?php echo (int) $esp_product->guid; ?>") {
-									alert('This item is an ESP. It does not need to be insured');
+								if (insured_guid == <?php echo json_encode("{$esp_product->guid}"); ?>) {
+									alert('This item is an ESP. It does not need to be insured.');
 									return;
 								} else if (insured_item.pgrid_get_value(10) != '') {
 									alert('There is already an ESP for this item');
@@ -575,7 +575,7 @@ if ($pines->config->com_sales->com_esp) {
 								$.each(products_table.pgrid_get_all_rows(), function(){
 									var cur_item = $(this);
 									if ($.inArray(cur_item.pgrid_get_value(10), deserted) != -1) {
-										if (cur_item.attr('title') == '<?php echo (int) $esp_product->guid; ?>')
+										if (cur_item.attr('title') == <?php echo json_encode("{$esp_product->guid}"); ?>)
 											// An insured item has been removed
 											cur_item.pgrid_delete();
 										else
@@ -1666,7 +1666,7 @@ if ($pines->config->com_sales->com_esp) {
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo (int) $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
+				<tr title="<?php echo htmlspecialchars($category->guid); ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -1718,7 +1718,7 @@ if ($pines->config->com_sales->com_esp) {
 						if (!isset($cur_product['entity']))
 							continue;
 						?>
-				<tr title="<?php echo (int) $cur_product['entity']->guid; ?>">
+				<tr title="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>">
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
@@ -1822,7 +1822,7 @@ if ($pines->config->com_sales->com_esp) {
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="btn payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo htmlspecialchars($cur_payment_type->guid); ?>" class="btn payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-financial-payment-mode" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlspecialchars($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
@@ -2011,7 +2011,7 @@ if ($pines->config->com_sales->com_esp) {
 	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 
 		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />

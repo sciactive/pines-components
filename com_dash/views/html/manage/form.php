@@ -28,7 +28,7 @@ $pines->com_pgrid->load();
 					<select class="pf-field" name="user" size="1">
 						<option value="none">--No User--</option>
 						<?php foreach ($this->user_array as $cur_user) {
-							?><option value="<?php echo (int) $cur_user->guid; ?>"<?php echo $cur_user->is($this->entity->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$cur_user->name} [{$cur_user->username}]"); ?></option><?php
+							?><option value="<?php echo htmlspecialchars($cur_user->guid); ?>"<?php echo $cur_user->is($this->entity->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$cur_user->name} [{$cur_user->username}]"); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -39,7 +39,7 @@ $pines->com_pgrid->load();
 					<select class="pf-field" name="group" size="1">
 						<option value="none">--No Group--</option>
 						<?php foreach ($this->group_array as $cur_group) {
-							?><option value="<?php echo (int) $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+							?><option value="<?php echo htmlspecialchars($cur_group->guid); ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -107,8 +107,8 @@ $pines->com_pgrid->load();
 					</thead>
 					<tbody>
 					<?php foreach($this->user_array as $cur_user) { ?>
-						<tr title="<?php echo (int) $cur_user->guid ?>">
-							<td><input type="checkbox" name="users[]" value="<?php echo (int) $cur_user->guid ?>" <?php echo ($cur_user->dashboard->guid && $cur_user->dashboard->is($this->entity)) ? 'checked="checked" ' : ''; ?>/></td>
+						<tr title="<?php echo htmlspecialchars($cur_user->guid); ?>">
+							<td><input type="checkbox" name="users[]" value="<?php echo htmlspecialchars($cur_user->guid); ?>" <?php echo ($cur_user->dashboard->guid && $cur_user->dashboard->is($this->entity)) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_user->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_user->username); ?></td>
 						</tr>
@@ -159,8 +159,8 @@ $pines->com_pgrid->load();
 					</thead>
 					<tbody>
 					<?php foreach($this->group_array as $cur_group) { ?>
-						<tr title="<?php echo (int) $cur_group->guid ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
-							<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo ($cur_group->dashboard->guid && $cur_group->dashboard->is($this->entity)) ? 'checked="checked" ' : ''; ?>/></td>
+						<tr title="<?php echo htmlspecialchars($cur_group->guid); ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
+							<td><input type="checkbox" name="groups[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo ($cur_group->dashboard->guid && $cur_group->dashboard->is($this->entity)) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
 						</tr>
@@ -173,7 +173,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_dash', 'manage/list'))); ?>);" value="Cancel" />

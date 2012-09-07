@@ -15,7 +15,7 @@ if (gatekeeper('com_hrm/listemployees') && !empty($_REQUEST['id'])) {
 	$entity = com_hrm_employee::factory((int) $_REQUEST['id']);
 	$entity->print_history();
 } elseif (gatekeeper('com_hrm/viewownhistory') && $_SESSION['user']->employee) {
-	$entity = com_hrm_employee::factory((int) $_SESSION['user']->guid);
+	$entity = com_hrm_employee::factory($_SESSION['user']->guid);
 	$entity->print_history();
 } else {
 	punt_user(null, pines_url('com_hrm', 'employee/history', array('id' => $_REQUEST['id'])));

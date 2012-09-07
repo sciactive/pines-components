@@ -71,7 +71,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->requests as $cur_request) {
 		$date_format = $cur_request->all_day ? 'date_sort' : 'full_sort'; ?>
-		<tr title="<?php echo (int) $cur_request->guid ?>">
+		<tr title="<?php echo htmlspecialchars($cur_request->guid); ?>">
 			<td><?php echo htmlspecialchars($cur_request->employee->name); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_request->start, $date_format)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($cur_request->end, $date_format)); ?></td>

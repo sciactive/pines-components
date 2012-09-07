@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Shipping Transfer ['.((int) $this->entity->guid).']';
+$this->title = 'Shipping Transfer ['.htmlspecialchars($this->entity->guid).']';
 $products = array();
 foreach ($this->entity->products as $cur_product) {
 	if (isset($products[$cur_product->guid])) {
@@ -109,7 +109,7 @@ foreach ($this->entity->products as $cur_product) {
 							<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 							<td>
 								<?php if ($cur_product['entity']->serialized) { ?>
-								<textarea cols="20" rows="2" name="serials_<?php echo (int) $cur_product['entity']->guid ?>"></textarea>
+								<textarea cols="20" rows="2" name="serials_<?php echo htmlspecialchars($cur_product['entity']->guid); ?>"></textarea>
 								<?php } else { ?>
 								Not serialized.
 								<?php } ?>
@@ -130,7 +130,7 @@ foreach ($this->entity->products as $cur_product) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Ship" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'transfer/list'))); ?>);" value="Cancel" />

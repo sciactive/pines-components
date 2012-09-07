@@ -304,7 +304,7 @@ class com_storefront extends component {
 		$cookie = array();
 		foreach ($this->cart as $cur_item) {
 			$cookie[] = array(
-				'product' => (int) $cur_item['product']->guid,
+				'product' => $cur_item['product']->guid,
 				'quantity' => (int) $cur_item['quantity']
 			);
 		}

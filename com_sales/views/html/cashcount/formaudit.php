@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Auditing Cash Count ['.((int) $this->entity->cashcount->guid).'] for '.htmlspecialchars($this->entity->cashcount->group->name);
+$this->title = 'Auditing Cash Count ['.htmlspecialchars($this->entity->cashcount->guid).'] for '.htmlspecialchars($this->entity->cashcount->group->name);
 $this->note = 'Count all of the cash currently present in the drawer.';
 ?>
 <style type="text/css" >
@@ -135,7 +135,7 @@ $this->note = 'Count all of the cash currently present in the drawer.';
 		<div class="pf-group pf-full-width" style="margin-left: 0;"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->cashcount->guid ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->cashcount->guid); ?>" />
 		<input class="pf-button btn btn-primary" type="button" value="Finish Audit" onclick="pines.com_sales_verify();" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'cashcount/list'))); ?>);" value="Cancel" />
 	</div>

@@ -31,7 +31,7 @@ $pines->com_jstree->load();
 		};
 
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -130,7 +130,7 @@ $pines->com_jstree->load();
 	</thead>
 	<tbody>
 	<?php foreach((array) $this->sales as $sale) { ?>
-		<tr title="<?php echo (int) $sale->guid ?>">
+		<tr title="<?php echo htmlspecialchars($sale->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td>Sale <a href="javascript:void(0);" onclick="alert('Recent upgrades have changed the shipment system, and new sales will no longer show in this view. It will instead be just for shipments.');">(?)</a></td>
 			<td><?php echo $sale->has_tag('shipping_shipped') ? 'Shipped' : 'Not Shipped'; ?></td>
@@ -149,7 +149,7 @@ $pines->com_jstree->load();
 		else
 			$ref_class = 'entity';
 		?>
-		<tr title="<?php echo (int) $shipment->guid ?>">
+		<tr title="<?php echo htmlspecialchars($shipment->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($shipment->guid); ?>" data-entity-context="com_sales_shipment"><?php echo htmlspecialchars($shipment->id); ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($shipment->ref->guid); ?>" data-entity-context="<?php echo htmlspecialchars($ref_class); ?>"><?php echo htmlspecialchars($shipment->ref->info('name')); ?></a></td>
 			<td><?php echo $shipment->shipped ? 'Shipped' : 'Not Shipped'; ?> - <?php echo $shipment->delivered ? 'Delivered' : 'In Transit'; ?></td>

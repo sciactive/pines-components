@@ -40,7 +40,7 @@ $pines->com_jstree->load();
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["<?php echo (int) $_SESSION['user']->group->guid; ?>"]
+				"initially_select" : [<?php echo json_encode("{$_SESSION['user']->group->guid}"); ?>]
 			}
 		});
 	});

@@ -236,7 +236,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" name="entries" value="" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />

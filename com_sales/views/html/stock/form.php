@@ -102,7 +102,7 @@ $pines->com_jstree->load();
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $this->entity->location->guid; ?>"]
+					"initially_select" : [<?php echo json_encode("{$this->entity->location->guid}"); ?>]
 				}
 			});
 		});
@@ -274,7 +274,7 @@ $pines->com_jstree->load();
 								<?php
 								$pines->entity_manager->sort($this->vendors, 'name');
 								foreach ($this->vendors as $cur_vendor) { ?>
-								<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
+								<option value="<?php echo htmlspecialchars($cur_vendor->guid); ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
 								<?php } ?>
 							</select>
 						</label>
@@ -324,7 +324,7 @@ $pines->com_jstree->load();
 	<br class="pf-clearing" />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } elseif ( is_array($this->entities) ) {
 			$guids = array();
 			foreach ($this->entities as $cur_entity) {

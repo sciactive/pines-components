@@ -528,7 +528,7 @@ switch ($this->entity->payment_frequency) {
 				</div>
 				<div class="pf-element" style="float:right;clear:none;">
 					<?php if ( isset($this->entity->guid) ) { ?>
-						<input id="edit_payment_loan_id" type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+						<input id="edit_payment_loan_id" type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 					<?php } ?>
 					<span class="pf-label" style="width:230px;">Save all Edited, Enabled Payments.</span>
 					<input name="editpayments" id="p_muid_edit_edit_save" class="pf-button btn btn-primary" type="submit" value="Save" />

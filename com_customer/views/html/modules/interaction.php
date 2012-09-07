@@ -47,7 +47,7 @@ echo $module->render();
 					dataType: "json",
 					data: {
 						customer: name_id,
-						employee: <?php echo (int) $_SESSION['user']->guid; ?>,
+						employee: <?php echo json_encode("{$_SESSION['user']->guid}"); ?>,
 						type: interaction_type.val(),
 						status: 'open',
 						comments: comments.val()

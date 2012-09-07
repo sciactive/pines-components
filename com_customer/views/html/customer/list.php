@@ -386,7 +386,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<label><span class="pf-label">Employee</span>
 				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 		</div>
-		<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid ?>" />
+		<input type="hidden" name="employee" value="<?php echo htmlspecialchars($_SESSION['user']->guid); ?>" />
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>

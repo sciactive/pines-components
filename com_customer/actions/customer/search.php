@@ -123,7 +123,7 @@ if (empty($query)) {
 
 foreach ($customers as $key => &$cur_customer) {
 	$json_struct = (object) array(
-		'guid'			=> (int) $cur_customer->guid,
+		'guid'			=> $cur_customer->guid,
 		'username'		=> (string) $cur_customer->username,
 		'name'			=> (string) $cur_customer->name,
 		'location'		=> (string) $cur_customer->group->name,

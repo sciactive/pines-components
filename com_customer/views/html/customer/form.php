@@ -260,7 +260,7 @@ $pines->com_customer->load_company_select();
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
-						filename: 'customer_interaction_<?php echo (int) $this->entity->guid; ?>',
+						filename: 'customer_interaction_'+<?php echo json_encode("{$this->entity->guid}"); ?>,
 						content: rows
 					});
 				}}
@@ -293,7 +293,7 @@ $pines->com_customer->load_company_select();
 						type: "POST",
 						dataType: "json",
 						data: {
-							customer: <?php echo (int) $this->entity->guid; ?>,
+							customer: <?php echo json_encode("{$this->entity->guid}"); ?>,
 							employee: $("#p_muid_new_interaction [name=employee]").val(),
 							date: $("#p_muid_new_interaction [name=interaction_date]").val(),
 							time: $("#p_muid_new_interaction [name=interaction_time]").val(),
@@ -860,7 +860,7 @@ $pines->com_customer->load_company_select();
 								</thead>
 								<tbody>
 									<?php foreach ($this->interactions as $cur_interaction) { ?>
-									<tr title="<?php echo (int) $cur_interaction->guid; ?>">
+									<tr title="<?php echo htmlspecialchars($cur_interaction->guid); ?>">
 										<td><a data-entity="<?php echo htmlspecialchars($cur_interaction->guid); ?>" data-entity-context="com_customer_interaction"><?php echo htmlspecialchars($cur_interaction->guid); ?></a></td>
 										<td><?php echo htmlspecialchars(format_date($cur_interaction->p_cdate, 'full_sort')); ?></td>
 										<td><?php echo htmlspecialchars(format_date($cur_interaction->action_date, 'full_sort')); ?></td>
@@ -908,7 +908,7 @@ $pines->com_customer->load_company_select();
 									<tbody>
 										<?php foreach ((array) $this->sales as $cur_sale) {
 											$item_count = count($cur_sale->products); ?>
-										<tr title="<?php echo (int) $cur_sale->guid; ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
+										<tr title="<?php echo htmlspecialchars($cur_sale->guid); ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
 											<td><a data-entity="<?php echo htmlspecialchars($cur_sale->guid); ?>" data-entity-context="com_sales_sale">Sale <?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 											<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
 											<td><?php echo ($item_count == 1) ? '<a data-entity="'.htmlspecialchars($cur_sale->products[0]['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_sale->products[0]['entity']->name).'</a> x ' . htmlspecialchars($cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
@@ -920,7 +920,7 @@ $pines->com_customer->load_company_select();
 										</tr>
 										<?php } foreach ((array) $this->returns as $cur_return) {
 											$item_count = count($cur_return->products); ?>
-										<tr title="<?php echo (int) $cur_return->guid; ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? ' class="child ch_'.htmlspecialchars($cur_return->sale->guid).'"' : ''; ?>>
+										<tr title="<?php echo htmlspecialchars($cur_return->guid); ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? ' class="child ch_'.htmlspecialchars($cur_return->sale->guid).'"' : ''; ?>>
 											<td><a data-entity="<?php echo htmlspecialchars($cur_return->guid); ?>" data-entity-context="com_sales_return">Return <?php echo htmlspecialchars($cur_return->id); ?></a></td>
 											<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
 											<td><?php echo ($item_count == 1) ? '<a data-entity="'.htmlspecialchars($cur_return->products[0]['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($cur_return->products[0]['entity']->name).'</a>' : $item_count.' items'; ?></td>
@@ -948,7 +948,7 @@ $pines->com_customer->load_company_select();
 							<select style="max-width: 150px;" name="employee">
 								<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
 									$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
-									echo '<option value="'.((int) $cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+									echo '<option value="'.htmlspecialchars($cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 								} ?>
 							</select></label>
 					</div>
@@ -957,7 +957,7 @@ $pines->com_customer->load_company_select();
 						<label><span class="pf-label">Employee</span>
 							<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 					</div>
-					<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid; ?>" />
+					<input type="hidden" name="employee" value="<?php echo htmlspecialchars($_SESSION['user']->guid); ?>" />
 					<?php } ?>
 					<div class="pf-element">
 						<label><span class="pf-label">Interaction Type</span>
@@ -1065,7 +1065,7 @@ $pines->com_customer->load_company_select();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_customer', 'customer/list'))); ?>);" value="Cancel" />

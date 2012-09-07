@@ -69,8 +69,8 @@ $pines->com_jstree->load();
 				if (!isset($cur_employee->group))
 					continue;
 				$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-				if (group_id == <?php echo (int) $cur_employee->group->guid ?>) {
-					employee.append("<option value='<?php echo (int) $cur_employee->guid ?>' <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_employee->name); ?></option>");
+				if (group_id == <?php echo json_encode($cur_employee->group->guid); ?>) {
+					employee.append("<option value=\"<?php echo htmlspecialchars($cur_employee->guid); ?>\" <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_employee->name); ?></option>");
 				}
 			<?php } ?>
 		};

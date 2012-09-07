@@ -78,8 +78,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->transfers as $transfer) { ?>
-		<tr title="<?php echo (int) $transfer->guid ?>">
-			<td><a data-entity="<?php echo htmlspecialchars($transfer->guid); ?>" data-entity-context="com_sales_transfer"><?php echo (int) $transfer->guid ?></a></td>
+		<tr title="<?php echo htmlspecialchars($transfer->guid); ?>">
+			<td><a data-entity="<?php echo htmlspecialchars($transfer->guid); ?>" data-entity-context="com_sales_transfer"><?php echo htmlspecialchars($transfer->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($transfer->origin->guid); ?>" data-entity-context="group"><?php echo $transfer->origin->guid ? htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]") : ''; ?></a></td>
 			<td><a data-entity="<?php echo htmlspecialchars($transfer->destination->guid); ?>" data-entity-context="group"><?php echo $transfer->destination->guid ? htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]") : ''; ?></a></td>

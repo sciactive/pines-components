@@ -39,7 +39,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -435,7 +435,7 @@ Only continue if you are fully aware of the results of changing a product."))
 	</thead>
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
-		<tr title="<?php echo (int) $sale->guid ?>">
+		<tr title="<?php echo htmlspecialchars($sale->guid); ?>">
 			<td><a data-entity="<?php echo htmlspecialchars($sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td><?php echo htmlspecialchars(format_date($sale->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($sale->status)); ?></td>

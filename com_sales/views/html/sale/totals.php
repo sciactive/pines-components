@@ -19,7 +19,7 @@ $pines->com_jstree->load();
 	</div>
 	<script type="text/javascript">
 		pines(function(){
-			var location = '<?php echo (int) $_SESSION['user']->group->guid ?>';
+			var location = <?php echo json_encode("{$_SESSION['user']->group->guid}"); ?>;
 			var date_start = $("#p_muid_date_start");
 			var date_end = $("#p_muid_date_end");
 			var result_totals = $("#p_muid_result_totals");
@@ -53,7 +53,7 @@ $pines->com_jstree->load();
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["<?php echo (int) $_SESSION['user']->group->guid ?>"]
+					"initially_select" : [<?php echo json_encode("{$_SESSION['user']->group->guid}"); ?>]
 				}
 			});
 			<?php } ?>
@@ -64,7 +64,7 @@ $pines->com_jstree->load();
 				<?php if (gatekeeper('com_sales/totalothersales')) { ?>
 				location = tree_location.val();
 				if ($("#p_muid_form [name=all_locations]").attr('checked') || location == '')
-					location = '<?php echo (int) $_SESSION['user']->group->guid ?>';
+					location = <?php echo json_encode("{$_SESSION['user']->group->guid}"); ?>;
 				<?php } ?>
 
 				$.ajax({

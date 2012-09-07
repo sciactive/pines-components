@@ -177,7 +177,7 @@ $pines->com_menueditor->load_editor();
 								if ($category->is($entity))
 									continue;
 								?>
-								<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
+								<option value="<?php echo htmlspecialchars($category->guid); ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
 								<?php
 								if ($category->children)
 									com_content__category_form_children($category, $entity, "{$prefix}->");
@@ -187,7 +187,7 @@ $pines->com_menueditor->load_editor();
 							if ($category->is($this->entity))
 								continue;
 							?>
-							<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
+							<option value="<?php echo htmlspecialchars($category->guid); ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
 							<?php
 							if ($category->children)
 								com_content__category_form_children($category, $this->entity);
@@ -773,7 +773,7 @@ $pines->com_menueditor->load_editor();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input class="pf-button btn btn-primary" type="submit" value="Submit" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_content', 'category/list'))); ?>);" value="Cancel" />

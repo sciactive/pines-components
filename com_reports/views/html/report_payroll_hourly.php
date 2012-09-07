@@ -41,7 +41,7 @@ $pines->com_pgrid->load();
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
-		var location = "<?php echo (int) $this->location->guid ?>";
+		var location = <?php echo json_encode("{$this->location->guid}"); ?>;
 		var descendants = <?php echo $this->descendants ? 'true' : 'false'; ?>;
 
 		var payroll_grid = $("#p_muid_grid").pgrid({
@@ -185,7 +185,7 @@ $pines->com_pgrid->load();
 				$commission_total[1]++;
 			}
 			?>
-		<tr title="<?php echo (int) $cur_employee['entity']->guid?>" >
+		<tr title="<?php echo htmlspecialchars($cur_employee['entity']->guid);?>" >
 			<td><a data-entity="<?php echo htmlspecialchars($cur_employee['entity']->guid); ?>" data-entity-context="com_hrm_employee"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
 			<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
 			<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>

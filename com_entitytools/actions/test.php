@@ -107,12 +107,11 @@ $test->tests['guid_tags'][0] = $entity_test->is($entity_result);
 $test->tests['guid_tags'][1] = microtime(true);
 $test->tests['guid_tags'][2] = 'Retrieving entity by GUID and tags...';
 
-// Retrieving entity by !GUID and !tags...
+// Retrieving entity by !GUID...
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('!&', 'guid' => ($entity_test->guid + 1), 'tag' => array('barbecue', 'pickles')),
-		array('&', 'tag' => array('com_entitytools', 'test'))
+		array('&', '!guid' => ($entity_test->guid + 1), 'tag' => array('com_entitytools', 'test'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {
@@ -120,9 +119,25 @@ foreach ($entity_result as $cur_entity) {
 		break;
 	}
 }
-$test->tests['guid_n_tags_n'][0] = $found_match;
-$test->tests['guid_n_tags_n'][1] = microtime(true);
-$test->tests['guid_n_tags_n'][2] = 'Retrieving entity by !GUID and !tags...';
+$test->tests['guid_n_'][0] = $found_match;
+$test->tests['guid_n_'][1] = microtime(true);
+$test->tests['guid_n_'][2] = 'Retrieving entity by !GUID...';
+
+// Retrieving entity by !tags...
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(
+		array(),
+		array('&', 'guid' => $entity_test->guid, '!tag' => array('barbecue', 'pickles'))
+	);
+foreach ($entity_result as $cur_entity) {
+	if ($entity_test->is($cur_entity)) {
+		$found_match = true;
+		break;
+	}
+}
+$test->tests['tags_n'][0] = $found_match;
+$test->tests['tags_n'][1] = microtime(true);
+$test->tests['tags_n'][2] = 'Retrieving entity by !tags...';
 
 // Testing GUID and wrong tags...
 $entity_result = $pines->entity_manager->get_entity(
@@ -268,8 +283,7 @@ $test->tests['isset'][2] = 'Retrieving entity by isset...';
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('!&', 'isset' => array('test_null')),
-		array('&', 'tag' => array('com_entitytools', 'test'))
+		array('&', 'tag' => array('com_entitytools', 'test'), '!isset' => array('test_null'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {
@@ -318,8 +332,7 @@ $test->tests['strict'][2] = 'Retrieving entity by strict...';
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('!&', 'strict' => array('test_value', 'wrong')),
-		array('&', 'tag' => array('com_entitytools', 'test'))
+		array('&', 'tag' => array('com_entitytools', 'test'), '!strict' => array('test_value', 'wrong'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity))
@@ -354,8 +367,7 @@ $test->tests['data'][2] = 'Retrieving entity by data...';
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('!&', 'data' => array('test_value', 'wrong')),
-		array('&', 'tag' => array('com_entitytools', 'test'))
+		array('&', 'tag' => array('com_entitytools', 'test'), '!data' => array('test_value', 'wrong'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity))
@@ -391,7 +403,8 @@ $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
 		array('&', 'tag' => array('com_entitytools', 'test')),
-		array('!|', 'data' => array(array('name', $entity_test->name), array('test_value', 'pickles')))
+		array('!|', 'data' => array(array('name', $entity_test->name), array('test_value', 'pickles'))),
+		array('|', '!data' => array(array('name', $entity_test->name), array('test_value', 'pickles')))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {
@@ -877,6 +890,52 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_wr_a_get'][0] = !$found_match;
 $test->tests['ref_wr_a_get'][1] = microtime(true);
 $test->tests['ref_wr_a_get'][2] = 'Testing wrong array reference...';
+
+// Testing logic operations...
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(
+		array(),
+		array('&',
+			'!ref' => array(
+				array('ref_array', $entity_reference_guid + 1),
+				array('ref_array', $entity_reference_guid + 2)
+			),
+			'!lte' => array('test_number', 29.99)
+		),
+		array('|',
+			'!lte' => array(
+				array('test_number', 29.99),
+				array('test_number', 30)
+			)
+		),
+		array('!&',
+			'!strict' => array('test_value', 'test'),
+			'!array' => array(
+				array('test_array', 'full'),
+				array('test_array', 'of'),
+				array('test_array', 'values'),
+				array('test_array', 500)
+			)
+		),
+		array('!|',
+			'!strict' => array('test_value', 'test'),
+			'array' => array(
+				array('test_array', 'full'),
+				array('test_array', 'of'),
+				array('test_array', 'values'),
+				array('test_array', 500)
+			)
+		)
+	);
+foreach ($entity_result as $cur_entity) {
+	if ($entity_test->is($cur_entity)) {
+		$found_match = true;
+		break;
+	}
+}
+$test->tests['logic'][0] = $found_match;
+$test->tests['logic'][1] = microtime(true);
+$test->tests['logic'][2] = 'Testing logic operations...';
 
 // Deleting referenced entities...
 $test->tests['del_ref'][0] = ($entity_test->reference->delete() && !isset($entity_test->reference->guid));

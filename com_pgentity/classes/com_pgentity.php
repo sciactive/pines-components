@@ -374,7 +374,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					echo "\t{$row['dname']}=".json_encode((substr($row['dvalue'], 0, 1) === '~' ? stripcslashes(substr($row['dvalue'], 1)) : $row['dvalue']))."\n";
+					echo "\t{$row['dname']}=".json_encode(($row['dvalue'][0] === '~' ? stripcslashes(substr($row['dvalue'], 1)) : $row['dvalue']))."\n";
 					$row = pg_fetch_assoc($result);
 				} while ((int) $row['guid'] === $guid);
 			} else {
@@ -396,6 +396,10 @@ class com_pgentity extends component implements entity_manager_interface {
 		} else {
 			$options = $selectors[0];
 			unset($selectors[0]);
+		}
+		foreach ($selectors as $key => $selector) {
+			if (!$selector || count($selector) === 1)
+				unset($selectors[$key]);
 		}
 
 		$entities = array();
@@ -432,6 +436,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$type_is_or = ($type == '|' || $type == '!|');
 					continue;
 				}
+				$clause_not = $key[0] === '!';
 				$cur_query = '';
 				if ((array) $value !== $value)
 					$value = array(array($value));
@@ -442,48 +447,50 @@ class com_pgentity extends component implements entity_manager_interface {
 				foreach ($value as $cur_value) {
 					switch ($key) {
 						case 'guid':
+						case '!guid':
 							foreach ($cur_value as $cur_guid) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid"='.(int) $cur_guid;
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid"='.(int) $cur_guid;
 							}
 							break;
 						case 'tag':
+						case '!tag':
 							foreach ($cur_value as $cur_tag) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'\'{'.pg_escape_string($pines->com_pgsql->link, $cur_tag).'}\' <@ e."tags"';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'\'{'.pg_escape_string($pines->com_pgsql->link, $cur_tag).'}\' <@ e."tags"';
 							}
 							break;
 						case 'isset':
+						case '!isset':
 							foreach ($cur_value as $cur_var) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= '('.($type_is_not ? 'NOT ' : '' ).'\'{'.pg_escape_string($pines->com_pgsql->link, $cur_var).'}\' <@ e."varlist"';
-								if ($type_is_not)
+								$cur_query .= '('.(($type_is_not xor $clause_not) ? 'NOT ' : '' ).'\'{'.pg_escape_string($pines->com_pgsql->link, $cur_var).'}\' <@ e."varlist"';
+								if ($type_is_not xor $clause_not)
 									$cur_query .= ' OR e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_var).'\' AND "value"=\'N;\')';
 								$cur_query .= ')';
 							}
 							break;
 						case 'ref':
+						case '!ref':
 							$guids = array();
 							if ((array) $cur_value[1] === $cur_value[1]) {
 								foreach ($cur_value[1] as $cur_entity) {
-									if ((object) $cur_entity === $cur_entity) {
+									if ((object) $cur_entity === $cur_entity)
 										$guids[] = (int) $cur_entity->guid;
-									} else {
+									else
 										$guids[] = (int) $cur_entity;
-									}
 								}
-							} elseif ((object) $cur_value[1] === $cur_value[1]) {
+							} elseif ((object) $cur_value[1] === $cur_value[1])
 								$guids[] = (int) $cur_value[1]->guid;
-							} else {
+							else
 								$guids[] = (int) $cur_value[1];
-							}
 							if ($guids) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND (';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND (';
 								//$cur_query .= '(POSITION(\'a:3:{i:0;s:22:"pines_entity_reference";i:1;i:';
 								//$cur_query .= implode(';\' IN "value") != 0) '.($type_is_or ? 'OR' : 'AND').' (POSITION(\'a:3:{i:0;s:22:"pines_entity_reference";i:1;i:', $guids);
 								//$cur_query .= ';\' IN "value") != 0)';
@@ -494,15 +501,16 @@ class com_pgentity extends component implements entity_manager_interface {
 							}
 							break;
 						case 'strict':
+						case '!strict':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
 								break;
 							} else {
 								if ( $cur_query )
@@ -511,20 +519,21 @@ class com_pgentity extends component implements entity_manager_interface {
 									$svalue = serialize($cur_value[1]->to_reference());
 								else
 									$svalue = serialize($cur_value[1]);
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "value"=\''.pg_escape_string($pines->com_pgsql->link, (strpos($svalue, "\0") !== false ? '~'.addcslashes($svalue, chr(0).'\\') : $svalue)).'\')';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "value"=\''.pg_escape_string($pines->com_pgsql->link, (strpos($svalue, "\0") !== false ? '~'.addcslashes($svalue, chr(0).'\\') : $svalue)).'\')';
 							}
 							break;
 						case 'match':
+						case '!match':
 							if ($this->use_plperl) {
 								if ($cur_value[0] == 'p_cdate') {
 									if ( $cur_query )
 										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
+									$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
 									break;
 								} elseif ($cur_value[0] == 'p_mdate') {
 									if ( $cur_query )
 										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
+									$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
 									break;
 								} else {
 									if ( $cur_query )
@@ -534,10 +543,10 @@ class com_pgentity extends component implements entity_manager_interface {
 									$mods = substr($cur_value[1], $lastslashpos + 1);
 									if (!$mods)
 										$mods = '';
-									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", \''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
+									$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", \''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
 								}
 							} else {
-								if (!$type_is_not) {
+								if (!($type_is_not xor $clause_not)) {
 									if ( $cur_query )
 										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 									$cur_query .= '\'{'.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'}\' <@ e."varlist"';
@@ -546,92 +555,98 @@ class com_pgentity extends component implements entity_manager_interface {
 							}
 							break;
 						case 'data':
+						case '!data':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[1] === true || $cur_value[1] === false) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_true"='.($cur_value[1] ? 'TRUE' : 'FALSE').')';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_true"='.($cur_value[1] ? 'TRUE' : 'FALSE').')';
 								break;
 							} elseif ($cur_value[1] === 1) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_one"=TRUE)';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_one"=TRUE)';
 								break;
 							} elseif ($cur_value[1] === 0) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_zero"=TRUE)';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_zero"=TRUE)';
 								break;
 							} elseif ($cur_value[1] === -1) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_negone"=TRUE)';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_negone"=TRUE)';
 								break;
 							} elseif ($cur_value[1] === array()) {
 								if ( $cur_query )
 									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_emptyarray"=TRUE)';
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_emptyarray"=TRUE)';
 								break;
 							}
 						case 'gt':
+						case '!gt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate">'.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate">'.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate">'.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate">'.((float) $cur_value[1]);
 								break;
 							}
 						case 'gte':
+						case '!gte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate">='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate">='.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate">='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate">='.((float) $cur_value[1]);
 								break;
 							}
 						case 'lt':
+						case '!lt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"<'.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate"<'.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"<'.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate"<'.((float) $cur_value[1]);
 								break;
 							}
 						case 'lte':
+						case '!lte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"<='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."cdate"<='.((float) $cur_value[1]);
 								break;
 							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"<='.((float) $cur_value[1]);
+								$cur_query .= (($type_is_not xor $clause_not) ? 'NOT ' : '' ).'e."mdate"<='.((float) $cur_value[1]);
 								break;
 							}
 						case 'array':
-							if (!$type_is_not) {
+						case '!array':
+							if (!($type_is_not xor $clause_not)) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= '\'{'.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'}\' <@ e."varlist"';
@@ -725,7 +740,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					$sdata[$row[4]] = (substr($row[5], 0, 1) === '~' ? stripcslashes(substr($row[5], 1)) : $row[5]);
+					$sdata[$row[4]] = ($row[5][0] === '~' ? stripcslashes(substr($row[5], 1)) : $row[5]);
 					$row = pg_fetch_row($result);
 				} while ((int) $row[0] === $guid);
 			} else {
@@ -744,26 +759,27 @@ class com_pgentity extends component implements entity_manager_interface {
 						$pass = !$type_is_or;
 						continue;
 					}
-					if ($key === 'ref') {
+					$clause_not = $key[0] === '!';
+					if ($key === 'ref' || $key === '!ref') {
 						// Handled by the query.
 						$pass = true;
-					} elseif ($key === 'guid' || $key === 'tag') {
+					} elseif ($key === 'guid' || $key === '!guid' || $key === 'tag' || $key === '!tag') {
 						// Handled by the query.
 						$pass = true;
-					} elseif ($key === 'isset') {
+					} elseif ($key === 'isset' || $key === '!isset') {
 						// Handled by the query.
 						$pass = true;
-					} elseif ($key === 'match' && $this->use_plperl) {
+					} elseif (($key === 'match' || $key === '!match') && $this->use_plperl) {
 						// Handled by the query.
 						$pass = true;
-					} elseif ($key === 'strict') {
+					} elseif ($key === 'strict' || $key === '!strict') {
 						// Handled by the query.
 						$pass = true;
 					} else {
 						// Check if it doesn't pass any for &, check if it
 						// passes any for |.
 						foreach ($value as $cur_value) {
-							if ($key === 'data' && ($cur_value[1] === true || $cur_value[1] === false || $cur_value[1] === 1 || $cur_value[1] === 0 || $cur_value[1] === -1 || $cur_value[1] === array())) {
+							if (($key === 'data' || $key === '!data') && ($cur_value[1] === true || $cur_value[1] === false || $cur_value[1] === 1 || $cur_value[1] === 0 || $cur_value[1] === -1 || $cur_value[1] === array())) {
 								// Handled by the query.
 								$pass = true;
 							} else {
@@ -774,27 +790,34 @@ class com_pgentity extends component implements entity_manager_interface {
 								}
 								switch ($key) {
 									case 'data':
+									case '!data':
 										// If we get here, it's not one of those simple data values above.
-										$pass = (($data[$cur_value[0]] == $cur_value[1]) xor $type_is_not);
+										$pass = (($data[$cur_value[0]] == $cur_value[1]) xor ($type_is_not xor $clause_not));
 										break;
 									case 'array':
-										$pass = (((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
+									case '!array':
+										$pass = (((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]])) xor ($type_is_not xor $clause_not));
 										break;
 									case 'match':
+									case '!match':
 										// If we get here, plperl functions are off.
-										$pass = ((isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
+										$pass = ((isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]])) xor ($type_is_not xor $clause_not));
 										break;
 									case 'gt':
-										$pass = (($data[$cur_value[0]] > $cur_value[1]) xor $type_is_not);
+									case '!gt':
+										$pass = (($data[$cur_value[0]] > $cur_value[1]) xor ($type_is_not xor $clause_not));
 										break;
 									case 'gte':
-										$pass = (($data[$cur_value[0]] >= $cur_value[1]) xor $type_is_not);
+									case '!gte':
+										$pass = (($data[$cur_value[0]] >= $cur_value[1]) xor ($type_is_not xor $clause_not));
 										break;
 									case 'lt':
-										$pass = (($data[$cur_value[0]] < $cur_value[1]) xor $type_is_not);
+									case '!lt':
+										$pass = (($data[$cur_value[0]] < $cur_value[1]) xor ($type_is_not xor $clause_not));
 										break;
 									case 'lte':
-										$pass = (($data[$cur_value[0]] <= $cur_value[1]) xor $type_is_not);
+									case '!lte':
+										$pass = (($data[$cur_value[0]] <= $cur_value[1]) xor ($type_is_not xor $clause_not));
 										break;
 								}
 							}

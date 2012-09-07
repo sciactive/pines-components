@@ -58,7 +58,8 @@ test. Such as, "cms-suite>=1.1.0". The available operators are:
 * `<=`
 * `>=`
 * `<>`
-
+EOF;
+			$return['examples'] = <<<'EOF'
 com_user
 :	Check that the com_user package is installed.
 
@@ -80,7 +81,7 @@ EOF;
 			strpos($value, '(') !== false ||
 			strpos($value, ')') !== false
 		)
-		return $this->simple_parse($value, 'com_package__check_package');
+		return $pines->depend->simple_parse($value, 'com_package__check_package');
 	$package_name = preg_replace('/([a-z0-9_-]+)([<>=]{1,2})(.+)/S', '$1', $value);
 	$package = com_package_package::factory($package_name);
 	if (!isset($package) || !$package->is_installed())

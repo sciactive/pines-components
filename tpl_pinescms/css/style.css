@@ -222,8 +222,9 @@ a:visited {
 	font-family: "EB Garamond","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 }
 #logo img {
-	border:none;
-	margin-left: -20px;
+	border: none;
+	margin-left: -15px;
+	max-width: none;
 }
 #header_right {
 	display: inline;

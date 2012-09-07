@@ -26,6 +26,8 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 <head>
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
+	<meta name="HandheldFriendly" content="true" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 	<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />

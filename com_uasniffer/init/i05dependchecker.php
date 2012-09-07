@@ -17,10 +17,69 @@ defined('P_RUN') or die('Direct access prohibited');
  * Uses simple_parse() to provide simple logic.
  *
  * @param string $value The value to check.
- * @return bool The result of the UA check.
+ * @param bool $help Whether to return the help for this checker.
+ * @return bool|array The result of the check, or the help array.
  */
-function com_uasniffer__browser_check($value) {
+function com_uasniffer__browser_check($value, $help = false) {
 	global $pines;
+	if ($help) {
+		$return = array();
+		$return['cname'] = 'Browser Checker';
+		$return['description'] = <<<'EOF'
+Check against the client's browser.
+
+This checker uses the "user agent string" submitted by the user's browser. This
+is a fairly reliable way to determine what browser and device they are using to
+view the site. You can use this to provide different content or layouts
+depending on the browser or device the client is using. For example, you can
+make a module show only to Internet Explorer users, or make a header that
+doesn't show if the user is on a mobile phone.
+EOF;
+		$return['syntax'] = <<<'EOF'
+The following values are available:
+
+* `desktop` - The client is using a desktop browser, or the client requested the desktop version from a mobile browser.
+* `desktop-real` - The client is using a desktop browser.
+* `mobile` - The client is using a mobile browser, or the client requested the mobile version.
+* `mobile-real` - The client is using a mobile browser.
+* `tablet` - The client is using a tablet, such as iPad or Android tablet.
+* `gameconsole` - The client is using a gaming console.
+* `bot` - The client is a web crawler.
+* `os-windows` - The client is using Windows.
+* `os-linux` - The client is using Linux.
+* `os-mac` - The client is using Macintosh.
+* `os-solaris` - The client is using Solaris.
+* `os-bsd` - The client is using BSD.
+* `os-ios` - The client is using iOS (iPhone, iPad, iPod).
+* `os-android` - The client is using Android.
+* `os-winphone` - The client is using Windows Phone.
+* `browser-ie` - The client is using Internet Explorer.
+* `browser-ie6` - The client is using Internet Explorer 6.
+* `browser-ie7` - The client is using Internet Explorer 7.
+* `browser-ie8` - The client is using Internet Explorer 8.
+* `browser-ie9` - The client is using Internet Explorer 9.
+* `browser-firefox` - The client is using Firefox.
+* `browser-safari` - The client is using Safari.
+* `browser-chrome` - The client is using Chrome.
+* `browser-opera` - The client is using Opera.
+* `console-ds` - The client is using a Nintendo DS.
+* `console-ps3` - The client is using a Sony PlayStation 3.
+* `console-psp` - The client is using a Sony PSP.
+* `console-wii` - The client is using a Nintendo Wii.
+EOF;
+		$return['examples'] = <<<'EOF'
+browser-ie7
+:	Check that the user is using Internet Explorer 7.
+
+mobile&os-android&!tablet
+:	Check that the user is using an Android smartphone.
+
+os-mac&(browser-firefox|browser-safari)
+:	Check that the user is using a Mac with either Firefox or Safari.
+EOF;
+		$return['simple_parse'] = true;
+		return $return;
+	}
 	if (
 			strpos($value, '&') !== false ||
 			strpos($value, '|') !== false ||
@@ -85,6 +144,9 @@ function com_uasniffer__browser_check($value) {
 		case 'os-bsd':
 			return preg_match('/bsd/i', $_SERVER['HTTP_USER_AGENT']);
 			break;
+		case 'os-ios':
+			return preg_match('/(iPhone|iPad|iPod).*like Mac OS X/i', $_SERVER['HTTP_USER_AGENT']);
+			break;
 		case 'os-android':
 			return preg_match('/android/i', $_SERVER['HTTP_USER_AGENT']);
 			break;
@@ -93,6 +155,18 @@ function com_uasniffer__browser_check($value) {
 			break;
 		case 'browser-ie':
 			return (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));
+			break;
+		case 'browser-ie6':
+			return (preg_match('/MSIE 6\.0/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));
+			break;
+		case 'browser-ie7':
+			return (preg_match('/MSIE 7\.0/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));
+			break;
+		case 'browser-ie8':
+			return (preg_match('/MSIE 8\.0/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));
+			break;
+		case 'browser-ie9':
+			return (preg_match('/MSIE 9\.0/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));
 			break;
 		case 'browser-firefox':
 			return (preg_match('/Firefox/', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/Opera/', $_SERVER['HTTP_USER_AGENT']));

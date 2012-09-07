@@ -416,9 +416,9 @@ if ($pines->config->com_user->check_username)
 			<script type="text/javascript">
 				pines(function(){
 					// Addresses
-					var addresses = $("#p_muid_addresses");
-					var addresses_table = $("#p_muid_addresses_table");
-					var address_dialog = $("#p_muid_address_dialog");
+					var addresses = $("#p_muid_addresses"),
+						addresses_table = $("#p_muid_addresses_table"),
+						address_dialog = $("#p_muid_address_dialog");
 
 					addresses_table.pgrid({
 						pgrid_paginate: false,
@@ -454,12 +454,12 @@ if ($pines->config->com_user->check_username)
 						width: 600,
 						buttons: {
 							"Done": function(){
-								var cur_address_type = $("#p_muid_cur_address_type").val();
-								var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
-								var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
-								var cur_address_city = $("#p_muid_cur_address_city").val();
-								var cur_address_state = $("#p_muid_cur_address_state").val();
-								var cur_address_zip = $("#p_muid_cur_address_zip").val();
+								var cur_address_type = $("#p_muid_cur_address_type").val(),
+									cur_address_addr1 = $("#p_muid_cur_address_addr1").val(),
+									cur_address_addr2 = $("#p_muid_cur_address_addr2").val(),
+									cur_address_city = $("#p_muid_cur_address_city").val(),
+									cur_address_state = $("#p_muid_cur_address_state").val(),
+									cur_address_zip = $("#p_muid_cur_address_zip").val();
 								if (cur_address_type == "" || cur_address_addr1 == "") {
 									alert("Please provide a name and a street address.");
 									return;
@@ -579,11 +579,10 @@ if ($pines->config->com_user->check_username)
 			</div>
 			<br class="pf-clearing" />
 			<?php foreach ($this->sections as $cur_section) {
-				if ($cur_section == 'system') {
+				if ($cur_section == 'system')
 					$section_abilities = (array) $pines->info->abilities;
-				} else {
+				else
 					$section_abilities = (array) $pines->info->$cur_section->abilities;
-				}
 				if (!$section_abilities) continue; ?>
 			<div class="abilities_accordion accordion">
 				<div class="accordion-group">
@@ -613,9 +612,9 @@ if ($pines->config->com_user->check_username)
 			<script type="text/javascript">
 				pines(function(){
 					// Attributes
-					var attributes = $("#p_muid_tab_attributes input[name=attributes]");
-					var attributes_table = $("#p_muid_tab_attributes .attributes_table");
-					var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
+					var attributes = $("#p_muid_tab_attributes input[name=attributes]"),
+						attributes_table = $("#p_muid_tab_attributes .attributes_table"),
+						attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
 
 					attributes_table.pgrid({
 						pgrid_paginate: false,

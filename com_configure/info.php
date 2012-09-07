@@ -22,7 +22,7 @@ return array(
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_jquery&com_bootstrap&com_ptags&com_pgrid&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_ptags&com_pgrid&com_markdown&com_pform'
 	),
 	'recommend' => array(
 		'service' => 'entity_manager&user_manager'

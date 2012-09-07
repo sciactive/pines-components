@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&editor',
-		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_markdown&com_pform'
 	),
 	'recommend' => array(
 		'class' => 'SQLite3'

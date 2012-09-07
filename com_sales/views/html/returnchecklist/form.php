@@ -40,10 +40,10 @@ $pines->com_pgrid->load();
 	<script type="text/javascript">
 		pines(function(){
 			// Conditions
-			var conditions = $("#p_muid_form [name=conditions]");
-			var conditions_table = $("#p_muid_form .conditions_table");
-			var condition_dialog = $("#p_muid_form .condition_dialog");
-			var cur_condition = null;
+			var conditions = $("#p_muid_form [name=conditions]"),
+				conditions_table = $("#p_muid_form .conditions_table"),
+				condition_dialog = $("#p_muid_form .condition_dialog"),
+				cur_condition = null;
 
 			conditions_table.pgrid({
 				pgrid_paginate: false,
@@ -97,10 +97,10 @@ $pines->com_pgrid->load();
 				width: 500,
 				buttons: {
 					"Done": function(){
-						var cur_condition_condition = condition_dialog.find("input[name=cur_condition_condition]").val();
-						var cur_condition_type = condition_dialog.find("select[name=cur_condition_type]").val();
-						var cur_condition_amount = condition_dialog.find("input[name=cur_condition_amount]").val();
-						var cur_condition_always = condition_dialog.find("input[name=cur_condition_always]").is(":checked");
+						var cur_condition_condition = condition_dialog.find("input[name=cur_condition_condition]").val(),
+							cur_condition_type = condition_dialog.find("select[name=cur_condition_type]").val(),
+							cur_condition_amount = condition_dialog.find("input[name=cur_condition_amount]").val(),
+							cur_condition_always = condition_dialog.find("input[name=cur_condition_always]").is(":checked");
 						if (cur_condition_condition == "" || cur_condition_type == "" || cur_condition_amount == "") {
 							alert("Please provide both a type and an amount for this condition.");
 							return;

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Content Search Replace',
 	'author' => 'SciActive',
-	'version' => '1.1.0beta',
+	'version' => '1.1.0beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Content search replace',
@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager',
-		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_pform'
+		'component' => 'com_jquery&com_bootstrap&com_pgrid&com_markdown&com_pform'
 	),
 	'abilities' => array(
 		array('listreplacements', 'List Replacements', 'User can see replacements.'),

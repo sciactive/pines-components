@@ -528,7 +528,7 @@ class entity implements entity_interface {
 		if (!isset($this->guid))
 			return false;
 		global $pines;
-		$refresh = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('guid' => $this->guid));
+		$refresh = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $this->guid));
 		if (!isset($refresh))
 			return 0;
 		$this->tags = $refresh->tags;

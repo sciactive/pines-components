@@ -327,7 +327,7 @@ class com_myentity extends component implements entity_manager_interface {
 			unset($selectors[0]);
 		}
 		foreach ($selectors as $key => $selector) {
-			if (!$selector || count($selector) === 1)
+			if (!$selector || (count($selector) === 1 && in_array($selector[0], array('!&', '!|', '|', '!|'))))
 				unset($selectors[$key]);
 		}
 
@@ -507,7 +507,6 @@ class com_myentity extends component implements entity_manager_interface {
 			default:
 				$sort = 'e.`guid`';
 				break;
-			
 		}
 		if ($query_parts) {
 			$query = sprintf("SELECT e.`guid`, e.`tags`, e.`cdate`, e.`mdate`, d.`name`, d.`value`, e.`varlist` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY %s;",

@@ -398,7 +398,7 @@ class com_pgentity extends component implements entity_manager_interface {
 			unset($selectors[0]);
 		}
 		foreach ($selectors as $key => $selector) {
-			if (!$selector || count($selector) === 1)
+			if (!$selector || (count($selector) === 1 && in_array($selector[0], array('!&', '!|', '|', '!|'))))
 				unset($selectors[$key]);
 		}
 
@@ -679,7 +679,6 @@ class com_pgentity extends component implements entity_manager_interface {
 			default:
 				$sort = 'e."guid"';
 				break;
-			
 		}
 		if ($query_parts) {
 			$query = sprintf("SELECT e.\"guid\", e.\"tags\", e.\"cdate\", e.\"mdate\", d.\"name\", d.\"value\" FROM \"%scom_pgentity_entities\" e LEFT JOIN \"%scom_pgentity_data\" d USING (\"guid\") WHERE %s ORDER BY %s;",

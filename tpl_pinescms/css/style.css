@@ -175,15 +175,22 @@ a:visited {
 }
 
 .navbar-inner {
-	background: url('../images/pines-navbar-bg.png') repeat-x;
+	background: url('../images/pines-navbar-bg-green.png') repeat-x;
 	min-height: 33px;
 	filter: none;
+}
+.scheme-blue .navbar-inner {
+	background-image: url('../images/pines-navbar-bg-blue.png');
 }
 .navbar-inner a,.navbar-inner a:link,.navbar-inner a:visited {
 	color:#103101 !important;
 	text-decoration: none;
 	text-rendering: optimizelegibility;
 	text-shadow: 1px 0.1em #A5CD60;
+}
+.scheme-blue .navbar-inner a,.scheme-blue .navbar-inner a:link,.scheme-blue .navbar-inner a:visited {
+	color:#0B4D5C !important;
+	text-shadow: 1px 0.1em #74B7C7;
 }
 
 .navbar-fixed-top.nav_not_fixed {
@@ -219,7 +226,7 @@ a:visited {
 	color: #3A3A3A;
 	font-size: 60px;
 	line-height: 45px;
-	font-family: "EB Garamond","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
+	font-family: "Crimson Text","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 }
 #logo img {
 	border: none;

@@ -20,6 +20,8 @@ if (substr($pines->config->tpl_pinescms->variant, -4) === 'left')
 	$sidebar = 'left';
 elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 	$sidebar = 'right';
+elseif (substr($pines->config->tpl_pinescms->variant, -6) === 'noside')
+	$sidebar = 'none';
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,16 +37,16 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/default.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/default.pines.css" media="all" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
-	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
-	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
-	<script type="text/javascript">pines(function(){ if ($.pnotify) {
+	<script type="text/javascript">pines(function(){if($.pnotify){
 		$.pnotify.defaults.opacity = .9;
 		$.pnotify.defaults.delay = 15000;
 		pines.pnotify_notice_defaults.nonblock = false;
 		pines.pnotify_alert_defaults.nonblock = false;
 	}});</script>
+	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body class="scheme-<?php echo htmlspecialchars($pines->config->tpl_pinescms->color_scheme); ?>">
 	<div id="top"><?php
 		echo $pines->page->render_modules('top');
 		$error = $pines->page->get_error();
@@ -111,6 +113,12 @@ elseif (substr($pines->config->tpl_pinescms->variant, -5) === 'right')
 						</div>
 						<div id="sidebar" class="span3">
 							<div class="container-fluid"><?php echo $pines->page->render_modules('left'); echo $pines->page->render_modules('right'); ?></div>
+						</div>
+					</div>
+					<?php } elseif ($sidebar == 'none') { ?>
+					<div class="row<?php echo ($layout_type) ? '-fluid': ''; ?>">
+						<div id="main_content" class="span12">
+							<div class="container-fluid"><?php echo $pines->page->render_modules('content'); ?></div>
 						</div>
 					</div>
 					<?php } } else {

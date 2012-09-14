@@ -51,14 +51,14 @@ $interaction->status = $_REQUEST['status'];
 $interaction->comments = $_REQUEST['comments'];
 
 $existing_appt = $pines->entity_manager->get_entity(
-	array('class' => com_customer_interaction),
-	array('&',
-		'data' => array('status', 'open'),
-		'ref' => array('customer', $interaction->customer),
-		'gte' => array('action_date', $interaction->action_date),
-		'lte' => array('action_date', strtotime('+1 hour', $interaction->action_date))
-	)
-);
+		array('class' => com_customer_interaction),
+		array('&',
+			'data' => array('status', 'open'),
+			'ref' => array('customer', $interaction->customer),
+			'gte' => array('action_date', $interaction->action_date),
+			'lte' => array('action_date', strtotime('+1 hour', $interaction->action_date))
+		)
+	);
 if (isset($existing_appt->guid) && $interaction->guid != $existing_appt->guid) {
 	$pines->page->override_doc('"conflict"');
 	date_default_timezone_set($cur_timezone);

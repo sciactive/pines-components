@@ -14,11 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Pines CMS Template',
 	'author' => 'SciActive',
-	'version' => '2.0.0beta2',
+	'version' => '2.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('template'),
 	'positions' => array(
+		'head',
 		'top',
 		'search',
 		'header',
@@ -29,7 +30,7 @@ return array(
 		'right',
 		'post_content',
 		'footer',
-		'bottom'
+		'bottom',
 	),
 	'short_description' => 'A nice default template for websites.',
 	'description' => 'This is the template used on pinescms.org and pinesframework.org. It\'s a good template for websites, and is a good starting point for other templates.',

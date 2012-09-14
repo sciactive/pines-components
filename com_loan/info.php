@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Loans',
 	'author' => 'SciActive',
-	'version' => '1.0.0beta2',
+	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Create and edit fixed loans',

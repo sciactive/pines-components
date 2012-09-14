@@ -14,11 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Mobile Pines Template',
 	'author' => 'SciActive',
-	'version' => '1.1.0beta2',
+	'version' => '1.1.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('template'),
 	'positions' => array(
+		'head',
 		'top',
 		'header',
 		'header_right',
@@ -32,7 +33,7 @@ return array(
 		'right',
 		'post_content',
 		'footer',
-		'bottom'
+		'bottom',
 	),
 	'short_description' => 'jQuery UI styled template for mobile browsers',
 	'description' => 'A template optimized for mobile browsers, completely styled with jQuery UI.',

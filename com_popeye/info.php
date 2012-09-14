@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'jQuery.popeye',
 	'author' => 'SciActive (Component), Christoph Schuessler (JavaScript)',
-	'version' => '2.1-1.0.1beta2',
+	'version' => '2.1-1.0.1',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'jQuery.popeye jQuery plugin',

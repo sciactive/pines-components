@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'IModule Parser',
 	'author' => 'SciActive',
-	'version' => '1.0.4beta2',
+	'version' => '1.0.4',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'An inline module parsing system',

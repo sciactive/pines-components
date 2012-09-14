@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Financial Functions',
 	'author' => 'SciActive (Component), Enrique Garcia (Library)',
-	'version' => '1.0.1beta2',
+	'version' => '1.0.1',
 	'license' => 'http://www.gnu.org/licenses/gpl.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Financial function library',

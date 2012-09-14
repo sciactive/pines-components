@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Bootstrap',
 	'author' => 'SciActive (Component), Twitter (Bootstrap)',
-	'version' => '2.0.4-1.0.1beta2',
+	'version' => '2.0.4-1.0.1',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Bootstrap CSS and JS components',

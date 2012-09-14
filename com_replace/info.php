@@ -12,12 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'Content Search Replace',
+	'name' => 'Content Search-Replace',
 	'author' => 'SciActive',
-	'version' => '1.1.0beta2',
+	'version' => '1.1.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
-	'short_description' => 'Content search replace',
+	'short_description' => 'Content search-replace',
 	'description' => 'Search and replace strings in content, such as pages.',
 	'depend' => array(
 		'pines' => '<3',

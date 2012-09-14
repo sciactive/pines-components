@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'CMS',
 	'author' => 'SciActive',
-	'version' => '1.2.0beta2',
+	'version' => '1.2.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Content Management System',

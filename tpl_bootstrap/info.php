@@ -19,6 +19,7 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'services' => array('template'),
 	'positions' => array(
+		'head',
 		'top',
 		'header',
 		'header_right',
@@ -32,7 +33,7 @@ return array(
 		'right',
 		'post_content',
 		'footer',
-		'bottom'
+		'bottom',
 	),
 	'short_description' => 'Bootstrap styled template',
 	'description' => 'A well integrated template, completely styled with Twitter Bootstrap.',

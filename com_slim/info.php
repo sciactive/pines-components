@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Slim Archive',
 	'author' => 'SciActive',
-	'version' => '1.0.2beta2',
+	'version' => '1.0.2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Slim archiver and extracter',

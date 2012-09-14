@@ -14,11 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Bamboo Template',
 	'author' => 'SciActive (Template), Free CSS Templates (Design)',
-	'version' => '1.0.1beta2',
+	'version' => '1.0.1',
 	'license' => 'http://creativecommons.org/licenses/by/2.5/',
 	'website' => 'http://www.freecsstemplates.org',
 	'services' => array('template'),
 	'positions' => array(
+		'head',
 		'top',
 		'header',
 		'header_right',
@@ -26,7 +27,7 @@ return array(
 		'left',
 		'right',
 		'footer',
-		'bottom'
+		'bottom',
 	),
 	'short_description' => 'A pretty bamboo style template',
 	'description' => 'An pretty bamboo style template.',

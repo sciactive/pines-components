@@ -109,11 +109,11 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
-					<th style="width: 25%;">Leader</th>
-					<th style="width: 25%;">Mgr</th>
+					<th style="width: 15%;">Leader</th>
+					<th style="width: 15%;">Mgr</th>
 					<?php } else { ?>
-					<th style="width: 25%;">Stores</th>
-					<th style="width: 25%;">Avg</th>
+					<th style="width: 15%;">Stores</th>
+					<th style="width: 15%;">Avg</th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -204,8 +204,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Goal</th>
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
-					<th style="width: 25%;">Lead</th>
-					<th style="width: 25%;">Prize</th>
+					<th style="width: 15%;">Lead</th>
+					<th style="width: 15%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -277,8 +277,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Goal</th>
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
-					<th style="width: 25%;">Lead</th>
-					<th style="width: 25%;">Prize</th>
+					<th style="width: 15%;">Lead</th>
+					<th style="width: 15%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>

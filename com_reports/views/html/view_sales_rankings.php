@@ -151,13 +151,13 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100)
-						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .25 );
+						echo '$'.sprintf('%01.0f', $cur_rank['trend'] * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .25 );
 					else
 						echo '$0';
 					?></td>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100)
-						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .5 );
+						echo '$'.sprintf('%01.0f', $cur_rank['trend'] * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .5 );
 					else
 						echo '$0';
 					?></td>

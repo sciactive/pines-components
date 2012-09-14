@@ -150,18 +150,16 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<td style="text-align: center;"><?php
-					if ($cur_rank['pct'] >= 100) {
-						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0) );
-					} else {
+					if ($cur_rank['pct'] >= 100)
+						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .25 );
+					else
 						echo '$0';
-					}
 					?></td>
 					<td style="text-align: center;"><?php
-					if ($cur_rank['pct'] >= 100) {
-						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (15 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 1000 : 0) );
-					} else {
+					if ($cur_rank['pct'] >= 100)
+						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .5 );
+					else
 						echo '$0';
-					}
 					?></td>
 					<?php } else { ?>
 					<td style="text-align: center;"><?php echo (int) $cur_rank['child_count']; ?></td>
@@ -239,25 +237,25 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
-								echo '$550';
+								echo '$650';
 								break;
 							case 2:
-								echo '$500';
+								echo '$550';
 								break;
 							case 3:
-								echo '$375';
+								echo '$450';
 								break;
 							case 4:
 								echo '$350';
 								break;
 							case 5:
-								echo '$325';
-								break;
-							case 6:
 								echo '$300';
 								break;
+							case 6:
+								echo '$250';
+								break;
 							case 7:
-								echo '$275';
+								echo '$200';
 								break;
 						} ?>
 					</td>

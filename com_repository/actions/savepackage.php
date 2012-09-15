@@ -157,7 +157,7 @@ foreach ($files as $cur_file) {
 		pines_error('Couldn\'t create MD5 sum for package.');
 		continue;
 	}
-	if (!move_uploaded_file($package_filename, $filename)) {
+	if (!rename($package_filename, $filename)) {
 		pines_error('Error moving package into repository.');
 		continue;
 	}

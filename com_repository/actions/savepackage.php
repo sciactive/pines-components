@@ -23,14 +23,14 @@ if (!$files) {
 }
 
 foreach ($files as $cur_file) {
-	$filename = $pines->uploader->temp($cur_file);
-	if (!$filename) {
+	$package_filename = $pines->uploader->temp($cur_file);
+	if (!$package_filename) {
 		pines_error('Error getting package '.$cur_file);
 		continue;
 	}
 
 	$package = new slim;
-	if (!$package->read($filename)) {
+	if (!$package->read($package_filename)) {
 		pines_error('Error reading package.');
 		continue;
 	}
@@ -152,12 +152,12 @@ foreach ($files as $cur_file) {
 		}
 	}
 
-	$md5 = md5_file($_FILES['package']['tmp_name']);
+	$md5 = md5_file($package_filename);
 	if (!$md5) {
 		pines_error('Couldn\'t create MD5 sum for package.');
 		continue;
 	}
-	if (!move_uploaded_file($_FILES['package']['tmp_name'], $filename)) {
+	if (!move_uploaded_file($package_filename, $filename)) {
 		pines_error('Error moving package into repository.');
 		continue;
 	}

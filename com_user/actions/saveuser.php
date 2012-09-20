@@ -69,6 +69,12 @@ if (in_array('email', $pines->config->com_user->user_fields)) {
 		}
 	} else
 		$user->email = $_REQUEST['email'];
+	if (isset($user->secret) && gatekeeper('com_user/edituser') && $_REQUEST['email_verified'] == 'ON') {
+		if ($pines->config->com_user->unconfirmed_access)
+			$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_secondary', true)));
+		$user->enable();
+		unset($user->secret);
+	}
 	if ($user->email && $_REQUEST['mailing_list'] != 'ON' && !$pines->com_mailer->unsubscribe_query($user->email)) {
 		if (!$pines->com_mailer->unsubscribe_add($user->email))
 			pines_error('Your email could not be removed from the mailing list. Please try again, and if the problem persists, contact an administrator.');
@@ -134,8 +140,7 @@ if (in_array('attributes', $pines->config->com_user->user_fields)) {
 // assigned.
 if ( gatekeeper('com_user/assigngroup') ) {
 	$highest_primary_parent = $pines->config->com_user->highest_primary;
-	$highest_secondary_parent = $pines->config->com_user->highest_secondary;
-	$primary_groups = $secondary_groups = array();
+	$primary_groups = array();
 	if ($highest_primary_parent == 0) {
 		$primary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 	} else {
@@ -145,33 +150,38 @@ if ( gatekeeper('com_user/assigngroup') ) {
 				$primary_groups = $highest_primary_parent->get_descendants();
 		}
 	}
-	if ($highest_secondary_parent == 0) {
-		$secondary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
-	} else {
-		if ($highest_secondary_parent > 0) {
-			$highest_secondary_parent = group::factory($highest_secondary_parent);
-			if (isset($highest_secondary_parent->guid))
-				$secondary_groups = $highest_secondary_parent->get_descendants();
-		}
-	}
 	$group = group::factory((int) $_REQUEST['group']);
-	$groups = array_map('intval', (array) $_REQUEST['groups']);
 	foreach ($primary_groups as $cur_group) {
 		if ($cur_group->is($group)) {
 			$user->group = $group;
 			break;
 		}
 	}
-	foreach ($secondary_groups as $cur_group) {
-		if (in_array($cur_group->guid, $groups))
-			$user->add_group($cur_group);
-		else
-			$user->del_group($cur_group);
-	}
 	// What if the user can't assign the current primary group, so it defaults to null?
 	//if ($_REQUEST['group'] == 'null' || $_REQUEST['no_primary_group'] == 'ON' )
 	if ($_REQUEST['group'] == 'null')
 		unset($user->group);
+
+	if (!(gatekeeper('com_user/edituser') && $_REQUEST['email_verified'] == 'ON' && $pines->config->com_user->unconfirmed_access)) {
+		$highest_secondary_parent = $pines->config->com_user->highest_secondary;
+		$secondary_groups = array();
+		if ($highest_secondary_parent == 0) {
+			$secondary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
+		} else {
+			if ($highest_secondary_parent > 0) {
+				$highest_secondary_parent = group::factory($highest_secondary_parent);
+				if (isset($highest_secondary_parent->guid))
+					$secondary_groups = $highest_secondary_parent->get_descendants();
+			}
+		}
+		$groups = array_map('intval', (array) $_REQUEST['groups']);
+		foreach ($secondary_groups as $cur_group) {
+			if (in_array($cur_group->guid, $groups))
+				$user->add_group($cur_group);
+			else
+				$user->del_group($cur_group);
+		}
+	}
 }
 
 if ( gatekeeper('com_user/abilities') ) {

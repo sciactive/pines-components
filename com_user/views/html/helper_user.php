@@ -46,7 +46,7 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 			<?php if (!empty($this->entity->email) && in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Email</td>
-				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
+				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a><?php echo isset($this->entity->secret) ? ' (Unverified)' : ''; ?></td>
 			</tr>
 			<?php } if (!empty($this->entity->phone) && in_array('phone', $pines->config->com_user->user_fields)) { ?>
 			<tr>

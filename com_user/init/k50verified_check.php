@@ -18,7 +18,7 @@ if (!$pines->config->com_user->confirm_email)
 	return;
 
 // Check to see if they're not verified.
-if (gatekeeper() && isset($_SESSION['user']->secret)) {
+if (gatekeeper() && isset($_SESSION['user']->secret) && !$pines->depend->check('request', 'com_user/registeruser')) {
 	// Provide a notice that they're not verified.
 	$module = new module('com_user', 'resend_verification', 'bottom');
 	unset($module);

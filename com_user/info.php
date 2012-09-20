@@ -19,7 +19,7 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'services' => array('user_manager'),
 	'short_description' => 'Entity based user manager',
-	'description' => 'Manages system users, groups, and abilities. Uses an entity manager as a storage backend.',
+	'description' => 'Provides and manages users, groups, and abilities (access control). Uses an entity manager as a storage backend.',
 	'depend' => array(
 		'pines' => '<3',
 		'service' => 'entity_manager&uploader&icons',
@@ -34,7 +34,7 @@ return array(
 		array('self', 'Change Info', 'User can change his own information. Email address changes may be subject to confirmation.'),
 		array('listusers', 'List Users', 'User can see users.'),
 		array('newuser', 'Create Users', 'User can create new users.'),
-		array('edituser', 'Edit Users', 'User can edit other users. Email address changes take place immediately.'),
+		array('edituser', 'Edit Users', 'User can edit other users. Email address changes take place immediately. Can confirm unverified email addresses.'),
 		array('deleteuser', 'Delete Users', 'User can delete other users.'),
 		array('enabling', 'Manage Enabling', 'User can enable and disable users and groups.'),
 		array('usernames', 'Manage Usernames', 'User can change usernames and groupnames.'),

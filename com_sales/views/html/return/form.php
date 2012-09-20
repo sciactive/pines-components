@@ -11,15 +11,14 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!isset($this->entity->guid)) {
+if (!isset($this->entity->guid))
 	$this->title = 'New Return';
-} elseif ($this->entity->status == 'quoted') {
+elseif ($this->entity->status == 'quoted')
 	$this->title = 'Quoted Return ['.htmlspecialchars($this->entity->id).']';
-} elseif ($this->entity->status == 'processed') {
+elseif ($this->entity->status == 'processed')
 	$this->title = 'Processed Return ['.htmlspecialchars($this->entity->id).']';
-} elseif ($this->entity->status == 'voided') {
+elseif ($this->entity->status == 'voided')
 	$this->title = 'Voided Return ['.htmlspecialchars($this->entity->id).']';
-}
 $this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
@@ -28,9 +27,9 @@ if ($pines->config->com_sales->per_item_salesperson)
 	$pines->com_hrm->load_employee_select();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
-
-if ($this->entity->specials) { ?>
+?>
 <style type="text/css">
+	<?php if ($this->entity->specials) { ?>
 	#p_muid_specials .special {
 		float: left;
 		margin-top: .5em;
@@ -43,8 +42,11 @@ if ($this->entity->specials) { ?>
 	#p_muid_specials .special_discount {
 		text-align: right;
 	}
+	<?php } ?>
+	#p_muid_form .p_muid_payment_data_throbber.hide {
+		display: none;
+	}
 </style>
-<?php } ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -711,6 +713,11 @@ if ($this->entity->specials) { ?>
 							});
 							update_payments();
 						}
+					},
+					{
+						type: 'label',
+						extra_class: 'p_muid_payment_data_throbber picon picon-throbber hide',
+						label: '&nbsp;'
 					}
 				]
 			});
@@ -722,6 +729,14 @@ if ($this->entity->specials) { ?>
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "return", "sale_id": $("#p_muid_form [name=sale_id]").val()},
+					beforeSend: function(){
+						$(":button", "#p_muid_buttons").attr("disabled", "disabled");
+						$(".p_muid_payment_data_throbber").removeClass("hide");
+					},
+					complete: function(){
+						$(":button", "#p_muid_buttons").removeAttr("disabled");
+						$(".p_muid_payment_data_throbber").addClass("hide");
+					},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retrieve the data form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
@@ -1349,7 +1364,7 @@ if ($this->entity->specials) { ?>
 		</span>
 	</div>
 	<?php } ?>
-	<div class="pf-element pf-buttons">
+	<div class="pf-element pf-buttons" id="p_muid_buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } elseif ( isset($this->entity->sale->guid) ) { ?>

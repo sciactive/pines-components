@@ -35,17 +35,16 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!isset($this->entity->guid)) {
+if (!isset($this->entity->guid))
 	$this->title = 'New Sale';
-} elseif ($this->entity->status == 'quoted') {
+elseif ($this->entity->status == 'quoted')
 	$this->title = 'Quoted Sale ['.htmlspecialchars($this->entity->id).']';
-} elseif ($this->entity->status == 'invoiced') {
+elseif ($this->entity->status == 'invoiced')
 	$this->title = 'Invoiced Sale ['.htmlspecialchars($this->entity->id).']';
-} elseif ($this->entity->status == 'paid') {
+elseif ($this->entity->status == 'paid')
 	$this->title = 'Paid Sale ['.htmlspecialchars($this->entity->id).']';
-} elseif ($this->entity->status == 'voided') {
+elseif ($this->entity->status == 'voided')
 	$this->title = 'Voided Sale ['.htmlspecialchars($this->entity->id).']';
-}
 $this->note = 'Use this form to edit a sale.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
@@ -73,6 +72,9 @@ if ($pines->config->com_sales->com_esp) {
 	}
 	#p_muid_specials .special_discount {
 		text-align: right;
+	}
+	#p_muid_form .p_muid_payment_data_throbber.hide {
+		display: none;
 	}
 </style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/save')); ?>">
@@ -1028,6 +1030,11 @@ if ($pines->config->com_sales->com_esp) {
 							});
 							update_payments();
 						}
+					},
+					{
+						type: 'label',
+						extra_class: 'p_muid_payment_data_throbber picon picon-throbber hide',
+						label: '&nbsp;'
 					}
 				]
 			});
@@ -1039,6 +1046,14 @@ if ($pines->config->com_sales->com_esp) {
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
+					beforeSend: function(){
+						$(":button", "#p_muid_buttons").attr("disabled", "disabled");
+						$(".p_muid_payment_data_throbber").removeClass("hide");
+					},
+					complete: function(){
+						$(":button", "#p_muid_buttons").removeAttr("disabled");
+						$(".p_muid_payment_data_throbber").addClass("hide");
+					},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retrieve the data form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
@@ -2009,7 +2024,7 @@ if ($pines->config->com_sales->com_esp) {
 		</div>
 	</div>
 	<?php } ?>
-	<div class="pf-element pf-buttons">
+	<div class="pf-element pf-buttons" id="p_muid_buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>

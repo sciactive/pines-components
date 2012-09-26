@@ -40,6 +40,7 @@ class com_reports_sales_ranking extends entity {
 		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
 		$this->top_location = $_SESSION['user']->group;
 		$this->calc_nh_goals = true;
+		$this->exclude_pending_contracts = false;
 		$this->only_below = true;
 		$this->sales_goals = array();
 	}
@@ -110,13 +111,15 @@ class com_reports_sales_ranking extends entity {
 	 * 
 	 * @return module The sales ranking report module.
 	 */
-	function rank() {
+	public function rank() {
 		global $pines;
 
 		$module = new module('com_reports', 'view_sales_rankings', 'content');
 		$module->entity = $this;
 		if ($this->final)
 			return $module;
+
+		$exclude_pending = $this->exclude_pending_contracts && $pines->depend->check('component', 'com_mifi');
 
 		// Get employees and locations.
 		$group = $this->top_location;
@@ -345,7 +348,21 @@ class com_reports_sales_ranking extends entity {
 			);
 
 		// Total all the sales and returns by employee and location.
+		$skipped = array();
 		foreach ($sales as $cur_sale) {
+			if ($exclude_pending) {
+				$test = $pines->entity_manager->get_entity(
+						array('class' => com_mifi_contract, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'contract', 'pending'),
+							'ref' => array('sale', $cur_sale)
+						)
+					);
+				if (isset($test->guid)) {
+					$skipped[] = $cur_sale->guid;
+					continue;
+				}
+			}
 			foreach ($cur_sale->products as $cur_product) {
 				if (!isset($cur_product['salesperson']))
 					continue;
@@ -370,6 +387,8 @@ class com_reports_sales_ranking extends entity {
 			}
 		}
 		foreach ($returns as $cur_return) {
+			if ($exclude_pending && in_array($cur_return->sale->guid, $skipped))
+				continue;
 			foreach ($cur_return->products as $cur_product) {
 				if (!isset($cur_product['salesperson']))
 					continue;

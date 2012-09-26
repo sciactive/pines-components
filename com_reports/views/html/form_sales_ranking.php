@@ -202,6 +202,12 @@ $pines->com_pgrid->load();
 		<label><span class="pf-label">End Date</span>
 			<input class="pf-field" type="text" name="end" value="<?php echo ($this->entity->end_date) ? htmlspecialchars(format_date($this->entity->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
 	</div>
+	<?php if ($pines->depend->check('component', 'com_mifi')) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Exclude Pending Contracts</span>
+		<label><input type="checkbox" class="pf-field" name="exclude_pending_contracts" value="ON"<?php echo $this->entity->exclude_pending_contracts ? ' checked="checked"' : ''; ?> /> Exclude sales with pending MiFi contracts from rankings.</label>
+	</div>
+	<?php } ?>
 	<div class="pf-element">
 		<span class="pf-label">New Hire Goals</span>
 		<label><input type="checkbox" class="pf-field" name="calc_nh_goals" value="ON"<?php echo $this->entity->calc_nh_goals ? ' checked="checked"' : ''; ?> /> Calculate new hire goals using training completion date.</label>

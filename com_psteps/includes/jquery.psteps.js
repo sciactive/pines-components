@@ -40,6 +40,7 @@
 			var send_button = psteps.find('.submit-button');
 			var toggle_buttons = psteps.find('.next-button, .submit-button');
 			var num_steps = psteps.find('.step-title').length;
+			var first_time = true;
 
 			// Ensure steps width always looks good (mobile)
 			if (psteps.steps_width_percentage) {
@@ -72,15 +73,15 @@
 							if ((psteps.traverse_titles == 'visited' && title.hasClass('step-visited')) || (psteps.traverse_titles == 'never' && title.hasClass('step-visited')) || psteps.traverse_titles == 'always') {
 								var validate_result = psteps.validation_rule.call(cur_step);
 								if (validate_result == 'warning') {
-									title.addClass('step-warning');
+									title.removeClass('step-error btn-info btn-success').addClass('step-warning');
 									psteps.trigger_error(cur_step);
 								} else if (validate_result == 'error') {
-									title.addClass('step-error');
+									title.removeClass('step-warning btn-info btn-success').addClass('step-error');
 									psteps.trigger_error(cur_step);
 								} else if (validate_result) {
-									title.removeClass('btn-info').addClass('btn-success').find('i').remove().end().prepend('<i class="icon-ok"></i> ');
+									title.removeClass('step-warning btn-info step-error').addClass('btn-success').find('i').remove().end().prepend('<i class="icon-ok"></i> ');
 								} else if (!validate_result) {
-									title.removeClass('btn-success')
+									title.removeClass('step-warning btn-info step-error btn-success')
 										.addClass('btn-info')
 										.find('i').remove();
 								}
@@ -187,8 +188,11 @@
 				if (psteps.traverse_titles == 'visited') {
 					active_title.css('cursor', 'pointer');
 				}
-
-				psteps.check_progress_titles();
+				
+				if (first_time)
+					first_time = false;
+				else
+					psteps.check_progress_titles();
 			}
 
 			// Function to go to the next step (calls go to step)
@@ -287,7 +291,7 @@
 			toggle_buttons.click(function(e){
 				var this_button = $(this);
 				var active_title = psteps.find('.step-title.step-active');
-				if (active_title.hasClass('step-error')) {
+				if (active_title.hasClass('step-error') && psteps.validate_errors) {
 					if (psteps.validate_use_error_msg) {
 						alert(psteps.validate_error_msg)
 					} else {

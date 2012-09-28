@@ -73,15 +73,15 @@
 							if ((psteps.traverse_titles == 'visited' && title.hasClass('step-visited')) || (psteps.traverse_titles == 'never' && title.hasClass('step-visited')) || psteps.traverse_titles == 'always') {
 								var validate_result = psteps.validation_rule.call(cur_step);
 								if (validate_result == 'warning') {
-									title.removeClass('step-error btn-info btn-success').addClass('step-warning');
+									title.removeClass('step-error btn-info btn-success btn-warning btn-danger').addClass('step-warning');
 									psteps.trigger_error(cur_step);
 								} else if (validate_result == 'error') {
-									title.removeClass('step-warning btn-info btn-success').addClass('step-error');
+									title.removeClass('step-warning btn-info btn-success btn-warning btn-danger').addClass('step-error');
 									psteps.trigger_error(cur_step);
 								} else if (validate_result) {
-									title.removeClass('step-warning btn-info step-error').addClass('btn-success').find('i').remove().end().prepend('<i class="icon-ok"></i> ');
+									title.removeClass('step-warning btn-info btn-warning btn-danger step-error').addClass('btn-success').find('i').remove().end().prepend('<i class="icon-ok"></i> ');
 								} else if (!validate_result) {
-									title.removeClass('step-warning btn-info step-error btn-success')
+									title.removeClass('step-warning btn-info btn-success btn-danger btn-warning step-error')
 										.addClass('btn-info')
 										.find('i').remove();
 								}

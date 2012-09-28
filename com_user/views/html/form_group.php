@@ -93,10 +93,9 @@ $pines->uploader->load();
 		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
 		<li><a href="#p_muid_tab_logo" data-toggle="tab">Logo</a></li>
 		<li><a href="#p_muid_tab_location" data-toggle="tab">Address</a></li>
-		<?php if ( $this->display_abilities ) { ?>
+		<?php if ($this->display_abilities) { ?>
 		<li><a href="#p_muid_tab_abilities" data-toggle="tab">Abilities</a></li>
-		<?php } ?>
-		<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
+		<?php } if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
 		<li><a href="#p_muid_tab_conditions" data-toggle="tab">Conditions</a></li>
 		<?php } ?>
 		<li><a href="#p_muid_tab_attributes" data-toggle="tab">Attributes</a></li>

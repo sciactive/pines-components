@@ -16,8 +16,8 @@ $pines->com_pgrid->load();
 //$pines->com_jstree->load();
 if ($pines->config->com_user->check_username)
 	$pines->icons->load();
-?>
-<?php if ($pines->config->com_user->check_username) { ?>
+
+if ($pines->config->com_user->check_username) { ?>
 <style type="text/css">
 	#p_muid_username_loading {
 		background-position: left;
@@ -91,11 +91,11 @@ if ($pines->config->com_user->check_username)
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'saveuser')); ?>" autocomplete="off">
 	<ul class="nav nav-tabs" style="clear: both;">
 		<li class="active"><a href="#p_muid_tab_general" data-toggle="tab">General</a></li>
-		<?php if ( $this->display_groups ) { ?>
+		<?php if ($this->display_groups) { ?>
 		<li><a href="#p_muid_tab_groups" data-toggle="tab">Groups</a></li>
 		<?php } if (in_array('address', $pines->config->com_user->user_fields) || in_array('additional_addresses', $pines->config->com_user->user_fields)) { ?>
 		<li><a href="#p_muid_tab_location" data-toggle="tab">Address</a></li>
-		<?php } if ( $this->display_abilities ) { ?>
+		<?php } if ($this->display_abilities) { ?>
 		<li><a href="#p_muid_tab_abilities" data-toggle="tab">Abilities</a></li>
 		<?php } if (in_array('attributes', $pines->config->com_user->user_fields)) { ?>
 		<li><a href="#p_muid_tab_attributes" data-toggle="tab">Attributes</a></li>
@@ -193,7 +193,7 @@ if ($pines->config->com_user->check_username)
 					</select>
 				</label>
 			</div>
-			<?php } ?>
+			<?php } if ($this->display_password) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 					<?php
@@ -208,7 +208,12 @@ if ($pines->config->com_user->check_username)
 				<label><span class="pf-label">Repeat Password</span>
 					<input class="pf-field" type="password" name="password2" size="24" /></label>
 			</div>
-			<?php if ($this->display_pin && in_array('pin', $pines->config->com_user->user_fields)) { ?>
+			<?php } elseif (isset($this->entity->guid) && $this->entity->is($_SESSION['user'])) { ?>
+			<div class="pf-element">
+				<span class="pf-label">Password</span>
+				<span class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_user', 'updatepassword')); ?>" onclick="return confirm('If you have made changes and you don\'t submit them before leaving this page, they will be lost.');">Update your password.</a></span>
+			</div>
+			<?php } if ($this->display_pin && in_array('pin', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">PIN code</span>
 					<input class="pf-field" type="password" name="pin" size="5" value="<?php echo htmlspecialchars($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>

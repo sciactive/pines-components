@@ -186,6 +186,7 @@ class user extends able_object implements user_interface {
 		$module->display_username = gatekeeper('com_user/usernames');
 		$module->display_enable = gatekeeper('com_user/enabling');
 		$module->display_email_verified = gatekeeper('com_user/edituser');
+		$module->display_password = gatekeeper('com_user/passwords');
 		$module->display_pin = gatekeeper('com_user/assignpin');
 		$module->display_groups = gatekeeper('com_user/assigngroup');
 		$module->display_abilities = gatekeeper('com_user/abilities');
@@ -216,6 +217,18 @@ class user extends able_object implements user_interface {
 		}
 		foreach ($pines->components as $cur_component)
 			$module->sections[] = $cur_component;
+
+		return $module;
+	}
+
+	/**
+	 * Print a form to change the user's password.
+	 * 
+	 * @return module The form's module.
+	 */
+	public function print_form_password() {
+		$module = new module('com_user', 'form_password', 'content');
+		$module->entity = $this;
 
 		return $module;
 	}

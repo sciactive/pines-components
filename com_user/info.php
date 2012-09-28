@@ -38,6 +38,7 @@ return array(
 		array('deleteuser', 'Delete Users', 'User can delete other users.'),
 		array('enabling', 'Manage Enabling', 'User can enable and disable users and groups.'),
 		array('usernames', 'Manage Usernames', 'User can change usernames and groupnames.'),
+		array('passwords', 'Manage Passwords', 'User can change other users\' passwords.'),
 		array('abilities', 'Manage Abilities', 'Let user manage other users\' and his own abilities.'),
 		array('assignpin', 'Assign PIN', 'User can assign PIN codes for users.'),
 		array('conditions', 'Manage Conditions', 'Let user manage user and group conditions.'),

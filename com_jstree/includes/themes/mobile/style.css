@@ -1,0 +1,64 @@
+/*
+ * jsTree mobile theme 1.0
+ * Supported features: dots/no-dots, icons/no-icons, focused, loading
+ * Supported plugins: ui (hovered, clicked), checkbox, contextmenu, search
+ */
+
+.jstree-mobile > ul { background:url("bg.jpg") left top repeat; font-size:200%; }
+.jstree-mobile li, 
+.jstree-mobile ins { background-image:url("d.png"); background-repeat:no-repeat; background-color:transparent; }
+.jstree-mobile ins { height:36px; width:36px; }
+.jstree-mobile li { background-position:-180px 0; background-repeat:repeat-y; line-height:36px; min-height:36px; min-width:36px; }
+.jstree-mobile li.jstree-last { background:transparent; }
+.jstree-mobile .jstree-open > ins { background-position:-144px 0; }
+.jstree-mobile .jstree-closed > ins { background-position:-108px 0; }
+.jstree-mobile .jstree-leaf > ins { background-position:-72px 0; }
+
+.jstree-mobile a { border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; text-shadow:1px 1px 1px white; height:32px; line-height:32px; padding:2px 4px; }
+.jstree-mobile a > ins { height:32px; width:32px; }
+.jstree-mobile .jstree-hovered { background:#e7f4f9; border:1px solid #d8f0fa; padding:0 6px 0 2px; text-shadow:1px 1px 1px silver; }
+.jstree-mobile .jstree-clicked { background:#beebff; border:1px solid #99defd; padding:0 6px 0 2px; }
+.jstree-mobile a .jstree-icon { background-position:-112px -40px; }
+.jstree-mobile a > .jstree-icon { margin-right:6px; }
+.jstree-mobile a.jstree-loading .jstree-icon { background:url("throbber.gif") center center no-repeat !important; }
+
+.jstree-mobile.jstree-focused { background:white; }
+
+.jstree-mobile .jstree-no-dots li, 
+.jstree-mobile .jstree-no-dots .jstree-leaf > ins { background:transparent; }
+.jstree-mobile .jstree-no-dots .jstree-open > ins { background-position:-36px 0; }
+.jstree-mobile .jstree-no-dots .jstree-closed > ins { background-position:0 0; }
+
+.jstree-mobile .jstree-no-icons a .jstree-icon { display:none; }
+
+.jstree-mobile .jstree-search { font-style:italic; }
+
+.jstree-mobile .jstree-no-icons .jstree-checkbox { display:inline-block; }
+.jstree-mobile .jstree-no-checkboxes .jstree-checkbox { display:none !important; }
+.jstree-mobile .jstree-checked > a > .jstree-checkbox { background-position:-76px -38px; }
+.jstree-mobile .jstree-unchecked > a > .jstree-checkbox { background-position:-4px -38px; }
+.jstree-mobile .jstree-undetermined > a > .jstree-checkbox { background-position:-40px -38px; }
+.jstree-mobile .jstree-checked > a > .checkbox:hover { background-position:-76px -74px; }
+.jstree-mobile .jstree-unchecked > a > .jstree-checkbox:hover { background-position:-4px -74px; }
+.jstree-mobile .jstree-undetermined > a > .jstree-checkbox:hover { background-position:-40px -74px; }
+
+#vakata-dragged.jstree-mobile ins { background:transparent !important; }
+#vakata-dragged.jstree-mobile .jstree-ok { background:url("d.png") -4px -106px no-repeat !important; }
+#vakata-dragged.jstree-mobile .jstree-invalid { background:url("d.png") -36px -106px no-repeat !important; }
+#jstree-marker.jstree-mobile { background:url("d.png") -82px -114px no-repeat !important; text-indent:-100px; }
+
+.jstree-mobile a.jstree-search { color:aqua; }
+.jstree-mobile .jstree-locked a { color:silver; cursor:default; }
+
+#vakata-contextmenu.jstree-mobile-context, 
+#vakata-contextmenu.jstree-mobile-context li ul { background:#f0f0f0; border:1px solid #979797; -moz-box-shadow: 1px 1px 2px #999; -webkit-box-shadow: 1px 1px 2px #999; box-shadow: 1px 1px 2px #999; }
+#vakata-contextmenu.jstree-mobile-context li { }
+#vakata-contextmenu.jstree-mobile-context a { color:black; }
+#vakata-contextmenu.jstree-mobile-context a:hover, 
+#vakata-contextmenu.jstree-mobile-context .vakata-hover > a { padding:0 10px; background:#e8eff7; border:1px solid #aecff7; color:black; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; }
+#vakata-contextmenu.jstree-mobile-context li.jstree-contextmenu-disabled a, 
+#vakata-contextmenu.jstree-mobile-context li.jstree-contextmenu-disabled a:hover { color:silver; background:transparent; border:0; padding:1px 4px; }
+#vakata-contextmenu.jstree-mobile-context li.vakata-separator { background:white; border-top:1px solid #e0e0e0; margin:0; }
+#vakata-contextmenu.jstree-mobile-context li ul { margin-left:-4px; }
+
+/* TODO: IE6 support - the `>` selectors */

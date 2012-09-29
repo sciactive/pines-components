@@ -16,6 +16,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	pines(function(){
 		$.jstree.defaults.core.animation = 100;
 		$.jstree._themes = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_jstree/includes/themes/";
+		<?php if ($pines->depend->check('component', 'com_uasniffer') && $pines->depend->check('browser', 'mobile')) { ?>
+		$.jstree.defaults.themes.theme = "mobile";
+		<?php } else { ?>
 		$.jstree.defaults.themes.theme = "apple";
+		<?php } ?>
 	});
 </script>

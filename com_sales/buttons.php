@@ -162,6 +162,16 @@ return array(
 			'ability' => 'com_sales/newproduct',
 		),
 	),
+	'shipments' => array(
+		'description' => 'Shipments List.',
+		'text' => 'Shipments',
+		'class' => 'picon-mail-folder-outbox',
+		'href' => pines_url('com_sales', 'shipment/list'),
+		'default' => true,
+		'depends' => array(
+			'ability' => 'com_sales/managestock',
+		),
+	),
 );
 
 ?>

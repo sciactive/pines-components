@@ -422,7 +422,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<br class="pf-clearing" />
 	</div>
 	<div class="pf-element pf-heading">
-		<h3>Pending Shipments</h3>
+		<h3>Purchase Orders</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">

@@ -28,6 +28,7 @@ if ($this->entity->final)
 				products_table = $("#p_muid_products_table"),
 				available_products_table = $("#p_muid_available_products_table"),
 				product_dialog = $("#p_muid_product_dialog"),
+				product_edit_dialog = $("#p_muid_product_edit_dialog"),
 				cur_vendor = <?php echo ($this->entity->vendor->guid ? json_encode($this->entity->vendor->guid) : 'null'); ?>,
 				dec = <?php echo (int) $pines->config->com_sales->dec; ?>; // Number of decimal places to round to.
 			var round_to_dec = function(value){
@@ -72,6 +73,8 @@ if ($this->entity->final)
 				available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 				$("#p_muid_cur_product_quantity").val("");
 				$("#p_muid_cur_product_cost").val("");
+				$("#p_muid_cur_product_edit_quantity").val("");
+				$("#p_muid_cur_product_edit_cost").val("");
 				// Save the data into a hidden form element.
 				products.val(JSON.stringify(all_rows));
 				// Calculate a total based on quantity and cost.
@@ -109,11 +112,9 @@ if ($this->entity->final)
 						double_click: true,
 						click: function(e, rows){
 							var row_data = products_table.pgrid_export_rows(rows);
-							available_products_table.pgrid_select_rows([row_data[0].key]);
-							$("#p_muid_cur_product_quantity").val(row_data[0].values[2]);
-							$("#p_muid_cur_product_cost").val(row_data[0].values[3]);
-							product_dialog.dialog('open');
-							rows.pgrid_delete();
+							$("#p_muid_cur_product_edit_quantity").val(row_data[0].values[2]);
+							$("#p_muid_cur_product_edit_cost").val(row_data[0].values[3]);
+							product_edit_dialog.dialog('open');
 						}
 					},
 					{
@@ -311,6 +312,31 @@ if ($this->entity->final)
 							]
 						}];
 						products_table.pgrid_add(new_product);
+						$(this).dialog('close');
+					}
+				},
+				close: function(){
+					update_products();
+				}
+			});
+			// Product Edit Dialog
+			product_edit_dialog.dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				buttons: {
+					"Done": function(){
+						var cur_product_quantity = parseInt($("#p_muid_cur_product_edit_quantity").val()),
+							cur_product_cost = parseFloat($("#p_muid_cur_product_edit_cost").val());
+						if (isNaN(cur_product_quantity) || isNaN(cur_product_cost)) {
+							alert("Please provide both a quantity and a cost for this product.");
+							return;
+						}
+						var row = products_table.pgrid_get_selected_rows();
+						row.pgrid_set_value(3, cur_product_quantity);
+						row.pgrid_set_value(4, cur_product_cost);
+						row.pgrid_set_value(5, round_to_dec(cur_product_quantity * cur_product_cost));
 						$(this).dialog('close');
 					}
 				},
@@ -554,6 +580,19 @@ if ($this->entity->final)
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
 					<input class="pf-field" type="text" name="cur_product_cost" size="24" id="p_muid_cur_product_cost" /></label>
+			</div>
+		</div>
+		<br />
+	</div>
+	<div id="p_muid_product_edit_dialog" title="Edit Product" style="display: none;">
+		<div class="pf-form">
+			<div class="pf-element">
+				<label><span class="pf-label">Quantity</span>
+					<input class="pf-field" type="text" name="cur_product_quantity" size="24" id="p_muid_cur_product_edit_quantity" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Cost</span>
+					<input class="pf-field" type="text" name="cur_product_cost" size="24" id="p_muid_cur_product_edit_cost" /></label>
 			</div>
 		</div>
 		<br />

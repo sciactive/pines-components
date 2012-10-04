@@ -15,8 +15,39 @@ if ( !gatekeeper('com_sales/receive') )
 	punt_user(null, pines_url('com_sales', 'stock/receive'));
 
 if (!isset($_REQUEST['products'])) {
-	$pines->com_sales->print_receive_form();
+	$module = $pines->com_sales->print_receive_form();
+	if ((int) $_REQUEST['location'])
+		$module->location = (int) $_REQUEST['location'];
+	if ($_REQUEST['shipments'])
+		$module->shipments = explode(',', $_REQUEST['shipments']);
 	return;
+}
+
+$shipments_json = (array) json_decode($_REQUEST['shipments']);
+if (!$shipments_json)
+	$shipments = array();
+else {
+	// These are the shipments (POs and transfers) selected to be received on
+	// the form. The GUIDs can be either a PO or transfer.
+	$shipments_json = array_map('intval', $shipments_json);
+	$shipments_transfers = $pines->entity_manager->get_entities(
+			array('class' => com_sales_transfer),
+			array('&',
+				'tag' => array('com_sales', 'transfer')
+			),
+			array('|',
+				'guid' => $shipments_json
+			)
+		);
+	$shipments_pos = $pines->entity_manager->get_entities(
+			array('class' => com_sales_po),
+			array('&',
+				'tag' => array('com_sales', 'po')
+			),
+			array('|',
+				'guid' => $shipments_json
+			)
+		);
 }
 
 $products_json = (array) json_decode($_REQUEST['products']);
@@ -65,26 +96,27 @@ foreach ($products as $cur_product) {
 		$origin = $stock = null;
 		$serial = empty($cur_product['serial']) ? null : $cur_product['serial'];
 		// Search for the product on a transfer.
-		$origin = $pines->com_sales->get_origin_transfer($cur_product_entity, $serial, $location);
+		$origin = $pines->com_sales->get_origin_transfer($cur_product_entity, $serial, $location, $shipments_transfers);
 		if (isset($origin) && isset($origin[0])) {
 			$stock = $origin[1];
 			$origin = $origin[0];
 			$status = 'received_transfer';
 		} else {
 			// Search for the product on a PO.
-			$origin = $pines->com_sales->get_origin_po($cur_product_entity, $location);
+			$origin = $pines->com_sales->get_origin_po($cur_product_entity, $location, $shipments_pos);
 			$stock = com_sales_stock::factory();
 			$stock->product = $cur_product_entity;
 			if ($cur_product_entity->serialized)
 				$stock->serial = $serial;
 			$stock->vendor = $origin->vendor;
+			// TODO: Save the stock's cost from the PO.
 			$status = 'received_po';
 		}
 		if (!isset($origin)) {
 			pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}
-		
+
 		$stock->receive($status, $origin, $location);
 		$stock->save();
 

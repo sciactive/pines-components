@@ -170,7 +170,12 @@ echo $module->render();
 				<td style="text-align: right;">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlspecialchars(" - {$cur_product['discount']}"); ?></td>
 				<td style="text-align: right;">$<?php echo $pines->com_sales->round($cur_product['line_total'] - (float) $cur_product['return_fee'], true); ?></td>
 			</tr>
-			<?php
+			<?php if (isset($cur_product['po']->guid)) { ?>
+			<tr>
+				<td colspan="2" style="text-align: right;">Attached PO</td>
+				<td colspan="5"><a data-entity="<?php echo htmlspecialchars($cur_product['po']->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
+			</tr>
+			<?php }
 			$stock_entities = array();
 			foreach ((array) $cur_product['stock_entities'] as $cur_stock) {
 				if (!isset($cur_stock->guid) || $cur_stock->in_array((array) $cur_product['returned_stock_entities']))

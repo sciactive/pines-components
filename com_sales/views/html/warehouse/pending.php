@@ -100,6 +100,48 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Mark Ordered', extra_class: 'picon picon-task-complete', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/markordered', array('id' => '__title__', 'ordered' => 'true'))); ?>, delimiter: ','},
 				<?php } else { ?>
 				{type: 'button', text: 'Mark Not Ordered', extra_class: 'picon picon-task-attempt', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/markordered', array('id' => '__title__', 'ordered' => 'false'))); ?>, delimiter: ','},
+				<?php } if (gatekeeper('com_sales/newpo')) { ?>
+				{type: 'button', text: 'Create PO', extra_class: 'picon picon-resource-calendar-child', multi_select: true, click: function(e, rows){
+					var problem = false,
+						location = false,
+						vendors = false;
+					rows.each(function(i, v){
+						if (problem)
+							return;
+						var row = $(v),
+							row_po = $(row.pgrid_get_value(8)).filter('a[data-entity]').attr('data-entity'),
+							row_loc = $(row.pgrid_get_value(3)).filter('a[data-entity]').attr('data-entity'),
+							row_ven = $(row.pgrid_get_value(9)).filter('a[data-entity]').map(function(i,e){return $(e).attr('data-entity')}).get();
+						if (row_po && row_po != '0') {
+							alert('All selected orders must not have attached POs.');
+							problem = true;
+							return;
+						}
+						if (!location)
+							location = row_loc;
+						else if (location != row_loc) {
+							alert('All selected orders must have the same location.');
+							problem = true;
+							return;
+						}
+						if (!vendors)
+							vendors = row_ven;
+						else {
+							vendors = $.grep(vendors, function(n){
+								return ($.inArray(n, row_ven) != -1);
+							});
+							if (!vendors.length) {
+								alert('All selected orders must have at least one vendor in common.');
+								problem = true;
+								return;
+							}
+						}
+					});
+					if (problem)
+						return;
+					var ids = rows.map(function(i,e){return $(e).attr('title')}).get();
+					pines.get(<?php echo json_encode(pines_url('com_sales', 'warehouse/createpo')); ?>, {id: ids.join(',')});
+				}},
 				<?php } ?>
 				{type: 'button', text: 'Attach PO', extra_class: 'picon picon-mail-attachment', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/attachpo', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'button', text: 'Detach PO', extra_class: 'picon picon-list-remove', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/detachpo', array('id' => '__title__'))); ?>, delimiter: ','},
@@ -254,11 +296,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
 			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - $cur_product['returned_stock_entities'])); ?></td>
 			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($sale->customer->name); ?></a></td>
-			<?php if (isset($cur_product['po'])) { ?>
-			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['po']->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
-			<?php } else { ?>
-			<td<?php echo $style; ?>></td>
-			<?php } ?>
+			<td<?php echo $style; ?>><?php if (isset($cur_product['po'])) { ?><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['po']->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a><?php } ?></td>
 			<td<?php echo $style; ?>>
 				<?php
 				$vendors = array(); 

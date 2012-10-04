@@ -59,7 +59,53 @@ if ($pines->config->com_sales->autocomplete_product)
 				products.val(JSON.stringify(all_rows));
 			};
 
-			$("#p_muid_shipment_table").pgrid({
+			var receive_row = function(row){
+				var loader, url, cur_row = $(row);
+				if (cur_row.hasClass('pending_receiving')) {
+					if (!confirm('It looks like you\'ve already selected this shipment for receiving. Are you sure you want to add it again?'))
+						return;
+				}
+				if (cur_row.pgrid_get_value(1) == "PO")
+					url = <?php echo json_encode(pines_url('com_sales', 'po/products')); ?>;
+				else
+					url = <?php echo json_encode(pines_url('com_sales', 'transfer/products')); ?>;
+				$.ajax({
+					url: url,
+					type: "POST",
+					dataType: "json",
+					data: {"id": cur_row.attr('title')},
+					beforeSend: function(){
+						loader = $.pnotify({
+							title: 'Shipment Search',
+							text: 'Retrieving products...',
+							icon: 'picon picon-throbber',
+							nonblock: true,
+							hide: false,
+							history: false
+						});
+					},
+					complete: function(){
+						loader.pnotify_remove();
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to lookup the shipment:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+					},
+					success: function(data){
+						if (!data) {
+							alert("No shipment was found for "+cur_row.pgrid_get_value(1)+".");
+							return;
+						}
+						cur_row.addClass('pending_receiving ui-state-highlight');
+						$.each(data, function(){
+							for (var i = 0; i < this.quantity; i++)
+								pines.com_sales_add_product(this);
+						});
+						var guids = shipment_table.find(".pending_receiving").map(function(){return $(this).attr('title')}).get();
+						$("#p_muid_shipments").val(JSON.stringify(guids));
+					}
+				});
+			};
+			var shipment_table = $("#p_muid_shipment_table").pgrid({
 				pgrid_paginate: false,
 				pgrid_view_height: '250px',
 				pgrid_sort_col: 3,
@@ -74,50 +120,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						multi_select: true,
 						click: function(e, rows){
 							$.each(rows, function(){
-								var loader;
-								var url;
-								var cur_row = $(this);
-								if (cur_row.hasClass('pending_receiving')) {
-									if (!confirm('It looks like you\'ve already selected this shipment for receiving. Are you sure you want to add it again?'))
-										return;
-								}
-								if (cur_row.pgrid_get_value(1) == "PO")
-									url = <?php echo json_encode(pines_url('com_sales', 'po/products')); ?>;
-								else
-									url = <?php echo json_encode(pines_url('com_sales', 'transfer/products')); ?>;
-								$.ajax({
-									url: url,
-									type: "POST",
-									dataType: "json",
-									data: {"id": this.title},
-									beforeSend: function(){
-										loader = $.pnotify({
-											title: 'Shipment Search',
-											text: 'Retrieving products...',
-											icon: 'picon picon-throbber',
-											nonblock: true,
-											hide: false,
-											history: false
-										});
-									},
-									complete: function(){
-										loader.pnotify_remove();
-									},
-									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the shipment:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
-									},
-									success: function(data){
-										if (!data) {
-											alert("No shipment was found for "+cur_row.pgrid_get_value(1)+".");
-											return;
-										}
-										cur_row.addClass('pending_receiving ui-state-highlight');
-										$.each(data, function(){
-											for (var i = 0; i < this.quantity; i++)
-												pines.com_sales_add_product(this);
-										});
-									}
-								});
+								receive_row(this);
 							});
 						}
 					},
@@ -289,7 +292,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 							$.each(data, function(){
 								var product = this;
-								category_products_grid.pgrid_add([{key: this.guid, values: [pines.safe(this.name), pines.safe(this.sku)]}], function(){
+								category_products_grid.pgrid_add([{key: this.guid, values: ['<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_sales_product">'+pines.safe(this.name)+'</a>', pines.safe(this.sku)]}], function(){
 									$(this).data("product", product);
 								});
 							});
@@ -341,8 +344,15 @@ if ($pines->config->com_sales->autocomplete_product)
 				}
 			});
 
-			products_table.pgrid_get_all_rows().pgrid_delete();
 			pines.com_sales_update_products();
+
+			<?php if (isset($this->shipments)) { foreach ((array) $this->shipments as $cur_id) { ?>
+			(function(){
+				var row = shipment_table.find('tbody tr[title='+<?php echo json_decode("$cur_id"); ?>+']');
+				if (row.length)
+					receive_row(row);
+			})();
+			<?php } } ?>
 		});
 	</script>
 	<?php if (gatekeeper('com_sales/receivelocation')) { ?>
@@ -373,7 +383,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : [<?php echo isset($_SESSION['user']->group->guid) ? json_encode("{$_SESSION['user']->group->guid}") : '""'; ?>]
+					"initially_select" : [<?php echo isset($this->location) ? json_encode("{$this->location}") : (isset($_SESSION['user']->group->guid) ? json_encode("{$_SESSION['user']->group->guid}") : '""'); ?>]
 				}
 			});
 		});
@@ -416,13 +426,12 @@ if ($pines->config->com_sales->autocomplete_product)
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />
 	</div>
 	<div class="pf-element pf-heading">
-		<h3>Purchase Orders</h3>
+		<h3>Purchase Orders / Transfers</h3>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">
@@ -448,15 +457,14 @@ if ($pines->config->com_sales->autocomplete_product)
 						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_shipment->po_number); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
-						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
-						<td><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></td>
-						<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></a></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></a></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></a></td>
 						<td><?php echo $cur_shipment->final ? ($cur_shipment->finished ? 'Received' : (empty($cur_shipment->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 						<td><?php
 						$names = array();
-						foreach ((array) $cur_shipment->products as $cur_product) {
-							$names[] = htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]");
-						}
+						foreach ((array) $cur_shipment->products as $cur_product)
+							$names[] = '<a data-entity="'.htmlspecialchars($cur_product['entity']->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]").'</a>'.($cur_product['quantity'] > 1 ? htmlspecialchars(" x {$cur_product['quantity']}") : '');
 						echo implode(', ', $names);
 						?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
@@ -467,15 +475,14 @@ if ($pines->config->com_sales->autocomplete_product)
 						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->guid); ?>" data-entity-context="com_sales_transfer"><?php echo htmlspecialchars($cur_shipment->guid); ?></a></td>
 						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
-						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
-						<td><?php echo htmlspecialchars("{$cur_shipment->origin->name} [{$cur_shipment->origin->groupname}]"); ?></td>
-						<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></a></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->origin->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars("{$cur_shipment->origin->name} [{$cur_shipment->origin->groupname}]"); ?></a></td>
+						<td><a data-entity="<?php echo htmlspecialchars($cur_shipment->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></a></td>
 						<td><?php echo $cur_shipment->final ? ($cur_shipment->finished ? 'Received' : (empty($cur_shipment->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 						<td><?php
 						$names = array();
-						foreach ((array) $cur_shipment->products as $cur_product) {
-							$names[] = htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]");
-						}
+						foreach ((array) $cur_shipment->products as $cur_product)
+							$names[] = '<a data-entity="'.htmlspecialchars($cur_product->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]").'</a>';
 						echo implode(', ', $names);
 						?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
@@ -484,6 +491,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				</tbody>
 			</table>
 		</div>
+		<input type="hidden" id="p_muid_shipments" name="shipments" value="[]" />
 	</div>
 	<div class="pf-element pf-heading">
 		<h3>Products to be Received</h3>
@@ -499,7 +507,6 @@ if ($pines->config->com_sales->autocomplete_product)
 					</tr>
 				</thead>
 				<tbody>
-					<tr><td>-</td><td>-</td><td>-</td></tr>
 				</tbody>
 			</table>
 		</div>

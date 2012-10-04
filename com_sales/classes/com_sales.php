@@ -204,10 +204,23 @@ class com_sales extends component {
 	 * @todo Go through each matched PO and check which one has the closest ETA.
 	 * @param com_sales_product $product The product to search for.
 	 * @param group $location Look through POs destined for this location.
+	 * @param array &$suggestions An array of POs that should take precedence.
 	 * @return com_sales_po|null A PO, or null if nothing is found.
 	 */
-	public function get_origin_po($product, $location = null) {
+	public function get_origin_po($product, $location = null, &$suggestions = array()) {
 		global $pines;
+		// First check through the suggestions to see if they match.
+		foreach ($suggestions as &$cur_po) {
+			if (!isset($cur_po->guid) || !$cur_po->has_tag('com_sales', 'po'))
+				continue;
+			$cur_po->refresh();
+			if ($cur_po->finished || !$cur_po->final)
+				continue;
+			if (!$product->in_array($cur_po->pending_products))
+				continue;
+			return $cur_po;
+		}
+		unset($cur_po);
 		// Get all the POs.
 		$selector = array('&',
 				'tag' => array('com_sales', 'po'),
@@ -236,10 +249,42 @@ class com_sales extends component {
 	 * @param com_sales_product $product The product to search for.
 	 * @param string $serial The serial to search for.
 	 * @param group $location Look through transfers destined for this location.
+	 * @param array &$suggestions An array of transfers that should take precedence.
 	 * @return array|null An array with the transfer and stock entry, or null if nothing is found.
 	 */
-	public function get_origin_transfer($product, $serial = null, $location = null) {
+	public function get_origin_transfer($product, $serial = null, $location = null, &$suggestions = array()) {
 		global $pines;
+		// First check through the suggestions to see if they match.
+		foreach ($suggestions as &$cur_transfer) {
+			if (!isset($cur_transfer->guid) || !$cur_transfer->has_tag('com_sales', 'transfer'))
+				continue;
+			$cur_transfer->refresh();
+			if ($cur_transfer->finished || !$cur_transfer->final)
+				continue;
+			if (!$product->in_array($cur_transfer->pending_products))
+				continue;
+			if (isset($serial) && !in_array($serial, $cur_transfer->pending_serials))
+				continue;
+			if (isset($location) && !$location->is($cur_transfer->destination))
+				continue;
+			// Iterate the transfer's stock, looking for a match.
+			foreach ($cur_transfer->stock as $cur_stock) {
+				if (isset($serial) || isset($cur_stock->serial)) {
+					// Check the serial with the stock entry's serial.
+					if ($cur_stock->serial != $serial)
+						continue;
+				}
+				// If it's not the right product, move on.
+				if (!$product->is($cur_stock->product))
+					continue;
+				// If it's already received, move on.
+				if ($cur_stock->in_array((array) $cur_transfer->received))
+					continue;
+				// If it's a match, return the transfer and the item.
+				return array($cur_transfer, $cur_stock);
+			}
+		}
+		unset($cur_transfer);
 		// Get all the transfers.
 		$selector = array('&',
 				'tag' => array('com_sales', 'transfer'),

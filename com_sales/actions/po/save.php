@@ -97,11 +97,71 @@ if (!$po->final && $_REQUEST['save'] == 'commit') {
 // Only comments can be cahnged after it is commited.
 $po->comments = $_REQUEST['comments'];
 
+// This happens when a PO is being created from warehouse orders.
+if ($_REQUEST['item_ids'] && $po->final) {
+	// Verify all the PO information, or kick them back to the edit page.
+	$location = $po->destination;
+	$vendors = array($po->vendor);
+	$items = array();
+
+	foreach (explode(',', $_REQUEST['item_ids']) as $cur_id) {
+		list ($sale_id, $key) = explode('_', $cur_id);
+		$sale = com_sales_sale::factory((int) $sale_id);
+		if (!isset($sale->guid)) {
+			pines_notice('Couldn\'t find specified sale.');
+			continue;
+		}
+
+		if (!isset($sale->products[(int) $key])) {
+			pines_notice('Couldn\'t find specified item.');
+			continue;
+		}
+
+		if ($sale->products[(int) $key]['delivery'] != 'warehouse') {
+			pines_notice('Specified item is not a warehouse order.');
+			continue;
+		}
+
+		if (isset($sale->products[(int) $key]['po']->guid)) {
+			pines_notice('All selected orders must not have attached POs.');
+			$po->print_form();
+			return;
+		}
+
+		if (!$location->is($sale->group)) {
+			pines_notice('All selected orders must have the same location.');
+			$po->print_form();
+			return;
+		}
+		$product = $sale->products[(int) $key]['entity'];
+		$cur_vendors = array();
+		foreach ($product->vendors as $cur_vendor)
+			$cur_vendors[] = $cur_vendor['entity'];
+		foreach ($vendors as $vkey => $cur_vendor)
+			if (!$cur_vendor->in_array($cur_vendors))
+				unset($vendors[$vkey]);
+		if (!$vendors) {
+			pines_notice('All selected orders must have at least one vendor in common.');
+			$po->print_form();
+			return;
+		}
+		$items[] = array('sale' => $sale, 'key' => (int) $key);
+	}
+}
+
 if ($po->save()) {
 	if ($_REQUEST['save'] == 'commit')
 		pines_notice('Committed PO ['.$po->po_number.']');
 	else
 		pines_notice('Saved PO ['.$po->po_number.']');
+	if ($_REQUEST['item_ids'] && $po->final) {
+		// Now attach the PO to its respective items for warehouse orders.
+		foreach ($items as $cur_item) {
+			$cur_item['sale']->products[$cur_item['key']]['po'] = $po;
+			if (!$cur_item['sale']->save())
+				pines_notice("Couldn't save sale #{$cur_item['sale']->id}. The item, {$cur_item['sale']->products[$cur_item['key']]['entity']->name}, couldn't be attached.");
+		}
+	}
 	if ($send_email)
 		$po->email();
 } else {

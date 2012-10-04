@@ -11,12 +11,12 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('com_sales/managestock'))) {
 $module = new module('com_entityhelper', 'default_helper');
 $module->render = $this->render;
 $module->entity = $this->entity;
 echo $module->render();
-
-if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('com_sales/managestock'))) { ?>
+?>
 <div style="clear:both;">
 	<hr />
 	<h3 style="margin:10px 0;">Properties</h3>
@@ -125,10 +125,54 @@ if ($this->render == 'body' && (gatekeeper('com_sales/listpos') || gatekeeper('c
 		</tbody>
 	</table>
 </div>
-<?php if (!empty($this->entity->comments)) { ?>
+<?php
+$sales = $pines->entity_manager->get_entities(
+		array('class' => com_sales_sale),
+		array('&',
+			'tag' => array('com_sales', 'sale'),
+			'ref' => array('products', $this->entity)
+		)
+	);
+if ($sales) {
+?>
+<div style="clear:both;">
+	<hr />
+	<h3 style="margin:10px 0;">Attached Warehouse Orders</h3>
+	<table class="table table-bordered" style="clear:both;">
+		<thead>
+			<tr>
+				<th>Sale</th>
+				<th>SKU</th>
+				<th>Product</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($sales as $cur_sale) {
+				foreach ($cur_sale->products as $cur_product) {
+					if (!isset($cur_product['po']) || !$this->entity->is($cur_product['po']))
+						continue;
+					?>
+			<tr>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_sale->guid); ?>" data-entity-context="com_sales_sale"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
+				<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
+			</tr>
+			<?php } } ?>
+		</tbody>
+	</table>
+</div>
+<?php
+}
+if (!empty($this->entity->comments)) { ?>
 <div style="clear:both;">
 	<hr />
 	<h3 style="margin:10px 0;">Comments</h3>
 	<div style="white-space: pre-wrap; padding-bottom: .5em;"><?php echo htmlspecialchars($this->entity->comments); ?></div>
 </div>
+<?php } } elseif ($this->render == 'footer') { ?>
+<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $this->entity->guid))); ?>" class="btn">Edit</a>
+<?php if (!$this->entity->finished && ( (gatekeeper('com_sales/receive') && isset($this->entity->destination->guid) && $this->entity->destination->is($_SESSION['user']->group)) || (gatekeeper('com_sales/receivelocation') && isset($this->entity->destination->guid) && isset($_SESSION['user']->group->guid) && $this->entity->destination->in_array($_SESSION['user']->group->get_descendants(true))) ) ) { ?>
+<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/receive', array('location' => $this->entity->destination->guid, 'shipments' => $this->entity->guid))); ?>" class="btn">Receive</a>
+<?php } if (gatekeeper('com_sales/listpos')) { ?>
+<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/list')); ?>" class="btn">View in List</a>
 <?php } } ?>

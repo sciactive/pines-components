@@ -57,14 +57,18 @@ if ($this->entity->final)
 				if (cur_vendor == vendor_id && !loading) return;
 				available_products_table.pgrid_get_all_rows().pgrid_delete();
 				if (!loading)
-					products_table.pgrid_get_all_rows().pgrid_delete();
+					products_table.pgrid_get_all_rows().each(function(){
+						var row = $(this);
+						if ($.inArray(vendor_id, JSON.parse(row.pgrid_get_value(6))) == -1)
+							row.pgrid_delete();
+					});
 				cur_vendor = vendor_id;
 				update_products();
 			};
 
 			var update_products = function(){
-				var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
-				var total = 0.00;
+				var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows(),
+					total = 0.00;
 				available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 				$("#p_muid_cur_product_quantity").val("");
 				$("#p_muid_cur_product_cost").val("");
@@ -122,6 +126,7 @@ if ($this->entity->final)
 						}
 					}
 				],
+				pgrid_hidden_cols: [<?php echo json_encode($this->entity->final ? 7 : 6); ?>],
 				pgrid_view_height: "300px"
 			});
 			<?php } else { ?>
@@ -138,6 +143,7 @@ if ($this->entity->final)
 						});
 					}}
 				],
+				pgrid_hidden_cols: [<?php echo json_encode($this->entity->final ? 7 : 6); ?>],
 				pgrid_paginate: false
 			});
 			$("#p_muid_received_table").pgrid({
@@ -220,8 +226,10 @@ if ($this->entity->final)
 							var sku = "",
 								cost = "",
 								link = "",
-								pass = false;
+								pass = false,
+								vendors = [];
 							$.each(this.vendors, function(i, vendor){
+								vendors.push(vendor.guid);
 								if (pass || vendor.guid != cur_vendor)
 									return;
 								sku = vendor.sku;
@@ -242,7 +250,8 @@ if ($this->entity->final)
 									pines.safe(sku),
 									pines.safe(cost),
 									pines.safe('$'+this.price),
-									link
+									link,
+									pines.safe(JSON.stringify(vendors))
 								]
 							});
 						});
@@ -267,6 +276,7 @@ if ($this->entity->final)
 				],
 				pgrid_multi_select: false,
 				pgrid_paginate: false,
+				pgrid_hidden_cols: [9],
 				pgrid_view_height: "300px"
 			});
 
@@ -278,9 +288,9 @@ if ($this->entity->final)
 				width: 600,
 				buttons: {
 					"Done": function(){
-						var cur_product_quantity = parseInt($("#p_muid_cur_product_quantity").val());
-						var cur_product_cost = parseFloat($("#p_muid_cur_product_cost").val());
-						var cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
+						var cur_product_quantity = parseInt($("#p_muid_cur_product_quantity").val()),
+							cur_product_cost = parseFloat($("#p_muid_cur_product_cost").val()),
+							cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_product[0]) {
 							alert("Please select a product.");
 							return;
@@ -296,7 +306,8 @@ if ($this->entity->final)
 								pines.safe(cur_product[0].values[1]),
 								pines.safe(cur_product_quantity),
 								pines.safe(cur_product_cost),
-								pines.safe(round_to_dec(cur_product_quantity * cur_product_cost))
+								pines.safe(round_to_dec(cur_product_quantity * cur_product_cost)),
+								pines.safe(cur_product[0].values[8])
 							]
 						}];
 						products_table.pgrid_add(new_product);
@@ -371,7 +382,7 @@ if ($this->entity->final)
 		<label>
 			<span class="pf-label">Vendor</span>
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
-			<span class="pf-note">Changing this will clear selected products!</span>
+			<span class="pf-note">Changing this will remove products not in new vendor!</span>
 			<select class="pf-field" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));">
 				<option value="null">-- None --</option>
 				<?php
@@ -390,7 +401,12 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Destination</span>
-		<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
+		<?php if ($this->location_fixed) { ?>
+		<span class="pf-note">Destination can't be changed for this PO.</span>
+		<span class="pf-field">
+			<a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->destination->guid ? "{$this->entity->destination->name} [{$this->entity->destination->groupname}]" : ''); ?></a>
+		</span>
+		<?php } elseif (!$this->entity->final && empty($this->entity->received)) { ?>
 		<div class="pf-group">
 			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
@@ -400,7 +416,7 @@ if ($this->entity->final)
 			<a data-entity="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($this->entity->destination->guid ? "{$this->entity->destination->name} [{$this->entity->destination->groupname}]" : ''); ?></a>
 		</span>
 		<?php } ?>
-		<input type="hidden" name="destination" />
+		<input type="hidden" name="destination" value="<?php echo htmlspecialchars($this->entity->destination->guid); ?>" />
 	</div>
 	<div class="pf-element">
 		<label>
@@ -457,6 +473,7 @@ if ($this->entity->final)
 							<?php } ?>
 							<th>Unit Cost</th>
 							<th>Line Total</th>
+							<th>Vendor IDs</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -474,8 +491,7 @@ if ($this->entity->final)
 							<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 							<?php if ($this->entity->final) { ?>
-							<td>
-								<?php
+							<td><?php
 								$rec_qty = 0;
 								foreach ($all_received as $key => $cur_received) {
 									if ($rec_qty >= $cur_product['quantity'])
@@ -486,11 +502,18 @@ if ($this->entity->final)
 									}
 								}
 								echo (int) $rec_qty;
-								?>
-							</td>
+							?></td>
 							<?php } ?>
 							<td><?php echo htmlspecialchars($cur_product['cost']); ?></td>
 							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost']); ?></td>
+							<td><?php
+								$vendors = array();
+								foreach ($cur_product['entity']->vendors as $cur_vendor) {
+									if (isset($cur_vendor['entity']->guid))
+										$vendors[] = $cur_vendor['entity']->guid;
+								}
+								echo htmlspecialchars(json_encode($vendors));
+							?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -516,10 +539,10 @@ if ($this->entity->final)
 					<th>Vendor Cost</th>
 					<th>Unit Price</th>
 					<th>Link</th>
+					<th>Vendor IDs</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />
@@ -613,11 +636,13 @@ if ($this->entity->final)
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
+		<?php } if ( isset($this->item_ids) ) { ?>
+		<input type="hidden" name="item_ids" value="<?php echo htmlspecialchars($this->item_ids); ?>" />
 		<?php } ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
-		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="<?php echo isset($this->item_ids) ? 'Save w/o Attaching' : 'Save'; ?>" onclick="$('#p_muid_save').val('save');" />
 		<?php if (!$this->entity->final) { ?>
-		<input class="pf-button btn btn-primary" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
+		<input class="pf-button btn btn-primary" type="submit" name="submit" value="<?php echo isset($this->item_ids) ? 'Commit and Attach' : 'Commit'; ?>" onclick="$('#p_muid_save').val('commit');" />
 		<?php } ?>
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_sales', 'po/list'))); ?>);" value="Cancel" />
 	</div>

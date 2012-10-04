@@ -590,16 +590,18 @@ if ($pines->config->com_calendar->com_customer)
 	<button class="btn btn-mini<?php echo ($this->filter == 'appointments') ? ' active' : ''; ?>" type="button" data-value="appointments" title="Show customer appointments.">appts</button>
 	<button class="btn btn-mini<?php echo ($this->filter == 'events') ? ' active' : ''; ?>" type="button" data-value="events" title="Show calendar events.">events</button>
 </div>
-<?php } if (!$this->is_widget || gatekeeper('com_calendar/managecalendar')) { ?>
+<?php } if (!$this->is_widget || gatekeeper('com_calendar/managecalendar') || gatekeeper('com_calendar/editcalendar')) { ?>
 <div style="margin: 0.75em 0;" id="p_muid_actions">
 	<?php if (!$this->is_widget) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
-	<?php } if (gatekeeper('com_calendar/managecalendar')) { ?>
+	<?php } if (gatekeeper('com_calendar/managecalendar') || gatekeeper('com_calendar/editcalendar')) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
+	<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
-	<?php } ?>
+	<?php }
+	} ?>
 </div>
 <?php } if (!$this->is_widget) { ?>
 <div>

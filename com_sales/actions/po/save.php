@@ -74,18 +74,36 @@ if (!$po->final) {
 	}
 	$test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'po'), 'data' => array('po_number', $po->po_number)));
 	if (isset($test) && $test->guid != $_REQUEST['id']) {
-		$po->print_form();
+		$module = $po->print_form();
 		pines_notice('There is already a PO with that number. Please enter a different number.');
+		if ($_REQUEST['item_ids']) {
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
+		}
 		return;
 	}
 	if (!isset($po->vendor)) {
-		$po->print_form();
+		$module = $po->print_form();
 		pines_error('Specified vendor is not valid.');
+		if ($_REQUEST['item_ids']) {
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
+		}
 		return;
 	}
 	if (!isset($po->shipper)) {
-		$po->print_form();
+		$module = $po->print_form();
 		pines_error('Specified shipper is not valid.');
+		if ($_REQUEST['item_ids']) {
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
+		}
 		return;
 	}
 }
@@ -124,13 +142,21 @@ if ($_REQUEST['item_ids'] && $po->final) {
 
 		if (isset($sale->products[(int) $key]['po']->guid)) {
 			pines_notice('All selected orders must not have attached POs.');
-			$po->print_form();
+			$module = $po->print_form();
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
 			return;
 		}
 
 		if (!$location->is($sale->group)) {
 			pines_notice('All selected orders must have the same location.');
-			$po->print_form();
+			$module = $po->print_form();
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
 			return;
 		}
 		$product = $sale->products[(int) $key]['entity'];
@@ -142,7 +168,11 @@ if ($_REQUEST['item_ids'] && $po->final) {
 				unset($vendors[$vkey]);
 		if (!$vendors) {
 			pines_notice('All selected orders must have at least one vendor in common.');
-			$po->print_form();
+			$module = $po->print_form();
+			$module->locations = array($po->destination);
+			$module->vendors = array($po->vendor);
+			$module->location_fixed = true;
+			$module->item_ids = $_REQUEST['item_ids'];
 			return;
 		}
 		$items[] = array('sale' => $sale, 'key' => (int) $key);

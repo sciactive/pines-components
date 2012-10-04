@@ -20,6 +20,9 @@ $this->title = 'Shipment Actions';
 		$("#p_muid_print").click(function(){
 			window.print();
 		});
+		$("#p_muid_delivered").click(function(){
+			pines.get(<?php echo json_encode(pines_url('com_sales', 'shipment/delivered', array('id' => $this->entity->guid))); ?>);
+		});
 	});
 </script>
 <div style="text-align: center;">
@@ -28,4 +31,6 @@ $this->title = 'Shipment Actions';
 	<br /><br />
 	<?php } ?>
 	<button id="p_muid_print" class="btn"><i class="icon-print"></i> Print This Page</button>
+	<br /><br />
+	<button id="p_muid_delivered" class="btn"><i class="icon-truck"></i> Mark <?php echo $this->entity->delivered ? 'Not ' : ''; ?>Delivered</button>
 </div>

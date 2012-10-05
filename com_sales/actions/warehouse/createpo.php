@@ -78,6 +78,8 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 	$item_ids[] = "{$sale_id}_{$key}";
 }
 $item_ids = implode(',', $item_ids);
+// Reset vendor indexing.
+$vendors = array_values($vendors);
 
 foreach ($products as &$cur_product) {
 	foreach ($cur_product['entity']->vendors as $cur_vendor) {

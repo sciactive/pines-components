@@ -89,7 +89,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><a data-entity="<?php echo htmlspecialchars($po->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($po->shipper->name); ?></a></td>
 			<td><?php echo ($po->eta ? htmlspecialchars(format_date($po->eta, 'date_sort')) : ''); ?></td>
 			<td><?php
-				if (isset($po->shipper->guid)) {
+				if (isset($po->shipper->guid) && $po->shipper->can_track()) {
 					$links = array();
 					foreach ((array) $po->tracking_numbers as $cur_number)
 						$links[] = '<a href="'.htmlspecialchars($po->shipper->tracking_url($cur_number)).'" target="_blank">'.htmlspecialchars($cur_number).'</a>';

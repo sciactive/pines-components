@@ -166,7 +166,7 @@ $pines->com_jstree->load();
 			<td><a data-entity="<?php echo htmlspecialchars($shipment->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($shipment->shipper->name); ?></a></td>
 			<td><?php echo $shipment->eta ? htmlspecialchars(format_date($shipment->eta, 'date_sort')) : '' ; ?></td>
 			<td><?php
-				if (isset($shipment->shipper->guid)) {
+				if (isset($shipment->shipper->guid) && $shipment->shipper->can_track()) {
 					$links = array();
 					foreach ((array) $shipment->tracking_numbers as $cur_number)
 						$links[] = '<a href="'.htmlspecialchars($shipment->shipper->tracking_url($cur_number)).'" target="_blank">'.htmlspecialchars($cur_number).'</a>';

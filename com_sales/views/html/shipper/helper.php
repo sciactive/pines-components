@@ -23,32 +23,50 @@ if ($this->render == 'body' && gatekeeper('com_sales/listshippers')) { ?>
 	<table class="table table-bordered" style="clear:both;">
 		<tbody>
 			<tr>
-				<td style="font-weight:bold;">GUID</td>
+				<td style="font-weight:bold;" colspan="2">GUID</td>
 				<td><?php echo htmlspecialchars($this->entity->guid); ?></td>
 			</tr>
 			<tr>
-				<td style="font-weight:bold;">Name</td>
+				<td style="font-weight:bold;" colspan="2">Name</td>
 				<td><?php echo htmlspecialchars($this->entity->name); ?></td>
 			</tr>
 			<?php if (!empty($this->entity->email)) { ?>
 			<tr>
-				<td style="font-weight:bold;">Email</td>
+				<td style="font-weight:bold;" colspan="2">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
 			</tr>
 			<?php } if (!empty($this->entity->phone_work)) { ?>
 			<tr>
-				<td style="font-weight:bold;">Phone</td>
+				<td style="font-weight:bold;" colspan="2">Phone</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone_work); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone_work)); ?></a></td>
 			</tr>
 			<?php } if (!empty($this->entity->fax)) { ?>
 			<tr>
-				<td style="font-weight:bold;">Fax</td>
+				<td style="font-weight:bold;" colspan="2">Fax</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->fax); ?>"><?php echo htmlspecialchars(format_phone($this->entity->fax)); ?></a></td>
 			</tr>
 			<?php } if (!empty($this->entity->account_number)) { ?>
 			<tr>
-				<td style="font-weight:bold;">Account Number</td>
+				<td style="font-weight:bold;" colspan="2">Account Number</td>
 				<td><?php echo htmlspecialchars($this->entity->account_number); ?></td>
+			</tr>
+			<?php } ?>
+			<tr >
+				<td style="font-weight:bold; vertical-align: middle;" rowspan="4">Tracking</td>
+			</tr>
+			<tr>
+				<td style="font-weight:bold;">Supported</td>
+				<td><?php echo $this->entity->can_track() ? 'Yes' : 'No'; ?></td>
+			</tr>
+			<?php if (isset($this->entity->tracking) && ($this->entity->tracking != 'custom' || ($this->entity->tracking == 'custom' && !empty($this->entity->tracking_url)))) { ?>
+			<tr>
+				<td style="font-weight:bold;">Setup</td>
+				<td><?php echo htmlspecialchars($this->entity->tracking); ?></td>
+			</tr>
+			<?php } if (!empty($this->entity->tracking_url)) { ?>
+			<tr>
+				<td style="font-weight:bold;">URL</td>
+				<td><?php echo htmlspecialchars($this->entity->tracking_url); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

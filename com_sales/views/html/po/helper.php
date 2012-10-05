@@ -55,7 +55,7 @@ echo $module->render();
 			<tr>
 				<td style="font-weight:bold;">Tracking #</td>
 				<td><?php
-					if (isset($this->entity->shipper->guid)) {
+					if (isset($this->entity->shipper->guid) && $this->entity->shipper->can_track()) {
 						$links = array();
 						foreach ((array) $this->entity->tracking_numbers as $cur_number)
 							$links[] = '<a href="'.htmlspecialchars($this->entity->shipper->tracking_url($cur_number)).'" target="_blank">'.htmlspecialchars($cur_number).'</a>';

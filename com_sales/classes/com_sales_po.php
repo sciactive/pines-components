@@ -143,7 +143,7 @@ class com_sales_po extends entity {
 		$module->entity = $this;
 
 		$tracking_links = array();
-		if (isset($this->shipper->id)) {
+		if (isset($this->shipper->guid) && $this->shipper->can_track()) {
 			foreach ($this->tracking_numbers as $cur_number) {
 				$url = htmlspecialchars($this->shipper->tracking_url($cur_number));
 				$tracking_links[] = '<a href="'.$url.'" target="_blank">'.$url.'</a>';

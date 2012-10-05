@@ -69,6 +69,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Phone</th>
 			<th>Fax</th>
 			<th>Account #</th>
+			<th>Tracking</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -84,6 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars(format_phone($shipper->phone_work)); ?></td>
 			<td><?php echo htmlspecialchars(format_phone($shipper->fax)); ?></td>
 			<td><?php echo htmlspecialchars($shipper->account_number); ?></td>
+			<td><?php echo $shipper->can_track() ? 'Yes' : 'No'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

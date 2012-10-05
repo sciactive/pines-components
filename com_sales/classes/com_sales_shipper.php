@@ -129,6 +129,14 @@ class com_sales_shipper extends entity {
 		global $pines;
 		return str_replace('#tracking_number#', urlencode($number), $pines->com_sales->tracking_urls[$this->tracking]);
 	}
+
+	/**
+	 * Determine if this shipper has tracking set up.
+	 * @return bool Whether this shipper supports tracking.
+	 */
+	public function can_track() {
+		return (isset($this->tracking) && ($this->tracking != 'custom' || ($this->tracking == 'custom' && !empty($this->tracking_url) && strpos($this->tracking_url, '#tracking_number#') !== false)));
+	}
 }
 
 ?>

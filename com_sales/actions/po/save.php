@@ -175,7 +175,10 @@ if ($_REQUEST['item_ids'] && $po->final) {
 			$module->item_ids = $_REQUEST['item_ids'];
 			return;
 		}
-		$items[] = array('sale' => $sale, 'key' => (int) $key);
+		if (isset($items[$sale->guid]))
+			$items[$sale->guid]['key'][] = (int) $key;
+		else
+			$items[$sale->guid] = array('sale' => $sale, 'key' => array((int) $key));
 	}
 }
 
@@ -187,9 +190,10 @@ if ($po->save()) {
 	if ($_REQUEST['item_ids'] && $po->final) {
 		// Now attach the PO to its respective items for warehouse orders.
 		foreach ($items as $cur_item) {
-			$cur_item['sale']->products[$cur_item['key']]['po'] = $po;
+			foreach ($cur_item['key'] as $cur_key)
+				$cur_item['sale']->products[$cur_key]['po'] = $po;
 			if (!$cur_item['sale']->save())
-				pines_notice("Couldn't save sale #{$cur_item['sale']->id}. The item, {$cur_item['sale']->products[$cur_item['key']]['entity']->name}, couldn't be attached.");
+				pines_notice("Couldn't save sale #{$cur_item['sale']->id}. The item(s) couldn't be attached.");
 		}
 	}
 	if ($send_email)

@@ -56,7 +56,7 @@ $pines->com_pgrid->load();
 			}
 		});
 
-		var goal_box;
+		var goal_box, rank_box;
 		// Sales Goals Grid
 		var goal_grid = $("#p_muid_sales_goals").pgrid({
 			pgrid_view_height: "300px",
@@ -69,6 +69,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'text',
 					title: 'Enter a Sales Goal',
+					attributes: {'size': '6'},
 					load: function(textbox){
 						goal_box = textbox;
 						textbox.keydown(function(e){
@@ -84,6 +85,28 @@ $pines->com_pgrid->load();
 					multi_select: true,
 					click: function(){
 						update_goal(goal_box.val());
+					}
+				},
+				{type: 'separator'},
+				{
+					type: 'text',
+					title: 'Enter a Fixed Rank (Blank for Regular Ranking)',
+					attributes: {'size': '6'},
+					load: function(textbox){
+						rank_box = textbox;
+						textbox.keydown(function(e){
+							if (e.keyCode == 13)
+								update_rank(textbox.val());
+						});
+					}
+				},
+				{
+					type: 'button',
+					text: 'Update Rank',
+					extra_class: 'picon picon-dialog-ok-apply',
+					multi_select: true,
+					click: function(){
+						update_rank(rank_box.val());
 					}
 				},
 				{type: 'separator'},
@@ -143,7 +166,8 @@ $pines->com_pgrid->load();
 							"values": [
 								pines.safe(this.name),
 								this.type == "location" ? "Location" : (this.type == "employee" ? "Employee" : "Unknown"),
-								"0.00"
+								"0.00",
+								""
 							]
 						});
 					});
@@ -160,12 +184,18 @@ $pines->com_pgrid->load();
 			goal_grid.pgrid_get_selected_rows().pgrid_set_value(3, pines.safe(new_value));
 			save_grid();
 		};
+		var update_rank = function(new_rank){
+			var new_value = parseInt(new_rank);
+			new_value = isNaN(new_value) ? "" : String(new_value);
+			goal_grid.pgrid_get_selected_rows().pgrid_set_value(4, pines.safe(new_value));
+			save_grid();
+		};
 
 		var save_grid = function(){
 			var sales_goals = {};
 			goal_grid.pgrid_get_all_rows().each(function(){
 				var cur_row = $(this);
-				sales_goals[cur_row.attr("title")] = cur_row.pgrid_get_value(3);
+				sales_goals[cur_row.attr("title")] = {"goal": cur_row.pgrid_get_value(3), "rank": cur_row.pgrid_get_value(4)};
 			});
 			$("#p_muid_form input[name=sales_goals]").val(JSON.stringify(sales_goals));
 		};
@@ -179,8 +209,14 @@ $pines->com_pgrid->load();
 				return;
 			goal_grid.pgrid_get_all_rows().each(function(){
 				var cur_row = $(this);
-				if (typeof sales_goals[cur_row.attr("title")] != "undefined")
-					cur_row.pgrid_set_value(3, String(parseFloat(sales_goals[cur_row.attr("title")]).toFixed(2)));
+				if (typeof sales_goals[cur_row.attr("title")] != "undefined") {
+					if (typeof sales_goals[cur_row.attr("title")] == "object") {
+						cur_row.pgrid_set_value(3, pines.safe(String(parseFloat(sales_goals[cur_row.attr("title")].goal).toFixed(2))));
+						if (typeof sales_goals[cur_row.attr("title")].rank == "number")
+							cur_row.pgrid_set_value(4, pines.safe(sales_goals[cur_row.attr("title")].rank));
+					} else
+						cur_row.pgrid_set_value(3, pines.safe(String(parseFloat(sales_goals[cur_row.attr("title")]).toFixed(2))));
+				}
 			});
 		}
 	});
@@ -233,6 +269,7 @@ $pines->com_pgrid->load();
 					<th>Name</th>
 					<th>Type</th>
 					<th>Dollar Goal</th>
+					<th>Fixed Rank</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -244,7 +281,7 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->entity->guid); ?>" />
 		<?php } ?>
 		<input type="hidden" name="top_location" />
-		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode((array) @array_combine(array_map('strval', array_keys($this->entity->sales_goals)), array_map('strval', $this->entity->sales_goals)))); ?>" />
+		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode($this->entity->sales_goals)); ?>" />
 		<input class="pf-button btn btn-primary" type="submit" value="Save" />
 		<input class="pf-button btn" type="button" onclick="pines.get(<?php echo htmlspecialchars(json_encode(pines_url('com_reports', 'salesrankings'))); ?>);" value="Cancel" />
 	</div>

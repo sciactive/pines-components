@@ -205,9 +205,9 @@ class com_reports_sales_ranking extends entity {
 							'ref' => array('user', $cur_employee)
 						)
 					);
-			} else {
+			} else
 				$current_apps = $last_apps = $mtd_apps = array();
-			}
+
 			$ranking_employee[$cur_employee->guid] = array(
 				'entity' => $cur_employee,
 				'location' => $cur_employee->group,
@@ -220,7 +220,8 @@ class com_reports_sales_ranking extends entity {
 				'mtd_apps' => count($mtd_apps),
 				'trend' => 0.00,
 				'pct' => 0.00,
-				'goal' => (isset($this->sales_goals[$cur_employee->guid]) ? $this->sales_goals[$cur_employee->guid] : 0.00)
+				'goal' => (isset($this->sales_goals[$cur_employee->guid]['goal']) ? $this->sales_goals[$cur_employee->guid]['goal'] : (isset($this->sales_goals[$cur_employee->guid]) ? $this->sales_goals[$cur_employee->guid] : 0.00)), // Support the old style.
+				'rank' => (isset($this->sales_goals[$cur_employee->guid]['rank']) ? $this->sales_goals[$cur_employee->guid]['rank'] : null)
 			);
 			unset($current_apps, $last_apps, $mtd_apps);
 		}
@@ -274,9 +275,9 @@ class com_reports_sales_ranking extends entity {
 							'ref' => array('group', $groups)
 						)
 					);
-			} else {
+			} else
 				$current_apps = $last_apps = $mtd_apps = array();
-			}
+
 			$ranking_location[$cur_location->guid] = array(
 				'entity' => $cur_location,
 				'location' => $cur_location->parent,
@@ -288,7 +289,8 @@ class com_reports_sales_ranking extends entity {
 				'mtd_apps' => count($mtd_apps),
 				'trend' => 0.00,
 				'pct' => 0.00,
-				'goal' => (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00),
+				'goal' => (isset($this->sales_goals[$cur_location->guid]['goal']) ? $this->sales_goals[$cur_location->guid]['goal'] : (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00)), // Support the old style.
+				'rank' => (isset($this->sales_goals[$cur_location->guid]['rank']) ? $this->sales_goals[$cur_location->guid]['rank'] : null),
 				'child_count' => 0,
 				'child_total' => 0.00
 			);
@@ -437,9 +439,8 @@ class com_reports_sales_ranking extends entity {
 			else
 				$cur_rank['pct'] = 0;
 			// Keep a total and average for parent locations.
-			if (isset($ranking_location[$cur_rank['entity']->parent->guid])) {
+			if (isset($ranking_location[$cur_rank['entity']->parent->guid]))
 				$ranking_location[$cur_rank['entity']->parent->guid]['child_count']++;
-			}
 		}
 		unset($cur_rank);
 
@@ -452,7 +453,7 @@ class com_reports_sales_ranking extends entity {
 				$this->new_hires[] = $cur_rank;
 			else
 				$this->employees[] = $cur_rank;
-			if (preg_match('/(manager|^dmt?$)/i', $cur_rank['entity']->job_title) && isset($ranking_location[$cur_rank['entity']->group->guid]))
+			if (preg_match('/(manager|^[dr]mt?$)/i', $cur_rank['entity']->job_title) && isset($ranking_location[$cur_rank['entity']->group->guid]))
 				$ranking_location[$cur_rank['entity']->group->guid]['manager'] = $cur_rank['entity'];
 		}
 		$this->locations = array();
@@ -470,26 +471,54 @@ class com_reports_sales_ranking extends entity {
 		ksort($this->locations);
 
 		// Sort and rank by trend.
+
+		// -- New hires.
 		usort($this->new_hires, array($this, 'sort_mtd'));
 		$this->new_hires = array_values($this->new_hires);
 		$rank = 1;
+		// Remember fixed ranks, to skip them.
+		$fixed_ranks = array();
+		foreach ($this->new_hires as $cur_rank) {
+			if (isset($cur_rank['rank']))
+				$fixed_ranks[] = $cur_rank['rank'];
+		}
 		foreach ($this->new_hires as &$cur_rank) {
 			if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 				continue;
-			$cur_rank['rank'] = $rank;
-			$rank++;
+			if (!isset($cur_rank['rank'])) {
+				$cur_rank['rank'] = $rank;
+				do {
+					$rank++;
+				} while (in_array($rank, $fixed_ranks));
+			}
 		}
 		unset($cur_rank);
+		usort($this->new_hires, array($this, 'sort_rank'));
+
+		// -- Employees.
 		usort($this->employees, array($this, 'sort_mtd'));
 		$this->employees = array_values($this->employees);
 		$rank = 1;
+		// Remember fixed ranks, to skip them.
+		$fixed_ranks = array();
+		foreach ($this->employees as $cur_rank) {
+			if (isset($cur_rank['rank']))
+				$fixed_ranks[] = $cur_rank['rank'];
+		}
 		foreach ($this->employees as &$cur_rank) {
 			if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 				continue;
-			$cur_rank['rank'] = $rank;
-			$rank++;
+			if (!isset($cur_rank['rank'])) {
+				$cur_rank['rank'] = $rank;
+				do {
+					$rank++;
+				} while (in_array($rank, $fixed_ranks));
+			}
 		}
 		unset($cur_rank);
+		usort($this->employees, array($this, 'sort_rank'));
+
+		// -- Locations.
 		$count = count($this->locations);
 		foreach ($this->locations as $key => &$cur_location) {
 			if ($key == $count - 1)
@@ -497,14 +526,26 @@ class com_reports_sales_ranking extends entity {
 			else
 				usort($cur_location, array($this, 'sort_avg'));
 			$rank = 1;
+			// Remember fixed ranks, to skip them.
+			$fixed_ranks = array();
+			foreach ($cur_location as $cur_rank) {
+				if (isset($cur_rank['rank']))
+					$fixed_ranks[] = $cur_rank['rank'];
+			}
 			foreach ($cur_location as &$cur_rank) {
 				if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 					continue;
-				$cur_rank['rank'] = $rank;
-				$rank++;
+				if (!isset($cur_rank['rank'])) {
+					$cur_rank['rank'] = $rank;
+					do {
+						$rank++;
+					} while (in_array($rank, $fixed_ranks));
+				}
 			}
 			unset($cur_rank);
+			usort($cur_location, array($this, 'sort_rank'));
 		}
+		unset($cur_location);
 
 		return $module;
 	}
@@ -539,6 +580,22 @@ class com_reports_sales_ranking extends entity {
 		if ($a['mtd'] > $b['mtd'])
 			return -1;
 		if ($a['mtd'] < $b['mtd'])
+			return 1;
+		return 0;
+	}
+
+	/**
+	 * Sort by the rank.
+	 *
+	 * @param array $a The first entry.
+	 * @param array $b The second entry.
+	 * @return int The sort order.
+	 * @access private
+	 */
+	private function sort_rank($a, $b) {
+		if ($a['rank'] > $b['rank'])
+			return -1;
+		if ($a['rank'] < $b['rank'])
 			return 1;
 		return 0;
 	}

@@ -41,8 +41,11 @@ if (!isset($ranking->top_location->guid))
 	$ranking->top_location = $_SESSION['user']->group;
 $sales_goals = (array) json_decode($_REQUEST['sales_goals'], true);
 $ranking->sales_goals = array();
-foreach ($sales_goals as $key => $cur_goal) {
-	$ranking->sales_goals[(int) $key] = (float) $cur_goal;
+foreach ($sales_goals as $key => $cur_goal_rank) {
+	$ranking->sales_goals[(int) $key] = array(
+		'goal' => (float) $cur_goal_rank['goal'],
+		'rank' => ($cur_goal_rank['rank'] == '' ? null : (int) $cur_goal_rank['rank'])
+	);
 }
 
 if ($pines->config->com_reports->global_sales_rankings)

@@ -257,9 +257,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						},
 						buttons: {
 							"Update": function(){
-								var swap_item = form.find(":input:checked[name=swap_item]").val();
+								var swap_items = JSON.stringify(form.find("[name='swap_item\\[\\]']:checked").serializeArray());
 								var salesperson = form.find(":input[name=salesperson]").val();
-								if (swap_item == "") {
+								if (swap_items == "") {
 									alert("Please specify the item(s) you want to swap.");
 								} else if (salesperson == "") {
 									alert("Please specify the new salesperson.");
@@ -273,7 +273,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 										data: {
 											"id": guid,
 											"type": "return",
-											"swap_item": swap_item,
+											"swap_items": swap_items,
 											"salesperson": salesperson
 										},
 										error: function(XMLHttpRequest, textStatus){

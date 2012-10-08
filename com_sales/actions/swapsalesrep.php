@@ -27,19 +27,50 @@ if (!isset($entity->guid)) {
 	return;
 }
 
-$key = intval($_REQUEST['swap_item']);
+//$key = intval($_REQUEST['swap_item']);
+
+// Changing this key to a foreach ...
+$swap_items = json_decode($_REQUEST['swap_items']);
+$new_swap_items = array();
+foreach ($swap_items as $swap_item) {
+	$new_swap_items[] = $swap_item->value;
+}
+
 $new_salesrep = user::factory(intval($_REQUEST['salesperson']));
 if (!isset($new_salesrep->guid)) {
 	pines_notice('Please check your salespeople for this swap.');
 	$pines->page->override_doc('false');
 	return;
 }
-if ($entity->swap_salesrep($key, $new_salesrep) && $entity->save()) {
-	pines_notice("The item has been swapped from {$old_salesrep->name} [{$old_salesrep->username}] to {$new_salesrep->name} [{$new_salesrep->username}].");
+$num_items = count($new_swap_items);
+$success = 0;
+
+foreach ($new_swap_items as $swap_item) {
+	$key = intval($swap_item);
+	if ($entity->swap_salesrep($key, $new_salesrep) && $entity->save())
+		$success++;
+}
+
+if ($success > 0) {
+	if ($num_items > 1)
+		pines_notice("{$success} of the {$num_items} were swapped from {$old_salesrep->name} [{$old_salesrep->username}] to {$new_salesrep->name} [{$new_salesrep->username}].");
+	else
+		pines_notice("The item has been swapped from {$old_salesrep->name} [{$old_salesrep->username}] to {$new_salesrep->name} [{$new_salesrep->username}].");
 	$pines->page->override_doc('true');
 } else {
-	pines_notice('The salesperson for this item could not be swapped.');
-	$pines->page->override_doc('false');
+	if ($num_items > 1)
+		pines_notice('None of the items could be swapped to this salesperson.');
+	else
+		pines_notice('The salesperson for this item could not be swapped.');
+	$pines->page->override_doc('false');	
 }
+
+//if ($entity->swap_salesrep($key, $new_salesrep) && $entity->save()) {
+//	pines_notice("The item has been swapped from {$old_salesrep->name} [{$old_salesrep->username}] to {$new_salesrep->name} [{$new_salesrep->username}].");
+//	$pines->page->override_doc('true');
+//} else {
+//	pines_notice('The salesperson for this item could not be swapped.');
+//	$pines->page->override_doc('false');
+//}
 
 ?>

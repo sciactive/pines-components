@@ -18,7 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element">
 		<?php foreach ($this->entity->products as $key => $cur_item) {
 			$serial = $cur_item['serial'] ? $cur_item['serial'] : 'No Serial'; ?>
-			<input class="pf-field ui-widget-content" type="radio" name="swap_item" value="<?php echo htmlspecialchars($key); ?>" /> <?php echo htmlspecialchars($cur_item['entity']->name.' ('.$serial.') - '.$cur_item['salesperson']->name); ?><br/>
+			<input class="pf-field ui-widget-content" type="checkbox" name="swap_item[]" value="<?php echo htmlspecialchars($key); ?>" /> <?php echo htmlspecialchars($cur_item['entity']->name.' ('.$serial.') - '.$cur_item['salesperson']->name); ?><br/>
 		<?php } ?>
 	</div>
 	<div class="pf-element pf-heading">

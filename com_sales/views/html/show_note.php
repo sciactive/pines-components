@@ -20,6 +20,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			echo $this->header;
 		?>
 		</span>
-		<span class="pf-note"><?php echo str_replace("\n", "<br />", htmlspecialchars($this->message)); ?></span>
+		<span class="pf-note"><?php echo str_replace("\n", "<br />", $this->message); ?></span>
 	</div>
 </div>

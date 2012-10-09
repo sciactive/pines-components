@@ -447,7 +447,7 @@ if ($this->entity->final)
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Shipper</span>
-			<?php if (!$this->entity->final) { ?>
+			<?php if (empty($this->entity->received)) { ?>
 			<select class="pf-field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
@@ -455,7 +455,7 @@ if ($this->entity->final)
 				<?php } ?>
 			</select>
 			<?php } else { ?>
-			<span class="pf-note">Shipper can't be changed after PO is committed.</span>
+			<span class="pf-note">Shipper can't be changed after PO is received.</span>
 			<span class="pf-field">
 				<a data-entity="<?php echo htmlspecialchars($this->entity->shipper->guid); ?>" data-entity-context="com_sales_shipper"><?php echo htmlspecialchars($this->entity->shipper->name); ?></a>
 			</span>

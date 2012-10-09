@@ -563,7 +563,7 @@ class com_sales extends component {
 		foreach ($module->pos as $po) {
 			// strtotime gives 12:00am versus time() which is to the second.
 			if ($po->eta < strtotime('today 12:00am') && empty($po->received))
-				$errors[] = "#{$po->po_number} was not received on time.";
+				$errors[] = '<a data-entity="'.htmlspecialchars($po->guid).'" data-entity-context="com_sales_po">#'.htmlspecialchars($po->po_number).'</a> was not received on time.';
 		}
 		if (!empty($errors)) {
 			$type = 'Reminder';

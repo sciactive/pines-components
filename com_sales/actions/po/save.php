@@ -41,7 +41,7 @@ if (!$po->final && empty($po->received)) {
 	if (!isset($po->destination->guid))
 		$po->destination = null;
 }
-if (!$po->final) {
+if (empty($po->received)) {
 	$po->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
 	if (!isset($po->shipper->guid))
 		$po->shipper = null;
@@ -95,17 +95,18 @@ if (!$po->final) {
 		}
 		return;
 	}
-	if (!isset($po->shipper)) {
-		$module = $po->print_form();
-		pines_error('Specified shipper is not valid.');
-		if ($_REQUEST['item_ids']) {
-			$module->locations = array($po->destination);
-			$module->vendors = array($po->vendor);
-			$module->location_fixed = true;
-			$module->item_ids = $_REQUEST['item_ids'];
-		}
-		return;
+}
+
+if (!isset($po->shipper)) {
+	$module = $po->print_form();
+	pines_error('Specified shipper is not valid.');
+	if ($_REQUEST['item_ids']) {
+		$module->locations = array($po->destination);
+		$module->vendors = array($po->vendor);
+		$module->location_fixed = true;
+		$module->item_ids = $_REQUEST['item_ids'];
 	}
+	return;
 }
 
 if (!$po->final && $_REQUEST['save'] == 'commit') {

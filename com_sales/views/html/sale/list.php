@@ -274,7 +274,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							"Update": function(){
 								var swap_items = JSON.stringify(form.find("[name='swap_item\\[\\]']:checked").serializeArray());
 								var salesperson = form.find(":input[name=salesperson]").val();
-								alert(swap_items);
 								if (swap_items == "") {
 									alert("Please specify the item(s) you want to swap.");
 								} else if (salesperson == "") {

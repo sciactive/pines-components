@@ -140,7 +140,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					if (problem)
 						return;
 					var ids = rows.map(function(i,e){return $(e).attr('title')}).get();
-					pines.get(<?php echo json_encode(pines_url('com_sales', 'warehouse/createpo')); ?>, {id: ids.join(',')});
+					pines.get(<?php echo json_encode(pines_url('com_sales', 'warehouse/createpo')); ?>, {id: ids.join(',')}, '_blank');
 				}},
 				<?php } ?>
 				{type: 'button', text: 'Attach PO', extra_class: 'picon picon-mail-attachment', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/attachpo', array('id' => '__title__'))); ?>, delimiter: ','},

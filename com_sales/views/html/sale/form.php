@@ -1884,113 +1884,125 @@ if ($pines->config->com_sales->com_esp) {
 	<div id="p_muid_shipping_dialog" title="Shipping Address" style="display: none;">
 		<div class="pf-form">
 			<?php if ($pines->config->com_sales->com_customer) { ?>
+			<script type="text/javascript">
+				pines(function(){
+					$("#p_muid_ship_use_cust").change(function(){
+						if ($(this).is(":checked"))
+							$("#p_muid_shipping_form").hide();
+						else
+							$("#p_muid_shipping_form").show();
+					}).change();
+				});
+			</script>
 			<div class="pf-element">
 				<label><span class="pf-label">Use Customer Info</span>
-					<input class="pf-field" type="checkbox" name="shipping_use_customer" value="ON"<?php echo $this->entity->shipping_use_customer ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" id="p_muid_ship_use_cust" name="shipping_use_customer" value="ON"<?php echo $this->entity->shipping_use_customer ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
-			<div class="pf-element">
-				<label><span class="pf-label">Name</span>
-					<input class="pf-field" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>
-			</div>
-			<div class="pf-element">
-				<script type="text/javascript">
-					pines(function(){
-						var address_us = $("#p_muid_address_us");
-						var address_international = $("#p_muid_address_international");
-						$("#p_muid_shipping_dialog [name=shipping_address_type]").change(function(){
-							var address_type = $(this);
-							if (address_type.is(":checked") && address_type.val() == "us") {
-								address_us.show();
-								address_international.hide();
-							} else if (address_type.is(":checked") && address_type.val() == "international") {
-								address_international.show();
-								address_us.hide();
-							}
-						}).change();
-					});
-				</script>
-				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field" type="radio" name="shipping_address_type" value="us"<?php echo (!isset($this->entity->shipping_address->address_type) || $this->entity->shipping_address->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field" type="radio" name="shipping_address_type" value="international"<?php echo $this->entity->shipping_address->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
-			</div>
-			<div id="p_muid_address_us" style="display: none;">
+			<div id="p_muid_shipping_form">
 				<div class="pf-element">
-					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field" type="text" name="shipping_address_1" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_1); ?>" /></label>
+					<label><span class="pf-label">Name</span>
+						<input class="pf-field" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>
 				</div>
 				<div class="pf-element">
-					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field" type="text" name="shipping_address_2" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_2); ?>" /></label>
+					<script type="text/javascript">
+						pines(function(){
+							var address_us = $("#p_muid_address_us");
+							var address_international = $("#p_muid_address_international");
+							$("#p_muid_shipping_dialog [name=shipping_address_type]").change(function(){
+								var address_type = $(this);
+								if (address_type.is(":checked") && address_type.val() == "us") {
+									address_us.show();
+									address_international.hide();
+								} else if (address_type.is(":checked") && address_type.val() == "international") {
+									address_international.show();
+									address_us.hide();
+								}
+							}).change();
+						});
+					</script>
+					<span class="pf-label">Address Type</span>
+					<label><input class="pf-field" type="radio" name="shipping_address_type" value="us"<?php echo (!isset($this->entity->shipping_address->address_type) || $this->entity->shipping_address->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+					<label><input class="pf-field" type="radio" name="shipping_address_type" value="international"<?php echo $this->entity->shipping_address->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 				</div>
-				<div class="pf-element">
-					<span class="pf-label">City, State</span>
-					<input class="pf-field" type="text" name="shipping_city" size="15" value="<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>" />
-					<select class="pf-field" name="shipping_state">
-						<option value="">None</option>
-						<?php foreach (array(
-								'AL' => 'Alabama',
-								'AK' => 'Alaska',
-								'AZ' => 'Arizona',
-								'AR' => 'Arkansas',
-								'CA' => 'California',
-								'CO' => 'Colorado',
-								'CT' => 'Connecticut',
-								'DE' => 'Delaware',
-								'DC' => 'DC',
-								'FL' => 'Florida',
-								'GA' => 'Georgia',
-								'HI' => 'Hawaii',
-								'ID' => 'Idaho',
-								'IL' => 'Illinois',
-								'IN' => 'Indiana',
-								'IA' => 'Iowa',
-								'KS' => 'Kansas',
-								'KY' => 'Kentucky',
-								'LA' => 'Louisiana',
-								'ME' => 'Maine',
-								'MD' => 'Maryland',
-								'MA' => 'Massachusetts',
-								'MI' => 'Michigan',
-								'MN' => 'Minnesota',
-								'MS' => 'Mississippi',
-								'MO' => 'Missouri',
-								'MT' => 'Montana',
-								'NE' => 'Nebraska',
-								'NV' => 'Nevada',
-								'NH' => 'New Hampshire',
-								'NJ' => 'New Jersey',
-								'NM' => 'New Mexico',
-								'NY' => 'New York',
-								'NC' => 'North Carolina',
-								'ND' => 'North Dakota',
-								'OH' => 'Ohio',
-								'OK' => 'Oklahoma',
-								'OR' => 'Oregon',
-								'PA' => 'Pennsylvania',
-								'RI' => 'Rhode Island',
-								'SC' => 'South Carolina',
-								'SD' => 'South Dakota',
-								'TN' => 'Tennessee',
-								'TX' => 'Texas',
-								'UT' => 'Utah',
-								'VT' => 'Vermont',
-								'VA' => 'Virginia',
-								'WA' => 'Washington',
-								'WV' => 'West Virginia',
-								'WI' => 'Wisconsin',
-								'WY' => 'Wyoming',
-								'AA' => 'Armed Forces (AA)',
-								'AE' => 'Armed Forces (AE)',
-								'AP' => 'Armed Forces (AP)'
-							) as $key => $cur_state) {
-						?><option value="<?php echo $key; ?>"<?php echo $this->entity->shipping_address->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option><?php
-						} ?>
-					</select>
-				</div>
-				<div class="pf-element">
-					<label><span class="pf-label">Zip</span>
-						<input class="pf-field" type="text" name="shipping_zip" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>" /></label>
+				<div id="p_muid_address_us" style="display: none;">
+					<div class="pf-element">
+						<label><span class="pf-label">Address 1</span>
+							<input class="pf-field" type="text" name="shipping_address_1" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_1); ?>" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Address 2</span>
+							<input class="pf-field" type="text" name="shipping_address_2" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_2); ?>" /></label>
+					</div>
+					<div class="pf-element">
+						<span class="pf-label">City, State</span>
+						<input class="pf-field" type="text" name="shipping_city" size="15" value="<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>" />
+						<select class="pf-field" name="shipping_state">
+							<option value="">None</option>
+							<?php foreach (array(
+									'AL' => 'Alabama',
+									'AK' => 'Alaska',
+									'AZ' => 'Arizona',
+									'AR' => 'Arkansas',
+									'CA' => 'California',
+									'CO' => 'Colorado',
+									'CT' => 'Connecticut',
+									'DE' => 'Delaware',
+									'DC' => 'DC',
+									'FL' => 'Florida',
+									'GA' => 'Georgia',
+									'HI' => 'Hawaii',
+									'ID' => 'Idaho',
+									'IL' => 'Illinois',
+									'IN' => 'Indiana',
+									'IA' => 'Iowa',
+									'KS' => 'Kansas',
+									'KY' => 'Kentucky',
+									'LA' => 'Louisiana',
+									'ME' => 'Maine',
+									'MD' => 'Maryland',
+									'MA' => 'Massachusetts',
+									'MI' => 'Michigan',
+									'MN' => 'Minnesota',
+									'MS' => 'Mississippi',
+									'MO' => 'Missouri',
+									'MT' => 'Montana',
+									'NE' => 'Nebraska',
+									'NV' => 'Nevada',
+									'NH' => 'New Hampshire',
+									'NJ' => 'New Jersey',
+									'NM' => 'New Mexico',
+									'NY' => 'New York',
+									'NC' => 'North Carolina',
+									'ND' => 'North Dakota',
+									'OH' => 'Ohio',
+									'OK' => 'Oklahoma',
+									'OR' => 'Oregon',
+									'PA' => 'Pennsylvania',
+									'RI' => 'Rhode Island',
+									'SC' => 'South Carolina',
+									'SD' => 'South Dakota',
+									'TN' => 'Tennessee',
+									'TX' => 'Texas',
+									'UT' => 'Utah',
+									'VT' => 'Vermont',
+									'VA' => 'Virginia',
+									'WA' => 'Washington',
+									'WV' => 'West Virginia',
+									'WI' => 'Wisconsin',
+									'WY' => 'Wyoming',
+									'AA' => 'Armed Forces (AA)',
+									'AE' => 'Armed Forces (AE)',
+									'AP' => 'Armed Forces (AP)'
+								) as $key => $cur_state) {
+							?><option value="<?php echo $key; ?>"<?php echo $this->entity->shipping_address->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option><?php
+							} ?>
+						</select>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Zip</span>
+							<input class="pf-field" type="text" name="shipping_zip" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>" /></label>
+					</div>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">

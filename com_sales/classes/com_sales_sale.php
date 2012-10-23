@@ -878,6 +878,137 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Remove an item from the sale.
+	 * 
+	 * After the stock is removed, the sale is saved.
+	 * 
+	 * @param int $key The key of the product entry.
+	 * @param com_sales_stock &$item The stock item to remove.
+	 * @return bool True on success, false on failure.
+	 */
+	public function remove_item($key, &$item) {
+		global $pines;
+		// Make sure this sale has been invoiced or tendered.
+		if ($this->status != 'invoiced' && $this->status != 'paid') {
+			// Make sure this sale has not been voided.
+			if ($this->status == 'voided') {
+				pines_notice('This sale was voided, items cannot be removed.');
+				return false;
+			} else {
+				pines_notice('This sale isn\'t invoiced, items cannot be removed.');
+				return false;
+			}
+		}
+		// Make sure this item is not attached to any returns.
+		$attached_return = $pines->entity_manager->get_entity(
+			array('class' => com_sales_return, 'skip_ac' => true),
+			array('&',
+				'tag' => array('com_sales', 'return'),
+				'ref' => array(
+					array('sale', $this),
+					array('products', $item)
+				)
+			)
+		);
+		if (isset($attached_return)) {
+			pines_notice('This item cannot be removed, because it is attached to a return.');
+			return false;
+		}
+		// Make sure the item is correctly located and available.
+		if (!isset($item->guid) || isset($item->location->guid) || $item->available) {
+			pines_notice('This item cannot be removed, because it is not both out of inventory and unavailable.');
+			return false;
+		}
+		// Verify the item on the sale.
+		if (!isset($this->products[$key]) || !is_array($this->products[$key]['stock_entities'])) {
+			pines_notice('This item cannot be removed, because the sale reference info is invalid.');
+			return false;
+		}
+		$stock_key = $item->array_search($this->products[$key]['stock_entities']);
+		if ($stock_key === false) {
+			pines_notice('This item cannot be removed, because it was not found on the sale.');
+			return false;
+		}
+		if ($item->in_array($this->products[$key]['returned_stock_entities'])) {
+			pines_notice('This item cannot be removed, because it is marked as returned.');
+			return false;
+		}
+		// Make sure the product can be sold as a warehouse item.
+		if ($this->products[$key]['delivery'] != 'warehouse' && $this->products[$key]['entity']->stock_type != 'stock_optional') {
+			pines_notice('This item cannot be removed, because the product is not stock optional so cannot be sold as a warehouse order.');
+			return false;
+		}
+		// Make sure we can save the sale.
+		if (!$this->save()) {
+			pines_notice('This item cannot be removed, because the sale cannot be saved.');
+			return false;
+		}
+
+
+		// Put the old item back into inventory.
+		$last_tx = $pines->entity_manager->get_entity(
+				array('reverse' => true, 'class' => com_sales_stock),
+				array('&',
+					'tag' => array('com_sales', 'transaction', 'stock_tx'),
+					'strict' => array('type', 'removed'),
+					'ref' => array(
+						array('ref', $this),
+						array('stock', $item)
+					)
+				)
+			);
+		if ($last_tx) {
+			if (!$item->receive('sale_removed', $this, $last_tx->old_location)) {
+				pines_notice('Could not receive item ['.$item->guid.'] back into inventory.');
+				return false;
+			}
+			pines_notice("Returned item to its original location, {$last_tx->old_location->name}.");
+		} else {
+			if (!$item->receive('sale_removed', $this, $this->group)) {
+				pines_notice('Could not receive item ['.$item->guid.'] back into inventory.');
+				return false;
+			}
+			pines_notice("Returned item to the sale's location, {$this->group->name}.");
+		}
+		if (!$item->save()) {
+			pines_notice('Could not save item ['.$item->guid.']');
+			return false;
+		}
+		// Make a transaction entry.
+		$tx = com_sales_tx::factory('sale_tx', 'swap');
+		$tx->type = 'swap_in';
+		$tx->ticket = $this;
+		$tx->item = $item;
+		$tx->save();
+
+		// Update the item on the sale.
+		if (isset($this->products[$key]['serial']))
+			$this->products[$key]['serial'] = '';
+		unset($this->products[$key]['stock_entities'][$stock_key]);
+		if ($this->products[$key]['delivery'] != 'warehouse') {
+			$this->products[$key]['delivery'] = 'warehouse';
+			$this->products[$key]['shipped_entities'] = array();
+			// Put all remaining stock into the shipped array.
+			foreach ($this->products[$key]['stock_entities'] as $cur_stock) {
+				if (!isset($cur_stock->guid) || $cur_stock->in_array($this->products[$key]['returned_stock_entities']))
+					continue;
+				$this->products[$key]['shipped_entities'][] = $cur_stock;
+			}
+		}
+		$shipped_key = $item->array_search((array) $this->products[$key]['shipped_entities']);
+		if ($shipped_key !== false)
+			unset($this->products[$key]['shipped_entities'][$shipped_key]);
+		$this->warehouse = true;
+
+		// Done, save the sale.
+		if (!$this->save()) {
+			pines_notice('Could not save the sale after swapping.');
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Remove the stock on this sale from current inventory.
 	 * @return bool True on success, false on any failure.
 	 */
@@ -893,13 +1024,12 @@ class com_sales_sale extends entity {
 			if (!is_array($cur_product['stock_entities']))
 				continue;
 			foreach ($cur_product['stock_entities'] as &$cur_stock) {
-				if ($cur_product['delivery'] == 'shipped') {
+				if ($cur_product['delivery'] == 'shipped')
 					$return = $cur_stock->remove('sold_pending_shipping', $this, $cur_stock->location) && $cur_stock->save() && $return;
-				} elseif ($cur_product['delivery'] == 'pick-up') {
+				elseif ($cur_product['delivery'] == 'pick-up')
 					$return = $cur_stock->remove('sold_pending_pickup', $this, $cur_stock->location) && $cur_stock->save() && $return;
-				} else {
+				else
 					$return = $cur_stock->remove('sold_at_store', $this) && $cur_stock->save() && $return;
-				}
 			}
 		}
 		unset($cur_product);
@@ -1006,13 +1136,15 @@ class com_sales_sale extends entity {
 
 	/**
 	 * Swap an item in the sale.
-	 * @param string $sku The SKU of the old item.
-	 * @param string $old_serial The serial number of the old item.
-	 * @param string $new_serial The serial number of the new item.
+	 * 
+	 * After the swap is performed, the sale is saved.
+	 * 
+	 * @param int $key The key of the product entry.
+	 * @param com_sales_stock &$old_item The old item.
+	 * @param com_sales_stock &$new_item The new item.
 	 * @return bool True on success, false on failure.
-	 * @todo Review this and make sure it works with warehouse sales.
 	 */
-	public function swap($sku, $old_serial = null, $new_serial = null) {
+	public function swap($key, &$old_item, &$new_item) {
 		global $pines;
 		// Make sure this sale has been invoiced or tendered.
 		if ($this->status != 'invoiced' && $this->status != 'paid') {
@@ -1025,107 +1157,118 @@ class com_sales_sale extends entity {
 				return false;
 			}
 		}
-		// Make sure this sale is not attached to any returns.
+		// Make sure this item is not attached to any returns.
 		$attached_return = $pines->entity_manager->get_entity(
 			array('class' => com_sales_return, 'skip_ac' => true),
-			array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $this))
+			array('&',
+				'tag' => array('com_sales', 'return'),
+				'ref' => array(
+					array('sale', $this),
+					array('products', $old_item)
+				)
+			)
 		);
 		if (isset($attached_return)) {
-			pines_notice('This item cannot be swapped, because it is attached to a return.');
+			pines_notice('This item cannot be swapped out, because it is attached to a return.');
+			return false;
+		}
+		// Make sure the old and new items are correctly located and available.
+		if (!isset($old_item->guid) || isset($old_item->location->guid) || $old_item->available) {
+			pines_notice('This item cannot be swapped out, because it is not both out of inventory and unavailable.');
+			return false;
+		}
+		if (!isset($new_item->guid) || !isset($new_item->location->guid) || !$new_item->available) {
+			pines_notice('The new item cannot be swapped in, because it is not both in inventory and available.');
+			return false;
+		}
+		// Make sure the old and new items are of the same product.
+		if (!isset($new_item->product->guid) || !$new_item->product->is($this->products[$key]['entity'])) {
+			pines_notice('The new item cannot be swapped in, because it is not the same product as on the sale.');
+			return false;
+		}
+		// Verify the item on the sale.
+		if (!isset($this->products[$key]) || !is_array($this->products[$key]['stock_entities'])) {
+			pines_notice('This item cannot be swapped, because the sale reference info is invalid.');
+			return false;
+		}
+		$stock_key = $old_item->array_search($this->products[$key]['stock_entities']);
+		if ($stock_key === false) {
+			pines_notice('This item cannot be swapped, because it was not found on the sale.');
+			return false;
+		}
+		if ($old_item->in_array($this->products[$key]['returned_stock_entities'])) {
+			pines_notice('This item cannot be swapped out, because it is marked as returned.');
+			return false;
+		}
+		// Make sure we can save the sale.
+		if (!$this->save()) {
+			pines_notice('This item cannot be swapped, because the sale cannot be saved.');
 			return false;
 		}
 
-		// Return the old stock item to inventory.
-		foreach ($this->products as &$cur_product) {
-			if ($cur_product['serial'] == $old_serial && $cur_product['sku'] == $sku) {
-				if ($cur_product['entity']->serialized && empty($new_serial)) {
-					pines_notice("This product requires a serial.");
-					return false;
-				}
-				if (!is_array($cur_product['stock_entities'])) {
-					pines_notice('This item cannot be swapped, because it was not found.');
-					return false;
-				}
-				// See if the new item is in stock.
-				$selector = array('&',
-					'tag' => array('com_sales', 'stock'),
-					'data' => array(
-						array('available', true),
-						array('serial', $new_serial)
-					),
-					'ref' => array(
-						array('product', $cur_product['entity']),
-						array('location', $this->group)
-					)
-				);
-				$new_stock = $pines->entity_manager->get_entity(array('class' => com_sales_stock), $selector);
-				if (isset($new_stock)) {
-					// Remove the item from inventory.
-					$new_product = $cur_product;
-					$new_product['serial'] = $new_serial;
-					$new_product['delivery'] = 'in-store';
-					$new_product['stock_entities'] = array($new_stock);
-					if (!$new_stock->remove('sold_swapped', $this) || !$new_stock->save()) {
-						pines_notice('Unable to remove item ['.$new_serial.'] from inventory');
-						return false;
-					}
-					// Make a transaction entry.
-					$tx = com_sales_tx::factory('sale_tx');
-					$tx->add_tag('swap');
-					$tx->type = 'swap_in';
-					$tx->ticket = $this;
-					$tx->item = $new_stock;
-					$tx->save();
-				} else {
-					pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [$new_serial]" : " and quantity {$cur_product['quantity']}")." is not in local stock.");
-					return false;
-				}
-				// Return the old item back into inventory.
-				$stock_entities = $cur_product['stock_entities'];
-				foreach ($stock_entities as &$old_stock) {
-					if (empty($old_stock))
-						continue;
-					$last_tx = $pines->entity_manager->get_entity(
-							array('reverse' => true, 'class' => com_sales_stock),
-							array('&',
-								'tag' => array('com_sales', 'transaction', 'stock_tx'),
-								'data' => array('type', 'removed'),
-								'ref' => array('ref', $this)
-							)
-						);
-					if ($last_tx) {
-						if (!$old_stock->receive('sale_swapped', $this, $last_tx->old_location)) {
-							pines_notice('Could not receive item ['.$cur_product['serial'].'] back into inventory.');
-							return false;
-						}
-					} else {
-						if (!$old_stock->receive('sale_swapped', $this)) {
-							pines_notice('Could not receive item ['.$cur_product['serial'].'] back into inventory.');
-							return false;
-						}
-					}
-					if (!$old_stock->save()) {
-						pines_notice('Could not save item ['.$cur_product['serial'].']');
-						return false;
-					}
-					// Make a transaction entry.
-					$tx = com_sales_tx::factory('sale_tx');
-					$tx->add_tag('swap');
-					$tx->type = 'swap_out';
-					$tx->ticket = $this;
-					$tx->item = $old_stock;
-					$tx->save();
-				}
-				unset($old_stock);
-				$cur_product = $new_product;
-				if (!$this->save()) {
-					pines_notice('Could not save the sale after swapping.');
-					return false;
-				}
-				return true;
-			}
+
+		// Take the new item out of inventory.
+		if (!$new_item->remove('sold_swapped', $this) || !$new_item->save()) {
+			pines_notice('Unable to remove item ['.$new_item->guid.'] from inventory');
+			return false;
 		}
-		unset($cur_product);
+		// Make a transaction entry.
+		$tx = com_sales_tx::factory('sale_tx', 'swap');
+		$tx->type = 'swap_out';
+		$tx->ticket = $this;
+		$tx->item = $new_item;
+		$tx->save();
+
+		// Put the old item back into inventory.
+		$last_tx = $pines->entity_manager->get_entity(
+				array('reverse' => true, 'class' => com_sales_stock),
+				array('&',
+					'tag' => array('com_sales', 'transaction', 'stock_tx'),
+					'strict' => array('type', 'removed'),
+					'ref' => array(
+						array('ref', $this),
+						array('stock', $old_item)
+					)
+				)
+			);
+		if ($last_tx) {
+			if (!$old_item->receive('sale_swapped', $this, $last_tx->old_location)) {
+				pines_notice('Could not receive item ['.$old_item->guid.'] back into inventory.');
+				return false;
+			}
+			pines_notice("Returned old item to its original location, {$last_tx->old_location->name}.");
+		} else {
+			if (!$old_item->receive('sale_swapped', $this, $this->group)) {
+				pines_notice('Could not receive item ['.$old_item->guid.'] back into inventory.');
+				return false;
+			}
+			pines_notice("Returned old item to the sale's location, {$this->group->name}.");
+		}
+		if (!$old_item->save()) {
+			pines_notice('Could not save item ['.$old_item->guid.']');
+			return false;
+		}
+		// Make a transaction entry.
+		$tx = com_sales_tx::factory('sale_tx', 'swap');
+		$tx->type = 'swap_in';
+		$tx->ticket = $this;
+		$tx->item = $old_item;
+		$tx->save();
+
+		// Update the item on the sale.
+		if (isset($this->products[$key]['serial']))
+			$this->products[$key]['serial'] = $new_item->serial;
+		$this->products[$key]['stock_entities'][$stock_key] = $new_item;
+		$shipped_key = $old_item->array_search((array) $this->products[$key]['shipped_entities']);
+		if ($shipped_key !== false)
+			$this->products[$key]['shipped_entities'][$shipped_key] = $new_item;
+
+		// Done, save the sale.
+		if (!$this->save()) {
+			pines_notice('Could not save the sale after swapping.');
+			return false;
+		}
+		return true;
 	}
 
 	/**

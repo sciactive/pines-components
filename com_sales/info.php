@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'POS',
 	'author' => 'SciActive',
-	'version' => '1.2.1dev',
+	'version' => '1.3.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Point of Sales system',
@@ -46,7 +46,7 @@ return array(
 		array('editsale', 'Edit Sales', 'User can edit current sales.'),
 		array('voidownsale', 'Void Own Sales', 'User can void their own sales, returning any stock to inventory.'),
 		array('voidsale', 'Void Sales', 'User can void any sales, returning any stock to inventory.'),
-		array('swapsale', 'Swap Items', 'User can swap items for sales.'),
+		array('swapsale', 'Swap/Remove Items', 'User can swap and remove stock items from sales.'),
 		array('swapsalesrep', 'Swap Salespeople', 'User can swap salespeople on completed sales/returns.'),
 		array('deletesale', 'Delete Sales', 'User can delete current sales.'),
 		array('listreturns', 'List Returns', 'User can see returns.'),

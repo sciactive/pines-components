@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
-if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep'))
+if (($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep')) || gatekeeper('com_sales/overrideowner'))
 	$pines->com_hrm->load_employee_select();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
@@ -59,7 +59,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_sales/newreturnwsale')) { ?>
 				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: <?php echo json_encode(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/swapsale')) { ?>
-				{type: 'button', text: 'Swap', extra_class: 'picon picon-document-swap', click: function(e, row){
+				{type: 'button', text: 'Swap/Remove', extra_class: 'picon picon-document-swap', click: function(e, row){
 					sale_grid.swap_form($(row).attr("title"));
 				}},
 				<?php } if (gatekeeper('com_sales/changeproduct')) { ?>
@@ -322,7 +322,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					if (data == "")
 						return;
 					pines.pause();
-					var form = $("<div title=\"Swap Item [Sale: "+pines.safe(sale_id)+"]\"></div>").html(data+"<br />");
+					var form = $('<div title="Swap/Remove Item"></div>').html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -332,22 +332,27 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							form.remove();
 						},
 						buttons: {
-							"Swap Items": function(){
-								var swap_item = form.find(":input[name=swap_item]:checked").val();
-								var new_serial = form.find(":input[name=new_serial]").val();
+							"Save Changes": function(){
+								var swap_item = form.find(":input[name=swap_item]:checked").val(),
+									item_action = form.find(":input[name=item_action]").val(),
+									new_item = form.find(":input[name=new_item]").val();
 								if (swap_item == "") {
 									alert('Please specify the item you want to swap.');
-								} else if (new_serial == "") {
-									alert('Please specify the new item serial number.');
+								} else if (item_action == "swap" && new_item == "") {
+									alert('Please specify the new item. If you have, please wait until the stock entry is shown.');
 								} else {
 									form.dialog('close');
 									// Submit the swap request.
 									pines.post(<?php echo json_encode(pines_url('com_sales', 'sale/swap')); ?>, {
 										"id": sale_id,
 										"swap_item": swap_item,
-										"new_serial": new_serial.trim()
+										"item_action": item_action,
+										"new_item": new_item
 									});
 								}
+							},
+							"Cancel": function(){
+								form.dialog('close');
 							}
 						}
 					});

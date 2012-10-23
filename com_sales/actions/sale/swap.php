@@ -21,19 +21,30 @@ if (!isset($entity->guid)) {
 	pines_redirect(pines_url('com_sales', 'sale/list'));
 	return;
 }
-$swap_item = explode(':', $_REQUEST['swap_item']);
-$sku = $swap_item[0];
-$old_serial = $swap_item[1];
-$new_serial = $_REQUEST['new_serial'];
-if (empty($old_serial) || empty($new_serial)){
-	pines_notice('Only serialized items may be swapped.');
+list($key, $stock_guid) = explode('_', $_REQUEST['swap_item']);
+$old_item = com_sales_stock::factory((int) $stock_guid);
+if (!isset($old_item->guid)){
+	pines_notice('Current item not found.');
 	pines_redirect(pines_url('com_sales', 'sale/list'));
 	return;
 }
-if ($entity->swap($sku, $old_serial, $new_serial) && $entity->save()) {
-	pines_notice("Item [$old_serial] has been swapped with [$new_serial].");
-} else {
-	pines_notice('The items could not be swapped.');
+$item_action = $_REQUEST['item_action'];
+if ($item_action == 'swap') {
+	$new_item = com_sales_stock::factory((int) $_REQUEST['new_item']);
+	if (!isset($new_item->guid)){
+		pines_notice('New item not found.');
+		pines_redirect(pines_url('com_sales', 'sale/list'));
+		return;
+	}
+	if ($entity->swap($key, $old_item, $new_item))
+		pines_notice('Item has been swapped successfully.');
+	else
+		pines_notice('The items could not be swapped.');
+} elseif ($item_action == 'remove') {
+	if ($entity->remove_item($key, $old_item))
+		pines_notice('Item has been removed successfully.');
+	else
+		pines_notice('The item could not be removed.');
 }
 
 pines_redirect(pines_url('com_sales', 'sale/list'));

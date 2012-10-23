@@ -35,7 +35,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 	<script type="text/javascript">
 		pines(function(){
 			var current_item;
-			
+
 			$("#p_muid_form").delegate(".products div.serial a.assign", "click", function(){
 				current_item = $(this).closest("div.serial");
 				serial_dialog.dialog("open");
@@ -98,12 +98,12 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			var refresh_entries = function(){
 				var entries = [];
 				$("#p_muid_form .products").children(".product_entry").each(function(){
-					var cur_product = $(this);
-					var cur_entries = cur_product.find(".entries .entry");
-					var sale = cur_product.children(".sale").text();
-					var key = cur_product.children(".key").text();
-					// Update the quantity left.
-					var qty_left = parseInt(cur_product.find(".qty").text()) - (parseInt(cur_product.find(".qty_done").text()) + cur_entries.length);
+					var cur_product = $(this),
+						cur_entries = cur_product.find(".entries .entry"),
+						sale = cur_product.children(".sale").text(),
+						key = cur_product.children(".key").text(),
+						// Update the quantity left.
+						qty_left = parseInt(cur_product.find(".qty").text()) - (parseInt(cur_product.find(".qty_done").text()) + cur_entries.length);
 					cur_product.find(".qty_left").html(qty_left);
 					if (qty_left < 1)
 						cur_product.find(".assign").hide();

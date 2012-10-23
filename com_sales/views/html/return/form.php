@@ -60,10 +60,10 @@ if ($pines->config->com_sales->autocomplete_product)
 	<?php } ?>
 	<script type="text/javascript">
 		pines(function(){
-			var products = $("#p_muid_products");
-			var products_table = $("#p_muid_products_table");
-			var payments_table = $("#p_muid_payments_table");
-			var payments = $("#p_muid_payments");
+			var products = $("#p_muid_products"),
+				products_table = $("#p_muid_products_table"),
+				payments_table = $("#p_muid_payments_table"),
+				payments = $("#p_muid_payments");
 			<?php if ($pines->config->com_sales->com_customer) { ?>
 			var require_customer = false;
 			<?php } ?>
@@ -100,12 +100,12 @@ if ($pines->config->com_sales->autocomplete_product)
 				);
 			}
 ?>
-			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
-			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
-			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
-			// Unlike on the sale form, this includes all associated specials.
-			var added_specials = <?php echo json_encode($added_specials); ?>;
-			var status = <?php echo json_encode($this->entity->status); ?>;
+			var taxes_percent = <?php echo json_encode($taxes_percent); ?>,
+				taxes_flat = <?php echo json_encode($taxes_flat); ?>,
+				drawer_kickers = <?php echo json_encode($drawer_kickers); ?>,
+				// Unlike on the sale form, this includes all associated specials.
+				added_specials = <?php echo json_encode($added_specials); ?>,
+				status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
 				var rnd = Math.pow(10, dec);

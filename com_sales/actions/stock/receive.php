@@ -25,7 +25,7 @@ if (!isset($_REQUEST['products'])) {
 
 $shipments_json = (array) json_decode($_REQUEST['shipments']);
 if (!$shipments_json)
-	$shipments = array();
+	$shipments_transfers = $shipments_pos = array();
 else {
 	// These are the shipments (POs and transfers) selected to be received on
 	// the form. The GUIDs can be either a PO or transfer.

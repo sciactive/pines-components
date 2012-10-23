@@ -90,10 +90,10 @@ if ($pines->config->com_sales->com_esp) {
 	<?php } ?>
 	<script type="text/javascript">
 		pines(function(){
-			var products = $("#p_muid_products");
-			var products_table = $("#p_muid_products_table");
-			var payments_table = $("#p_muid_payments_table");
-			var payments = $("#p_muid_payments");
+			var products = $("#p_muid_products"),
+				products_table = $("#p_muid_products_table"),
+				payments_table = $("#p_muid_payments_table"),
+				payments = $("#p_muid_payments");
 			<?php if ($pines->config->com_sales->com_esp) { ?>
 			var esp_rate = <?php echo (float) $pines->config->com_esp->esp_rate; ?>;
 			<?php } if ($pines->config->com_sales->com_customer) { ?>
@@ -188,12 +188,12 @@ if ($pines->config->com_sales->com_esp) {
 				);
 			}
 ?>
-			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
-			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
-			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
-			var elig_specials = <?php echo json_encode($elig_specials); ?>;
-			var added_specials = <?php echo json_encode($added_specials); ?>;
-			var status = <?php echo json_encode($this->entity->status); ?>;
+			var taxes_percent = <?php echo json_encode($taxes_percent); ?>,
+				taxes_flat = <?php echo json_encode($taxes_flat); ?>,
+				drawer_kickers = <?php echo json_encode($drawer_kickers); ?>,
+				elig_specials = <?php echo json_encode($elig_specials); ?>,
+				added_specials = <?php echo json_encode($added_specials); ?>,
+				status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
 				var rnd = Math.pow(10, dec);

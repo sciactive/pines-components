@@ -57,14 +57,27 @@ if ($this->entity->final)
 			pines.com_sales_select_vendor = function(vendor_id, loading) {
 				if (cur_vendor == vendor_id && !loading) return;
 				available_products_table.pgrid_get_all_rows().pgrid_delete();
-				if (!loading)
-					products_table.pgrid_get_all_rows().each(function(){
+				if (!loading) {
+					var locked = false, all_rows = products_table.pgrid_get_all_rows().each(function(){
+						if (locked)
+							return;
+						var row = $(this);
+						if ($.inArray(vendor_id, JSON.parse(row.pgrid_get_value(6))) == -1 && row.pgrid_get_value(7) == '1') {
+							alert('The selected vendor cannot be used, because there is a locked item which is unavailable from that vendor.');
+							locked = true;
+						}
+					});
+					if (locked)
+						return false;
+					all_rows.each(function(){
 						var row = $(this);
 						if ($.inArray(vendor_id, JSON.parse(row.pgrid_get_value(6))) == -1)
 							row.pgrid_delete();
 					});
+				}
 				cur_vendor = vendor_id;
 				update_products();
+				return true;
 			};
 
 			var update_products = function(){
@@ -112,6 +125,10 @@ if ($this->entity->final)
 						double_click: true,
 						click: function(e, rows){
 							var row_data = products_table.pgrid_export_rows(rows);
+							if (row_data[0].values[<?php echo json_encode($this->entity->final ? 7 : 6); ?>] == '1') {
+								alert('That product is locked, because it has an assigned reference. It cannot be edited.');
+								return;
+							}
 							$("#p_muid_cur_product_edit_quantity").val(row_data[0].values[2]);
 							$("#p_muid_cur_product_edit_cost").val(row_data[0].values[3]);
 							product_edit_dialog.dialog('open');
@@ -122,12 +139,16 @@ if ($this->entity->final)
 						text: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						click: function(e, rows){
+							if (rows.pgrid_get_value(<?php echo json_encode($this->entity->final ? 8 : 7); ?>) == '1') {
+								alert('That product is locked, because it has an assigned reference. It cannot be removed.');
+								return;
+							}
 							rows.pgrid_delete();
 							update_products();
 						}
 					}
 				],
-				pgrid_hidden_cols: [<?php echo json_encode($this->entity->final ? 7 : 6); ?>],
+				pgrid_hidden_cols: <?php echo json_encode($this->entity->final ? array(7,8) : array(6,7)); ?>,
 				pgrid_view_height: "300px"
 			});
 			<?php } else { ?>
@@ -144,7 +165,7 @@ if ($this->entity->final)
 						});
 					}}
 				],
-				pgrid_hidden_cols: [<?php echo json_encode($this->entity->final ? 7 : 6); ?>],
+				pgrid_hidden_cols: <?php echo json_encode($this->entity->final ? array(7,8) : array(6,7)); ?>,
 				pgrid_paginate: false
 			});
 			$("#p_muid_received_table").pgrid({
@@ -308,7 +329,8 @@ if ($this->entity->final)
 								pines.safe(cur_product_quantity),
 								pines.safe(cur_product_cost),
 								pines.safe(round_to_dec(cur_product_quantity * cur_product_cost)),
-								pines.safe(cur_product[0].values[8])
+								pines.safe(cur_product[0].values[8]),
+								'0'
 							]
 						}];
 						products_table.pgrid_add(new_product);
@@ -376,6 +398,11 @@ if ($this->entity->final)
 			});
 			<?php } ?>
 
+			$("#p_muid_vendor").change(function(){
+				var vendor = $(this);
+				if (!pines.com_sales_select_vendor(Number(vendor.val())))
+					vendor.val(cur_vendor);
+			});
 			pines.com_sales_select_vendor(cur_vendor, true);
 		});
 	</script>
@@ -409,7 +436,7 @@ if ($this->entity->final)
 			<span class="pf-label">Vendor</span>
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			<span class="pf-note">Changing this will remove products not in new vendor!</span>
-			<select class="pf-field" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));">
+			<select class="pf-field" name="vendor" id="p_muid_vendor">
 				<option value="null">-- None --</option>
 				<?php
 				$pines->entity_manager->sort($this->vendors, 'name');
@@ -500,6 +527,7 @@ if ($this->entity->final)
 							<th>Unit Cost</th>
 							<th>Line Total</th>
 							<th>Vendor IDs</th>
+							<th>Locked</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -540,6 +568,7 @@ if ($this->entity->final)
 								}
 								echo htmlspecialchars(json_encode($vendors));
 							?></td>
+							<td><?php echo $cur_product['locked'] ? '1' : '0'; ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

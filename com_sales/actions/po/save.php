@@ -57,7 +57,8 @@ if (!$po->final && empty($po->received)) {
 		$cur_product = array(
 			'entity' => com_sales_product::factory((int) $cur_product->key),
 			'quantity' => (int) $cur_product->values[2],
-			'cost' => (float) $cur_product->values[3]
+			'cost' => (float) $cur_product->values[3],
+			'locked' => ($cur_product->values[6] == '1')
 		);
 		if (!isset($cur_product['entity']->guid))
 			$cur_product['entity'] = null;

@@ -72,7 +72,7 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 	if ($products[$product->guid])
 		$products[$product->guid]['quantity'] += $sale->products[(int) $key]['quantity'];
 	else
-		$products[$product->guid] = array('entity' => $product, 'quantity' => $sale->products[(int) $key]['quantity'], 'cost' => 0);
+		$products[$product->guid] = array('entity' => $product, 'quantity' => $sale->products[(int) $key]['quantity'], 'cost' => 0, 'locked' => true);
 
 	// Save the valid item IDs.
 	$item_ids[] = "{$sale_id}_{$key}";

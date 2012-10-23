@@ -976,7 +976,7 @@ class com_sales_sale extends entity {
 		}
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('sale_tx', 'swap');
-		$tx->type = 'swap_in';
+		$tx->type = 'swap_out';
 		$tx->ticket = $this;
 		$tx->item = $item;
 		$tx->save();
@@ -1214,7 +1214,7 @@ class com_sales_sale extends entity {
 		}
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('sale_tx', 'swap');
-		$tx->type = 'swap_out';
+		$tx->type = 'swap_in';
 		$tx->ticket = $this;
 		$tx->item = $new_item;
 		$tx->save();
@@ -1250,7 +1250,7 @@ class com_sales_sale extends entity {
 		}
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('sale_tx', 'swap');
-		$tx->type = 'swap_in';
+		$tx->type = 'swap_out';
 		$tx->ticket = $this;
 		$tx->item = $old_item;
 		$tx->save();

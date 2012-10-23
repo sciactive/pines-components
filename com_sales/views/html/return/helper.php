@@ -199,7 +199,51 @@ echo $module->render();
 	<h3 style="margin:10px 0;">Comments</h3>
 	<div style="font-size: 75%;"><?php echo htmlspecialchars($this->entity->comments); ?></div>
 </div>
-<?php } } elseif ($this->render == 'footer') { ?>
+<?php } ?>
+<div style="clear:both;">
+	<hr />
+	<h3 style="margin:10px 0;">Transaction History</h3>
+	<table class="table table-bordered" style="clear:both;">
+		<thead>
+			<tr>
+				<th>GUID</th>
+				<th>Type</th>
+				<th>Date</th>
+				<th>User</th>
+				<th>Reference</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			$txs = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_tx),
+					array('&',
+						'tag' => array('com_sales', 'transaction'),
+						'ref' => array('ticket', $this->entity)
+					),
+					array('|',
+						'tag' => array('sale_tx', 'payment_tx')
+					)
+				);
+			foreach ($txs as $cur_tx) {
+				$ref = isset($cur_tx->item->guid) ? $cur_tx->item : $cur_tx->ref; ?>
+			<tr>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="com_sales_tx"><?php echo htmlspecialchars($cur_tx->guid); ?></a></td>
+				<td><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $cur_tx->type))); ?></td>
+				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate, 'full_short')); ?></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_tx->user->name); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($ref->guid); ?>" data-entity-context="<?php echo isset($ref) ? htmlspecialchars(str_replace('hook_override_', '', get_class($ref))) : ''; ?>"><?php echo isset($ref) ? htmlspecialchars($ref->info('name')) : ''; ?></a></td>
+			</tr>
+			<?php if (isset($cur_tx->amount)) { ?>
+			<tr>
+				<td colspan="2" style="text-align: right;">Amount</td>
+				<td colspan="3">$<?php echo $pines->com_sales->round($cur_tx->amount, true); ?></td>
+			</tr>
+			<?php } } ?>
+		</tbody>
+	</table>
+</div>
+<?php } elseif ($this->render == 'footer') { ?>
 <a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $this->entity->guid))); ?>" class="btn">Receipt</a>
 <?php if (gatekeeper('com_sales/listreturns')) { ?>
 <a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/list', array('location' => $this->entity->group->guid, 'descendants' => 'false', 'all_time' => 'false', 'start_date' => format_date($this->entity->p_cdate, 'custom', 'Y-m-d'), 'end_date' => format_date(strtotime('+1 day', $this->entity->p_cdate), 'custom', 'Y-m-d')))); ?>" class="btn">View in List</a>

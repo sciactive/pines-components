@@ -185,7 +185,7 @@ class com_hrm extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load_employee_select() {
-		if (!$this->js_loaded_cust) {
+		if (!$this->js_loaded_employee) {
 			$module = new module('com_hrm', 'employee/select', 'head');
 			$module->render();
 			$this->js_loaded_employee = true;

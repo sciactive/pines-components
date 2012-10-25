@@ -38,38 +38,43 @@ if ($this->render == 'body' && gatekeeper('com_customer/listcustomers')) { ?>
 				<td style="font-weight:bold;">Enabled</td>
 				<td><?php echo $this->entity->has_tag('enabled') ? 'Yes' : 'No'; ?></td>
 			</tr>
-			<?php if (in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php if (!empty($this->entity->email) && in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a></td>
 			</tr>
-			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (isset($this->entity->company->guid) && in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Company</td>
 				<td><a data-entity="<?php echo htmlspecialchars($this->entity->company->guid); ?>" data-entity-context="com_customer_company"><?php echo htmlspecialchars($this->entity->company->name); ?></a></td>
 			</tr>
+			<?php if (!empty($this->entity->job_title)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Job Title</td>
 				<td><?php echo htmlspecialchars($this->entity->job_title); ?></td>
 			</tr>
-			<?php } if (in_array('phone', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } } if (in_array('phone', $pines->config->com_customer->shown_fields_customer)) {
+				if (!empty($this->entity->phone_cell)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Cell Phone</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone_cell); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone_cell)); ?></a></td>
 			</tr>
+			<?php } if (!empty($this->entity->phone_work)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Work Phone</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone_work); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone_work)); ?></a></td>
 			</tr>
+			<?php } if (!empty($this->entity->phone_home)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Home Phone</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->phone_home); ?>"><?php echo htmlspecialchars(format_phone($this->entity->phone_home)); ?></a></td>
 			</tr>
+			<?php } if (!empty($this->entity->fax)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Fax</td>
 				<td><a href="tel:<?php echo htmlspecialchars($this->entity->fax); ?>"><?php echo htmlspecialchars(format_phone($this->entity->fax)); ?></a></td>
 			</tr>
-			<?php } ?>
+			<?php } } ?>
 			<tr>
 				<td style="font-weight:bold;">Timezone</td>
 				<td><?php echo htmlspecialchars($this->entity->get_timezone()).(empty($this->entity->timezone) ? ' (Inherited)' : ' (Assigned)'); ?></td>
@@ -166,6 +171,7 @@ if ($this->render == 'body' && gatekeeper('com_customer/listcustomers')) { ?>
 				<td style="font-weight:bold;">Member Since</td>
 				<td><?php echo htmlspecialchars(format_date($this->entity->member_since, 'full_long')); ?></td>
 			</tr>
+			<?php } if ($this->entity->member_exp) { ?>
 			<tr>
 				<td style="font-weight:bold;">Membership Expiration</td>
 				<td><?php echo $this->entity->member_exp ? htmlspecialchars(format_date($this->entity->member_exp, 'date_long')) : ''; ?></td>
@@ -174,7 +180,7 @@ if ($this->render == 'body' && gatekeeper('com_customer/listcustomers')) { ?>
 		</tbody>
 	</table>
 </div>
-<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer) && $this->entity->attributes) { ?>
+<?php } if ($this->entity->attributes && in_array('attributes', $pines->config->com_customer->shown_fields_customer) && $this->entity->attributes) { ?>
 <div style="clear:both;">
 	<hr />
 	<h3 style="margin:10px 0;">Attributes</h3>

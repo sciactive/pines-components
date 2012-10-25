@@ -546,11 +546,13 @@ $pines->com_customer->load_company_select();
 			<br class="pf-clearing" />
 		</div>
 		<div class="tab-pane" id="p_muid_tab_account">
-			<?php if (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->username)) { ?>
+			<?php if (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->username)) {
+				if (!$pines->config->com_user->email_usernames) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<input class="pf-field" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Login Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->has_tag('enabled') ? ' checked="checked"' : ''; ?> /></label>

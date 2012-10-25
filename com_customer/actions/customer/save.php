@@ -62,9 +62,11 @@ if (!in_array('description', $pines->config->com_customer->critical_fields_custo
 
 // Account
 if (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->username)) {
-	$customer->username = $_REQUEST['username'];
-	if (empty($_REQUEST['username']))
-		$customer->username = uniqid('user');
+	if (!$pines->config->com_user->email_usernames) {
+		$customer->username = $_REQUEST['username'];
+		if (empty($_REQUEST['username']))
+			$customer->username = uniqid('user');
+	}
 	if ($_REQUEST['enabled'] == 'ON')
 		$customer->add_tag('enabled');
 	else
@@ -131,8 +133,8 @@ if (empty($customer->ssn)) {
 		pines_notice('The SSN must be a 9 digit number.');
 		return;
 	}
-	$test = $pines->entity_manager->get_entity(array('class' => com_customer_customer, 'skip_ac' => true), array('&', 'tag' => array('com_customer', 'customer'), 'strict' => array('ssn', $customer->ssn)));
-	if (isset($test) && !$customer->is($test)) {
+	$test = $pines->entity_manager->get_entity(array('class' => com_customer_customer, 'skip_ac' => true), array('&', 'tag' => array('com_customer', 'customer'), 'strict' => array('ssn', $customer->ssn), '!guid' => $customer->guid));
+	if (isset($test)) {
 		$customer->print_form();
 		pines_notice('Another customer already has this SSN.');
 		return;
@@ -202,46 +204,22 @@ if (in_array('address', $pines->config->com_customer->required_fields_customer))
 	}
 }
 
-if (empty($customer->username)) {
+
+$un_check = $pines->user_manager->check_username($customer->username, $customer->guid);
+if (!$un_check['result']) {
 	$customer->print_form();
-	pines_notice('Please specify a username.');
-	return;
-}
-if ($pines->config->com_user->max_username_length > 0 && strlen($customer->username) > $pines->config->com_user->max_username_length) {
-	$customer->print_form();
-	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
-	return;
-}
-if (array_diff(str_split($customer->username), str_split($pines->config->com_user->valid_chars))) {
-	$customer->print_form();
-	pines_notice($pines->config->com_user->valid_chars_notice);
-	return;
-}
-if (!preg_match($pines->config->com_user->valid_regex, $customer->username)) {
-	$customer->print_form();
-	pines_notice($pines->config->com_user->valid_regex_notice);
+	pines_notice($un_check['message']);
 	return;
 }
 $test = $pines->entity_manager->get_entity(
 		array('class' => user, 'skip_ac' => true),
 		array('&',
 			'tag' => array('com_user', 'user'),
-			'match' => array('username', '/^'.preg_quote($_REQUEST['username'], '/').'$/i')
+			'match' => array('email', '/^'.preg_quote($customer->email, '/').'$/i'),
+			'!guid' => $customer->guid
 		)
 	);
-if (isset($test->guid) && !$customer->is($test)) {
-	$customer->print_form();
-	pines_notice('There is already a user with that username. Please choose a different username.');
-	return;
-}
-$test = $pines->entity_manager->get_entity(
-		array('class' => user, 'skip_ac' => true),
-		array('&',
-			'tag' => array('com_user', 'user'),
-			'match' => array('email', '/^'.preg_quote($customer->email, '/').'$/i')
-		)
-	);
-if (isset($test) && !$customer->is($test)) {
+if (isset($test)) {
 	$customer->print_form();
 	pines_notice('There is already a user with that email address. Please use a different email.');
 	return;

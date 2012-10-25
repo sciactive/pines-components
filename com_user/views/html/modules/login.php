@@ -69,10 +69,10 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		<div class="pf-element">
 			<script type="text/javascript">
 				pines(function(){
-					var new_account = false;
-					var username = $("[name=username]", "#p_muid_form");
-					var password = $("[name=password]", "#p_muid_form");
-					var password2 = $("[name=password2]", "#p_muid_form");
+					var new_account = false,
+						username = $("[name=username]", "#p_muid_form"),
+						password = $("[name=password]", "#p_muid_form"),
+						password2 = $("[name=password2]", "#p_muid_form");
 					$("#p_muid_form").submit(function(){
 						if (new_account && password.val() != password2.val()) {
 							alert("Your passwords do not match.");
@@ -83,8 +83,8 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 
 					<?php if ($this->check_username) { ?>
 					// Check usernames.
-					var un_loading = $("#p_muid_username_loading");
-					var un_message = $("#p_muid_username_message");
+					var un_loading = $("#p_muid_username_loading"),
+						un_message = $("#p_muid_username_message");
 					username.change(function(){
 						if (!new_account) {
 							un_loading.hide();
@@ -130,9 +130,9 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 					});
 					<?php } ?>
 
-					var pass_reenter = $("#p_muid_register_form");
-					var recovery = $("#p_muid_recovery");
-					var submit_btn = $("[name=submit]", "#p_muid_form");
+					var pass_reenter = $("#p_muid_register_form"),
+						recovery = $("#p_muid_recovery"),
+						submit_btn = $("[name=submit]", "#p_muid_form");
 					$("[name=existing]", "#p_muid_form").change(function(){
 						if ($(this).is(":checked")) {
 							new_account = false;
@@ -163,7 +163,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 		</div>
 		<?php } ?>
 		<div class="pf-element">
-			<label><span class="pf-label">Username</span>
+			<label><span class="pf-label"><?php echo $pines->config->com_user->email_usernames ? 'Email' : 'Username'; ?></span>
 				<?php if ($this->style != 'small') { ?>
 				<span class="pf-group" style="display: block;">
 				<?php } ?>
@@ -211,7 +211,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field" type="text" name="name_last" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
-			<?php } if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email <span class="pf-required">*</span></span>
 					<input class="pf-field" type="email" name="email" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>

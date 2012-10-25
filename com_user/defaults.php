@@ -19,6 +19,12 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'email_usernames',
+		'cname' => 'Use Email Address as Username',
+		'description' => 'Instead of a "username", a user logs in and is referred to by their email address. Enabling this after many users have been created can be messy. Make sure they all have email addresses first.',
+		'value' => false,
+	),
+	array(
 		'name' => 'allow_registration',
 		'cname' => 'Allow User Registration',
 		'description' => 'Allow users to register.',
@@ -91,6 +97,13 @@ return array(
 		'cname' => 'Unconfirmed User Access',
 		'description' => 'Unconfirmed users will be able to log in, but will only have the "unconfirmed users" secondary group(s) until they confirm their email. If set to false, their account will instead be disabled until they confirm.',
 		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'default_domain',
+		'cname' => 'Default Login Domain',
+		'description' => 'When using email address as username, the domain name listed here will be automatically appended to short logins. For example, you could put "sciactive.com" to be able to sign in with "hunter" instead of "hunter@sciactive.com".',
+		'value' => '',
 		'peruser' => true,
 	),
 	array(
@@ -190,7 +203,7 @@ return array(
 	array(
 		'name' => 'valid_chars',
 		'cname' => 'Valid Characters',
-		'description' => 'Only these characters can be used when creating usernames and groupnames.',
+		'description' => 'Only these characters can be used when creating usernames and groupnames. (Doesn\'t apply to emails as usernames.)',
 		'value' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',
 	),
 	array(
@@ -203,7 +216,7 @@ return array(
 	array(
 		'name' => 'valid_regex',
 		'cname' => 'Valid Regex',
-		'description' => 'Usernames and groupnames must match this regular expression. By default, this ensures that the name begins and ends with an alphanumeric. (To allow anything, use "/.*/")',
+		'description' => 'Usernames and groupnames must match this regular expression. (Doesn\'t apply to emails as usernames.) By default, this ensures that the name begins and ends with an alphanumeric. (To allow anything, use "/.*/")',
 		'value' => '/^[a-zA-Z0-9].*[a-zA-Z0-9]$/',
 	),
 	array(

@@ -81,6 +81,65 @@ class com_user extends component implements user_manager_interface {
 		return ($ac->other >= $type);
 	}
 
+	/**
+	 * Check that a username is valid.
+	 * 
+	 * The ID of a user can be given so that user is excluded when checking if
+	 * the name is already in use.
+	 * 
+	 * @param string $username The username to check.
+	 * @param int $id The GUID of the user for which the name is being checked.
+	 * @return array An associative array with a boolean 'result' entry and a 'message' entry.
+	 */
+	public function check_username($username, $id = null) {
+		global $pines;
+		if (!$pines->config->com_user->email_usernames) {
+			if (empty($username))
+				return array('result' => false, 'message' => 'Please specify a username.');
+			if ($pines->config->com_user->max_username_length > 0 && strlen($username) > $pines->config->com_user->max_username_length)
+				return array('result' => false, 'message' => "Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
+			if (array_diff(str_split($username), str_split($pines->config->com_user->valid_chars)))
+				return array('result' => false, 'message' => $pines->config->com_user->valid_chars_notice);
+			if (!preg_match($pines->config->com_user->valid_regex, $username))
+				return array('result' => false, 'message' => $pines->config->com_user->valid_regex_notice);
+			$selector = array('&',
+					'tag' => array('com_user', 'user'),
+					'match' => array('username', '/^'.preg_quote($username, '/').'$/i')
+				);
+			if (isset($id) && $id > 0)
+				$selector['!guid'] = $id;
+			$test = $pines->entity_manager->get_entity(
+					array('class' => user, 'skip_ac' => true),
+					$selector
+				);
+			if (isset($test->guid))
+				return array('result' => false, 'message' => 'That username is taken.');
+
+			return array('result' => true, 'message' => (isset($id) ? 'Username is valid.' : 'Username is available!'));
+		} else {
+			if (empty($username))
+				return array('result' => false, 'message' => 'Please specify an email.');
+			if ($pines->config->com_user->max_username_length > 0 && strlen($username) > $pines->config->com_user->max_username_length)
+				return array('result' => false, 'message' => "Emails must not exceed {$pines->config->com_user->max_username_length} characters.");
+			if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $username))
+				return array('result' => false, 'message' => 'Email must be a correctly formatted address.');
+			$selector = array('&',
+					'tag' => array('com_user', 'user'),
+					'match' => array('email', '/^'.preg_quote($username, '/').'$/i')
+				);
+			if (isset($id) && $id > 0)
+				$selector['!guid'] = $id;
+			$test = $pines->entity_manager->get_entity(
+					array('class' => user, 'skip_ac' => true),
+					$selector
+				);
+			if (isset($test->guid))
+				return array('result' => false, 'message' => 'That email address is already registered.');
+
+			return array('result' => true, 'message' => (isset($id) ? 'Email is valid.' : 'Email address is valid!'));
+		}
+	}
+
 	public function fill_session() {
 		global $pines;
 		pines_session('write');

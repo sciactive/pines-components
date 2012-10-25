@@ -38,6 +38,28 @@ switch ($_REQUEST['type']) {
 		if (!isset($user->new_email_secret) || $_REQUEST['secret'] != $user->new_email_secret)
 			punt_user('The secret code given does not match this user.');
 
+		if ($pines->config->com_user->email_usernames) {
+			$un_check = $pines->user_manager->check_username($user->new_email_address, $user->guid);
+			if (!$un_check['result']) {
+				$user->print_form();
+				pines_notice($un_check['message']);
+				return;
+			}
+		}
+		$test = $pines->entity_manager->get_entity(
+				array('class' => user, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_user', 'user'),
+					'match' => array('email', '/^'.preg_quote($user->new_email_address, '/').'$/i'),
+					'!guid' => $user->guid
+				)
+			);
+		if (isset($test)) {
+			$user->print_form();
+			pines_notice('There is already a user with that email address. Please use a different email.');
+			return;
+		}
+
 		$user->email = $user->new_email_address;
 		unset($user->new_email_address, $user->new_email_secret);
 		break;

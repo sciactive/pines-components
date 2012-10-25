@@ -28,7 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 	$user->password($_REQUEST['password']);
 }
 
-if (gatekeeper('com_user/usernames'))
+if (!$pines->config->com_user->email_usernames && gatekeeper('com_user/usernames'))
 	$user->username = $_REQUEST['username'];
 if (in_array('name', $pines->config->com_user->user_fields)) {
 	$user->name_first = $_REQUEST['name_first'];
@@ -42,7 +42,7 @@ if (gatekeeper('com_user/enabling')) {
 	else
 		$user->remove_tag('enabled');
 }
-if (in_array('email', $pines->config->com_user->user_fields)) {
+if ($pines->config->com_user->email_usernames || in_array('email', $pines->config->com_user->user_fields)) {
 	// Only send an email if they don't have the ability to edit all users.
 	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
 		if (isset($user->guid) && $user->email != $_REQUEST['email']) {
@@ -203,26 +203,11 @@ if ( gatekeeper('com_user/abilities') ) {
 	}
 }
 
-if (empty($user->username)) {
+
+$un_check = $pines->user_manager->check_username($user->username, $user->guid);
+if (!$un_check['result']) {
 	$user->print_form();
-	pines_notice('Please specify a username.');
-	return;
-}
-if ($pines->config->com_user->max_username_length > 0 && strlen($user->username) > $pines->config->com_user->max_username_length) {
-	$user->print_form();
-	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
-	return;
-}
-$test = $pines->entity_manager->get_entity(
-		array('class' => user, 'skip_ac' => true),
-		array('&',
-			'tag' => array('com_user', 'user'),
-			'match' => array('username', '/^'.preg_quote($_REQUEST['username'], '/').'$/i')
-		)
-	);
-if (isset($test->guid) && !$user->is($test)) {
-	$user->print_form();
-	pines_notice('There is already a user with that username. Please choose a different username.');
+	pines_notice($un_check['message']);
 	return;
 }
 if (in_array('email', $pines->config->com_user->user_fields)) {
@@ -230,24 +215,15 @@ if (in_array('email', $pines->config->com_user->user_fields)) {
 			array('class' => user, 'skip_ac' => true),
 			array('&',
 				'tag' => array('com_user', 'user'),
-				'match' => array('email', '/^'.preg_quote($user->email, '/').'$/i')
+				'match' => array('email', '/^'.preg_quote($user->email, '/').'$/i'),
+				'!guid' => $user->guid
 			)
 		);
-	if (isset($test) && !$user->is($test)) {
+	if (isset($test)) {
 		$user->print_form();
 		pines_notice('There is already a user with that email address. Please use a different email.');
 		return;
 	}
-}
-if (array_diff(str_split($user->username), str_split($pines->config->com_user->valid_chars))) {
-	$user->print_form();
-	pines_notice($pines->config->com_user->valid_chars_notice);
-	return;
-}
-if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
-	$user->print_form();
-	pines_notice($pines->config->com_user->valid_regex_notice);
-	return;
 }
 if (empty($user->password) && !$pines->config->com_user->pw_empty) {
 	$user->print_form();

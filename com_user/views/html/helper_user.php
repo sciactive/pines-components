@@ -29,11 +29,12 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 				<td style="font-weight:bold;">GUID</td>
 				<td><?php echo htmlspecialchars($this->entity->guid); ?></td>
 			</tr>
+			<?php if (!$pines->config->com_user->email_usernames) { ?>
 			<tr>
 				<td style="font-weight:bold;">Username</td>
 				<td><?php echo htmlspecialchars($this->entity->username); ?></td>
 			</tr>
-			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
+			<?php } if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<tr>
 				<td style="font-weight:bold;">Real Name</td>
 				<td><?php echo htmlspecialchars($this->entity->name); ?></td>
@@ -43,7 +44,7 @@ if ($this->render == 'body' && gatekeeper('com_user/listusers')) { ?>
 				<td style="font-weight:bold;">Enabled</td>
 				<td><?php echo $this->entity->has_tag('enabled') ? 'Yes' : 'No'; ?></td>
 			</tr>
-			<?php if (!empty($this->entity->email) && in_array('email', $pines->config->com_user->user_fields)) { ?>
+			<?php if ($pines->config->com_user->email_usernames || (!empty($this->entity->email) && in_array('email', $pines->config->com_user->user_fields))) { ?>
 			<tr>
 				<td style="font-weight:bold;">Email</td>
 				<td><a href="mailto:<?php echo htmlspecialchars($this->entity->email); ?>"><?php echo htmlspecialchars($this->entity->email); ?></a><?php echo isset($this->entity->secret) ? ' (Unverified)' : ''; ?></td>

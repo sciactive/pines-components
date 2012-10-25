@@ -36,7 +36,7 @@ $this->note = 'Please fill in your account details.';
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
-			<?php } if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email <span class="pf-required">*</span></span>
 					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>

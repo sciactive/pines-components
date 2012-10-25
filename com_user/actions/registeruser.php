@@ -32,7 +32,7 @@ if (in_array('name', $pines->config->com_user->reg_fields)) {
 	$user->name_last = $_REQUEST['name_last'];
 	$user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
 }
-if (in_array('email', $pines->config->com_user->reg_fields))
+if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->reg_fields))
 	$user->email = $_REQUEST['email'];
 if (in_array('phone', $pines->config->com_user->reg_fields))
 	$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
@@ -52,22 +52,13 @@ if (in_array('address', $pines->config->com_user->reg_fields)) {
 	$user->address_international = $_REQUEST['address_international'];
 }
 
-if ($pines->config->com_user->max_username_length > 0 && strlen($user->username) > $pines->config->com_user->max_username_length) {
-	$user->register();
-	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
+$un_check = $pines->user_manager->check_username($user->username, $user->guid);
+if (!$un_check['result']) {
+	$user->print_register();
+	pines_notice($un_check['message']);
 	return;
 }
-if (array_diff(str_split($user->username), str_split($pines->config->com_user->valid_chars))) {
-	$user->register();
-	pines_notice($pines->config->com_user->valid_chars_notice);
-	return;
-}
-if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
-	$user->register();
-	pines_notice($pines->config->com_user->valid_regex_notice);
-	return;
-}
-if (in_array('email', $pines->config->com_user->reg_fields)) {
+if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->reg_fields)) {
 	$test = $pines->entity_manager->get_entity(
 			array('class' => user, 'skip_ac' => true),
 			array('&',
@@ -76,13 +67,13 @@ if (in_array('email', $pines->config->com_user->reg_fields)) {
 			)
 		);
 	if (isset($test) && !$user->is($test)) {
-		$user->print_form();
+		$user->print_register();
 		pines_notice('There is already a user with that email address. Please use a different email.');
 		return;
 	}
 }
 if (empty($user->password) && !$pines->config->com_user->pw_empty) {
-	$user->register();
+	$user->print_register();
 	pines_notice('Please specify a password.');
 	return;
 }

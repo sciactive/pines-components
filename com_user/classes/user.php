@@ -51,7 +51,7 @@ class user extends able_object implements user_interface {
 			if ((int) $id === $id)
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user')));
 			else
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('username', (string) $id)));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user'), 'strict' => array(($pines->config->com_user->email_usernames ? 'email' : 'username'), (string) $id)));
 			if (isset($entity)) {
 				$this->guid = $entity->guid;
 				$this->tags = $entity->tags;
@@ -83,6 +83,64 @@ class user extends able_object implements user_interface {
 		$entity = new $class($args[0]);
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
+	}
+
+	/**
+	 * Override the magic method, for email usernames.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return mixed The value of the variable or nothing if it doesn't exist.
+	 */
+	public function &__get($name) {
+		global $pines;
+		if ($pines->config->com_user->email_usernames && $name == 'username')
+			return parent::__get('email') ? parent::__get('email') : parent::__get('username');
+		else
+			return parent::__get($name);
+	}
+
+	/**
+	 * Override the magic method, for email usernames.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return bool
+	 */
+	public function __isset($name) {
+		global $pines;
+		if ($pines->config->com_user->email_usernames && $name == 'username')
+			return (parent::__isset('email') || parent::__isset('username'));
+		else
+			return parent::__isset($name);
+	}
+
+	/**
+	 * Override the magic method, for email usernames.
+	 *
+	 * @param string $name The name of the variable.
+	 * @param string $value The value of the variable.
+	 * @return mixed The value of the variable.
+	 */
+	public function __set($name, $value) {
+		global $pines;
+		if ($pines->config->com_user->email_usernames && ($name == 'username' || $name == 'email')) {
+			parent::__set('username', $value);
+			return parent::__set('email', $value);
+		} else
+			return parent::__set($name, $value);
+	}
+
+	/**
+	 * Override the magic method, for email usernames.
+	 *
+	 * @param string $name The name of the variable.
+	 */
+	public function __unset($name) {
+		global $pines;
+		if ($pines->config->com_user->email_usernames && ($name == 'username' || $name == 'email')) {
+			parent::__unset('username');
+			return parent::__unset('email');
+		} else
+			return parent::__unset($name);
 	}
 
 	public function info($type) {

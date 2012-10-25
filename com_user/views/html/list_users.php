@@ -27,7 +27,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } if (gatekeeper('com_user/edituser')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: <?php echo json_encode(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_user/deleteuser')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_user', 'deleteuser', array('id' => '__title__'))); ?>, delimiter: ','},
@@ -65,10 +64,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>GUID</th>
-			<th>Username</th>
+			<th><?php echo $pines->config->com_user->email_usernames ? 'Email' : 'Username'; ?></th>
 			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<th>Real Name</th>
-			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
+			<?php } if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<th>Email</th>
 			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<th>Timezone</th>
@@ -88,7 +87,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><a data-entity="<?php echo htmlspecialchars($user->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($user->username); ?></a></td>
 			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->name); ?></td>
-			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
+			<?php } if (!$pines->config->com_user->email_usernames && in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<td><a href="mailto:<?php echo htmlspecialchars($user->email); ?>"><?php echo htmlspecialchars($user->email); ?></a></td>
 			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>

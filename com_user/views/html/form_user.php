@@ -35,9 +35,9 @@ if ($pines->config->com_user->check_username) { ?>
 <?php } ?>
 <script type="text/javascript">
 	pines(function(){
-		<?php if ($this->display_username && $pines->config->com_user->check_username) { ?>
+		<?php if (($pines->config->com_user->email_usernames || $this->display_username) && $pines->config->com_user->check_username) { ?>
 		// Check usernames.
-		$("[name=username]", "#p_muid_form").change(function(){
+		$("[name=<?php echo $pines->config->com_user->email_usernames ? 'email' : 'username'; ?>]", "#p_muid_form").change(function(){
 			var username = $(this),
 				id = <?php echo json_encode("{$this->entity->guid}"); ?>;
 			$.ajax({
@@ -114,7 +114,7 @@ if ($pines->config->com_user->check_username) { ?>
 					<img src="<?php echo htmlspecialchars($this->entity->info('avatar')); ?>" alt="Avatar" title="Avatar by Gravatar" />
 				</div>
 			</div>
-			<?php if ($this->display_username) { ?>
+			<?php if (!$pines->config->com_user->email_usernames && $this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<span class="pf-group" style="display: block;">
@@ -144,17 +144,27 @@ if ($pines->config->com_user->check_username) { ?>
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->has_tag('enabled') ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
+			<?php } if ($pines->config->com_user->email_usernames || in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<?php if ($this->display_email_verified && isset($this->entity->secret)) { ?>
 				<label for="p_muid_email"><span class="pf-label">Email</span></label>
 				<div class="pf-group">
 					<input class="pf-field" type="email" name="email" id="p_muid_email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" />
+					<?php if ($pines->config->com_user->email_usernames && $pines->config->com_user->check_username) { ?>
+					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
+					<span class="pf-field picon" id="p_muid_username_message"></span>
+					<?php } ?>
 					<label<?php if ($pines->config->com_user->unconfirmed_access) { ?> title="Disregards changes to the user's secondary groups, and defaults will be used."<?php } ?>><input class="pf-field" type="checkbox" name="email_verified" value="ON" /> Mark this address as verified.</label>
 				</div>
 				<?php } else { ?>
-				<label><span class="pf-label">Email</span>
-					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
+				<label>
+					<span class="pf-label">Email</span>
+					<input class="pf-field" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" />
+					<?php if ($pines->config->com_user->email_usernames && $pines->config->com_user->check_username) { ?>
+					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
+					<span class="pf-field picon" id="p_muid_username_message"></span>
+					<?php } ?>
+				</label>
 				<?php } ?>
 			</div>
 			<?php if (isset($pines->com_mailer)) { ?>

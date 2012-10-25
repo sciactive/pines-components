@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'User Manager',
 	'author' => 'SciActive',
-	'version' => '1.1.1dev',
+	'version' => '1.2.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('user_manager'),

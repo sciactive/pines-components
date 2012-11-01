@@ -41,6 +41,8 @@ foreach ($entities as $stock) {
 		continue;
 	}
 
+	$txs = array();
+
 	if ($_REQUEST['available_change'] == '1' && $stock->available != $available) {
 		if (!in_array(
 				$_REQUEST['available_reason'],
@@ -86,7 +88,7 @@ foreach ($entities as $stock) {
 			$tx->old_available = $old_available;
 			$tx->new_available = $stock->available;
 			$tx->stock = $stock;
-			$tx->save();
+			$txs[] = $tx;
 		}
 	}
 	if ($count == 1 && $_REQUEST['serial_change'] == '1' && $stock->serial != $serial) {
@@ -111,7 +113,7 @@ foreach ($entities as $stock) {
 			$tx->old_serial = $old_serial;
 			$tx->new_serial = $stock->serial;
 			$tx->stock = $stock;
-			$tx->save();
+			$txs[] = $tx;
 		}
 	}
 	if ($_REQUEST['location_change'] == '1' && $stock->location->guid != $location->guid) {
@@ -147,7 +149,7 @@ foreach ($entities as $stock) {
 			$tx->old_location = $old_location;
 			$tx->new_location = $stock->location;
 			$tx->stock = $stock;
-			$tx->save();
+			$txs[] = $tx;
 		}
 	}
 	if ($_REQUEST['vendor_change'] == '1' && $stock->vendor->guid != $vendor->guid) {
@@ -170,7 +172,7 @@ foreach ($entities as $stock) {
 			$tx->old_vendor = $old_vendor;
 			$tx->new_vendor = $stock->vendor;
 			$tx->stock = $stock;
-			$tx->save();
+			$txs[] = $tx;
 		}
 	}
 	if ($_REQUEST['cost_change'] == '1' && $stock->cost != $cost) {
@@ -193,12 +195,14 @@ foreach ($entities as $stock) {
 			$tx->old_cost = $old_cost;
 			$tx->new_cost = $stock->cost;
 			$tx->stock = $stock;
-			$tx->save();
+			$txs[] = $tx;
 		}
 	}
 
 	if ($stock->save()) {
 		pines_notice('Saved stock entry ['.$stock->guid.']');
+		foreach ($txs as $cur_tx)
+			$cur_tx->save();
 	} else {
 		pines_error('Error saving stock entry. Do you have permission?');
 	}

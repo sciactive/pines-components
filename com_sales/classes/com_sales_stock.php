@@ -236,6 +236,24 @@ class com_sales_stock extends entity {
 		$return = $tx->save() && $return;
 		return $return;
 	}
+
+	/**
+	 * Save the stock.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		global $pines;
+
+		if ($pines->config->com_sales->unique_serials && !empty($this->serial)) {
+			$test = $pines->entity_manager->get_entity(array('class' => com_sales_stock, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'stock'), 'strict' => array('serial', $this->serial), '!guid' => $this->guid));
+			if (isset($test)) {
+				pines_notice('There is already a stock entry with that serial. Serials must be unique.');
+				return false;
+			}
+		}
+
+		return parent::save();
+	}
 }
 
 ?>

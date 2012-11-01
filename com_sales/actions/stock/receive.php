@@ -94,7 +94,7 @@ foreach ($products as $cur_product) {
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
 		$origin = $stock = null;
-		$serial = empty($cur_product['serial']) ? null : $cur_product['serial'];
+		$serial = empty($cur_product['serial']) ? null : trim($cur_product['serial']);
 		// Search for the product on a transfer.
 		$origin = $pines->com_sales->get_origin_transfer($cur_product_entity, $serial, $location, $shipments_transfers);
 		if (isset($origin) && isset($origin[0])) {
@@ -106,8 +106,16 @@ foreach ($products as $cur_product) {
 			$origin = $pines->com_sales->get_origin_po($cur_product_entity, $location, $shipments_pos);
 			$stock = com_sales_stock::factory();
 			$stock->product = $cur_product_entity;
-			if ($cur_product_entity->serialized)
+			if ($cur_product_entity->serialized) {
 				$stock->serial = $serial;
+				if ($pines->config->com_sales->unique_serials) {
+					$test = $pines->entity_manager->get_entity(array('class' => com_sales_stock, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'stock'), 'strict' => array('serial', $stock->serial)));
+					if (isset($test)) {
+						pines_notice("There is already a stock entry with the serial {$stock->serial}. Serials must be unique.");
+						continue;
+					}
+				}
+			}
 			$stock->vendor = $origin->vendor;
 			// TODO: Save the stock's cost from the PO.
 			$status = 'received_po';
@@ -118,7 +126,10 @@ foreach ($products as $cur_product) {
 		}
 
 		$stock->receive($status, $origin, $location);
-		$stock->save();
+		if (!$stock->save()) {
+			pines_error("Stock entry for product [{$cur_product_entity->name}] couldn't be saved.");
+			continue;
+		}
 
 		if ($status == 'received_po') {
 			// Check for warehouse items being assigned the incoming stock.

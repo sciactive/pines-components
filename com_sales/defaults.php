@@ -41,6 +41,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'unique_serials',
+		'cname' => 'Require Unique Serials',
+		'description' => 'Require that all serialized stock entries have unique serial numbers.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'remove_stock',
 		'cname' => 'Remove Stock',
 		'description' => 'When (in the sale process) to take stock out of inventory.',

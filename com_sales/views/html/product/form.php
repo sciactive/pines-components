@@ -13,19 +13,74 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide product details in this form.';
 $pines->editor->load();
+$pines->icons->load();
 $pines->uploader->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
 $pines->com_sales->load_jcrop();
 ?>
+<style type="text/css">
+	#p_muid_sku_loading {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 16px;
+		display: none;
+	}
+	#p_muid_sku_message {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 20px;
+		line-height: 16px;
+	}
+</style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'product/save')); ?>">
 	<script type="text/javascript">
 		pines(function(){
-			var vendors = $("#p_muid_vendors");
-			var vendors_table = $("#p_muid_vendors_table");
-			var available_vendors_table = $("#p_muid_available_vendors_table");
-			var vendor_dialog = $("#p_muid_vendor_dialog");
-			var cur_vendor = null;
+			// Check usernames.
+			$("[name=sku]", "#p_muid_form").change(function(){
+				var sku = $(this),
+					id = <?php echo json_encode($this->entity->guid); ?>;
+				$.ajax({
+					url: <?php echo json_encode(pines_url('com_sales', 'product/codesearch')); ?>,
+					type: "POST",
+					dataType: "json",
+					data: {"code": sku.val()},
+					beforeSend: function(){
+						$("#p_muid_sku_loading").show();
+						sku.removeClass("ui-state-error");
+						$("#p_muid_sku_message").removeClass("picon-task-complete").removeClass("picon-task-attempt").html("");
+					},
+					complete: function(){
+						$("#p_muid_sku_loading").hide();
+					},
+					error: function(){
+						sku.addClass("ui-state-error");
+						$("#p_muid_sku_message").addClass("picon-task-attempt").html("Error checking SKU. Please check your internet connection.");
+					},
+					success: function(data){
+						if (!data && data != null) {
+							sku.addClass("ui-state-error");
+							$("#p_muid_sku_message").addClass("picon-task-attempt").html("Error checking SKU.");
+							return;
+						}
+						if (data == null || data.guid == id) {
+							sku.removeClass("ui-state-error");
+							$("#p_muid_sku_message").addClass("picon-task-complete").html("SKU is valid!");
+							return;
+						}
+						sku.addClass("ui-state-error");
+						$("#p_muid_sku_message").addClass("picon-task-attempt").html('That SKU belongs to <a data-entity="'+pines.safe(data.guid)+'" data-entity-context="com_sales_product">'+pines.safe(data.name)+'</a>.');
+					}
+				});
+			}).blur(function(){
+				$(this).change();
+			});
+
+			var vendors = $("#p_muid_vendors"),
+				vendors_table = $("#p_muid_vendors_table"),
+				available_vendors_table = $("#p_muid_available_vendors_table"),
+				vendor_dialog = $("#p_muid_vendor_dialog"),
+				cur_vendor = null;
 
 			vendors_table.pgrid({
 				pgrid_paginate: false,
@@ -182,7 +237,12 @@ $pines->com_sales->load_jcrop();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Product SKU</span>
-					<input class="pf-field" type="text" name="sku" size="24" value="<?php echo htmlspecialchars($this->entity->sku); ?>" /></label>
+					<span class="pf-group" style="display: block;">
+						<input class="pf-field" type="text" name="sku" size="24" value="<?php echo htmlspecialchars($this->entity->sku); ?>" />
+						<span class="pf-field picon picon-throbber loader" id="p_muid_sku_loading" style="display: none;">&nbsp;</span>
+						<span class="pf-field picon" id="p_muid_sku_message"></span>
+					</span>
+				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer</span>

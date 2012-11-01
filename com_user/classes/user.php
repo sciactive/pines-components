@@ -93,9 +93,12 @@ class user extends able_object implements user_interface {
 	 */
 	public function &__get($name) {
 		global $pines;
-		if ($pines->config->com_user->email_usernames && $name == 'username')
-			return parent::__get('email') ? parent::__get('email') : parent::__get('username');
-		else
+		if ($pines->config->com_user->email_usernames && $name == 'username') {
+			if (parent::__get('email'))
+				return parent::__get('email');
+			else
+				return parent::__get('username');
+		} else
 			return parent::__get($name);
 	}
 

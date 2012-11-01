@@ -947,7 +947,7 @@ class com_sales_sale extends entity {
 
 		// Put the old item back into inventory.
 		$last_tx = $pines->entity_manager->get_entity(
-				array('reverse' => true, 'class' => com_sales_stock),
+				array('reverse' => true, 'class' => com_sales_tx),
 				array('&',
 					'tag' => array('com_sales', 'transaction', 'stock_tx'),
 					'strict' => array('type', 'removed'),
@@ -1221,7 +1221,7 @@ class com_sales_sale extends entity {
 
 		// Put the old item back into inventory.
 		$last_tx = $pines->entity_manager->get_entity(
-				array('reverse' => true, 'class' => com_sales_stock),
+				array('reverse' => true, 'class' => com_sales_tx),
 				array('&',
 					'tag' => array('com_sales', 'transaction', 'stock_tx'),
 					'strict' => array('type', 'removed'),
@@ -1893,10 +1893,10 @@ class com_sales_sale extends entity {
 					if (!isset($cur_stock->guid))
 						continue;
 					$last_tx = $pines->entity_manager->get_entity(
-							array('reverse' => true, 'class' => com_sales_stock),
+							array('reverse' => true, 'class' => com_sales_tx),
 							array('&',
 								'tag' => array('com_sales', 'transaction', 'stock_tx'),
-								'data' => array('type', 'removed'),
+								'strict' => array('type', 'removed'),
 								'ref' => array('ref', $this)
 							)
 						);

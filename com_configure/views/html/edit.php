@@ -10,7 +10,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = htmlspecialchars("Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})");
+$this->title = htmlspecialchars("Editing Configuration for {$this->entity->name}");
 if ($this->entity->per_user) {
 	if ($this->entity->user->is_com_configure_condition)
 		$this->note = 'For conditional configuration <a data-entity="'.htmlspecialchars($this->entity->user->guid).'" data-entity-context="com_configure_condition">'.htmlspecialchars($this->entity->user->name).'</a>.';
@@ -21,6 +21,10 @@ if ($this->entity->per_user) {
 }
 $pines->com_ptags->load();
 ?>
+<div class="hero-unit">
+	<h1><?php echo htmlspecialchars("{$this->entity->info->name} {$this->entity->info->version}"); ?></h1>
+	<p>Check a setting to set it manually, or leave it unchecked to use the <?php echo $this->entity->per_user ? 'system configured' : 'default'; ?> setting.</p>
+</div>
 <style type="text/css">
 	#p_muid_form .setting .ui-ptags {
 		display: inline-block;
@@ -46,17 +50,14 @@ $pines->com_ptags->load();
 		$(".setting-label", "#p_muid_form").each(function(){
 			var label = $(this);
 			label.popover({
+				trigger: 'hover',
 				title: label.find(".cname").text(),
-				content: "<p>"+label.find(".description").html()+"<br /><br /><strong>Default:</strong> "+label.nextAll(".default").children().text()+"</p>",
-				selector: ".cname"
+				content: "<p>"+label.find(".description").html()+"<br /><br /><strong>Default:</strong> "+label.nextAll(".default").children().text()+"</p>"
 			})
 		});
 	});
 </script>
 <form id="p_muid_form" class="pf-form" action="<?php echo htmlspecialchars(pines_url('com_configure', 'save')); ?>" method="post">
-	<div class="pf-element pf-heading">
-		<p>Check a setting to set it manually, or leave it unchecked to use the <?php echo $this->entity->per_user ? 'system configured' : 'default'; ?> setting.</p>
-	</div>
 	<?php foreach ($this->entity->defaults as $cur_var) {
 		if (key_exists($cur_var['name'], $this->entity->config_keys)) {
 			$is_default = false;
@@ -66,21 +67,19 @@ $pines->com_ptags->load();
 			$cur_value = $cur_var['value'];
 		} ?>
 	<div class="pf-element pf-full-width">
-		<label class="setting-label">
-			<span class="pf-label">
-				<input class="p_muid_default_checkbox" type="checkbox" name="manset_<?php echo htmlspecialchars($cur_var['name']); ?>" value="ON" <?php echo $is_default ? '' : 'checked="checked" '; ?>/>
-				<span class="cname"><?php echo htmlspecialchars($cur_var['cname']); ?></span>
-				<span class="pf-note">
-					<?php
-					if (strlen($cur_var['description']) > 60)
-						$desc = substr($cur_var['description'], 0, 60).'&hellip;';
-					else
-						$desc = $cur_var['description'];
-					echo str_replace("\n", '<br />', htmlspecialchars($desc, null, null, false));
-					?>
-					<span class="description" style="display: none;">
-						<?php echo str_replace("\n", '<br />', htmlspecialchars($cur_var['description'])); ?>
-					</span>
+		<label class="pf-label setting-label">
+			<input class="p_muid_default_checkbox" type="checkbox" name="manset_<?php echo htmlspecialchars($cur_var['name']); ?>" value="ON" <?php echo $is_default ? '' : 'checked="checked" '; ?>/>
+			<span class="cname"><?php echo htmlspecialchars($cur_var['cname']); ?></span>
+			<span class="pf-note">
+				<?php
+				if (strlen($cur_var['description']) > 60)
+					$desc = substr($cur_var['description'], 0, 60).'&hellip;';
+				else
+					$desc = $cur_var['description'];
+				echo str_replace("\n", '<br />', htmlspecialchars($desc, null, null, false));
+				?>
+				<span class="description" style="display: none;">
+					<?php echo str_replace("\n", '<br />', htmlspecialchars($cur_var['description'])); ?>
 				</span>
 			</span>
 		</label>
@@ -124,10 +123,10 @@ $pines->com_ptags->load();
 			<?php if (is_array($cur_var['value'])) {
 				$output = array();
 				foreach ($cur_var['value'] as $key => $cur_default)
-					$output[] = '<div class="pf-field"><span class="label">'.htmlspecialchars(print_r(is_string($key) ? $key : $cur_default, true)).'</span></div>';
+					$output[] = '<div class="pf-field"><span class="text-info">'.htmlspecialchars(print_r(is_string($key) ? $key : $cur_default, true)).'</span></div>';
 				echo implode('<span style="display: none;">, </span>', $output);
 			} else {
-				echo '<div class="pf-field"><span class="label">';
+				echo '<div class="pf-field"><span class="text-info">';
 				if (is_bool($cur_var['value']))
 					$cur_var['value'] = $cur_var['value'] ? 'Yes' : 'No';
 				echo htmlspecialchars(print_r($cur_var['value'], true));

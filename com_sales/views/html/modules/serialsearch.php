@@ -79,6 +79,7 @@ $pines->icons->load();
 								"<p><strong>Manufacturer:</strong> "+pines.safe(this.manufacturer)+"</p>"+
 								"<p><strong>Manufacturer SKU:</strong> "+pines.safe(this.manufacturer_sku)+"</p>";
 							stock_struct.push($("<div class=\"entry clearfix alert alert-success\">"+cur_stock_link+" | "+cur_product_link+"<br/>Last Transaction: "+pines.safe(this.last_transaction)+"</div>").popover({
+								trigger: 'hover',
 								title: "Stock Entry "+pines.safe(this.guid),
 								content: content
 							}));

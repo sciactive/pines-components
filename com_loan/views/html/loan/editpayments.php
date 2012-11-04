@@ -330,6 +330,7 @@ switch ($this->entity->payment_frequency) {
 										<script type="text/javascript">
 											pines(function(){
 												$("#p_muid_next_payment").popover({
+													trigger: 'hover',
 													title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars((string) ($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount']) + $pines->com_sales->round($this->entity->payments[0]['past_due'])))); ?>+'</span>',
 													content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true)));?>+'</span><br/>'+<?php echo json_encode(htmlspecialchars($payment_frequency));?>+' Payment: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true))); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
 													placement: 'right'
@@ -2230,6 +2231,7 @@ switch ($this->entity->payment_frequency) {
 												<script type="text/javascript">
 													pines(function(){
 														$("#p_muid_next_payment2").popover({
+															trigger: 'hover',
 															title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars((string) ($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount']) + $pines->com_sales->round($this->entity->payments[0]['past_due'])))); ?>+'</span>',
 															content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true)));?>+'</span><br/>'+<?php echo json_encode(htmlspecialchars($payment_frequency));?>+' Payment: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true))); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
 															placement: 'right'
@@ -2392,6 +2394,7 @@ switch ($this->entity->payment_frequency) {
 										<script type="text/javascript">
 											pines(function(){
 												$("#p_muid_tooltip_<?php echo ($uniq2); ?>").popover({
+													trigger: 'hover',
 													title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid_expected'] - $payment['payment_interest_paid'], true))); ?>,
 													content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid_expected'], true)));?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true))); ?>+'</span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
 													placement: "right"
@@ -2440,6 +2443,7 @@ switch ($this->entity->payment_frequency) {
 										<script type="text/javascript">
 											pines(function(){
 												$("#p_muid_tooltip_<?php echo $uniq; ?>").popover({
+													trigger: 'hover',
 													title: 'Unpaid Balance: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'] - $payment['scheduled_balance'], true))); ?>,
 													content: 'Previous Remaining Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'], true))); ?>+'</span><br/>Expected Balance: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['scheduled_balance'], true))); ?>+'</span><br/><hr style="margin: 10px 0;"/>Unpaid Payment Principal: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_principal_expected'], true))); ?>+'</span><br/>Accumulated Unpaid Principal: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['remaining_balance'] - $payment['scheduled_balance'], true))); ?>+'</span><br/><br/><span style="font-size:.8em;">Calculated unpaid balance based on the terms of the loan at the time of payment.</span>',
 													placement: "right"

@@ -124,6 +124,7 @@ if ($this->is_widget) {
 				else
 					header = "<div><strong>Start:</strong> <span>"+pines.safe($.fullCalendar.formatDate(event.start, "ddd MMM dS, yyyy h:mm tt"))+"</span></div><div><strong>End:</strong> <span>"+pines.safe($.fullCalendar.formatDate(event.end, "ddd MMM dS, yyyy h:mm tt"))+"</span></div>";
 				element.popover({
+					trigger: 'hover',
 					title: pines.safe(event.title),
 					content: header+"<p>"+pines.safe(event.info)+"</p>",
 					placement: "top"

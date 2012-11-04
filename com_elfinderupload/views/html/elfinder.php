@@ -78,7 +78,7 @@ pines(function(){$(".puploader").each(function(){
 				pfile.val(value).attr({
 					"data-original-title": title,
 					"data-content": content
-				}).popover({placement: "bottom"});
+				}).popover({trigger: 'hover', placement: "bottom"});
 				pfile.elfdlg.dialog("close");
 				pfile.change();
 			}

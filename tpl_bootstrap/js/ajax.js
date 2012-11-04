@@ -90,7 +90,6 @@ var load_page_ajax = function(url, type, data){
 			$.each(data.notices, function(){
 				pines.notice(pines.safe(this), "Notice");
 			});
-			pines.tpl_bootstrap_page_ready();
 			// Now run DOM ready scripts.
 			pines.play();
 		}

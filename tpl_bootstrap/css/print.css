@@ -64,34 +64,11 @@ body.printheader #page_title {
 	padding: 0 !important;
 	border: none !important;
 }
-.module .module_title.ui-widget-header {
-	border-radius: 0;
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
-	border-top: none;
-	border-left: none;
-	border-right: none;
-	background-image: none;
-}
 .module .module_title, .module .module_content {
     padding-left: 0;
     padding-right: 0;
 }
-body.shadows .module.ui-widget-content {
-	box-shadow: none;
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-}
-body.shadows .module_title.ui-widget-header {
-	box-shadow: none;
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-}
 
-/* Titlebar Icons */
-.module_maximize, .module_minimize {
-	display: none !important;
-}
 /* Pines Notify */
 .ui-pnotify-history-container {
 	display: none !important;

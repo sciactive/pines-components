@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Bootstrap Template',
 	'author' => 'SciActive',
-	'version' => '0.0.1alpha',
+	'version' => '1.0.0alpha1',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('template'),
@@ -23,6 +23,7 @@ return array(
 		'top',
 		'header',
 		'header_right',
+		'breadcrumbs',
 		'pre_content',
 		'left',
 		'content_top_left',

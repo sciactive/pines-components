@@ -31,7 +31,7 @@ return array(
 		'name' => 'width',
 		'cname' => 'Width',
 		'description' => 'Fluid or fixed width.',
-		'value' => 'fluid',
+		'value' => 'fixed',
 		'options' => array(
 			'Fluid Width' => 'fluid',
 			'Fixed Width' => 'fixed',
@@ -42,7 +42,7 @@ return array(
 		'name' => 'use_header_image',
 		'cname' => 'Use Header Image',
 		'description' => 'Show a header image (instead of just text) at the top of the page.',
-		'value' => true,
+		'value' => false,
 		'peruser' => true,
 	),
 	array(
@@ -63,7 +63,7 @@ return array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
 		'description' => 'Use fancier styling modifications.',
-		'value' => array('printfix', 'printheader', 'shadows'),
+		'value' => array('printfix', 'printheader'),
 		'options' => array(
 			'Hide non-content positions.' => 'printfix',
 			'Show the page header when non-content positions are hidden.' => 'printheader',

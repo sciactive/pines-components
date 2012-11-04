@@ -56,7 +56,10 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/themes/bootstrap/bootstrap.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
-	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/template.js"></script>
+	<script type="text/javascript">pines(function(){if ($.pnotify) {
+		$.pnotify.defaults.opacity = .9;
+		$.pnotify.defaults.delay = 15000;
+	}});</script>
 	<?php if ($pines->config->tpl_bootstrap->ajax) { ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/ajax.js"></script>
 	<?php } ?>
@@ -111,16 +114,19 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			</div>
 		</div>
 	</div>
-	<div id="page" class="container<?php echo $width; ?>">
-		<div id="header">
-			<div class="well">
-				<div class="row-fluid">
-					<div class="span4">
-					</div>
-					<div id="header_position" class="span4"><?php echo $pines->page->render_modules('header', 'module_header'); ?>&nbsp;</div>
-					<div id="header_right" class="span4"><?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?></div>
+	<div id="header" class="well well-large">
+		<div class="container<?php echo $width; ?>">
+			<div class="row-fluid">
+				<div class="span12 positions">
+					<div id="header_position"><?php echo $pines->page->render_modules('header', 'module_header'); ?></div>
+					<div id="header_right"><?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?></div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="page" class="container<?php echo $width; ?>">
+		<div class="row-fluid">
+			<div id="breadcrumbs" class="span12"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 		</div>
 		<div class="row-fluid">
 			<div id="pre_content" class="span12"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
@@ -128,14 +134,13 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		<div id="column_container">
 			<div class="row-fluid">
 				<?php if (in_array($pines->config->tpl_bootstrap->variant, array('threecol', 'twocol-sideleft'))) { ?>
-				<div id="left" class="span2">
+				<div id="left" class="span3">
 					<?php echo $pines->page->render_modules('left', 'module_side'); ?>
 					<?php if ($pines->config->tpl_bootstrap->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_side'); } ?>&nbsp;
 				</div>
 				<?php } ?>
-				<div class="<?php echo $pines->config->tpl_bootstrap->variant == 'full-page' ? 'span12' : ($pines->config->tpl_bootstrap->variant == 'threecol' ? 'span8' : 'span10'); ?>">
+				<div class="<?php echo $pines->config->tpl_bootstrap->variant == 'full-page' ? 'span12' : ($pines->config->tpl_bootstrap->variant == 'threecol' ? 'span6' : 'span9'); ?>">
 					<div id="content_container">
-						<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 						<div class="row-fluid">
 							<div id="content_top_left" class="span6"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
 							<div id="content_top_right" class="span6"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
@@ -148,7 +153,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 					</div>
 				</div>
 				<?php if (in_array($pines->config->tpl_bootstrap->variant, array('threecol', 'twocol-sideright'))) { ?>
-				<div id="right" class="span2">
+				<div id="right" class="span3">
 					<?php if ($pines->config->tpl_bootstrap->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_side'); } ?>
 					<?php echo $pines->page->render_modules('right', 'module_side'); ?>&nbsp;
 				</div>
@@ -158,9 +163,11 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		<div class="row-fluid">
 			<div id="post_content" class="span12"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
 		</div>
-		<div id="footer" class="well">
+	</div>
+	<div id="footer" class="well">
+		<div class="container<?php echo $width; ?>">
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span12 positions">
 					<div id="footer_position"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
 					<p id="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
 				</div>

@@ -51,7 +51,7 @@ class tpl_bootstrap extends template {
 				break;
 			case 'main_menu':
 			default:
-				$return = '<ul class="nav dropdown dropdown-horizontal">';
+				$return = '<ul class="nav">';
 				break;
 		}
 		foreach ($menu as $key => &$value) {
@@ -71,12 +71,13 @@ class tpl_bootstrap extends template {
 	 */
 	public function sub_menu(&$menu, $top_level = true) {
 		$count = count($menu);
-		$return = '<li class="'.($menu[0]['current_page'] || $menu[0]['current_page_parent'] ? ' active' : '').'"><a href="'.
+		$return = '<li class="'.(($count > 1) ? ($top_level ? 'dropdown' : 'dropdown-submenu') : '').($menu[0]['current_page'] || $menu[0]['current_page_parent'] ? ' active' : '').'"><a href="'.
 			(isset($menu[0]['href']) ? htmlspecialchars($menu[0]['href']) : 'javascript:void(0);').'"'.
 			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
-			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '')
+			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '').
+			(($count > 1) ? ' data-toggle="dropdown" class="dropdown-toggle"' : '')
 			.'>'.htmlspecialchars($menu[0]['text']).
-			($count > 1 ? ($top_level ? '<span class="icon-caret-down"></span>' : '<span class="icon-caret-right"></span>') : '').'</a>';
+			(($count > 1 && $top_level) ? '<b class="caret"></b>' : '').'</a>';
 		if ($count > 1) {
 			$return .= '<ul class="dropdown-menu">';
 			foreach ($menu as $key => &$value) {

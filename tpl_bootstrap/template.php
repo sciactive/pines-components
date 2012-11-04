@@ -56,9 +56,6 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/themes/bootstrap/bootstrap.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
-	<?php if ($pines->config->tpl_bootstrap->menu_delay) { ?>
-	<script type="text/javascript">pines.tpl_bootstrap_menu_delay = true;</script>
-	<?php } ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/template.js"></script>
 	<?php if ($pines->config->tpl_bootstrap->ajax) { ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/ajax.js"></script>
@@ -93,9 +90,9 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		<?php
 		}
 	?></div>
-	<div id="nav" class="navbar navbar-fixed-top">
+	<div id="nav" class="navbar navbar-fixed-top<?php echo $pines->config->tpl_bootstrap->alt_navbar ? ' navbar-inverse' : ''; ?>">
 		<div class="navbar-inner">
-			<div class="container">
+			<div class="container<?php echo $width; ?>">
 				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>

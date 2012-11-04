@@ -53,6 +53,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'alt_navbar',
+		'cname' => 'Alternate Navbar',
+		'description' => 'Use the Bootstrap theme\'s alternate navbar styling.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
 		'description' => 'Use fancier styling modifications.',
@@ -62,13 +69,6 @@ return array(
 			'Show the page header when non-content positions are hidden.' => 'printheader',
 			'No gutters on the sides.' => 'nosidegutters',
 		),
-		'peruser' => true,
-	),
-	array(
-		'name' => 'menu_delay',
-		'cname' => 'Menu Delay',
-		'description' => 'Make menus delay before closing when the mouse leaves them. This makes it easier to navigate menus, but the menus may become slower.',
-		'value' => false,
 		'peruser' => true,
 	),
 	array(

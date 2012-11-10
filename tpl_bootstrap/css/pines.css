@@ -54,6 +54,8 @@ body {
 	border-top-width: 1px !important;
 	border-bottom: 0 none !important;
 	margin: 4em 0 0;
+	bottom: 0;
+	width: 100%;
 }
 #header_position {
 	float: left;

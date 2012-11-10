@@ -96,6 +96,19 @@ class tpl_bootstrap extends template {
 			$params['tpl_bootstrap_ajax'] = 1;
 		return parent::url($component, $action, $params, $full_location);
 	}
+	
+	/**
+	 * Verify a color.
+	 * 
+	 * @param string $color The color to verify.
+	 * @return boolean Whether it is a color (true) or not (false).
+	 */
+	public function verify_color($color) {
+		if (empty($color))
+			return false;
+		if (preg_match('/^(?:#[a-f0-9]{3,6}|(?:rgb|hsl)a?\( ?[\d.]+%?, ?[\d.]+%?, ?[\d.]+%?(?:,? ?[\d.]+)?\))$/i', $color))
+			return true;
+	}
 }
 
 ?>

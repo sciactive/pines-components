@@ -275,6 +275,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			// Filter non warehouse products.
 			if ($cur_product['delivery'] != 'warehouse' || ($cur_product['ordered'] xor $this->ordered))
 				continue;
+			// Have they all been returned?
+			if ($cur_product['quantity'] <= $cur_product['returned_quantity'])
+				continue;
 			// Have they already all been assigned?
 			if (count($cur_product['stock_entities']) >= ($cur_product['quantity'] + $cur_product['returned_quantity']))
 				continue;
@@ -294,7 +297,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td<?php echo $style; ?>><a data-entity="<?php echo htmlspecialchars($sale->group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($sale->group->name); ?></a></td>
 			<td<?php echo $style; ?>><a data-entity="<?php echo htmlspecialchars($cur_product['salesperson']->guid); ?>" data-entity-context="user"><?php echo htmlspecialchars($cur_product['salesperson']->name); ?></a></td>
 			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['entity']->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($cur_product['entity']->name); ?></a></td>
-			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - count($cur_product['returned_stock_entities']))); ?></td>
+			<td<?php echo $style; ?>><?php echo htmlspecialchars(($cur_product['quantity'] - (int) $cur_product['returned_quantity']) - (count($cur_product['stock_entities']) - count($cur_product['returned_stock_entities']))); ?></td>
 			<td<?php echo $style; ?>><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($sale->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($sale->customer->name); ?></a></td>
 			<td<?php echo $style; ?>><?php if (isset($cur_product['po'])) { ?><a<?php echo $style; ?> data-entity="<?php echo htmlspecialchars($cur_product['po']->guid); ?>" data-entity-context="com_sales_po"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a><?php } ?></td>
 			<td<?php echo $style; ?>>

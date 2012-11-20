@@ -109,7 +109,6 @@ class JabberAuth {
 	var $stdout;  /* stdout file pointer */
 
 	function JabberAuth() {
-		@define_syslog_variables();
 		@openlog("pipe-auth", LOG_NDELAY, LOG_SYSLOG);
 
 		if ($this->debug) {

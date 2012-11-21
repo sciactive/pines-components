@@ -108,7 +108,7 @@ class com_sales extends component {
 				continue;
 			$arguments['name'] = $cur_action['name'];
 			for ($i = 0; $i < (int) $times; $i++)
-				call_user_func_array($cur_action['callback'], array($arguments));
+				call_user_func_array($cur_action['callback'], array(&$arguments));
 		}
 		return true;
 	}

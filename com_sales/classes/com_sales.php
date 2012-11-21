@@ -70,7 +70,7 @@ class com_sales extends component {
 				continue;
 			if (!is_callable($cur_type['callback']))
 				continue;
-			$result = call_user_func_array($cur_type['callback'], array($arguments));
+			$result = call_user_func_array($cur_type['callback'], array(&$arguments));
 			return true;
 		}
 	}

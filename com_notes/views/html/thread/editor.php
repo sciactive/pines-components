@@ -201,7 +201,7 @@ $pines->icons->load();
 					return;
 				}
 				var text = textarea.val();
-				if (text == "" || textarea.css("font-style") == "italic") {
+				if (text.match(/^\s*$/) || textarea.css("font-style") == "italic") {
 					alert("Please enter a reply first.");
 					return;
 				}

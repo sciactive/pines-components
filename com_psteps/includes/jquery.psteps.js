@@ -58,20 +58,17 @@
 
 			// Function that takes step names from titles and makes a heading in
 			// the step content.
-			psteps.make_step_content_headings = function() {
+			psteps.make_step_content_headings = function(){
 				psteps.find('.step-title').each(function(r){
 					var step_name = $(this).find('.step-name'),
 						step_content = psteps.find('.step-content').eq(r);
 					if (step_name.length == 1) {
-						if (opts.content_headings_hr)
-							var the_hr = '<hr/>';
-						else
-							the_hr = '';
-						var the_heading = '<div class="step-content-name"><'+opts.content_headings_element+'>'+step_name.html()+'</'+opts.content_headings_element+'>'+the_hr+'</div>'
+						var hr = opts.content_headings_hr ? '<hr/>' : '',
+							heading = '<div class="step-content-name"><'+opts.content_headings_element+'>'+step_name.html()+'</'+opts.content_headings_element+'>'+hr+'</div>'
 						if (opts.content_headings_after != false && step_content.find(opts.content_headings_after).length > 0)
-							step_content.find(opts.content_headings_after).after(the_heading)
+							step_content.find(opts.content_headings_after).after(heading)
 						else
-							step_content.prepend(the_heading);
+							step_content.prepend(heading);
 					}
 				});
 			};
@@ -174,18 +171,34 @@
 					}
 				});
 				psteps.toggle_buttons_function();
-				psteps.trigger('validation_complete');
-			}
+				psteps.trigger('validation_complete.psteps');
+			};
 
 			// Function for toggling send/next buttons as btn-success or btn-info.
 			psteps.toggle_buttons_function = function(){
+				// Get proper button name
+				var next_name = next_button.attr('data-btn-name'),
+					send_name = send_button.attr('data-btn-name'),
+					back_name = back_button.attr('data-btn-name');
+					
+				if (next_name != undefined && next_name.length)
+					next_button.html(next_name);
+				if (send_name != undefined && send_name.length)
+					send_button.html(send_name);
+				if (back_name != undefined && back_name.length)
+					back_button.html(back_name);
+				
 				// Toggle whether to show send or next.
 				if (psteps.find('.step-content').last().hasClass('step-active')) {
-					next_button.hide();
-					send_button.show();
+					if (!next_button.hasClass('btn-manual'))
+						next_button.hide();
+					if (!send_button.hasClass('btn-manual'))
+						send_button.show();
 				} else {
-					next_button.show();
-					send_button.hide();
+					if (!next_button.hasClass('btn-manual'))
+						next_button.show();
+					if (!send_button.hasClass('btn-manual'))
+						send_button.hide();
 				}
 
 				// Changes color of send/next buttons based upon completion.
@@ -222,34 +235,38 @@
 					}
 				} else
 					back_button.hide();
-			}
+			};
 
 			// Function to go to a certain step
 			psteps.go_to_step = function(step_num){
-				var c = 1,
-					last_active_title = psteps.find('.step-title.last-active'),
+				var last_active_title = psteps.find('.step-title.last-active'),
 					last_active_content = psteps.find('.step-content.last-active'),
 					active_step = psteps.find('.step-content.step-active'),
-					active_title = psteps.find('.step-title.step-active'),
-					show_step,
-					show_title;
+					active_title = psteps.find('.step-title.step-active');
 
 				if (step_num > num_steps)
 					return;
 
-				psteps.find('.step-content').each(function(){
-					if (c == step_num)
-						show_step = $(this);
-					c++;
-				});
-				c = 1;
-				psteps.find('.step-title').each(function(){
-					if (c == step_num)
-						show_title = $(this);
-					c++;
-				});
+				var show_step = psteps.find('.step-content').eq(step_num-1),
+					show_title = psteps.find('.step-title').eq(step_num-1);
 
-				opts.steps_hide.call(active_step);
+				// If you're at go to step, and there's step-resumes, the step-transition-processing
+				// was not removed. Remove step-resume class if you don't want to remove the step
+				// transition processing class.
+				if (psteps.find('.step-resume').length) {
+					psteps.find('.step-transition-processing').removeClass('step-transition-processing');
+				}
+				if (active_title.hasClass('step-transition') && !psteps.find('.step-resume').length && !first_time)
+					opts.steps_transition.call(active_step);
+				if (active_title.hasClass('step-transition-processing')) {
+					psteps.find('.step-resume').removeClass('step-resume');
+					show_title.addClass('step-resume');
+					return;
+				} else
+					psteps.find('.step-resume').removeClass('step-resume');
+
+				if (!first_time)
+					opts.steps_hide.call(active_step);
 
 				last_active_title.removeClass('last-active');
 				last_active_content.removeClass('last-active');
@@ -267,70 +284,62 @@
 				
 				opts.steps_show.call(show_step);
 
-				// If visisted traversing,
+				// If visited traversing,
 				if (opts.traverse_titles == 'visited')
 					active_title.css('cursor', 'pointer');
 
+				// Don't validate upon loading the first time.
 				if (first_time)
 					first_time = false;
 				else
-					psteps.trigger('validate_psteps');
+					psteps.trigger('validate.psteps');
 				psteps.toggle_buttons_function();
-			}
+			};
 
 			// Function to go to the next step (calls go to step)
-			psteps.next_step_function = function(){
-				var preceeding_titles = psteps.find('.step-title.step-active').prevAll('.step-title'),
-					num = preceeding_titles.length + 2;
-				psteps.go_to_step(num);
-			}
+			psteps.go_to_next_step = function(){
+				var preceeding_titles = psteps.find('.step-title.step-active').prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length + 2);
+			};
 
 			// Function to go to the next step (calls go to step)
-			psteps.previous_step_function = function(){
-				var preceeding_titles = psteps.find('.step-title.step-active').prevAll('.step-title'),
-					num = preceeding_titles.length;
-				psteps.go_to_step(num);
-			}
+			psteps.go_to_prev_step = function(){
+				var preceeding_titles = psteps.find('.step-title.step-active').prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length);
+			};
 
-			// Function for traversing steps through the titles.
-			psteps.traverse_titles_function = function(){
-				psteps.change_traverse(opts.traverse_titles);
-			}
-
-			// Function to set or change the way titles are traversed. Used by the traver_titles_function
-			// and the binding events that can be triggered to change the type.
-			psteps.change_traverse = function(type) {
-				if (type == 'always'){
-					var step_titles = psteps.find('.step-title');
-					step_titles.unbind('click')
-					step_titles.click(function(){
+			// Function to set or change the way titles are traversed. Used by
+			// the binding events that can be triggered to change the type.
+			psteps.change_traverse = function(type){
+				var step_titles = psteps.find('.step-title');
+				psteps.off('click', '.step-title:not(.step-notraverse)');
+				psteps.off('click', '.step-title.step-active:not(.step-notraverse)');
+				psteps.off('click', '.step-title.step-visited:not(.step-notraverse)');
+				if (type == 'always') {
+					step_titles.css('cursor', 'pointer');
+					psteps.on('click', '.step-title:not(.step-notraverse)', function(){
 						var clicked_title = $(this),
-							all_prev = clicked_title.prevAll('.step-title'),
-							click_num = all_prev.length + 1;
-						psteps.go_to_step(click_num);
+							all_prev = clicked_title.prevAll('.step-title');
+						psteps.go_to_step(all_prev.length + 1);
 					}).css('cursor', 'pointer');
 				} else if (type == 'visited') {
-					var titles_visited = psteps.find('.step-title.step-visited');
-					titles_visited.css('cursor', 'pointer');
-					psteps.off('click', '.step-title.step-visited');
-					psteps.on('click', '.step-title.step-visited', function(){
+					step_titles.css('cursor', 'default').filter('.step-visited').css('cursor', 'pointer');
+					psteps.on('click', '.step-title.step-visited:not(.step-notraverse)', function(){
 						var clicked_title = $(this);
 						// if the title is the "next" title from the current view,
 						// trigger next.
 						// if the title is the "previous" title from the current view,
 						// trigger previous.
 						if (clicked_title.prevAll('.step-title:first').hasClass('step-active'))
-							psteps.next_step_function();
+							psteps.go_to_next_step();
 						else if (clicked_title.nextAll('.step-title:first').hasClass('step-active'))
-							psteps.previous_step_function();
+							psteps.go_to_prev_step();
 						else {
-							var all_prev = clicked_title.prevAll('.step-title'),
-								click_num = all_prev.length + 1;
-							psteps.go_to_step(click_num);
+							var all_prev = clicked_title.prevAll('.step-title');
+							psteps.go_to_step(all_prev.length + 1);
 						}
 					});
 				} else if (type == 'never') {
-					step_titles = psteps.find('.step-title');
 					step_titles.css('cursor', 'default');
 					// this is for never, which this is actually super useful.
 					// It allows the user to click on the current step, which
@@ -339,27 +348,20 @@
 					// trigger a click on this step (which shows the error message)
 					// from the validation rule. This allows for unique error
 					// messages to show on the next button.
-					psteps.off('click', '.step-title.step-active')
-					psteps.on('click', '.step-title.step-active', function(){
+					psteps.on('click', '.step-title.step-active:not(.step-notraverse)', function(){
 						var clicked_title = $(this),
-							all_prev = clicked_title.prevAll('.step-title'),
-							click_num = all_prev.length + 1;
-						psteps.go_to_step(click_num);
+							all_prev = clicked_title.prevAll('.step-title');
+						psteps.go_to_step(all_prev.length + 1);
 					});
 				}
-			}
+				step_titles.filter('.step-notraverse').css('cursor', 'default');
+			};
 
 
 			// Trigger Error in Title
-			psteps.trigger_error = function(the_step) {
-				var step_num = the_step.prevAll('.step-content').length + 1,
-					title,
-					c = 1;
-				psteps.find('.step-title').each(function(){
-					if (c == step_num)
-						title = $(this);
-					c++;
-				});
+			psteps.trigger_error = function(step){
+				var step_num = step.prevAll('.step-content').length + 1,
+					title = psteps.find('.step-title').eq(step_num-1);
 				if (title.hasClass('step-warning')) {
 					title.removeClass('btn-info btn-success').addClass('btn-warning')
 					if (opts.check_marks)
@@ -369,7 +371,7 @@
 					if (opts.check_marks)
 						title.find('i.step-mark').remove().end().prepend('<i class="icon-remove step-mark"></i> ');
 				}
-			}
+			};
 
 			// Load necessary classes
 			all_steps.hide().first().addClass('step-visited step-active').show();
@@ -377,40 +379,34 @@
 			if (!opts.step_names)
 				step_names.hide();
 			// Load functions
-			psteps.traverse_titles_function();
+			psteps.change_traverse(opts.traverse_titles);
 			psteps.check_progress_titles();
 			if (opts.content_headings)
 				psteps.make_step_content_headings();
 
 			// Load the default step
 			if (opts.start_incomplete_step) {
-				var incomplete = psteps.find('.step-title.btn-info').first(),
-					all_prev = incomplete.prevAll('.step-title'),
-					num = all_prev.length + 1;
-				psteps.go_to_step(num);
+				var incomplete = psteps.find('.step-title.btn-info').first();
+				psteps.go_to_step(incomplete.prevAll('.step-title').length + 1);
 			} else if (opts.start_warning_step) {
 				var warning = psteps.find('.step-title.step-warning').first();
-				all_prev = warning.prevAll('.step-title');
-				num = all_prev.length + 1;
-				psteps.go_to_step(num);
+				psteps.go_to_step(warning.prevAll('.step-title').length + 1);
 			} else if (opts.start_error_step) {
 				var error = psteps.find('.step-title.step-error').first();
-				all_prev = error.prevAll('.step-title');
-				num = all_prev.length + 1;
-				psteps.go_to_step(num);
+				psteps.go_to_step(error.prevAll('.step-title').length + 1);
 			} else
 				psteps.go_to_step(opts.step_start);
 
 
 			// Event Triggers
 			back_button.click(function(){
-				psteps.previous_step_function();
+				psteps.go_to_prev_step();
 			});
 
 			// Extremely useful for instant validation, for example, after a
 			// user has completed an input on a step.
 			var last_val_timestamp = 0;
-			psteps.bind('validate_psteps', function(e){
+			psteps.bind('validate.psteps', function(e){
 				// Validation throttling: validation events called within 500ms
 				// should be considered the same event.
 				if (e.timeStamp < (last_val_timestamp + 500)) {
@@ -423,88 +419,84 @@
 			});
 
 			// An event that triggers a change on how titles will be traversed.
-			psteps.bind('traverse_never', function(){
+			psteps.bind('traverse_never.psteps', function(){
 				psteps.change_traverse('never');
 			});
 
 			// An event that triggers a change on how titles will be traversed.
-			psteps.bind('traverse_always', function(){
+			psteps.bind('traverse_always.psteps', function(){
 				psteps.change_traverse('always');
 			});
 
 			// An event that triggers a change on how titles will be traversed.
-			psteps.bind('traverse_visited', function(){
+			psteps.bind('traverse_visited.psteps', function(){
 				psteps.change_traverse('visited');
 			});
 
 			// Loads the call back for what happens after steps, probably
 			// when a submit button is pressed.
-			psteps.bind('load_after_steps', function(){
+			psteps.bind('load_after_steps.psteps', function(){
 				opts.load_after_steps.call(psteps);
 			});
 
 			// Have yet to find a use for this, but maybe it will be to someone.
-			all_steps.bind('psteps_step_error', function(){
+			psteps.on('step_error.psteps', '.step-content', function(){
 				psteps.trigger_error($(this));
 			});
 
 			// When triggered on a step, it will go there, despite traversal settings.
-			all_titles.bind('go_to_step', function(){
+			psteps.on('go_to_step.psteps', '.step-title', function(){
 				var cur_step = $(this),
-					preceeding_titles = cur_step.prevAll('.step-title'),
-					num = preceeding_titles.length + 1;
-				psteps.go_to_step(num);
+					preceeding_titles = cur_step.prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length + 1);
 			});
 
 			// When triggered on psteps object, it goes to the first incomplete step.
-			psteps.bind('go_to_first_incomplete', function(){
+			psteps.bind('go_to_first_incomplete.psteps', function(){
 				var cur_step = psteps.find('.step-title.btn-info:first'),
-					preceeding_titles = cur_step.prevAll('.step-title'),
-					num = preceeding_titles.length + 1;
-				psteps.go_to_step(num);
+					preceeding_titles = cur_step.prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length + 1);
 			});
 
 			// When triggered on psteps object, it goes to the first step with an error.
-			psteps.bind('go_to_first_warning', function(){
+			psteps.bind('go_to_first_warning.psteps', function(){
 				var cur_step = psteps.find('.step-title.step-warning:first'),
-					preceeding_titles = cur_step.prevAll('.step-title'),
-					num = preceeding_titles.length + 1;
-				psteps.go_to_step(num);
+					preceeding_titles = cur_step.prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length + 1);
 			});
 
 			// When triggered on psteps object, it goes to the first step with an error.
-			psteps.bind('go_to_first_error', function(){
+			psteps.bind('go_to_first_error.psteps', function(){
 				var cur_step = psteps.find('.step-title.step-error:first'),
-					preceeding_titles = cur_step.prevAll('.step-title'),
-					num = preceeding_titles.length + 1;
-				psteps.go_to_step(num);
+					preceeding_titles = cur_step.prevAll('.step-title');
+				psteps.go_to_step(preceeding_titles.length + 1);
 			});
 
 			// Submit or Next. Checks for success in order to progress. Stops submit if fails.
 			toggle_buttons.click(function(e){
 				var this_button = $(this);
 				// Just to make sure that the validation ran and titles are correct run check titles.
-				psteps.trigger('validate_psteps');
+				psteps.trigger('validate.psteps');
 				var active_title = psteps.find('.step-title.step-active');
 				if (active_title.hasClass('step-error') && opts.validate_errors && !opts.validate_next_step) {
 					if (opts.validate_use_error_msg)
 						alert(opts.validate_error_msg)
 					else
 						active_title.click();
-				} else if (active_title.hasClass('step-error') && opts.validate_next_step && !opts.ignore_errors_on_next) {
-					//do nothing.
-				} else if (active_title.hasClass('step-error') && opts.ignore_errors_on_next)
-					psteps.next_step_function();
+				} else if (active_title.hasClass('step-error') && opts.validate_next_step && !opts.ignore_errors_on_next)
+					$.noop(); //do nothing.
+				else if (active_title.hasClass('step-error') && opts.ignore_errors_on_next)
+					psteps.go_to_next_step();
 				else if (this_button.hasClass('btn-success'))
-					psteps.next_step_function();
+					psteps.go_to_next_step();
 				else if (this_button.hasClass('submit-button') && (opts.validate_submit_all_steps || opts.validate_next_step)) {
 					if (opts.use_before_submit)
 						alert(opts.before_submit);
 					e.preventDefault();
 				} else if (opts.validate_next_step && opts.use_before_next)
-						alert(opts.before_next);
+					alert(opts.before_next);
 				else
-					psteps.next_step_function();
+					psteps.go_to_next_step();
 			});
 
 			// Save the ptags object in the DOM, so we can access it.
@@ -521,7 +513,7 @@
 		// traverse steps already visited.
 		// 'never' = never means the user cannot traverse steps other
 		// than through progression.
-		traverse_titles: "never",
+		traverse_titles: 'never',
 		// If step names should be copied to step content and used as headings
 		content_headings: false,
 		// The element inside the content headings div to wrap around the step name. ie h4
@@ -567,6 +559,13 @@
 		steps_show: function(){},
 		// Execute this function right before we hide the active step (hiding this step to show another)
 		steps_hide: function(){},
+		// This function is used for creating transitions between steps. It is ran before steps_hide. You need
+		// to add the class 'step-transition' to the step-title you are transitioning from for this to be called.
+		// You also need to add the class in this function 'step-transition-processing' to prevent the transition.
+		// Which ever step that was going to be transitioned to will have a 'step-resume' class on the title.
+		// Once you remove 'step-transition-processing and trigger the event go_to_step.psteps on the step-resume title, 
+		// you'll have transitioned. This function definitely has a manual operation to it, but it is useful
+		steps_transition: function(){},
 		// Go to the first incomplete step
 		start_incomplete_step: false,
 		// Go to the first step with a warning

@@ -39,6 +39,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'user_search_limit',
+		'cname' => 'User Search Limit',
+		'description' => 'Limit the user search to this many results.',
+		'value' => 20,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'check_username',
 		'cname' => 'Check Usernames',
 		'description' => 'Notify immediately if a requested username is available. (This can technically be used to determine if a user exists on the system.)',

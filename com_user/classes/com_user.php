@@ -31,6 +31,13 @@ class com_user extends component implements user_manager_interface {
 	private $gatekeeper_cache = array();
 
 	/**
+	 * Whether the user selector JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded_cust
+	 */
+	private $js_loaded_user = false;
+	
+	/**
 	 * Activate the SAWASC system.
 	 * @return bool True if SAWASC could be activated, false otherwise.
 	 */
@@ -381,6 +388,19 @@ class com_user extends component implements user_manager_interface {
 		else
 			pines_redirect(pines_url('com_user', 'exit'));
 		exit($message);
+	}
+	
+	/**
+	 * Load the user selector.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_user_select() {
+		if (!$this->js_loaded_user) {
+			$module = new module('com_user', 'select', 'head');
+			$module->render();
+			$this->js_loaded_user = true;
+		}
 	}
 }
 

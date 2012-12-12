@@ -123,7 +123,7 @@ class com_loan_loan extends entity {
 	}
 
 	/**
-	 * Creates and attaches a module which verifies a loan.
+	 * Creates and attaches a module which overviews a loan.
 	 * @return module The module.
 	 */
 	public function print_overview() {
@@ -2605,12 +2605,13 @@ class com_loan_loan extends entity {
 	 */
 	public function array_values_recursive($arr) {
 		$arr = array_values($arr);
-		foreach($arr as $key => $val)
-			if(array_values($val) === $val)
+		foreach($arr as $key => $val) {
+			if(is_array($val)) {
 				$arr[$key] = array_values_recursive($val);
-
-		return $arr;
-	}
+			}
+		}
+	return $arr;
+}
 	
 	/**
 	 * Get the current past due amount.

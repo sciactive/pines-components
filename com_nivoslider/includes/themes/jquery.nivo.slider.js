@@ -5,8 +5,6 @@
  * Copyright 2012, Dev7studios
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
- * 
- * November 2012
  */
 
 (function($) {

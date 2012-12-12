@@ -28,7 +28,6 @@ body {
 	padding: 0;
 	border: none 0;
 	vertical-align: middle;
-	height: 20px;
 	width: auto;
 }
 /* Header, Footer */
@@ -47,15 +46,19 @@ body {
 }
 #header {
 	border-top: 0 none !important;
-	border-bottom-width: 1px !important;
+	border-bottom-width: 0 !important;
 	margin: 0 0 2em;
 }
 #footer {
 	border-top-width: 1px !important;
 	border-bottom: 0 none !important;
-	margin: 4em 0 0;
+	margin: 0;
+	padding: 5px;
 	bottom: 0;
-	width: 100%;
+	display:block;
+	background-color: #dddddd;
+	border-top-color: #bbbbbb;
+	width:100%;
 }
 #header_position {
 	float: left;

@@ -59,50 +59,23 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 	<?php if ($pines->config->tpl_bootstrap->ajax) { ?>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/ajax.js"></script>
 	<?php } ?>
-
-	<!--[if lt IE 7]>
+	<?php if ($pines->template->verify_color($pines->config->tpl_bootstrap->lighter_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->darker_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->border_color)) { ?>
+	<!--[if lt IE 8]>
+	<style type="text/css">
+	.navbar-inner {
+		filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
+	}
+	</style>
+	<![endif]-->
+	<?php } ?>
+	<!--[if lt IE 8]>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
-	<?php if ($pines->config->tpl_bootstrap->mobile_menu == "adjusted") { ?>
-	<style type="text/css">
-		@media (max-width: 800px) {
-			.nav-helper {
-				float:right !important;
-				position:relative;
-				cursor: pointer;
-			}
-			.sub-nav-helper {
-				float:right !important;
-				position:relative;
-				cursor: pointer;
-			}
-			#nav ul.nav > li.dropdown > a {
-				float:left !important;
-				width: 60% !important;
-				position:relative;
-				clear:both;
-			}
-			#nav ul.dropdown-menu {
-				width: 60% !important;
-			}
-			#nav ul.dropdown-menu a, ul.dropdown-menu > li.dropdown-submenu {
-				clear:both !important;
-			}
-			
-			#nav li.dropdown-submenu > a {
-				float: left !important;
-				position:relative;
-			}
-			
-			#nav li.dropdown-submenu > a:after {
-				display:none;
-			}
-			
-		}
-	</style>
+	<?php if (!empty($pines->config->tpl_bootstrap->font_folder)) { ?>
+	<link href="<?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_folder); ?>stylesheet.css" media="all" rel="stylesheet" type="text/css" />
 	<?php } ?>
 	<script type="text/javascript">
 		var rgb_to_hex = function(rgb) {
@@ -310,160 +283,382 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			}, 1000);
 		<?php } ?>
 	</script>
-	<?php if ($pines->template->verify_color($pines->config->tpl_bootstrap->lighter_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->darker_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->border_color)) { ?>
-	<style type="text/css">
-		#nav > div.navbar-inner {
-			background-color: <?php echo $pines->config->tpl_bootstrap->darker_color; ?> !important;
-			background-image: -moz-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo $pines->config->tpl_bootstrap->lighter_color; ?>), to(<?php echo $pines->config->tpl_bootstrap->darker_color; ?>)) !important;
-			background-image: -webkit-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -o-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			border-color: <?php echo $pines->config->tpl_bootstrap->border_color; ?> !important;
-		}
-		#nav ul.nav li > a:hover, #nav ul.nav > li.dropdown.open > a, #nav ul.nav > li.dropdown.active > a, #nav ul.nav > li.active > a {
-			background-color: <?php echo $pines->config->tpl_bootstrap->darker_color; ?> !important;
-		}
-		
-		#nav .dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
-			background-color: <?php echo $pines->config->tpl_bootstrap->darker_color; ?> !important;
-			background-image: -moz-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo $pines->config->tpl_bootstrap->lighter_color; ?>), to(<?php echo $pines->config->tpl_bootstrap->darker_color; ?>)) !important;
-			background-image: -webkit-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -o-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-		}
-		
-		.navbar-inverse .btn-navbar {
-			background-color: <?php echo $pines->config->tpl_bootstrap->darker_color; ?> !important;
-			background-image: -moz-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo $pines->config->tpl_bootstrap->lighter_color; ?>), to(<?php echo $pines->config->tpl_bootstrap->darker_color; ?>)) !important;
-			background-image: -webkit-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: -o-linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			background-image: linear-gradient(to bottom, <?php echo $pines->config->tpl_bootstrap->lighter_color; ?>, <?php echo $pines->config->tpl_bootstrap->darker_color; ?>) !important;
-			border-color: <?php echo $pines->config->tpl_bootstrap->border_color; ?> !important;
-		}
-	</style>	
-	<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->caret_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->caret_hover_color)) { ?>
-	<style type="text/css">
-		#nav ul.nav > li.dropdown > .dropdown-toggle .caret {
-			border-top-color: <?php echo $pines->config->tpl_bootstrap->caret_color; ?> !important;
-		}
-		#nav ul.nav > li.dropdown.active > .dropdown-toggle .caret {
-			border-top-color: <?php echo $pines->config->tpl_bootstrap->caret_hover_color; ?> !important;
-		}
-		#nav ul.nav > li.dropdown.open > a:hover > .caret, ul.nav > li.dropdown.open > a:focus > .caret, #nav ul.nav > li.dropdown.open > a > .caret {
-			border-top-color: <?php echo $pines->config->tpl_bootstrap->caret_hover_color; ?> !important;
-		}
-	</style>
-	<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->brand_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->brand_hover_color)) { ?>
-	<style type="text/css">
-		#nav a.brand {
-			color: <?php echo $pines->config->tpl_bootstrap->brand_color; ?> !important;
-		}
-		#nav a.brand:hover {
-			color: <?php echo $pines->config->tpl_bootstrap->brand_hover_color; ?> !important;
-		}
-	</style>
 	<script type="text/javascript">
 		pines(function(){
-			// Get brand color text shadow.
-			var brand_color = "<?php echo $pines->config->tpl_bootstrap->brand_color; ?>";
-			var text_shadow = get_text_shadow(brand_color)
-			$('#nav a.brand').css('text-shadow', text_shadow);
+			<?php if ($pines->template->verify_color($pines->config->tpl_bootstrap->brand_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->brand_hover_color)) { ?>
+				// Get brand color text shadow.
+				var brand_color = "<?php echo $pines->config->tpl_bootstrap->brand_color; ?>";
+				var text_shadow = get_text_shadow(brand_color)
+				$('#nav.brand-color a.brand').css('text-shadow', text_shadow);
+			<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->font_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->font_hover_color)) { ?>
+				// Get font color text shadow.
+				var font_color = "<?php echo $pines->config->tpl_bootstrap->font_color; ?>";
+				var text_shadow = get_text_shadow(font_color)
+				$('#nav ul.nav > li.dropdown > a').css('text-shadow', text_shadow);
+			<?php } if ($pines->config->tpl_bootstrap->navbar_menu_height > 0) { ?>
+				var navbar_menu_height = "<?php echo $pines->config->tpl_bootstrap->navbar_menu_height; ?>";
+				var min_height = $('.navbar-inner').css('min-height');
+				if (navbar_menu_height >= parseInt(min_height)) {
+					// Do stuff
+					var li = $('.navbar .nav > li > a'),
+						li_outer = li.outerHeight(),
+						li_height = li.height();
+					var padding = li_outer - li_height;
+					var leftover = (navbar_menu_height - padding) / 2;
+					li.css({
+						'padding-top': leftover+'px',
+						'padding-bottom': leftover+'px'
+					});
+					$('#nav a.brand').css({
+						'padding-top': leftover+'px',
+						'padding-bottom': leftover+'px'
+					});
+					$('.navbar-inner').css('min-height', navbar_menu_height+'px');
+				}
+			<?php } ?>
 		});
 	</script>
-	<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->font_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->font_hover_color)) { ?>
 	<style type="text/css">
-		#nav ul.nav > li.dropdown > a, #nav ul.nav > li > a {
-			color: <?php echo $pines->config->tpl_bootstrap->font_color; ?> !important;
-			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-		}
-		#nav .nav-collapse.collapse .nav > li > a, #nav .nav-collapse.collapse .dropdown-menu a {
-			color: <?php echo $pines->config->tpl_bootstrap->font_color; ?> !important;
-			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-		}
-		#nav .dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
-			color: <?php echo $pines->config->tpl_bootstrap->font_hover_color; ?> !important;
-		}
-		#nav.navbar .btn-navbar .icon-bar {
-			background-color: <?php echo $pines->config->tpl_bootstrap->font_color; ?> !important;
-		}
-	</style>
-	<script type="text/javascript">
-		pines(function(){
-			// Get font color text shadow.
-			var font_color = "<?php echo $pines->config->tpl_bootstrap->font_color; ?>";
-			var text_shadow = get_text_shadow(font_color)
-			$('#nav ul.nav > li.dropdown > a').css('text-shadow', text_shadow);
-		});
-	</script>
-	<?php } if ($pines->config->tpl_bootstrap->navbar_menu_height > 0) { ?>
-	<style type="text/css">
-		.navbar-inner {
-			min-height: navbar_menu_height;
-		}
-	</style>
-	<script type="text/javascript">
-		pines(function(){
-			var navbar_menu_height = "<?php echo $pines->config->tpl_bootstrap->navbar_menu_height; ?>";
-			var min_height = $('.navbar-inner').css('min-height');
-			if (navbar_menu_height >= parseInt(min_height)) {
-				// Do stuff
-				var li = $('.navbar .nav > li > a'),
-					li_outer = li.outerHeight(),
-					li_height = li.height();
-				var padding = li_outer - li_height;
-				var leftover = (navbar_menu_height - padding) / 2;
-				li.css({
-					'padding-top': leftover+'px',
-					'padding-bottom': leftover+'px'
-				});
-				$('#nav a.brand').css({
-					'padding-top': leftover+'px',
-					'padding-bottom': leftover+'px'
-				});
-				$('.navbar-inner').css('min-height', navbar_menu_height+'px');
-				
+		/* Media Queries */
+		@media (max-width: 767px) {
+			#footer {
+				margin-left: -20px !important;
+				margin-right: -20px !important;
+				padding-left: 20px !important;
+				padding-right: 20px !important;
 			}
-			
-			console.log(navbar_menu_height);
-		});
-	</script>
-	<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_background) && $pines->template->verify_color($pines->config->tpl_bootstrap->footer_border)) { ?>
-	<style type="text/css">
-		#footer {
-			background-color: <?php echo $pines->config->tpl_bootstrap->footer_background; ?> !important;
-			border-color: <?php echo $pines->config->tpl_bootstrap->footer_border; ?> !important;
 		}
-	</style>
-	<?php } if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_font_color)) { ?>
-	<style type="text/css">
-		#footer {
-			color: <?php echo $pines->config->tpl_bootstrap->footer_font_color; ?> !important;
+		/* Conditional Classes template CSS */
+		/* Body */
+		body.body-font {
+			font-family: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->body_fontface); ?>;
 		}
-	</style>
-	<?php } if ($pines->config->tpl_bootstrap->footer_type == "fixed") { ?>
-	<style type="text/css">
-		#footer {
+		body.body-custom {
+			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->body_css); ?>;
+		}
+		/* Navbar Configurations */
+		#nav-configure.bar-colors #nav > div.navbar-inner {
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>', endColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>');
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?> !important;
+			background-image: -moz-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>), to(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>)) !important;
+			background-image: -webkit-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -o-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			border-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->border_color); ?> !important;
+		}
+		#nav-configure.bar-colors #nav ul.nav li > a:hover, #nav ul.nav > li.dropdown.open > a, #nav-configure.bar-colors #nav ul.nav > li.dropdown.active > a, #nav-configure.bar-colors #nav ul.nav > li.active > a {
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>', endColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>');
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?> !important;
+		}
+		
+		#nav-configure.bar-colors #nav .dropdown-menu li > a:hover, #nav-configure.bar-colors #nav .dropdown-menu li > a:focus, #nav-configure.bar-colors #nav .dropdown-submenu:hover > a, #nav-configure.bar-colors #nav .dropdown-menu .active > a, #nav-configure.bar-colors #nav .dropdown-menu .active > a:hover {
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>', endColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>');
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?> !important;
+			background-image: -moz-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>), to(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>)) !important;
+			background-image: -webkit-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -o-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			border-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->border_color); ?> !important;
+		}
+		
+		#nav-configure.bar-colors #nav.navbar-inverse .btn-navbar, #nav-configure.bar-colors #nav .btn-navbar  {
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>', endColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>');
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?> !important;
+			background-image: -moz-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>), to(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>)) !important;
+			background-image: -webkit-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -o-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			border-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->border_color); ?> !important;
+		}
+		
+		#nav-configure.caret-color #nav ul.nav > li.dropdown > .dropdown-toggle .caret {
+			border-top-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->caret_color); ?> !important;
+		}
+		#nav-configure.caret-color #nav ul.nav > li.dropdown.active > .dropdown-toggle .caret {
+			border-top-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->caret_hover_color); ?> !important;
+		}
+		#nav-configure.caret-color #nav ul.nav > li.dropdown.open > a:hover > .caret, #nav-configure.caret-color #nav ul.nav > li.dropdown.open > a:focus > .caret, #nav-configure.caret-color #nav ul.nav > li.dropdown.open > a > .caret {
+			border-top-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->caret_hover_color); ?> !important;
+		}
+		#nav-configure.caret-color #nav.navbar-inverse .nav li.dropdown > .dropdown-toggle .caret {
+			border-top-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->caret_color); ?> !important;
+		}
+		
+		#nav-configure.caret-color #nav.navbar-inverse .nav li.dropdown.open > .dropdown-toggle .caret, #nav-configure.caret-color #nav.navbar-inverse .nav li.dropdown.active > .dropdown-toggle .caret, #nav-configure.caret-color #nav.navbar-inverse .nav li.dropdown.open.active > .dropdown-toggle .caret {
+			border-top-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->caret_hover_color); ?> !important;
+		}
+		
+		#nav-configure.brand-color #nav a.brand {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->brand_color); ?> !important;
+		}
+		#nav-configure.brand-color #nav a.brand:hover {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->brand_hover_color); ?> !important;
+		}
+		
+		#nav-configure.font-color #nav ul.nav > li.dropdown > a, #nav-configure.font-color #nav ul.nav > li > a {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_color); ?> !important;
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		}
+		#nav-configure.font-color #nav .nav-collapse.collapse .nav > li > a, #nav-configure.font-color #nav .nav-collapse.collapse .dropdown-menu a {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_color); ?> !important;
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		}
+		#nav-configure.font-color #nav .dropdown-menu li > a:hover, #nav-configure.font-color #nav .dropdown-menu li > a:focus, #nav-configure.font-color #nav .dropdown-submenu:hover > a {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_hover_color); ?> !important;
+		}
+		#nav-configure.font-color #nav.navbar .btn-navbar .icon-bar {
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_color); ?> !important;
+		}
+		#nav-configure.menu-height #nav .navbar-inner {
+			min-height: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->navbar_menu_height); ?>;
+		}
+		#nav-configure.brand-font #nav a.brand {
+			font-family: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->brand_fontface); ?> !important;
+		}
+		#nav-configure.menu-font #nav .nav a {
+			font-family: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->menu_fontface); ?>;
+		}
+		#nav-configure.menu-custom #nav .nav a {
+			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->menu_css); ?>;
+		}
+		#nav-configure.brand-custom #nav a.brand {
+			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->brand_css); ?>;
+		}
+		#nav-configure.nav-bar-custom #nav .navbar-inner {
+			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->nav_bar_css); ?>;
+		}
+		
+		/* Footer Configurations */
+		#footer.footer-fixed {
 			position: fixed !important;
 			bottom: 0 !important;
 		}
-		#page {
+		#page.footer-fixed {
 			margin-bottom: 4em;
 		}
-		
 		@media (max-width: 800px) {
-		#footer {
-			padding: 0 20px;
-			margin-left: -20px;
-			position: relative !important;
+			#footer.footer-fixed {
+				padding: 0 20px;
+				margin-left: -20px;
+				position: relative !important;
+			}
 		}
-	}
+		#footer.bg-color {
+			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->footer_background); ?> !important;
+			border-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->footer_border); ?> !important;
+		}
+		#footer.font-color {
+			color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->footer_font_color); ?> !important;
+		}
+		#footer.footer-custom {
+			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->footer_css); ?>;
+		}
+		
+		/* Conditional Media Queries */
+		@media (min-width: 800px){
+			#nav-configure.nav-list-custom #nav .nav {
+				<?php echo htmlspecialchars($pines->config->tpl_bootstrap->nav_list_css); ?>;
+			}
+		}
+		@media (max-width: 800px) {
+			#nav-configure.adjusted #nav li {
+				clear:both;
+			}
+			#nav-configure.adjusted #nav .nav-helper {
+				float:right !important;
+				position:relative;
+				cursor: pointer;
+				zoom: 1;
+				z-index: 200;
+			}
+			#nav-configure.adjusted #nav .sub-nav-helper {
+				float:right !important;
+				position:relative;
+				cursor: pointer;
+			}
+			#nav-configure.adjusted #nav ul.nav > li.dropdown > a {
+				float:left !important;
+				width: 60% !important;
+				position:relative;
+				clear:both;
+			}
+			#nav-configure.adjusted #nav ul.dropdown-menu {
+				width: 60% !important;
+			}
+			#nav-configure.adjusted #nav ul.dropdown-menu a, #nav-configure.adjusted #nav ul.dropdown-menu > li.dropdown-submenu {
+				clear:both !important;
+			}
+			
+			#nav-configure.adjusted #nav li.dropdown-submenu > a {
+				float: left !important;
+				position:relative;
+			}
+			
+			#nav-configure.adjusted #nav li.dropdown-submenu > a:after {
+				display:none;
+			}
+		}
 	</style>
+	<?php  
+		// The following creates strings of classes to be added into certain elements based on configuration options.
+		// Body Configuration 
+		if (!empty($pines->config->tpl_bootstrap->body_fontface)) {
+			// body font face has been set
+			if (empty($body))
+				$body = "body-font";
+			else
+				$body .= " body-font";
+		}
+		
+		if (!empty($pines->config->tpl_bootstrap->body_css)) {
+			// body custom css has been set
+			if (empty($body))
+				$body = "body-custom";
+			else
+				$body .= " body-custom";
+		}
+		// Navigation Bar Configuration
+		if ($pines->config->tpl_bootstrap->mobile_menu == "adjusted") { 
+			// The mobile menu option is chosen
+			if (empty($nav))
+				$nav = "adjusted";
+			else
+				$nav .= " adjusted";
+		} 
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->lighter_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->darker_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->border_color)) {
+			// all the required fields for changing the nav bar colors have been filled out
+			if (empty($nav))
+				$nav = "bar-colors";
+			else
+				$nav .= " bar-colors";
+		}
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->caret_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->caret_hover_color)) {
+			// caret color has been set
+			if (empty($nav))
+				$nav = "caret-color";
+			else
+				$nav .= " caret-color";
+		}
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->brand_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->brand_hover_color)) {
+			// brand color has been set
+			if (empty($nav))
+				$nav = "brand-color";
+			else
+				$nav .= " brand-color";
+		}
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->font_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->font_hover_color)) {
+			// font color has been set
+			if (empty($nav))
+				$nav = "font-color";
+			else
+				$nav .= " font-color";
+		}
+		if (!empty($pines->config->tpl_bootstrap->brand_fontface)) {
+			// brand font face has been set
+			if (empty($nav))
+				$nav = "brand-font";
+			else
+				$nav .= " brand-font";
+		}
+		if ($pines->config->tpl_bootstrap->navbar_menu_height > 0) {
+			// Menu Height has been set
+			if (empty($nav))
+				$nav = "menu-height";
+			else
+				$nav .= " menu-height";
+		}
+		if (!empty($pines->config->tpl_bootstrap->menu_fontface)) {
+			// Menu Font face has been set
+			if (empty($nav))
+				$nav = "menu-font";
+			else
+				$nav .= " menu-font";
+		}
+		if (!empty($pines->config->tpl_bootstrap->menu_css)) {
+			// Custom Menu CSS 
+			if (empty($nav))
+				$nav = "menu-custom";
+			else
+				$nav .= " menu-custom";
+		}
+		if (!empty($pines->config->tpl_bootstrap->brand_css)) {
+			// Custom Brand CSS 
+			if (empty($nav))
+				$nav = "brand-custom";
+			else
+				$nav .= " brand-custom";
+		}
+		if (!empty($pines->config->tpl_bootstrap->nav_list_css)) {
+			// Custom Navbar CSS 
+			if (empty($nav))
+				$nav = "nav-list-custom";
+			else
+				$nav .= " nav-list-custom";
+		}
+		if (!empty($pines->config->tpl_bootstrap->nav_bar_css)) {
+			// Custom Navbar CSS 
+			if (empty($nav))
+				$nav = "nav-bar-custom";
+			else
+				$nav .= " nav-bar-custom";
+		}
+		
+		// Footer Configuration Options
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_background) && $pines->template->verify_color($pines->config->tpl_bootstrap->footer_border)) {
+			// footer background and footer border colors
+			if (empty($footer))
+				$footer = "bg-color";
+			else
+				$footer .= " bg-color";
+		}
+		if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_font_color)) {
+			// footer font color
+			if (empty($footer))
+				$footer = "font-color";
+			else
+				$footer .= " font-color";
+		}
+		if (!empty($pines->config->tpl_bootstrap->footer_css)) {
+			// footer fixed
+			if (empty($footer))
+				$footer = "footer-custom";
+			else
+				$footer .= " footer-custom";
+		}
+		if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
+			// footer fixed
+			if (empty($footer))
+				$footer = "footer-fixed";
+			else
+				$footer .= " footer-fixed";
+		}// The page variable below still affects the footer so I put it in here.
+		if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
+			// footer fixed
+			if (empty($page))
+				$page = "footer-fixed";
+			else
+				$page .= " footer-fixed";
+		}
+	
+		// Stuff that  couldn't be added by classes (like headings)
+		if (!empty($pines->config->tpl_bootstrap->headings_fontface)) { ?>
+			<style type="text/css">
+			h1, h2, h3, h4, h5, h6 {
+				font-family: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->headings_fontface); ?>;
+			}
+			</style>
+	<?php } if (!empty($pines->config->tpl_bootstrap->headings_css)) { ?>
+			<style type="text/css">
+			h1, h2, h3, h4, h5, h6 {
+				<?php echo htmlspecialchars($pines->config->tpl_bootstrap->headings_css); ?>;
+			}
+			</style>
 	<?php } ?>
 </head>
-<body class="<?php echo in_array('printfix', $pines->config->tpl_bootstrap->fancy_style) ? ' printfix' : ''; echo in_array('printheader', $pines->config->tpl_bootstrap->fancy_style) ? ' printheader' : ''; echo in_array('nosidegutters', $pines->config->tpl_bootstrap->fancy_style) ? ' nosidegutters' : ''; ?>">
+<body class="<?php echo $body; echo in_array('printfix', $pines->config->tpl_bootstrap->fancy_style) ? ' printfix' : ''; echo in_array('printheader', $pines->config->tpl_bootstrap->fancy_style) ? ' printheader' : ''; echo in_array('nosidegutters', $pines->config->tpl_bootstrap->fancy_style) ? ' nosidegutters' : '';?>">
 	<div id="top"><?php
 		echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();
@@ -484,28 +679,30 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		<?php
 		}
 	?></div>
-	<div id="nav" class="navbar clearfix navbar-fixed-top<?php echo $pines->config->tpl_bootstrap->alt_navbar ? ' navbar-inverse' : ''; ?>">
-		<div class="navbar-inner">
-			<div class="container<?php echo $width; ?>">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<a class="brand" href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
-					<?php if ($pines->config->tpl_bootstrap->use_header_image) { ?>
-					<img src="<?php echo htmlspecialchars($pines->config->tpl_bootstrap->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
-					<?php } else { ?>
-					<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
-					<?php } ?>
-				</a>
-				<div class="nav-collapse">
-					<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
+	<div id="nav-configure" class="<?php echo $nav; ?>">
+		<div id="nav" class="navbar clearfix navbar-fixed-top<?php echo $pines->config->tpl_bootstrap->alt_navbar ? ' navbar-inverse' : ''; ?>">
+			<div class="navbar-inner">
+				<div class="container<?php echo $width; ?>">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
+						<?php if ($pines->config->tpl_bootstrap->use_header_image) { ?>
+						<img src="<?php echo htmlspecialchars($pines->config->tpl_bootstrap->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
+						<?php } else { ?>
+						<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
+						<?php } ?>
+					</a>
+					<div class="nav-collapse">
+						<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="header" class="well well-large">
+	<div id="header">
 		<div class="container<?php echo $width; ?>">
 			<div class="row-fluid">
 				<div class="span12 positions">
@@ -515,7 +712,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			</div>
 		</div>
 	</div>
-	<div id="page" class="container<?php echo $width; ?>">
+	<div id="page" class="container<?php echo $width; ?> <?php echo $page; ?>">
 		<div class="row-fluid">
 			<div id="breadcrumbs" class="span12"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 		</div>
@@ -555,7 +752,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			<div id="post_content" class="span12"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
 		</div>
 	</div>
-	<div id="footer" class="well">
+	<div id="footer" class="clearfix <?php echo $footer;?>">
 		<div class="container<?php echo $width; ?>">
 			<div class="row-fluid">
 				<div class="span12 positions">

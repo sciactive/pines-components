@@ -15,7 +15,7 @@ return array(
 	'contact' => array(
 		'cname' => 'Contact Form',
 		'view' => 'modules/contact',
-		'type' => 'imodule',
+		'type' => 'module imodule',
 	),
 );
 

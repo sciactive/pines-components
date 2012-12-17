@@ -31,7 +31,9 @@ $msg .= "E-mail:		$email";
 $mail = com_mailer_mail::factory($email, $send_to, $subject, $msg);
 if ($mail->send()) {
 	pines_notice('Your message has been sent.');
+	pines_redirect(pines_url('com_contact', 'thanks'));
 } else {
 	pines_error('Your message was not sent successfuly.');
+	return;
 }
 ?>

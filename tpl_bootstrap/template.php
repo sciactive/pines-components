@@ -227,10 +227,38 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 					item.dropdown('toggle');
 				setTimeout(function(){
 					item.siblings('ul.dropdown-menu').removeClass('dropdown-opened');
-				}, 1000)
-			}).on('mouseleave', 'ul.nav', function(){
-				if ($(this).find('.dropdown-opened').length < 1)
-					$(this).find('li.dropdown.open > a').dropdown('toggle');
+				}, 800);
+			}).on('mouseleave', 'ul.nav', function(e){
+				var nav = $(this);
+				var mouse_top = e.pageY - $(window).scrollTop();
+				var navbar_height = $('.navbar-inner').height();
+				if (mouse_top > (navbar_height + 5)) {
+					nav.find('li.dropdown.open > a').dropdown('toggle');
+				}
+			});
+			
+			// To ensure that the menu closes
+			$('#page').on('hover', function(){
+				$('ul.nav').find('li.dropdown.open > a').dropdown('toggle');
+			});
+			
+			// To enable clicks on dropdowns that have links too
+			$('#nav').on('mousedown', 'ul.nav > li.dropdown > a', function(e){
+				var href = $(this).attr('href');
+				switch(e.which)
+				{
+					case 1:
+						//left Click
+						window.location = href;
+					break;
+					case 2:
+						//middle Click
+						window.open(href);
+					break;
+					default:
+					break;
+				}
+				return true;// to allow the browser to know that we handled it.
 			});
 		});
 		<?php } if ($pines->config->tpl_bootstrap->mobile_menu == "adjusted") { ?>

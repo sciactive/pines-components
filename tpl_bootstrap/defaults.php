@@ -39,6 +39,25 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'brand_type',
+		'cname' => 'Textual Brand Type',
+		'description' => 'Choose which textual form to use as the brand in the navbar.',
+		'value' => 'System Name',
+		'options' => array(
+			'System Name',
+			'Page Title',
+			'Custom',
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'brand_name',
+		'cname' => 'Custom Brand Name',
+		'description' => 'Specify a custom brand Name to appear as text.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'use_header_image',
 		'cname' => 'Use Header Image',
 		'description' => 'Show a header image (instead of just text) at the top of the page.',

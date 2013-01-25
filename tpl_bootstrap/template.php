@@ -720,8 +720,20 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 						<?php if ($pines->config->tpl_bootstrap->use_header_image) { ?>
 						<img src="<?php echo htmlspecialchars($pines->config->tpl_bootstrap->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
 						<?php } else { ?>
-						<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
-						<?php } ?>
+							<span>
+						<?php	switch ($pines->config->tpl_bootstrap->brand_type) {
+								case "System Name":
+									echo htmlspecialchars($pines->config->system_name);
+									break;
+								case "Page Title":
+									echo htmlspecialchars($pines->config->page_title);
+									break;
+								case "Custom":
+									echo htmlspecialchars($pines->config->tpl_bootstrap->brand_name);
+									break;
+								} ?>
+							</span>	
+					<?php } ?>
 					</a>
 					<div class="nav-collapse">
 						<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>

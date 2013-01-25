@@ -60,6 +60,10 @@ body {
 	border-top-color: #bbbbbb;
 	width:auto;
 }
+#bottom {
+	font-size: 0;
+	line-height: 0;
+}
 #header_position {
 	float: left;
 }

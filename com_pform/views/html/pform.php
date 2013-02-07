@@ -16,9 +16,18 @@ pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>componen
 <?php if ($pines->depend->check('component', 'com_bootstrap')) { ?>
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/<?php echo $pines->config->debug_mode ? 'pform-bootstrap.css' : 'pform-bootstrap.min.css'; ?>");
 <?php } ?></script>
+<noscript>
+<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/<?php echo $pines->config->debug_mode ? 'pform.css' : 'pform.min.css'; ?>" type="text/css" media="all" rel="stylesheet" />
+<?php if ($pines->depend->check('component', 'com_bootstrap')) { ?>
+<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/<?php echo $pines->config->debug_mode ? 'pform-bootstrap.css' : 'pform-bootstrap.min.css'; ?>" type="text/css" media="all" rel="stylesheet" />
+<?php } ?>
+</noscript>
 <!--[if lt IE 8]>
 <script type="text/javascript">
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/<?php echo $pines->config->debug_mode ? 'pform-ie-lt-8.css' : 'pform-ie-lt-8.min.css'; ?>");</script>
+<noscript>
+<link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/<?php echo $pines->config->debug_mode ? 'pform-ie-lt-8.css' : 'pform-ie-lt-8.min.css'; ?>" type="text/css" media="all" rel="stylesheet" />
+</noscript>
 <![endif]-->
 <!--[if lt IE 6]>
 <script type="text/javascript">

@@ -15,7 +15,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ========================================================== */
+ * ========================================================== 
+ * This file was edited on line 134 to counter a problem with too much 
+ * recursion on having more than one modal opened.
+ * */
 
 
 !function ($) {
@@ -131,7 +134,7 @@
             .addClass('in')
             .attr('aria-hidden', false)
 
-          that.enforceFocus()
+          //that.enforceFocus()
 
           transition ?
             that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :

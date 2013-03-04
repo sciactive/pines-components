@@ -251,12 +251,12 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 							case 5:
 								echo '$300';
 								break;
-							case 6:
-								echo '$250';
-								break;
-							case 7:
-								echo '$200';
-								break;
+//							case 6:
+//								echo '$250';
+//								break;
+//							case 7:
+//								echo '$200';
+//								break;
 						} ?>
 					</td>
 				</tr>
@@ -311,17 +311,17 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
-						<?php switch ($cur_rank['rank']) {
-							case 1:
-								echo '$200';
-								break;
-							case 2:
-								echo '$150';
-								break;
-							case 3:
-								echo '$100';
-								break;
-						} ?>
+						<?php // switch ($cur_rank['rank']) {
+							//case 1:
+							//	echo '$200';
+							//	break;
+							//case 2:
+							//	echo '$150';
+							//	break;
+							//case 3:
+							//	echo '$100';
+							//	break;
+					//	} ?>
 					</td>
 				</tr>
 				<?php } ?>

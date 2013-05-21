@@ -43,7 +43,7 @@ pines(function(){
 </noscript>
 <!--[if IE 7]>
 <script type="text/javascript">
-pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_bootstrap/includes/fontawesome/css/font-awesome-ie7.css");
+pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_bootstrap/includes/fontawesome/css/font-awesome-ie7.min.css");
 </script>
 <![endif]-->
 <style type="text/css">

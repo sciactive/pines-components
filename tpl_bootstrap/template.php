@@ -218,6 +218,30 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			}
 			return text_shadow;
 		}
+		
+		// Let the template load up to 4 style sheets that use the pines relative location.
+		<?php if (isset($pines->config->tpl_bootstrap->load_css1)) { ?>
+			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css1; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css2; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css3; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css4; ?>");
+		<?php } ?>
+			
+		// Let the template load up to 4 style sheets that use the pines relative location.
+		<?php if (isset($pines->config->tpl_bootstrap->load_js1)) { ?>
+			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js1; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_js2)) { ?>
+			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js2; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_js3)) { ?>
+			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js3; ?>");
+		<?php } if (isset($pines->config->tpl_bootstrap->load_js4)) { ?>
+			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js4; ?>");
+		<?php } ?>
+		
+		
 		<?php if ($pines->config->tpl_bootstrap->navbar_trigger == "hover") { ?>
 		pines(function(){
 			$('#nav').on('mouseenter', 'ul.nav > li.dropdown > a', function(){
@@ -308,7 +332,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 			setTimeout(function(){
 				var el = $("#footer");
 				el.height($(document).height() - el.offset().top - 1);
-			}, 1000);
+			}, 2000);
 		<?php } ?>
 	</script>
 	<script type="text/javascript">

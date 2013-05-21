@@ -316,6 +316,62 @@ return array(
 		'value' => '',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'load_css1',
+		'cname' => 'Load Pines Relative CSS 1',
+		'description' => 'You can add a pines relative style sheet to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_css2',
+		'cname' => 'Load Pines Relative CSS 1',
+		'description' => 'You can add a pines relative style sheet to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_css3',
+		'cname' => 'Load Pines Relative CSS 1',
+		'description' => 'You can add a pines relative style sheet to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_css4',
+		'cname' => 'Load Pines Relative CSS 1',
+		'description' => 'You can add a pines relative style sheet to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_js1',
+		'cname' => 'Load Pines Relative JS 1',
+		'description' => 'You can add a pines relative javascript file to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_js2',
+		'cname' => 'Load Pines Relative JS 1',
+		'description' => 'You can add a pines relative javascript file to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_js3',
+		'cname' => 'Load Pines Relative JS 1',
+		'description' => 'You can add a pines relative javascript file to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'load_js4',
+		'cname' => 'Load Pines Relative JS 1',
+		'description' => 'You can add a pines relative javascript file to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
 );
 
 ?>

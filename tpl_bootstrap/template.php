@@ -220,24 +220,24 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		}
 		
 		// Let the template load up to 4 style sheets that use the pines relative location.
-		<?php if (isset($pines->config->tpl_bootstrap->load_css1)) { ?>
+		<?php if (!empty($pines->config->tpl_bootstrap->load_css1)) { ?>
 			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css1; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_css2)) { ?>
 			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css2; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_css2)) { ?>
 			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css3; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_css2)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_css2)) { ?>
 			pines.loadcss(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_css4; ?>");
 		<?php } ?>
 			
 		// Let the template load up to 4 style sheets that use the pines relative location.
-		<?php if (isset($pines->config->tpl_bootstrap->load_js1)) { ?>
+		<?php if (!empty($pines->config->tpl_bootstrap->load_js1)) { ?>
 			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js1; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_js2)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_js2)) { ?>
 			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js2; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_js3)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_js3)) { ?>
 			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js3; ?>");
-		<?php } if (isset($pines->config->tpl_bootstrap->load_js4)) { ?>
+		<?php } if (!empty($pines->config->tpl_bootstrap->load_js4)) { ?>
 			pines.loadjs(pines.rela_location+"<?php echo $pines->config->tpl_bootstrap->load_js4; ?>");
 		<?php } ?>
 		

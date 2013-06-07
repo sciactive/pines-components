@@ -121,7 +121,7 @@ class com_user extends component implements user_manager_interface {
 				);
 			if (isset($test->guid))
 				return array('result' => false, 'message' => 'That username is taken.');
-
+				
 			return array('result' => true, 'message' => (isset($id) ? 'Username is valid.' : 'Username is available!'));
 		} else {
 			if (empty($username))
@@ -145,6 +145,42 @@ class com_user extends component implements user_manager_interface {
 
 			return array('result' => true, 'message' => (isset($id) ? 'Email is valid.' : 'Email address is valid!'));
 		}
+	}
+	
+	/**
+	 * Check that an email is unique.
+	 * 
+	 * The ID of a user can be given so that user is excluded when checking if
+	 * the name is already in use.
+	 * 
+	 * Wrote this mainly for quick ajax testing of the email for user sign up on
+	 * an application.
+	 * 
+	 * @param string $username The username to check.
+	 * @param int $id The GUID of the user for which the name is being checked.
+	 * @return array An associative array with a boolean 'result' entry and a 'message' entry.
+	 */
+	public function check_email($email, $id = null) {
+		global $pines;
+		
+		if (empty($email))
+			return array('result' => false, 'message' => 'Please specify an email.');
+		if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+			return array('result' => false, 'message' => 'Email must be a correctly formatted address.');
+		$selector = array('&',
+				'tag' => array('com_user', 'user'),
+				'match' => array('email', '/^'.preg_quote($email, '/').'$/i')
+			);
+		if (isset($id) && $id > 0)
+			$selector['!guid'] = $id;
+		$test = $pines->entity_manager->get_entity(
+				array('class' => user, 'skip_ac' => true),
+				$selector
+			);
+		if (isset($test->guid))
+			return array('result' => false, 'message' => 'That email address is already registered.');
+
+		return array('result' => true, 'message' => (isset($id) ? 'Email is valid.' : 'Email address is valid!'));
 	}
 
 	public function fill_session() {

@@ -41,6 +41,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'check_ssn',
+		'cname' => 'Check SSNs',
+		'description' => 'Notify immediately if a requested SSN is available. (This can technically be used to determine that a specific SSN exists on the system.)',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'reg_users',
 		'cname' => 'Add Newly Registered Users',
 		'description' => 'Make new users who are registering themselves customers as well.',

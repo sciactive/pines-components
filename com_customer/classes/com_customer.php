@@ -150,6 +150,47 @@ class com_customer extends component {
 			pines_error("Error adding $points points to $type {$array['ticket']->customer->name}.");
 		}
 	}
+	
+	/**
+	 * Check that an ssn is unique.
+	 * 
+	 * The ID of a user can be given so that user is excluded when checking if
+	 * the ssn is already in use.
+	 * 
+	 * Wrote this mainly for quick ajax testing of the ssn for user sign up on
+	 * an application.
+	 * 
+	 * @param string $ssn The ssn to check.
+	 * @param int $id The GUID of the user for which the name is being checked.
+	 * @return array An associative array with a boolean 'result' entry and a 'message' entry.
+	 */
+	public function check_ssn($ssn, $id = null) {
+		global $pines;
+		
+		if (empty($ssn))
+			return array('result' => false, 'message' => 'Please specify an SSN.');
+		if (!preg_match('/^((?!000)(?!666)(?:[0-6]\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\d{2})-((?!0000)\d{4})$/i', $ssn))
+			return array('result' => false, 'message' => 'SSN must be a valid and correctly formatted SSN.');
+		
+		// Remove Dashes
+		$ssn = str_replace('-', '', $ssn);
+		
+		$selector = array('&',
+				'tag' => array('com_customer', 'customer'),
+				'strict' => array('ssn', $ssn)
+			);
+		if (isset($id) && $id > 0)
+			$selector['!guid'] = $id;
+		$test = $pines->entity_manager->get_entity(
+				array('class' => com_customer_customer, 'skip_ac' => true),
+				$selector
+			);
+		if (isset($test->guid))
+			return array('result' => false, 'message' => "That SSN is already registered.");
+
+		return array('result' => true, 'message' => (isset($id) ? 'SSN is valid.' : 'SSN is valid!'));
+	}
+	
 
 	/**
 	 * Make new users customers as well.
@@ -268,6 +309,52 @@ class com_customer extends component {
 			$string = join($delimiter, $newwords);
 		}
 		return $string;
+	}
+	
+	/**
+	 * Sort users.
+	 * @param group $a User.
+	 * @param group $b User.
+	 * @return bool User order.
+	 */
+	private function sort_users($a, $b) {
+		$aname = empty($a->name) ? $a->username : $a->name;
+		$bname = empty($b->name) ? $b->username : $b->name;
+		return strtolower($aname) > strtolower($bname);
+	}
+	
+	/**
+	 * Print a form to select users.
+	 *
+	 * @param bool $all Whether to show users who are employees too.
+	 * @return module The form's module.
+	 */
+	public function user_select_form($all = false) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_customer', 'forms/users');
+		if (!$all) {
+			$module->users = $pines->entity_manager->get_entities(
+				array('class' => user),
+				array('&',
+					'tag' => array('com_user', 'user')
+				),
+				array('!&',
+					'tag' => array('com_customer', 'customer')
+				)
+			);
+		} else {
+			$module->users = $pines->entity_manager->get_entities(
+				array('class' => user),
+				array('&',
+					'tag' => array('com_user', 'user')
+				)
+			);
+		}
+		usort($module->users, array($this, 'sort_users'));
+		$pines->page->override_doc($module->render());
+		return $module;
 	}
 }
 

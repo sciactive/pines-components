@@ -479,7 +479,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		#nav-configure.brand-custom #nav a.brand {
 			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->brand_css); ?>;
 		}
-		#nav-configure.nav-bar-custom #nav .navbar-inner {
+		#nav-configure.nav-bar-custom #nav > div.navbar-inner {
 			<?php echo htmlspecialchars($pines->config->tpl_bootstrap->nav_bar_css); ?>;
 		}
 		

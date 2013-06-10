@@ -392,11 +392,11 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		#nav-configure.bar-colors #nav > div.navbar-inner {
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>', endColorstr='<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>');
 			background-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?> !important;
-			background-image: -moz-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>), to(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>)) !important;
-			background-image: -webkit-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
-			background-image: -o-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
-			background-image: linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>) !important;
+			background-image: -moz-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>);
+			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>), to(<?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>));
+			background-image: -webkit-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>);
+			background-image: -o-linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>);
+			background-image: linear-gradient(to bottom, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->lighter_color); ?>, <?php echo htmlspecialchars($pines->config->tpl_bootstrap->darker_color); ?>);
 			border-color: <?php echo htmlspecialchars($pines->config->tpl_bootstrap->border_color); ?> !important;
 		}
 		#nav-configure.bar-colors #nav ul.nav li > a:hover, #nav ul.nav > li.dropdown.open > a, #nav-configure.bar-colors #nav ul.nav > li.dropdown.active > a, #nav-configure.bar-colors #nav ul.nav > li.active > a {

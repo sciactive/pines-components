@@ -79,6 +79,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Menu Entries</th>
 			<th>Created</th>
 			<th>Modified</th>
+			<th>Tags</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -92,6 +93,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo count($category->com_menueditor_entries); ?></td>
 			<td><?php echo htmlspecialchars(format_date($category->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($category->p_mdate)); ?></td>
+			<td><?php echo htmlspecialchars(implode(', ', $category->content_tags)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -15,6 +15,8 @@ $this->note = 'Provide category details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_menueditor->load_editor();
+$pines->com_ptags->load();
+
 ?>
 <style type="text/css">
 	#p_muid_pages .page {
@@ -159,6 +161,22 @@ $pines->com_menueditor->load_editor();
 						<option value="true"<?php echo $this->entity->link_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->link_menu === false ? ' selected="selected"' : ''; ?>>No</option>
 					</select></label>
+			</div>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Tags</span>
+				<div class="pf-group">
+					<input class="pf-field" type="text" name="content_tags" size="24" value="<?php echo isset($this->entity->content_tags) ? htmlspecialchars(implode(',', $this->entity->content_tags)) : ''; ?>" />
+					<script type="text/javascript">
+						pines(function(){
+							$("#p_muid_form [name=content_tags]").ptags({
+								ptags_sortable: {
+									tolerance: 'pointer',
+									handle: '.ui-ptags-tag-text'
+								}
+							});
+						});
+					</script>
+				</div>
 			</div>
 			<div class="pf-element">
 				<label>

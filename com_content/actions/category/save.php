@@ -38,6 +38,13 @@ $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];
 $category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'null' ? null : ($_REQUEST['show_pages_in_menu'] == 'true'));
 $category->link_menu = ($_REQUEST['link_menu'] == 'null' ? null : ($_REQUEST['link_menu'] == 'true'));
+$category->content_tags = explode(',', $_REQUEST['content_tags']);
+if (is_array($category)) {
+	foreach ($category->content_tags as $key => $cur_tag) {
+		if ($cur_tag == '')
+			unset($category->content_tags[$key]);
+	}
+}
 $category->pages = array();
 $pages = (array) json_decode($_REQUEST['pages']);
 foreach ($pages as $cur_page_guid) {
@@ -74,13 +81,15 @@ $category->per_page = ($_REQUEST['per_page'] === '' ? null : (int) $_REQUEST['pe
 $category->pagination_type = ($_REQUEST['pagination_type'] == 'null' ? null : $_REQUEST['pagination_type']);
 $category->intro = $_REQUEST['intro'];
 $category->variants = array();
-foreach ($_REQUEST['variants'] as $cur_variant_entry) {
-	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
-	if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
-		pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
-		continue;
+if (is_array($_REQUEST['variants'])) {
+	foreach ($_REQUEST['variants'] as $cur_variant_entry) {
+		list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
+		if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
+			pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
+			continue;
+		}
+		$category->variants[$cur_template] = $cur_variant;
 	}
-	$category->variants[$cur_template] = $cur_variant;
 }
 
 // Conditions

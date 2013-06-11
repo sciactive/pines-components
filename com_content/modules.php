@@ -61,6 +61,13 @@ return array(
 		'form' => 'modules/custom_form',
 		'type' => 'module',
 	),
+	'sidemenu' => array(
+		'cname' => 'Side Menu Navigation',
+		'description' => 'Show a side menu based on pages with certain tags.',
+		'view' => 'modules/sidemenu',
+		'form' => 'modules/sidemenu_form',
+		'type' => 'module',
+	),
 );
 
 ?>

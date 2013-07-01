@@ -467,7 +467,12 @@
 
 			// Event Triggers
 			back_button.click(function(){
-				psteps.go_to_prev_step();
+				if (opts.use_custom_back_button) {
+					var previous_step_num = psteps.find('.step-title.step-active').prevAll('.step-title').length;
+					opts.custom_back_button_click.call(undefined, previous_step_num);
+				} else {
+					psteps.go_to_prev_step();
+				}
 			});
 
 			// Extremely useful for instant validation, for example, after a
@@ -668,6 +673,10 @@
 		shrink_step_names: true,
 		// Set if there is a back button.
 		back: true,
+		// Set if you want to use a special back button function callback on the click event
+		use_custom_back_button: false,
+		// the function passes the previous step num in the num
+		custom_back_button_click: function(){},
 		// Set the default step.
 		step_start: "1",
 		// Use the steps onload function to customize events that happen

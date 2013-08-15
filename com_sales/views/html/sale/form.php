@@ -469,7 +469,16 @@ if ($pines->config->com_sales->com_esp) {
 								} else if (insured_item.pgrid_get_value(10) != '') {
 									alert('There is already an ESP for this item');
 									return;
-								}
+								} 
+								
+								<?php if (!empty($pines->config->com_esp->product_min_price)) { ?>
+									var product_min = pines.safe(<?php echo $pines->config->com_esp->product_min_price; ?>);
+									var insured_item_price = insured_item.pgrid_get_value(6);
+									if (insured_item_price < product_min) {
+										alert('An ESP can only be applied to a product price of $'+product_min+' or more.');
+										return;
+									}
+								<?php } ?>
 
 								<?php if ($pines->config->com_esp->round_up) { ?>
 								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2).replace(/\d\.\d{2}/, '9.99');

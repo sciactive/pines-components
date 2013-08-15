@@ -41,6 +41,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'product_min_price',
+		'cname' => 'Product Minimum Price',
+		'description' => 'The minimum price a product must be in order to Apply an ESP.',
+		'value' => 0,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'esp_term',
 		'cname' => 'ESP Coverage Term',
 		'description' => 'The length of time, in years, that Extended Service Plans provide coverage for.',

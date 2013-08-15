@@ -474,7 +474,7 @@ if ($pines->config->com_sales->com_esp) {
 								<?php if (!empty($pines->config->com_esp->product_min_price)) { ?>
 									var product_min = pines.safe(<?php echo $pines->config->com_esp->product_min_price; ?>);
 									var insured_item_price = insured_item.pgrid_get_value(6);
-									if (insured_item_price < product_min) {
+									if (parseInt(insured_item_price) < parseInt(product_min)) {
 										alert('An ESP can only be applied to a product price of $'+product_min+' or more.');
 										return;
 									}

@@ -151,13 +151,13 @@ class com_user extends component implements user_manager_interface {
 	 * Check that an email is unique.
 	 * 
 	 * The ID of a user can be given so that user is excluded when checking if
-	 * the name is already in use.
+	 * the email is already in use.
 	 * 
 	 * Wrote this mainly for quick ajax testing of the email for user sign up on
 	 * an application.
 	 * 
-	 * @param string $username The username to check.
-	 * @param int $id The GUID of the user for which the name is being checked.
+	 * @param string $email The email to check.
+	 * @param int $id The GUID of the user for which the email is being checked.
 	 * @return array An associative array with a boolean 'result' entry and a 'message' entry.
 	 */
 	public function check_email($email, $id = null) {
@@ -181,6 +181,49 @@ class com_user extends component implements user_manager_interface {
 			return array('result' => false, 'message' => 'That email address is already registered.');
 
 		return array('result' => true, 'message' => (isset($id) ? 'Email is valid.' : 'Email address is valid!'));
+	}
+	
+	/**
+	 * Check that a phone number is unique.
+	 * 
+	 * The ID of a user can be given so that user is excluded when checking if
+	 * the phone is already in use.
+	 * 
+	 * Wrote this mainly for quick ajax testing of the phone for user sign up on
+	 * an application.
+	 * 
+	 * @param string $phone The phone to check.
+	 * @param int $id The GUID of the user for which the phone is being checked.
+	 * @return array An associative array with a boolean 'result' entry and a 'message' entry.
+	 */
+	public function check_phone($phone, $id = null) {
+		global $pines;
+		
+		if (empty($phone))
+			return array('result' => false, 'message' => 'Please specify a phone number.');
+		
+		$strip_to_digits = preg_replace('/\D/', '', $phone);
+		if (!preg_match('/\d{10}/', $strip_to_digits))
+			return array('result' => false, 'message' => 'Phone must contain 10 digits, but formatting does not matter.');
+		$selector = array('&',
+				'tag' => array('com_user', 'user')
+			);
+		$or = array('|',
+				'data' => array(
+					array('phone_cell', $strip_to_digits),
+					array('phone', $strip_to_digits)
+				)
+			);
+		if (isset($id) && $id > 0)
+			$selector['!guid'] = $id;
+		$test = $pines->entity_manager->get_entity(
+				array('class' => user, 'skip_ac' => true),
+				$selector, $or
+			);
+		if (isset($test->guid))
+			return array('result' => false, 'message' => 'Phone number is in use.');
+
+		return array('result' => true, 'message' => (isset($id) ? 'Phone number is valid.' : 'Phone number is valid!'));
 	}
 
 	public function fill_session() {

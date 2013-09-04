@@ -60,6 +60,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'check_phone',
+		'cname' => 'Check Phone Numbers',
+		'description' => 'Notify immediately if a requested phone number is available. (This can technically be used to determine if a user exists on the system.)',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'user_fields',
 		'cname' => 'User Account Fields',
 		'description' => 'These will be the available fields for users. (Some fields, like username, can\'t be excluded.)',

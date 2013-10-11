@@ -133,7 +133,7 @@ $pines->com_testimonials->load();
 								<div class="span12">
 									<div class="clearfix" style="margin-bottom: 8px;">
 										<div class="pull-left">
-											<button class="submit-button" type="button">Submit</button>
+											<div class="submit-button">Submit</div>
 										</div>
 										<div class="pull-right rating-container"> 
 											<span class="rate-us">Rate Us</span>

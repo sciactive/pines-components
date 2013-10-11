@@ -156,7 +156,8 @@ pines(function(){
 				}, 700);
 			});
 			<?php if ($logged_in && $customer) { ?>
-			submit.click(function(){
+			submit.click(function(e){
+                                e.preventDefault();
 				please_rate.hide();
 				var height = feedback_form.height() - 11;
 				// Set the height so that it doesn't move weird when we send other messages to this form area.
@@ -210,21 +211,21 @@ pines(function(){
 								status_icon.removeClass('icon-spin icon-spinner icon-warning-sign icon-ok').addClass('icon-remove');
 								status_words.text('Error. Not Submitted.');
 								share_again.hide().text('Try Again?').css('visibility', 'visible').fadeIn();
-								return;
+								return false;
 							}
 
 							if (data) {
 								status_icon.removeClass('icon-spin icon-spinner icon-warning icon-remove').addClass('icon-ok');
 								status_words.text('Success!');
 								share_again.hide().text('Share another Story?').css('visibility', 'visible').fadeIn();
-								return;
+								return false;
 							}
 
 							if (!data.result) {
 								status_icon.removeClass('icon-spin icon-spinner icon-ok icon-warning-sign').addClass('icon-remove');
 								status_words.text(data.message);
 								share_again.hide().text('Try Again?').css('visibility', 'visible').fadeIn();
-								return;
+								return false;
 							}
 
 						}
@@ -242,20 +243,26 @@ pines(function(){
 					// Hide the content, show the submit
 					status_icon.removeClass('icon-spin icon-spinner icon-remove').addClass('icon-warning-sign');
 					status_words.text('Incomplete!');
-					form_content.hide();
 					share_again.css('visibility', 'hidden');
-					form_submit.fadeIn();
+                                        setTimeout(function(){
+                                            form_content.hide();
+                                        }, 20);
+                                        form_submit.fadeIn();
+					
 
 					setTimeout(function(){
-						form_submit.hide();
 						status_icon.addClass('icon-spin icon-spinner').removeClass('icon-ok icon-warning-sign icon-remove');
 						status_words.text('Submitting');
 						share_again.css('visibility', 'hidden');
+                                                setTimeout(function(){
+                                                    form_submit.hide();
+                                                }, 20);
 						form_content.fadeIn();
 						// Reset the height
 						feedback_form.css('height', 'auto');
 					}, 500);
 				}
+                            return false;
 			});
 			<?php } ?>
 
@@ -461,7 +468,7 @@ pines(function(){
 				var blockquote = $('<blockquote></blockquote>');
 				blockquote.append('<meta content="'+check_value(review_item_name)+'" itemprop="about"/>');
 				blockquote.append('<meta content="'+check_value(review_item_name)+'" itemprop="name"/>');
-				blockquote.append('<p class="description" itemprop="description">'+object.testimonial+'</p>');
+				blockquote.append('<p class="description" itemprop="description">"'+object.testimonial+'"</p>');
 				if (object.author != false) {
 					var just_author = object.author.replace(/ in.*$/, '');
 					var just_place = ' in'+object.author.replace(/.*?in/, '');
@@ -555,6 +562,9 @@ pines(function(){
 		$('.testimonial-box').each(function(){
 			create_testimonial_module($(this));
 		});
+                
+                // Attach globally so it can be called from anywhere.
+                window.create_testimonial_module = create_testimonial_module;
 	});
 	//</script>
 	<?php 

@@ -390,7 +390,7 @@ $list_item_border = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testi
 	.testimonials-module.small  .login-container .pf-element {
 		padding-right: 16px;
 	}
-	
+	<?php echo $pines->config->com_testimonials->misc_css; ?>
 	/* </style> */
 <?php 
 	exit;

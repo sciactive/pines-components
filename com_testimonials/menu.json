@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/business/testimonials",
+		"text": "Testimonials",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/business/testimonials/testimonials",
+			"text": "Testimonials",
+			"href": ["com_testimonials","testimonial/list"],
+			"depend": {
+				"ability": "com_testimonials/listtestimonials"
+			}
+		},
+		{
+			"path": "main_menu/business/testimonials/newtestimonial",
+			"text": "New Testimonial",
+			"href": ["com_testimonials","testimonial/edit"],
+			"depend": {
+				"ability": "com_testimonials/newtestimonials"
+			}
+		}
+]

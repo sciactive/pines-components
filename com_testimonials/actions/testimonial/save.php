@@ -142,8 +142,9 @@ if ($_REQUEST['review_option_type'] == 'review') {
 	}
 	
 	// Reviews get auto approved, but they CAN be denied later.
-	if (isset($testimonial->guid)) {
+	if (!isset($testimonial->guid)) {
 		$testimonial->add_tag('approved');
+		$testimonial->status = true;
 		$testimonial->remove_tag('pending');
 	}
 	// Changing status happens elsewhere on edits.
@@ -152,6 +153,7 @@ if ($_REQUEST['review_option_type'] == 'review') {
 // Auto deny non-shared ones
 if (!$testimonial->share) {
 	$testimonial->add_tag('denied');
+	$testimonial->status = false;
 	$testimonial->remove_tag('pending', 'approved', 'share');
 }
 

@@ -19,9 +19,59 @@ $pines->com_customer->load_customer_select();
 		pines(function(){
 			// Customer Autocomplete.
 			$("#p_muid_customer").customerselect();
+			var stars = $('#rating-container .star');
+			var rating_input = $('[name=rating]');
+			var rate_button = $('.rate');
+			
+			rate_button.click(function(){
+				stars.find('.icon-star-empty')
+				$(this).remove();
+			});
+			
+			stars.click(function(){
+				var cur_star = $(this);
+				if (cur_star.find('i').hasClass('icon-star-empty')) {
+					stars.find('i').addClass('icon-star').removeClass('icon-star-empty');
+				}
+				var num = cur_star.nextAll('.star').andSelf().length;
+				var rated = cur_star.nextAll('.star').andSelf(); // deprecated changed to addBack();
+				rating_input.val(num);
+				
+				stars.removeClass('rated');
+				rated.addClass('rated');
+			});
 		});
 	</script>
-	<?php var_dump($this->entity->quotefeedback); if (isset($this->entity->guid)) { ?>
+	<style type="text/css">
+		#rating-container {
+			float: right;
+			margin-left: 10px;
+		}
+		#rating-container .star {
+			color: <?php echo (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->feedback_hr_bottom)) ? $pines->config->com_testimonials->feedback_hr_bottom : '#5cb4f2'; ?>;
+			cursor: pointer;
+			float: right;
+			padding-right: 2px;
+			-o-transition: color 125ms linear 0s;
+			-ms-transition: color 125ms linear 0s;
+			-moz-transition: color 125ms linear 0s;
+			-webkit-transition: color 125ms linear 0s;
+			/* ...and now override with proper CSS property */
+			transition: color 125ms linear 0s;
+		}
+		#rating-container .remove {
+			display: block;
+			text-align:center;
+			font-size: 10px;
+		}
+		#rating-container .remove span {
+			font-size: 10px;
+		}
+		#rating-container .star:hover, #rating-container .star:hover ~ .star, #rating-container .star.rated  {
+			color: <?php echo (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->feedback_hr_top)) ? $pines->config->com_testimonials->feedback_hr_top : '#005c9e'; ?>;
+		}
+	</style>
+	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
 		<div>Customer: <span><?php echo htmlspecialchars("{$this->entity->customer->name} [{$this->entity->customer->username}]"); ?></span></div>
@@ -64,6 +114,28 @@ $pines->com_customer->load_customer_select();
 		<span class="pf-label">Share Anonymously</span>
 		<input class="pf-field" type="checkbox" name="anon" value="ON" <?php echo ($this->entity->anon) ? 'checked="checked"' : ''; ?>/>
 	</div>
+	<div class="pf-element">
+		<span class="pf-label">Rating</span>
+		<div id="rating-container">
+			<?php if (!$this->entity->rating) { ?>
+				<span class="star"><i class="icon-star-empty"></i></span>
+				<span class="star"><i class="icon-star-empty"></i></span>
+				<span class="star"><i class="icon-star-empty"></i></span>
+				<span class="star"><i class="icon-star-empty"></i></span>
+				<span class="star"><i class="icon-star-empty"></i></span>
+			<?php } else { 
+				for ($c = 5; $c >= 1; $c--) { 
+					if ((int) $this->entity->rating >= $c) { ?>
+					<span class="star rated"><i class="icon-star"></i></span>
+					<?php } else { ?>
+					<span class="star"><i class="icon-star"></i></span>
+					<?php } 
+					}
+				} ?>
+		</div>
+		<input type="hidden" name="rating" value="<?php echo ($this->entity->rating) ? htmlspecialchars($this->entity->rating) : ''; ?>" />
+	</div>
+	<div class="pf-element pf-heading" style="margin-bottom: 20px;"></div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="type" value="form" />
 		<?php if ( isset($this->entity->guid) ) { ?>

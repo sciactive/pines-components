@@ -163,7 +163,7 @@ $list_item_border = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testi
 		font-weight: bold;
 	}
 	.testimonials-module .submit-button:hover {
-		color: <?php echo $feedback_hr_top; ?>;
+		color: <?php echo $feedback_hr_bottom; ?>;
 	}
 	
 	.testimonials-module .share-checkbox label.right-align {

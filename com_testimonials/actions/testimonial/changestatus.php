@@ -75,6 +75,29 @@ switch ($testimonial->status) {
 		break;
 }
 
+// Adjust Tags on Testimonial
+if (gatekeeper('com_testimonials/edittags')) {
+	// Variables
+	$uneditable_tags = array('approved', 'pending', 'share', 'denied', 'review', 'rated', 'com_testimonials', 'testimonial');
+	$get_tags = explode(',', $_REQUEST['tags']);
+	$new_tags = array_diff($get_tags, $uneditable_tags);
+	$current_tags = $testimonial->tags;
+	
+	// Work the Arrays!
+	// Take uneditable out of current tags to reveal editable tags.
+	$editable_tags = array_diff($current_tags, $uneditable_tags); 
+	// Take all the new tags out of the editable tags, because that means such tags are being "kept".
+	// The tags left behind are ones being removed.
+	$remove_tags = array_diff($editable_tags, $new_tags); 
+	// Get the Add tags by removing all uneditable [un-addable] tags first
+	$add_tags = array_diff($new_tags, $uneditable_tags);
+	// Merge the add tags with current tags, but make sure that we only have unique tags,
+	// because the "kept" ones would possibly make duplicate entries.
+	$merged_tags = array_unique(array_merge($current_tags, $add_tags));
+	// Remove the remove tags from the merged tags
+	$testimonial->tags = array_values(array_diff($merged_tags, $remove_tags));
+}
+
 if ($testimonial->save())
 	pines_notice('Updated testimonial '.$testimonial->id.' for customer '.$testimonial->customer->name.'.');
 else

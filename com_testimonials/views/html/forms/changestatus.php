@@ -10,7 +10,6 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-
 ?>
 <style type="text/css">
 	#p_muid_form .form-alerts {
@@ -20,7 +19,15 @@ defined('P_RUN') or die('Direct access prohibited');
 		margin-bottom:7px;
 		clear:both;
 	}
+	#p_muid_tags__ptags {
+		margin-bottom: 5px;
+	}
 </style>
+<script type="text/javascript">
+	pines(function(){
+		$('#p_muid_tags').ptags();
+	});
+</script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="row-fluid">
 		<h4 style="text-align: center;">Approve / Deny Testimonials</h4>
@@ -53,7 +60,13 @@ defined('P_RUN') or die('Direct access prohibited');
 			</blockquote>
 		</div>
 	</div>
-	<?php if (!empty($this->entity->quotefeedback)) { ?>
+	<?php if (gatekeeper('com_testimonials/edittags')) { ?>
+	<div class="tags row-fluid" style="margin-bottom: 15px; font-size: 11px;">
+		<div class="span10 offset1">
+			<input id="p_muid_tags" name="tags" type="text" value="<?php echo implode(',', $this->entity->tags);?>" />
+		</div>
+	</div>
+	<?php } if (!empty($this->entity->quotefeedback)) { ?>
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<div style="background: #557700; padding: 4px; color: #fff; text-transform: uppercase; font-size: 12px; text-align:center; font-weight:bold;">Currently Using Quoted Version.</div>

@@ -28,6 +28,7 @@ return array(
 		array('newtestimonial', 'Create Testimonials', 'User can create new testimonials.'),
 		array('listtestimonials', 'List Testimonials', 'User can see testimonials.'),
 		array('edittestimonials', 'Edit Testimonials', 'User can edit current testimonials.'),
+		array('edittags', 'Edit Testimonial Tags', 'User can add/remove tags on testimonials/reviews.'),
 		array('quotetestimonials', 'Quote Testimonial', 'User can define a quote from the testimonial.'),
 		array('changestatus', 'Change Testimonial Status', 'User can approve or disapprove testimonials.'),
 		array('deletetestimonials', 'Delete Testimonials', 'User can delete testimonials.'),

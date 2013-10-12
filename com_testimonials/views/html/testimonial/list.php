@@ -14,7 +14,7 @@ $this->title = 'Testimonials - '.ucwords($this->testimonial_type).' Testimonials
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_testimonials/testimonial/list']);
-
+$pines->com_ptags->load();
 ?>
 <script type="text/javascript">
 	pines(function(){
@@ -96,6 +96,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						buttons: {
 							"Update Testimonial": function(){
 								var status = form.find(":[name=status]").val();
+								var tags = form.find(":[name=tags]").val();
 								var quotefeedback = form.find(":[name=quotefeedback]").val();
 								if (status == "") {
 									alert('Please specify the status.');
@@ -105,6 +106,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									pines.post(<?php echo json_encode(pines_url('com_testimonials', 'testimonial/changestatus')); ?>, {
 										"id": testimonial_id,
 										"quotefeedback": quotefeedback,
+										"tags": tags,
 										"status": status
 									});
 								}

@@ -16,7 +16,7 @@ return array(
 		'name' => 'business_review_name',
 		'cname' => 'Business Review Name',
 		'description' => 'Use this name to by default use a business name for testimonials.',
-		'value' => '108 Solutions',
+		'value' => '',
 		'peruser' => true,
 	),
 	array(

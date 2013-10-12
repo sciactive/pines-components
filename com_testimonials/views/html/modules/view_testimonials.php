@@ -162,7 +162,7 @@ $pines->com_testimonials->load();
 								<br/>
 								<span class="feedback-status-words">Submitting</span>
 							</div>
-							<div class="share-again">Share Another Story?</div>
+							<div class="share-again">Share Another <span class="story">Story</span>?</div>
 						</div>
 						<?php } elseif (!gatekeeper()) { ?>
 						<div class="row-fluid">

@@ -38,6 +38,7 @@ pines(function(){
 				status_words = form_submit.find('.feedback-status-words'),
 				stars = form_content.find('.star'),
 				please_stars = please_rate.find('.star'),
+				rating_container = form_content.find('.rating-container'),
 				stars_container = form_content.find('.star-container'),
 				average_rating = testimonials_container.find('.average-rating'),
 				star_rating = average_rating.find('.star-rating'),
@@ -77,7 +78,10 @@ pines(function(){
 				review_story_text = testimonial_box.find('[name=review_option_story_text]'),
 				review_item_name = testimonial_box.find('[name=review_item_name]'),
 				review_list_height = testimonial_box.find('[name=review_list_height]'),
-				review_option_dates = testimonial_box.find('[name=review_option_dates]');
+				review_option_dates = testimonial_box.find('[name=review_option_dates]'),
+				review_ratings_off = testimonial_box.find('[name=review_ratings_off]'),
+				review_submit_refresh = testimonial_box.find('[name=review_submit_refresh]'),
+				review_option_quotes = testimonial_box.find('[name=review_option_quotes]');
 
 			if (review_type.val() == 'review') {
 				// define more variables
@@ -157,13 +161,13 @@ pines(function(){
 			});
 			<?php if ($logged_in && $customer) { ?>
 			submit.click(function(e){
-                                e.preventDefault();
+                e.preventDefault();
 				please_rate.hide();
 				var height = feedback_form.height() - 11;
 				// Set the height so that it doesn't move weird when we send other messages to this form area.
 				form_submit.height(height);
 
-				if (check_value(feedback_textarea) != "" && form_content.find('.rated').length) {
+				if (check_value(feedback_textarea) != "" && (form_content.find('.rated').length || check_value(review_ratings_off) == 'true')) {
 					// This is where we make the ajax submit thing
 
 					var feedback = feedback_textarea.val(),
@@ -194,7 +198,7 @@ pines(function(){
 						url: <?php echo $save_testimonial; ?>,
 						type: "POST",
 						dataType: "json",
-						data: {"type": "module", "customer": customer_guid, "feedback": feedback, "share": share, "anon": anon, "rating": rating},
+						data: values,
 						beforeSend: function() {
 							status_icon.addClass('icon-spin icon-spinner').removeClass('icon-ok');
 							status_words.text('Submitting');
@@ -217,7 +221,19 @@ pines(function(){
 							if (data) {
 								status_icon.removeClass('icon-spin icon-spinner icon-warning icon-remove').addClass('icon-ok');
 								status_words.text('Success!');
-								share_again.hide().text('Share another Story?').css('visibility', 'visible').fadeIn();
+								if (check_value(review_story_text) != '')
+									var text = review_story_text.val();
+								else
+									var text = 'Story';
+								share_again.hide().text('Share another '+text+'?').css('visibility', 'visible').fadeIn();
+								if (check_value(review_submit_refresh) == 'true' && check_value(review_display) == 'list') {
+									// Actually load more testimonials
+									// Scroll to bottom first
+									var scroll = list_container.height();
+									list_container.animate({scrollTop: scroll}, function(){
+										list_more.click();
+									});
+								}
 								return false;
 							}
 
@@ -230,7 +246,7 @@ pines(function(){
 
 						}
 					});
-				} else if (feedback_textarea.val() != "") {
+				} else if (feedback_textarea.val() != "" && check_value(review_ratings_off) != 'true') {
 					// They have completed the story but they didn't rate us.
 					// Make them rate us here.
 					status_icon.hide();
@@ -310,7 +326,7 @@ pines(function(){
 					loaded_testimonial.hide();
 					average_rating_box.hide();
 					if (check_value(review_item_name) != '')
-						no_average_rating_box.text(pines.safe(review_item_name.val()) + ' Reviews');
+						no_average_rating_box.text(pines.safe(review_item_name.val()));
 					no_average_rating_box.show();
 					testimonial_box.hide();
 					testimonial_box.css('visibility', 'visible');
@@ -330,6 +346,12 @@ pines(function(){
 				options.review_name = check_value(review_name);
 				options.review_option_type = check_value(review_type);
 				options.review_data_type = check_value(review_data_type);
+				options.review_ratings_off = check_value(review_ratings_off);
+
+				if (check_value(review_ratings_off) == 'true') {
+					// Remove rating container
+					rating_container.remove();
+				}
 
 				if (check_value(review_display) == 'list') {
 					list_testimonials(options);
@@ -386,9 +408,8 @@ pines(function(){
 				// Load the testimonials
 				load_testimonials(options, 'list');
 
-				// and change the offset value everytime.
-				var cur_value = (check_value(review_offset) == '') ? 0 : review_offset.val(); 
-				review_offset.val(parseInt(cur_value) + parseInt(review_limit.val())); // so that next time it will get the next 5
+				// what if we always make the offset exactly the number of loaded reviews/testimonials
+				// IF that's the case we shouldnt reset it here, but rather after the result of the ajax call.
 
 				// this is in charge of calling load testimonials in increments as the user clicks read more or scrolls down.
 			};
@@ -429,9 +450,18 @@ pines(function(){
 					},
 					success: function(data){
 						if (data == 'No testimonials found.') {
+							// Fix the offset now.
+							var cur_loaded = list_container.find('.testimonial.item').length;
+							review_offset.val(cur_loaded); // Set the offset so next time we load the right increment
+							
 							if (test_loader.is(':visible')) {
 								test_loader.text('Be the First to Share!');
 								test_loader.find('i').removeAttr('class').addClass('icon-thumbs-up');
+								list_more.find('i').remove();
+								list_more.text('Share yours!');
+								list_more.prepend('<i class="icon-edit"></i> ');
+								list_more.css('visibility', 'hidden');
+								list_more.hide().css('visibility', 'visible').fadeIn();
 								return;
 							} else {
 								list_more.find('i').remove();
@@ -453,6 +483,7 @@ pines(function(){
 							list_more.hide();
 						}
 						// Depending on the display, add items to list or to carousel
+						// Remember we will fix the offset in add_testimonials, once they are added.
 						list_container.fadeIn();
 						add_testimonials(data, display);
 					}
@@ -468,22 +499,26 @@ pines(function(){
 				var blockquote = $('<blockquote></blockquote>');
 				blockquote.append('<meta content="'+check_value(review_item_name)+'" itemprop="about"/>');
 				blockquote.append('<meta content="'+check_value(review_item_name)+'" itemprop="name"/>');
-				blockquote.append('<p class="description" itemprop="description">"'+object.testimonial+'"</p>');
+				if (check_value(review_option_quotes) == 'false')
+					blockquote.append('<p class="description" itemprop="description">'+object.testimonial+'</p>');
+				else
+					blockquote.append('<p class="description" itemprop="description">"'+object.testimonial+'"</p>');
 				if (object.author != false) {
 					var just_author = object.author.replace(/ in.*$/, '');
 					var just_place = ' in'+object.author.replace(/.*?in/, '');
 					blockquote.append('<small><span itemprop="author">'+just_author+'</span>'+just_place+'</small>');
 				}
-
-				var stars = $('<div class="pull-right rating-container"><span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><meta itemprop="worstRating" content="1"><meta itemprop="bestRating" content="5"><meta itemprop="ratingValue" content="'+object.rating+'"></span></div>');
-				for (var c = 1; c <= 5; c++) {
-					if (object.rating >= c) {
-						stars.find('span').append('<i class="icon-star"></i> ');
-					} else {
-						stars.find('span').append('<i class="icon-star-empty"></i> ');
+				if (check_value(review_ratings_off) != 'true') {
+					var stars = $('<div class="pull-right rating-container"><span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><meta itemprop="worstRating" content="1"><meta itemprop="bestRating" content="5"><meta itemprop="ratingValue" content="'+object.rating+'"></span></div>');
+					for (var c = 1; c <= 5; c++) {
+						if (object.rating >= c) {
+							stars.find('span').append('<i class="icon-star"></i> ');
+						} else {
+							stars.find('span').append('<i class="icon-star-empty"></i> ');
+						}
 					}
+					blockquote.append(stars);
 				}
-				blockquote.append(stars);
 				
 				if (check_value(review_option_dates) != '') {
 					if (review_option_dates.val() == 'true') {
@@ -548,6 +583,10 @@ pines(function(){
 					}
 					testimonials_container.addClass('initialized');
 				}
+				
+				// Always fix offset once loaded
+				var cur_loaded = list_container.find('.testimonial.item').length;
+				review_offset.val(cur_loaded); // Set the offset so next time we load the right increment
 			};
 
 

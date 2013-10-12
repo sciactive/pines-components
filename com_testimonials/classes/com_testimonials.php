@@ -100,13 +100,16 @@ class com_testimonials extends component {
 	 * @param $entity_guid int The guid of a certain entity that the testimonial correlates to. ie A review for a product.
 	 * @param $entity_class string A string representing the entity's class, useful for pulling aggregate data (ie highest rated products)
 	 * @param $name string A string representing the name of the reviewed item, in case there is no guid - a specific picture name for example
+	 * @param $rated_off boolean Whether or not to require ratings. When false, the rated tag is kept.
 	 * 
 	 * @return module The module.
 	 */
-	public function get_testimonials($type = 'individual', $reverse = true, $limit = 20, $offset = 0, $tags = array('approved', 'share'), $entity_guid = null, $entity_class = null, $name = null) {
+	public function get_testimonials($type = 'individual', $reverse = true, $limit = 20, $offset = 0, $tags = array('approved', 'share'), $entity_guid = null, $entity_class = null, $name = null, $rated_off = false) {
 		global $pines;
 
 		$tag_args = array('com_testimonials', 'testimonial', 'rated'); // I always want rated ones.
+		if ($rated_off)
+			$tag_args = array_diff($tag_args, array('rated'));
 		$done = false;
 		
 		if (!empty($entity_guid)) {
@@ -116,7 +119,9 @@ class com_testimonials extends component {
 		
 		if (isset($tags) && !$done) {
 			foreach ($tags as $cur_tag) {
-				$tag_args[] = $cur_tag;
+				// replace spaces with - because they were saved that way
+				$formatted_tag = preg_replace('/ /', '-', $cur_tag);
+				$tag_args[] = $formatted_tag;
 			}
 		}
 		
@@ -125,9 +130,9 @@ class com_testimonials extends component {
 		}
 		
 		if (isset($name) && !$done) {
-			$tag_args[] = $name;
+			$formatted_name = preg_replace('/ /', '-', $name);
+			$tag_args[] = $formatted_name;
 		}
-		$temp = json_encode($tag_args);
 		
 		// Get the entities based on all the tags and settings
 		$testimonials = $pines->entity_manager->get_entities(

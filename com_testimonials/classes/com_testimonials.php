@@ -47,17 +47,21 @@ class com_testimonials extends component {
 		global $pines;
 
 		$module = new module('com_testimonials', 'testimonial/list', 'content');
-
-		$module->testimonials = $pines->entity_manager->get_entities(
-				array('class' => com_testimonials_testimonial),
-				array('&',
-					'tag' => array('com_testimonials', 'testimonial', $type)
-				)
-			);
 		$module->testimonial_type = $type; 
-		if ( empty($module->testimonials) )
-			pines_notice('No testimonials found.');
+		return $module;
+	}
+	
+	/**
+	 * Creates and attaches a module which lists reviews.
+	 * 
+	 * @param $type string A string indicating the type of review to retrieve. Pending by default.
+	 * @return module The module.
+	 */
+	public function list_reviews($type = 'pending') {
+		global $pines;
 
+		$module = new module('com_testimonials', 'testimonial/list_reviews', 'content');
+		$module->testimonial_type = $type; 
 		return $module;
 	}
 	
@@ -178,6 +182,8 @@ class com_testimonials extends component {
 				$review['testimonial'] = (!empty($cur_testimonial->quotefeedback)) ?  htmlspecialchars($cur_testimonial->quotefeedback) : htmlspecialchars($cur_testimonial->feedback);
 				$review['rating'] = $cur_testimonial->rating;
 				$review['tags'] = json_encode($cur_testimonial->tags);
+				if (gatekeeper('com_testimonials/showentityhelp'))
+					$review['customer_guid'] = $cur_testimonial->customer->guid;
 				$reviews[] = $review;
 			}
 

@@ -506,7 +506,11 @@ pines(function(){
 				if (object.author != false) {
 					var just_author = object.author.replace(/ in.*$/, '');
 					var just_place = ' in'+object.author.replace(/.*?in/, '');
+					<?php if (gatekeeper('com_testimonials/showentityhelp')) { ?>
+					blockquote.append('<small><a data-entity="'+object.customer_guid+'" data-entity-context="com_customer_customer"><span itemprop="author">'+just_author+'</span></a>'+just_place+'</small>');
+					<?php } else { ?>
 					blockquote.append('<small><span itemprop="author">'+just_author+'</span>'+just_place+'</small>');
+					<?php } ?>
 				}
 				if (check_value(review_ratings_off) != 'true') {
 					var stars = $('<div class="pull-right rating-container"><span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><meta itemprop="worstRating" content="1"><meta itemprop="bestRating" content="5"><meta itemprop="ratingValue" content="'+object.rating+'"></span></div>');

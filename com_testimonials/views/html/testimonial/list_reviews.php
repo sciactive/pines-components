@@ -1,6 +1,6 @@
 <?php
 /**
- * Lists testimonials.
+ * Lists Reviews.
  *
  * @package Components\testimonials
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -10,10 +10,10 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Testimonials - '.ucwords($this->testimonial_type).' Testimonials';
+$this->title = 'Reviews - '.ucwords($this->testimonial_type).' Reviews';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_testimonials/testimonial/list']);
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_testimonials/testimonial/list_reviews']);
 $pines->com_ptags->load();
 ?>
 <script type="text/javascript">
@@ -32,7 +32,7 @@ $pines->com_ptags->load();
 				url: <?php echo json_encode(pines_url('com_testimonials', 'search')); ?>,
 				type: "POST",
 				dataType: "json",
-				data: {"q": search_string, "status": <?php echo json_encode($this->testimonial_type); ?>, "type": 'testimonial'},
+				data: {"q": search_string, "status": <?php echo json_encode($this->testimonial_type); ?>, "type": 'review'},
 				beforeSend: function(){
 					loader = $.pnotify({
 						title: 'Search',
@@ -61,7 +61,7 @@ $pines->com_ptags->load();
 							"key": this.guid,
 							"values": [
 								'<a data-entity="'+pines.safe(this.guid)+'" data-entity-context="com_testimonials_testimonial">'+pines.safe(this.id)+'</a>',
-								'<a data-entity="'+pines.safe(this.customer_guid)+'" data-entity-context="com_customer_customer">'+pines.safe(this.customer_name)+'</a>',
+								'<a data-entity="'+pines.safe(this.customer_guid)+'" data-entity-context="com_testimonials_testimonial">'+pines.safe(this.customer_name)+'</a>',
 								'<a href="mailto:'+pines.safe(this.email)+'">'+pines.safe(this.email)+'</a>',
 								'<a data-entity="'+pines.safe(this.user_guid)+'" data-entity-context="user">'+pines.safe(this.user_name)+'</a>',
 								pines.safe(this.location),
@@ -106,9 +106,9 @@ $pines->com_ptags->load();
 				}},
 				{type: 'separator'},
 				<?php } if (gatekeeper('com_testimonials/toggletestimonials')) { ?>
-				{type: 'button', text: 'Pending', extra_class: 'picon picon-view-refresh', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list', array('type' => 'pending'))); ?>},
-				{type: 'button', text: 'Approved', extra_class: 'picon picon-dialog-ok-apply', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list', array('type' => 'approved'))); ?>},
-				{type: 'button', text: 'Denied', extra_class: 'picon picon-dialog-close', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list', array('type' => 'denied'))); ?>},
+				{type: 'button', text: 'Pending', extra_class: 'picon picon-view-refresh', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list_reviews', array('type' => 'pending'))); ?>},
+				{type: 'button', text: 'Approved', extra_class: 'picon picon-dialog-ok-apply', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list_reviews', array('type' => 'approved'))); ?>},
+				{type: 'button', text: 'Denied', extra_class: 'picon picon-dialog-close', selection_optional: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/list_reviews', array('type' => 'denied'))); ?>},
 				{type: 'separator'},
 				<?php } if (gatekeeper('com_testimonials/deletetestimonials')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_testimonials', 'testimonial/delete', array('id' => '__title__'))); ?>, delimiter: ','},

@@ -27,11 +27,14 @@ return array(
 	'abilities' => array(
 		array('newtestimonial', 'Create Testimonials', 'User can create new testimonials.'),
 		array('listtestimonials', 'List Testimonials', 'User can see testimonials.'),
+		array('listalltestimonials', 'List All Testimonials', 'User can see testimonials in grids by typing *.'),
 		array('edittestimonials', 'Edit Testimonials', 'User can edit current testimonials.'),
+		array('showentityhelp', 'Show Entity Helpers', 'User can view entity references on authored testimonials/reviews.'),
 		array('edittags', 'Edit Testimonial Tags', 'User can add/remove tags on testimonials/reviews.'),
 		array('quotetestimonials', 'Quote Testimonial', 'User can define a quote from the testimonial.'),
 		array('changestatus', 'Change Testimonial Status', 'User can approve or disapprove testimonials.'),
 		array('deletetestimonials', 'Delete Testimonials', 'User can delete testimonials.'),
+		array('search', 'Search Testimonials', 'User can search testimonials.'),
 		array('help', 'Help With Testimonials', 'User can use the help section to learn how to create testimonial modules.')
 	),
 );

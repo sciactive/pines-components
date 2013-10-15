@@ -7,6 +7,14 @@
 		}
 	},
 		{
+			"path": "main_menu/business/testimonials/newtestimonial",
+			"text": "New Testimonial",
+			"href": ["com_testimonials","testimonial/edit"],
+			"depend": {
+				"ability": "com_testimonials/newtestimonials"
+			}
+		},
+		{
 			"path": "main_menu/business/testimonials/testimonials",
 			"text": "Testimonials",
 			"href": ["com_testimonials","testimonial/list"],
@@ -15,11 +23,12 @@
 			}
 		},
 		{
-			"path": "main_menu/business/testimonials/newtestimonial",
-			"text": "New Testimonial",
-			"href": ["com_testimonials","testimonial/edit"],
+			"path": "main_menu/business/testimonials/reviews",
+			"text": "Reviews",
+			"href": ["com_testimonials","testimonial/list_reviews"],
 			"depend": {
-				"ability": "com_testimonials/newtestimonials"
+				"ability": "com_testimonials/listtestimonials"
 			}
 		}
+		
 ]

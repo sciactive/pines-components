@@ -29,6 +29,14 @@
 			"depend": {
 				"ability": "com_testimonials/listtestimonials"
 			}
+		},
+		{
+			"path": "main_menu/business/testimonials/help",
+			"text": "Help",
+			"href": ["com_testimonials","help/help"],
+			"depend": {
+				"ability": "com_testimonials/help"
+			}
 		}
 		
 ]

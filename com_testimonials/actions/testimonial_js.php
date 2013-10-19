@@ -49,7 +49,7 @@ pines(function(){
 			// Get all testimonial display javascript variables
 			var test_loader = testimonials_container.find('.testimonial-loader'),
 				loaded_testimonial = testimonials_container.find('.loaded-testimonial'),
-				testimonial_box = testimonials_container.closest('.testimonial-box'),
+				testimonial_box = parent,
 				average_rating_box = testimonials_container.find('.average-rating'),
 				no_average_rating_box = testimonials_container.find('.no-average-rating'),
 				story_spans = testimonials_container.find('.story'),
@@ -81,6 +81,7 @@ pines(function(){
 				review_option_dates = testimonial_box.find('[name=review_option_dates]'),
 				review_ratings_off = testimonial_box.find('[name=review_ratings_off]'),
 				review_submit_refresh = testimonial_box.find('[name=review_submit_refresh]'),
+				review_module_hidden = testimonial_box.find('[name=review_module_hidden]'),
 				review_option_quotes = testimonial_box.find('[name=review_option_quotes]');
 
 			if (review_type.val() == 'review') {
@@ -103,6 +104,7 @@ pines(function(){
 			}).resize();
 
 			trigger_feedback.click(function(){
+				console.log('here');
 				if (feedback_container.hasClass('opened')) {
 					feedback_container.removeClass('opened')
 					feedback_form.fadeOut(50);
@@ -507,9 +509,13 @@ pines(function(){
 					var just_author = object.author.replace(/ in.*$/, '');
 					var just_place = ' in'+object.author.replace(/.*?in/, '');
 					<?php if (gatekeeper('com_testimonials/showentityhelp')) { ?>
-					blockquote.append('<small><a data-entity="'+object.customer_guid+'" data-entity-context="com_customer_customer"><span itemprop="author">'+just_author+'</span></a>'+just_place+'</small>');
+					blockquote.append('<small><a data-entity="'+object.guid+'" data-entity-context="com_testimonials_testimonial"><span itemprop="author">'+just_author+'</span></a>'+just_place+'</small>');
 					<?php } else { ?>
 					blockquote.append('<small><span itemprop="author">'+just_author+'</span>'+just_place+'</small>');
+					<?php } ?>
+				} else {
+					<?php if (gatekeeper('com_testimonials/viewanonauthor')) { ?>
+					blockquote.append('<small>Posted Anonymously by <a data-entity="'+object.guid+'" data-entity-context="com_testimonials_testimonial"><span itemprop="author">'+object.customer_name+'</span></a></small>');
 					<?php } ?>
 				}
 				if (check_value(review_ratings_off) != 'true') {
@@ -559,15 +565,36 @@ pines(function(){
 					// Add Carousel-inner class to testimionial-list-container
 					list_container.addClass('carousel-inner');
 					var max = -1;
+					
 					$.each(data, function(index, value){
 						var item = construct_testimonial(value);
 						list_container.append(item);
-						item.css('visibility', 'hidden');
-						// figure out max height
-						var h = item.height();
-						max = h > max ? h : max;
-						item.find('.item-bottom-border').remove();
+						if (check_value(review_module_hidden) == 'true') {
+							var temp_item = item.clone().addClass('remove-temp-item');
+							$('body').append(temp_item)
+							temp_item.css({
+								'visibility': 'hidden',
+								'position': 'absolute',
+								'display': 'block'
+							});
+							// figure out max height
+							var h = temp_item.height();
+							max = h > max ? h : max;
+							item.find('.item-bottom-border').remove();
+						} else {
+							item.css('visibility', 'hidden');
+							// figure out max height
+							var h = item.height();
+							max = h > max ? h : max;
+							item.find('.item-bottom-border').remove();
+						}
+						
 					});
+					
+					if (check_value(review_module_hidden) == 'true') {
+						$('.remove-temp-item').remove();
+					}
+					
 					testimonials_testimonials.height(max);
 					loaded_testimonial.hide();
 					list_container.find('.item').each(function(){
@@ -603,11 +630,12 @@ pines(function(){
 		}
 		
 		$('.testimonial-box').each(function(){
-			create_testimonial_module($(this));
+			if (!$(this).hasClass('manual-trigger') && !$(this).closest('.manual-trigger').length)
+				create_testimonial_module($(this));
 		});
                 
-                // Attach globally so it can be called from anywhere.
-                window.create_testimonial_module = create_testimonial_module;
+		// Attach globally so it can be called from anywhere.
+		window.create_testimonial_module = create_testimonial_module;
 	});
 	//</script>
 	<?php 

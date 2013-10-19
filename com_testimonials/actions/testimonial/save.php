@@ -69,6 +69,12 @@ if ($testimonial->customer == null) {
 		return;
 	}
 }
+
+// Save customer name email and username onto the testimonial for easy searching
+$testimonial->name = $testimonial->customer->name;
+$testimonial->email = $testimonial->customer->email;
+$testimonial->username = $testimonial->customer->username;
+
 // This is the review, this is always required: testimonial or review.
 if (empty($testimonial->feedback)) {
 	if ($_REQUEST['type'] == 'module')

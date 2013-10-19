@@ -53,6 +53,40 @@ class com_testimonials_testimonial extends entity {
 		return $entity;
 	}
 
+//	public function info($type) {
+//		switch ($type) {
+//			case 'name':
+//				return "Application {$this->app_id}";
+//			case 'type':
+//				return 'application';
+//			case 'types':
+//				return 'applications';
+//			case 'url_view':
+//				if (gatekeeper('com_mifi/listapps') || gatekeeper('com_mifi/apply'))
+//					return pines_url('com_mifi', 'viewoffer', array('id' => $this->guid));
+//				break;
+//			case 'url_edit':
+//				if (gatekeeper('com_mifi/listapps'))
+//					return pines_url('com_mifi', 'application/list', array('show' => 'app:'.$this->app_id));
+//				break;
+//			case 'url_list':
+//				if (gatekeeper('com_mifi/listapps'))
+//					return pines_url('com_mifi', 'application/list');
+//				break;
+//			case 'icon':
+//				return 'picon-document-edit-verify';
+//		}
+//		return null;
+//	}
+	
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		return new module('com_testimonials', 'testimonial/helper');
+	}
+	
 	public function info($type) {
 		switch ($type) {
 			case 'name':
@@ -70,7 +104,7 @@ class com_testimonials_testimonial extends entity {
 					return pines_url('com_testimonials', 'testimonials/list');
 				break;
 			case 'icon':
-				return 'picon-view-conversation-balloon';
+				return 'picon-bookmark-new-list';
 		}
 		return null;
 	}

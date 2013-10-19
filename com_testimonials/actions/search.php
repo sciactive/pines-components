@@ -31,6 +31,16 @@ $selector2 = array('!&', 'tag' => 'review');
 
 if (empty($query)) {
 	$testimonials = array();
+} else if (preg_match('/id:/', $query)) {
+	$num_query = preg_replace('/\D/', '', $query);
+	$args = array(
+			array('class' => com_testimonials_testimonial),
+			array('&', 
+				'data' => array('id', $num_query),
+				'tag' => array('com_testimonials', 'testimonial')
+			)
+	);
+	$testimonials = (array) call_user_func_array(array($pines->entity_manager, 'get_entities'), $args);
 } elseif ($query == '*') {
 	if (!gatekeeper('com_testimonials/listalltestimonials'))
 		$testimonials = array();

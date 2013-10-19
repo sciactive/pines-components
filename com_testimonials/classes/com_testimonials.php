@@ -66,14 +66,24 @@ class com_testimonials extends component {
 	}
 	
 	/**
-	 * Creates and attaches a module which overviews an application.
+	 * Creates and attaches a module which previews a testimonial module.
 	 * @return module The module.
 	 */
 	public function print_preview() {
 		global $pines;
 		$module = new module('com_testimonials', 'help/preview', 'content');
 		$module->entity = $this;
-		//$pines->format_content($module);
+		return $module;
+	}
+	
+	/**
+	 * Creates and attaches a module which provides help with the testimonial component.
+	 * @return module The module.
+	 */
+	public function print_help() {
+		global $pines;
+		$module = new module('com_testimonials', 'help/help', 'content');
+		$module->entity = $this;
 		return $module;
 	}
 	
@@ -182,8 +192,10 @@ class com_testimonials extends component {
 				$review['testimonial'] = (!empty($cur_testimonial->quotefeedback)) ?  htmlspecialchars($cur_testimonial->quotefeedback) : htmlspecialchars($cur_testimonial->feedback);
 				$review['rating'] = $cur_testimonial->rating;
 				$review['tags'] = json_encode($cur_testimonial->tags);
-				if (gatekeeper('com_testimonials/showentityhelp'))
-					$review['customer_guid'] = $cur_testimonial->customer->guid;
+				if (gatekeeper('com_testimonials/showentityhelp')) {
+					$review['guid'] = $cur_testimonial->guid;
+					$review['customer_name'] = $cur_testimonial->customer->name_first;
+				}
 				$reviews[] = $review;
 			}
 

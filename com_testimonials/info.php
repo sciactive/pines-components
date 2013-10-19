@@ -29,6 +29,7 @@ return array(
 		array('listtestimonials', 'List Testimonials', 'User can see testimonials.'),
 		array('listalltestimonials', 'List All Testimonials', 'User can see testimonials in grids by typing *.'),
 		array('edittestimonials', 'Edit Testimonials', 'User can edit current testimonials.'),
+		array('viewanonauthor', 'View Anonymouse Authors', 'User can view authors on anonymous testimonials.'),
 		array('showentityhelp', 'Show Entity Helpers', 'User can view entity references on authored testimonials/reviews.'),
 		array('edittags', 'Edit Testimonial Tags', 'User can add/remove tags on testimonials/reviews.'),
 		array('quotetestimonials', 'Quote Testimonial', 'User can define a quote from the testimonial.'),

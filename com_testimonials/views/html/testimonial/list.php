@@ -15,6 +15,7 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_testimonials/testimonial/list']);
 $pines->com_ptags->load();
+$this->show = $_REQUEST['show'];
 ?>
 <script type="text/javascript">
 	pines(function(){
@@ -94,6 +95,10 @@ $pines->com_ptags->load();
 							submit_search();
 					});
 					search_box = textbox;
+					<?php if (!empty($this->show)) { ?>
+					search_box.val(<?php echo json_encode((string) $this->show); ?>);
+					submit_search();
+					<?php } ?>
 				}},
 				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				<?php if (gatekeeper('com_testimonials/newtestimonials')) { ?>

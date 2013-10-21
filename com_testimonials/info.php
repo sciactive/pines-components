@@ -25,7 +25,7 @@ return array(
 		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),
 	'abilities' => array(
-		array('newtestimonial', 'Create Testimonials', 'User can create new testimonials.'),
+		array('newtestimonials', 'Create Testimonials', 'User can create new testimonials.'),
 		array('listtestimonials', 'List Testimonials', 'User can see testimonials.'),
 		array('listalltestimonials', 'List All Testimonials', 'User can see testimonials in grids by typing *.'),
 		array('edittestimonials', 'Edit Testimonials', 'User can edit current testimonials.'),

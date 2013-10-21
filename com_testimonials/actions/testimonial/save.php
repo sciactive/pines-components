@@ -75,6 +75,10 @@ $testimonial->name = $testimonial->customer->name;
 $testimonial->email = $testimonial->customer->email;
 $testimonial->username = $testimonial->customer->username;
 
+// Get user input variables.
+$testimonial->feedback = $_REQUEST['feedback'];
+$testimonial->quotefeedback = $_REQUEST['quotefeedback'];
+
 // This is the review, this is always required: testimonial or review.
 if (empty($testimonial->feedback)) {
 	if ($_REQUEST['type'] == 'module')
@@ -85,10 +89,6 @@ if (empty($testimonial->feedback)) {
 		return;
 	}
 }
-
-// Get user input variables.
-$testimonial->feedback = $_REQUEST['feedback'];
-$testimonial->quotefeedback = $_REQUEST['quotefeedback'];
 
 // Only save a rating if it matches the accepted values.
 if (in_array((int) $_REQUEST['rating'], array(1,2,3,4,5)))
@@ -117,7 +117,7 @@ if (isset($testimonial->rating)) {
 // And I need them to find them again. The values come from hidden inputs either
 // hardcoded into the sales component on products, or from hidden inputs that are
 // manually inserted on content pages you want reviews to show up on.
-if ($_REQUEST['review_option_type'] == 'review') {
+if ($_REQUEST['review_option_type'] == 'review' || $_REQUEST['review'] == 'ON') {
 	$testimonial->add_tag('review');
 	
 	$review_entity_class = isset($_REQUEST['review_option_entity']) ? 'review_'.$_REQUEST['review_option_entity'] : false;
@@ -161,6 +161,29 @@ if (!$testimonial->share) {
 	$testimonial->add_tag('denied');
 	$testimonial->status = false;
 	$testimonial->remove_tag('pending', 'approved', 'share');
+}
+
+// Adjust Tags on Testimonial
+if (gatekeeper('com_testimonials/edittags') && !empty($_REQUEST['tags'])) {
+	// Variables
+	$uneditable_tags = array('approved', 'pending', 'share', 'denied', 'review', 'rated', 'com_testimonials', 'testimonial');
+	$get_tags = explode(',', $_REQUEST['tags']);
+	$new_tags = array_diff($get_tags, $uneditable_tags);
+	$current_tags = $testimonial->tags;
+	
+	// Work the Arrays!
+	// Take uneditable out of current tags to reveal editable tags.
+	$editable_tags = array_diff($current_tags, $uneditable_tags); 
+	// Take all the new tags out of the editable tags, because that means such tags are being "kept".
+	// The tags left behind are ones being removed.
+	$remove_tags = array_diff($editable_tags, $new_tags); 
+	// Get the Add tags by removing all uneditable [un-addable] tags first
+	$add_tags = array_diff($new_tags, $uneditable_tags);
+	// Merge the add tags with current tags, but make sure that we only have unique tags,
+	// because the "kept" ones would possibly make duplicate entries.
+	$merged_tags = array_unique(array_merge($current_tags, $add_tags));
+	// Remove the remove tags from the merged tags
+	$testimonial->tags = array_values(array_diff($merged_tags, $remove_tags));
 }
 
 // Save and output appropriately

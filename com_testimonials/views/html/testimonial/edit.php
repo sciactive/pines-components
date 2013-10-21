@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Testimonial' : 'Editing Testimonial ['.htmlspecialchars($this->entity->id).'] for '.htmlspecialchars($this->entity->customer->name);
 $this->note = 'Provide testimonial details in this form.';
 $pines->com_customer->load_customer_select();
+$pines->com_ptags->load();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_testimonials', 'testimonial/save')); ?>">
 	<script type="text/javascript">
@@ -40,6 +41,20 @@ $pines->com_customer->load_customer_select();
 				stars.removeClass('rated');
 				rated.addClass('rated');
 			});
+			
+			$('#p_muid_tags').ptags();
+			
+			$('[name=review]').change(function(){
+				if ($(this).val() == 'ON' && $(this).is(':checked')) {
+					// Tell the user to be SURE to add the classes for a review.
+					$('#p_muid_add_tags_warning').fadeIn();
+					$('#p_muid_remove_tags_warning').hide();
+				} else {
+					$('#p_muid_add_tags_warning').hide();
+					$('#p_muid_remove_tags_warning').fadeIn();
+				}
+					
+			})
 		});
 	</script>
 	<style type="text/css">
@@ -108,7 +123,7 @@ $pines->com_customer->load_customer_select();
 	<?php } ?>
 	<div class="pf-element">
 		<span class="pf-label">Allow us to Share Feedback</span>
-		<input class="pf-field" type="checkbox" name="share" value="ON" <?php echo ($this->entity->share) ? 'checked="checked"' : ''; ?>/>
+		<input class="pf-field" type="checkbox" name="share" value="ON" <?php echo ($this->entity->share) ? 'checked="checked"' : (isset($this->entity->guid) ? '' : 'checked="checked"') ; ?>/>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Share Anonymously</span>
@@ -135,6 +150,35 @@ $pines->com_customer->load_customer_select();
 		</div>
 		<input type="hidden" name="rating" value="<?php echo ($this->entity->rating) ? htmlspecialchars($this->entity->rating) : ''; ?>" />
 	</div>
+	<?php if (gatekeeper('com_testimonials/edittags')) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Review
+			<span class="pf-note">If the testimonial is a review of a certain product/entity as opposed to a review of the general business.</span>
+		</span>
+		<input class="pf-field" type="checkbox" name="review" value="ON" <?php echo (in_array('review',$this->entity->tags)) ? 'checked="checked"' : ''; ?>/>
+	</div>
+	<div class="pf-element hide" id="p_muid_add_tags_warning">
+		<div class="alert alert-info"><strong>Be sure to add the appropriate tags for the review</strong>:
+                    <ul style="margin-top: 10px;">
+                        <li>The unique name or alias of the item being reviewed</li>
+                        <li>OR, the entity guid</li>
+                        <li>AND the entity class name</li>
+                    </ul>
+                    <p>ie. 34893,com_gallery_picture OR a-very-specific_picture-of_someone OR a random number 3849349384939</p>
+                </div>
+	</div>
+	<div class="pf-element hide" id="p_muid_remove_tags_warning">
+		<div class="alert alert-info">
+			<strong>Be sure to remove any tags you removed from the testimonial</strong>!
+        </div>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Tags 
+			<span class="pf-note">Certain tags cannot be removed or added: approved, com_testimonials, testimonial etc</span>
+		</span>
+		<input class="pf-field" id="p_muid_tags" name="tags" type="text" value="<?php echo implode(',', $this->entity->tags);?>" />
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-heading" style="margin-bottom: 20px;"></div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="type" value="form" />

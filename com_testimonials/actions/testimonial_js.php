@@ -44,7 +44,8 @@ pines(function(){
 				star_rating = average_rating.find('.star-rating'),
 				votes = average_rating.find('.votes'),
 				testimonials_testimonials = testimonials_container.find('.testimonials'),
-				login_container = testimonials_container.find('.login-container');
+				login_container = testimonials_container.find('.login-container'),
+				signup_button = login_container.find('.signup-button');
 
 			// Get all testimonial display javascript variables
 			var test_loader = testimonials_container.find('.testimonial-loader'),
@@ -64,6 +65,10 @@ pines(function(){
 				console.log('Please wrap your testimonial module in an element with a class testimonial-box. Put all your options in inputs within that same box.')
 				return;
 			}
+			
+			var check_value = function(element) {
+				return (element == undefined) ?  '' : element.val();
+			};
 
 			// Get all testimonial display options
 			var review_reverse = testimonial_box.find('[name=review_option_reverse]'),
@@ -82,7 +87,8 @@ pines(function(){
 				review_ratings_off = testimonial_box.find('[name=review_ratings_off]'),
 				review_submit_refresh = testimonial_box.find('[name=review_submit_refresh]'),
 				review_module_hidden = testimonial_box.find('[name=review_module_hidden]'),
-				review_option_quotes = testimonial_box.find('[name=review_option_quotes]');
+				review_option_quotes = testimonial_box.find('[name=review_option_quotes]'),
+				review_signup_url = testimonial_box.find('[name=review_signup_url]');
 
 			if (review_type.val() == 'review') {
 				// define more variables
@@ -93,7 +99,15 @@ pines(function(){
 			
 			<?php if (!$logged_in) { ?>
 					// If not logged in, guarantee a hide
-					login_container.find('.pf-element').first().hide();
+					var login_hide_field = login_container.find('.pf-element').first();
+					if (login_hide_field.find('label').text() == ' I have an account.')
+						login_hide_field.hide();
+					setTimeout(function(){
+						login_container.find('.btn-primary').prop('value', 'Sign In');
+					}, 300);
+					
+					if (check_value(review_signup_url) != '')
+						signup_button.attr('href', review_signup_url.val());
 			<?php } ?>
 
 			$(window).resize(function(){
@@ -104,7 +118,6 @@ pines(function(){
 			}).resize();
 
 			trigger_feedback.click(function(){
-				console.log('here');
 				if (feedback_container.hasClass('opened')) {
 					feedback_container.removeClass('opened')
 					feedback_form.fadeOut(50);
@@ -285,9 +298,6 @@ pines(function(){
 			<?php } ?>
 
 			// BEGIN RETRIEVAL 
-			var check_value = function(element) {
-				return (element == undefined) ?  '' : element.val();
-			}
 			
 			// Randomize the order of the JavaScript Array (for carousel)
 			if (check_value(review_display) == 'carousel') {

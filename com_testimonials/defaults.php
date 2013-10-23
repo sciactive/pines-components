@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'signup_link',
+		'cname' => 'Signup Link',
+		'description' => 'Link to use by default on the share form for users not logged in on any testimonials or reviews.',
+		'value' => pines_url(),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'business_review_name',
 		'cname' => 'Business Review Name',
 		'description' => 'Use this name to by default use a business name for testimonials.',

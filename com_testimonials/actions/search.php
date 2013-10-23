@@ -94,10 +94,8 @@ foreach ($testimonials as $key => &$cur_testimonial) {
 	
 	if (!isset($cur_testimonial->status))
 		$status = "Pending";
-	elseif ($cur_testimonial->status)
-		$status = "Approved";
-	elseif (!$cur_testimonial->status)
-		$status = "Denied";
+	else
+		$status = ucwords($cur_testimonial->status);
 	
 	$json_struct = (object) array(
 		'guid'			=> $cur_testimonial->guid,

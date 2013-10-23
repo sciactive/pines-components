@@ -1489,6 +1489,40 @@ $font_light = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonial
 					</tr>
 					<tr class="option">
 						<td>
+							<span class="option-name details">review_signup_url</span>
+							<div class="option-type hide">string</div>
+							<div class="option-default hide">Nothing</div>
+							<div class="option-description hide">
+								<ul class="help-list">
+									<li>When users are not signed in, there is a signup button in the expanded form.</li>
+									<li>Set the href attribute, or link, of where the signup button should take the user.</li>
+								</ul>
+								<hr/>
+								<span class="label">Required Options</span>
+								None.
+							</div>
+							<div class="option-example hide">
+								<div class="clearfix">
+									<pre class="help-code manual-trigger" style="margin-bottom: 20px;"><div class="testimonial-box" style="visibility: hidden;">
+   [com_testimonials/testimonials /]
+   <input type="hidden" name="review_signup_url" value="<?php echo pines_url(); ?>"/>
+</div>
+					</pre>
+								</div>
+							</div>
+							<div class="add-section hide">
+								<input class="option-get-value" type="text" placeholder="Type the URL"/>
+								<input class="option-put-value" type="hidden" name="review_signup_url"/>
+							</div>
+							<div class="add-requirements hide">
+								None.
+							</div>
+						</td>
+						<td><button class="btn btn-mini details">Details</button></td>
+						<td><button class="btn btn-mini add">Add</button></td>
+					</tr>
+					<tr class="option">
+						<td>
 							<span class="option-name details">review_data_type</span>
 							<div class="option-type hide">string</div>
 							<div class="option-default hide">individual</div>

@@ -189,9 +189,8 @@ $pines->com_testimonials->load();
 										$url = pines_url($option, $action, $query);
 									}
 								}
-								echo '<div class="hide">'.$url.'</div>';
 								?>
-								<div style="text-align:center;"><a class="btn btn-success btn-block btn-large signup-button" href="">Sign Up!</a></div>
+								<div style="text-align:center;"><a class="btn btn-success btn-block btn-large signup-button" href="<?php echo htmlspecialchars($pines->config->com_testimonials->signup_link); ?>">Sign Up!</a></div>
 								<?php
 								$login = $pines->user_manager->print_login(null, $url);
 								$login->detach();

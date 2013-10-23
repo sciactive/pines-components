@@ -178,6 +178,11 @@ $pines->com_ptags->load();
 		</span>
 		<input class="pf-field" id="p_muid_tags" name="tags" type="text" value="<?php echo implode(',', $this->entity->tags);?>" />
 	</div>
+	<?php } if (gatekeeper('com_testimonials/changestatus')) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Auto-Approve</span>
+		<input class="pf-field" type="checkbox" name="approve" value="ON" <?php echo ($this->entity->has_tag('approved')) ? 'checked="checked"' : (isset($this->entity->guid) ? '' : 'checked="checked"') ; ?>/>
+	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading" style="margin-bottom: 20px;"></div>
 	<div class="pf-element pf-buttons">

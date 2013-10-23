@@ -186,6 +186,30 @@ if (gatekeeper('com_testimonials/edittags') && !empty($_REQUEST['tags'])) {
 	$testimonial->tags = array_values(array_diff($merged_tags, $remove_tags));
 }
 
+if (!$testimonial->has_tag('pending')) {
+				$testimonial->add_tag('pending');
+				$testimonial->remove_tag('share', 'denied', 'approved');
+			}
+// If the testimonial was approved or denied from the new/edit form
+if (!empty($_REQUEST['approve'])) {
+	// Add / Remove appropriate status tags
+	if ($_REQUEST['approve'] == 'ON') {
+		// Approve it.
+		if (!$testimonial->has_tag('approved')) {
+			$testimonial->add_tag('approved');
+			$testimonial->remove_tag('denied', 'pending');
+			$testimonial->status = 'approved';
+		}
+	} else {
+		// Make it Pending
+		if (!$testimonial->has_tag('pending')) {
+			$testimonial->add_tag('pending');
+			$testimonial->remove_tag('share', 'denied', 'approved');
+			// Do not set status when pending.
+		}
+	}
+}
+
 // Save and output appropriately
 if ($testimonial->type == "form") {
 	if ($testimonial->save()) {

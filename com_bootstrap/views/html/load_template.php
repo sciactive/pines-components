@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_bootstrap/css/template_css.php">
+<link rel="stylesheet" type="text/css" href="<?php echo pines_url('com_bootstrap', 'template/template_css'); ?>">
 <script type="text/javascript">
 	var load_css1 = <?php echo json_encode($pines->config->tpl_bootstrap->load_css1); ?>;
 	var load_css2 = <?php echo json_encode($pines->config->tpl_bootstrap->load_css2); ?>;

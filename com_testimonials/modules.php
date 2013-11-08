@@ -16,7 +16,7 @@ return array(
 		'cname' => 'Testimonials',
 		'description' => 'Testimonials approved for display.',
 		'view' => 'modules/view_testimonials',
-		'type' => 'module imodule',
+		'type' => 'imodule',
 	),
 );
 

@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 header("Content-type: text/css");
+//$file = __FILE__;
+//include('system/includes/externalcache.php');
 
 $review_background = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->review_background)) ? $pines->config->com_testimonials->review_background : '#eeeeee';
 $review_text = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->review_text)) ? $pines->config->com_testimonials->review_text : '#333333';
@@ -26,6 +28,7 @@ $feedback_hr_bottom = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_tes
 $scroll_up_background = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->scroll_up_background)) ? $pines->config->com_testimonials->scroll_up_background : '#dedede';
 $scroll_up_text = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->scroll_up_text)) ? $pines->config->com_testimonials->scroll_up_text : '#aaaaaa';
 $list_item_border = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonials->list_item_border)) ? $pines->config->com_testimonials->list_item_border : '#dddddd';
+$misc_css = $pines->config->com_testimonials->misc_css;
 
 ?>
 /* style tag used only for ide purposes. 
@@ -390,8 +393,6 @@ $list_item_border = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testi
 	.testimonials-module.small  .login-container .pf-element {
 		padding-right: 16px;
 	}
-	<?php echo $pines->config->com_testimonials->misc_css; ?>
+	<?php echo $misc_css; ?>
 	/* </style> */
-<?php 
-	exit;
-	?>
+<?php exit; ?>

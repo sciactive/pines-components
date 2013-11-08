@@ -25,6 +25,13 @@ class com_bootstrap extends component {
 	private $scripts_loaded = false;
 
 	/**
+	 * Whether the Template Bootstrap scripts have been loaded.
+	 * @access private
+	 * @var bool $css_loaded
+	 */
+	private $tpl_bootstrap_loaded = false;
+	
+	/**
 	 * Load the Bootstrap scripts.
 	 *
 	 * This will place the required scripts into the document's head section.
@@ -37,6 +44,21 @@ class com_bootstrap extends component {
 			$this->scripts_loaded = true;
 		}
 	}
+	
+	/**
+	 * Load the tpl_bootstrap CSS/JS. Use com_template in the future.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_js_css() {
+		if (!$this->tpl_bootstrap_loaded) {
+			$module = new module('com_bootstrap', 'load_template', 'head');
+			// Not needed since no other libraries are loaded.
+			//$module->render();
+			$this->tpl_bootstrap_loaded = true;
+		}
+	}
+	
 }
 
 ?>

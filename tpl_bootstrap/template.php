@@ -39,7 +39,7 @@ if ($pines->config->tpl_bootstrap->ajax && ($_REQUEST['tpl_bootstrap_ajax'] == 1
 	return;
 }
 header('Content-Type: text/html');
-
+$pines->com_bootstrap->load_js_css();
 $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 
 ?>
@@ -76,157 +76,154 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<?php if (!empty($pines->config->tpl_bootstrap->font_folder)) { ?>
 	<link href="<?php echo htmlspecialchars($pines->config->tpl_bootstrap->font_folder); ?>stylesheet.css" media="all" rel="stylesheet" type="text/css" />
-	<?php } ?>
-	<script type="text/javascript" src="<?php echo pines_url('com_bootstrap', 'template/template_js');?>"></script>
-	<link type="text/css" rel="stylesheet" href="<?php echo pines_url('com_bootstrap', 'template/template_css');?>"/>
-        <?php 
-        if (!empty($pines->config->tpl_bootstrap->link_css)) {
-            $link_css = explode(',', $pines->config->tpl_bootstrap->link_css);
-            foreach ($link_css as $cur_link) {
-                echo '<link type="text/css" rel="stylesheet" href="'.htmlspecialchars($pines->config->location).$cur_link.'" />';
-            }
-        }
-        ?>
-        <?php  
-		// The following creates strings of classes to be added into certain elements based on configuration options.
-		// Body Configuration 
-		if (!empty($pines->config->tpl_bootstrap->body_fontface)) {
-			// body font face has been set
-			if (empty($body))
-				$body = "body-font";
-			else
-				$body .= " body-font";
+	<?php } 
+	if (!empty($pines->config->tpl_bootstrap->link_css)) {
+		$link_css = explode(',', $pines->config->tpl_bootstrap->link_css);
+		foreach ($link_css as $cur_link) {
+			echo '<link type="text/css" rel="stylesheet" href="'.htmlspecialchars($pines->config->location).$cur_link.'" />';
 		}
-		
-		if (!empty($pines->config->tpl_bootstrap->body_css)) {
-			// body custom css has been set
-			if (empty($body))
-				$body = "body-custom";
-			else
-				$body .= " body-custom";
-		}
-		// Navigation Bar Configuration
-		if ($pines->config->tpl_bootstrap->mobile_menu == "adjusted") { 
-			// The mobile menu option is chosen
-			if (empty($nav))
-				$nav = "adjusted";
-			else
-				$nav .= " adjusted";
-		} 
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->lighter_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->darker_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->border_color)) {
-			// all the required fields for changing the nav bar colors have been filled out
-			if (empty($nav))
-				$nav = "bar-colors";
-			else
-				$nav .= " bar-colors";
-		}
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->caret_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->caret_hover_color)) {
-			// caret color has been set
-			if (empty($nav))
-				$nav = "caret-color";
-			else
-				$nav .= " caret-color";
-		}
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->brand_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->brand_hover_color)) {
-			// brand color has been set
-			if (empty($nav))
-				$nav = "brand-color";
-			else
-				$nav .= " brand-color";
-		}
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->font_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->font_hover_color)) {
-			// font color has been set
-			if (empty($nav))
-				$nav = "font-color";
-			else
-				$nav .= " font-color";
-		}
-		if (!empty($pines->config->tpl_bootstrap->brand_fontface)) {
-			// brand font face has been set
-			if (empty($nav))
-				$nav = "brand-font";
-			else
-				$nav .= " brand-font";
-		}
-		if ($pines->config->tpl_bootstrap->navbar_menu_height > 0) {
-			// Menu Height has been set
-			if (empty($nav))
-				$nav = "menu-height";
-			else
-				$nav .= " menu-height";
-		}
-		if (!empty($pines->config->tpl_bootstrap->menu_fontface)) {
-			// Menu Font face has been set
-			if (empty($nav))
-				$nav = "menu-font";
-			else
-				$nav .= " menu-font";
-		}
-		if (!empty($pines->config->tpl_bootstrap->menu_css)) {
-			// Custom Menu CSS 
-			if (empty($nav))
-				$nav = "menu-custom";
-			else
-				$nav .= " menu-custom";
-		}
-		if (!empty($pines->config->tpl_bootstrap->brand_css)) {
-			// Custom Brand CSS 
-			if (empty($nav))
-				$nav = "brand-custom";
-			else
-				$nav .= " brand-custom";
-		}
-		if (!empty($pines->config->tpl_bootstrap->nav_list_css)) {
-			// Custom Navbar CSS 
-			if (empty($nav))
-				$nav = "nav-list-custom";
-			else
-				$nav .= " nav-list-custom";
-		}
-		if (!empty($pines->config->tpl_bootstrap->nav_bar_css)) {
-			// Custom Navbar CSS 
-			if (empty($nav))
-				$nav = "nav-bar-custom";
-			else
-				$nav .= " nav-bar-custom";
-		}
-		
-		// Footer Configuration Options
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_background) && $pines->template->verify_color($pines->config->tpl_bootstrap->footer_border)) {
-			// footer background and footer border colors
-			if (empty($footer))
-				$footer = "bg-color";
-			else
-				$footer .= " bg-color";
-		}
-		if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_font_color)) {
-			// footer font color
-			if (empty($footer))
-				$footer = "font-color";
-			else
-				$footer .= " font-color";
-		}
-		if (!empty($pines->config->tpl_bootstrap->footer_css)) {
-			// footer fixed
-			if (empty($footer))
-				$footer = "footer-custom";
-			else
-				$footer .= " footer-custom";
-		}
-		if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
-			// footer fixed
-			if (empty($footer))
-				$footer = "footer-fixed";
-			else
-				$footer .= " footer-fixed";
-		}// The page variable below still affects the footer so I put it in here.
-		if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
-			// footer fixed
-			if (empty($page))
-				$page = "footer-fixed";
-			else
-				$page .= " footer-fixed";
-		} ?>
+	}
+	?>
+	<?php  
+	// The following creates strings of classes to be added into certain elements based on configuration options.
+	// Body Configuration 
+	if (!empty($pines->config->tpl_bootstrap->body_fontface)) {
+		// body font face has been set
+		if (empty($body))
+			$body = "body-font";
+		else
+			$body .= " body-font";
+	}
+
+	if (!empty($pines->config->tpl_bootstrap->body_css)) {
+		// body custom css has been set
+		if (empty($body))
+			$body = "body-custom";
+		else
+			$body .= " body-custom";
+	}
+	// Navigation Bar Configuration
+	if ($pines->config->tpl_bootstrap->mobile_menu == "adjusted") { 
+		// The mobile menu option is chosen
+		if (empty($nav))
+			$nav = "adjusted";
+		else
+			$nav .= " adjusted";
+	} 
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->lighter_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->darker_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->border_color)) {
+		// all the required fields for changing the nav bar colors have been filled out
+		if (empty($nav))
+			$nav = "bar-colors";
+		else
+			$nav .= " bar-colors";
+	}
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->caret_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->caret_hover_color)) {
+		// caret color has been set
+		if (empty($nav))
+			$nav = "caret-color";
+		else
+			$nav .= " caret-color";
+	}
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->brand_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->brand_hover_color)) {
+		// brand color has been set
+		if (empty($nav))
+			$nav = "brand-color";
+		else
+			$nav .= " brand-color";
+	}
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->font_color) && $pines->template->verify_color($pines->config->tpl_bootstrap->font_hover_color)) {
+		// font color has been set
+		if (empty($nav))
+			$nav = "font-color";
+		else
+			$nav .= " font-color";
+	}
+	if (!empty($pines->config->tpl_bootstrap->brand_fontface)) {
+		// brand font face has been set
+		if (empty($nav))
+			$nav = "brand-font";
+		else
+			$nav .= " brand-font";
+	}
+	if ($pines->config->tpl_bootstrap->navbar_menu_height > 0) {
+		// Menu Height has been set
+		if (empty($nav))
+			$nav = "menu-height";
+		else
+			$nav .= " menu-height";
+	}
+	if (!empty($pines->config->tpl_bootstrap->menu_fontface)) {
+		// Menu Font face has been set
+		if (empty($nav))
+			$nav = "menu-font";
+		else
+			$nav .= " menu-font";
+	}
+	if (!empty($pines->config->tpl_bootstrap->menu_css)) {
+		// Custom Menu CSS 
+		if (empty($nav))
+			$nav = "menu-custom";
+		else
+			$nav .= " menu-custom";
+	}
+	if (!empty($pines->config->tpl_bootstrap->brand_css)) {
+		// Custom Brand CSS 
+		if (empty($nav))
+			$nav = "brand-custom";
+		else
+			$nav .= " brand-custom";
+	}
+	if (!empty($pines->config->tpl_bootstrap->nav_list_css)) {
+		// Custom Navbar CSS 
+		if (empty($nav))
+			$nav = "nav-list-custom";
+		else
+			$nav .= " nav-list-custom";
+	}
+	if (!empty($pines->config->tpl_bootstrap->nav_bar_css)) {
+		// Custom Navbar CSS 
+		if (empty($nav))
+			$nav = "nav-bar-custom";
+		else
+			$nav .= " nav-bar-custom";
+	}
+
+	// Footer Configuration Options
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_background) && $pines->template->verify_color($pines->config->tpl_bootstrap->footer_border)) {
+		// footer background and footer border colors
+		if (empty($footer))
+			$footer = "bg-color";
+		else
+			$footer .= " bg-color";
+	}
+	if ($pines->template->verify_color($pines->config->tpl_bootstrap->footer_font_color)) {
+		// footer font color
+		if (empty($footer))
+			$footer = "font-color";
+		else
+			$footer .= " font-color";
+	}
+	if (!empty($pines->config->tpl_bootstrap->footer_css)) {
+		// footer fixed
+		if (empty($footer))
+			$footer = "footer-custom";
+		else
+			$footer .= " footer-custom";
+	}
+	if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
+		// footer fixed
+		if (empty($footer))
+			$footer = "footer-fixed";
+		else
+			$footer .= " footer-fixed";
+	}// The page variable below still affects the footer so I put it in here.
+	if ($pines->config->tpl_bootstrap->footer_type == "fixed") {
+		// footer fixed
+		if (empty($page))
+			$page = "footer-fixed";
+		else
+			$page .= " footer-fixed";
+	} ?>
 </head>
 <body class="<?php echo $body; echo in_array('printfix', $pines->config->tpl_bootstrap->fancy_style) ? ' printfix' : ''; echo in_array('printheader', $pines->config->tpl_bootstrap->fancy_style) ? ' printheader' : ''; echo in_array('nosidegutters', $pines->config->tpl_bootstrap->fancy_style) ? ' nosidegutters' : '';?>">
 	<div id="top"><?php

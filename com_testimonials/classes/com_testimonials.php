@@ -66,24 +66,12 @@ class com_testimonials extends component {
 	}
 	
 	/**
-	 * Creates and attaches a module which previews a testimonial module.
-	 * @return module The module.
-	 */
-	public function print_preview() {
-		global $pines;
-		$module = new module('com_testimonials', 'help/preview', 'content');
-		$module->entity = $this;
-		return $module;
-	}
-	
-	/**
 	 * Creates and attaches a module which provides help with the testimonial component.
 	 * @return module The module.
 	 */
 	public function print_help() {
 		global $pines;
 		$module = new module('com_testimonials', 'help/help', 'content');
-		$module->entity = $this;
 		return $module;
 	}
 	

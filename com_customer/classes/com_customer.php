@@ -169,7 +169,7 @@ class com_customer extends component {
 		
 		if (empty($ssn))
 			return array('result' => false, 'message' => 'Please specify an SSN.');
-		if (!preg_match('/^((?!000)(?!666)(?:[0-6]\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\d{2})-((?!0000)\d{4})$/i', $ssn))
+		if (!preg_match('/^((?!000)(?!666)(?:[0-8]\d{2}|7[0-2][0-9]|73[0-3]|7[5-6][0-9]|77[0-2]))-((?!00)\d{2})-((?!0000)\d{4})$/i', $ssn))
 			return array('result' => false, 'message' => 'SSN must be a valid and correctly formatted SSN.');
 		
 		// Remove Dashes

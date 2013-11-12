@@ -609,7 +609,10 @@ pines(function(){
 				if (!testimonials_container.hasClass('initialized')) {
 					// You will need to initialize the Carousel!
 					if (display == 'carousel') {
-						testimonials_testimonials.carousel();
+						testimonials_testimonials.carousel({
+							pause: 'hover',
+							interval: 6000
+						});
 					}
 					testimonials_container.addClass('initialized');
 				}

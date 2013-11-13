@@ -80,7 +80,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($page->alias); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo (isset($page->show_front_page) ? ($page->show_front_page ? 'Yes' : 'No') : 'Use Default'); ?></td>
-			<td><?php echo ($page->custom_head) ? 'Yes': ''; ?></td>
+			<td>
+			<?php 
+				if ($page->custom_head)
+					echo ($page->enable_custom_head) ? 'Enabled': 'Disabled';
+				else
+					echo '';
+			?>
+			</td>
 			<td><?php echo htmlspecialchars(format_date($page->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($page->p_mdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($page->publish_begin)); ?></td>

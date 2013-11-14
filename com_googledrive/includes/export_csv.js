@@ -14,7 +14,7 @@ var ROWS;
 var loader;
       
 function setRows(rows) {
-    ROWS = rows;
+    ROWS = unescape(encodeURIComponent(rows));
 }
 /**
        * Check if the current user has authorized the application.

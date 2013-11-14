@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Paystubs';
 
 $pines->com_pgrid->load();
+$google_drive = false;
+if (isset($pines->com_googledrive)) {
+    $pines->com_googledrive->export_to_drive('csv');
+    $google_drive = true;
+} else {
+    pines_log("Google Drive is not installed", 'notice');
+}
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/list_paystubs']);
 ?>
@@ -36,7 +43,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						filename: 'paystub_list',
 						content: rows
 					});
-				}}
+				}},
+                                <?php // Need to check if Google Drive is installed
+                                    if ($google_drive && !empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                        // First need to set the rows to which we want to export
+                                        setRows(rows);
+                                        // Then we have to check if we have permission to post to user's google drive
+                                        checkAuth();
+                                    }},
+                                    <?php } elseif ($google_drive && empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                        // They have com_googledrive installed but didn't set the client id, so alert them on click
+                                        alert('You need to set the CLIENT ID before you can export to Google Drive');
+                                    }},
+                                    <?php } ?>
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',

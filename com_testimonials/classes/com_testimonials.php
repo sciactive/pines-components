@@ -103,10 +103,11 @@ class com_testimonials extends component {
 	 * @param $entity_class string A string representing the entity's class, useful for pulling aggregate data (ie highest rated products)
 	 * @param $name string A string representing the name of the reviewed item, in case there is no guid - a specific picture name for example
 	 * @param $rated_off boolean Whether or not to require ratings. When false, the rated tag is kept.
+	 * @param $random boolean Whether or not pick only 1 out of the limit so that a random testimonial is all that is shown.
 	 * 
 	 * @return module The module.
 	 */
-	public function get_testimonials($type = 'individual', $reverse = true, $limit = 20, $offset = 0, $tags = array('approved', 'share'), $entity_guid = null, $entity_class = null, $name = null, $rated_off = false) {
+	public function get_testimonials($type = 'individual', $reverse = true, $limit = 20, $offset = 0, $tags = array('approved', 'share'), $entity_guid = null, $entity_class = null, $name = null, $rated_off = false, $random = false) {
 		global $pines;
 
 		$tag_args = array('com_testimonials', 'testimonial', 'rated'); // I always want rated ones.
@@ -136,13 +137,20 @@ class com_testimonials extends component {
 			$tag_args[] = $formatted_name;
 		}
 		
+		if ($random) {
+			$offset = rand(0, $limit - 1);
+			$limit = 1;
+		}
+		
 		// Get the entities based on all the tags and settings
-		$testimonials = $pines->entity_manager->get_entities(
-			array('class' => com_testimonials_testimonial, 'reverse' => $reverse, 'limit' => $limit, 'offset' => $offset),
-			array('&',
-				'tag' => array_unique($tag_args)
-			)
-		);
+		if ($type != 'aggregate') {
+			$testimonials = $pines->entity_manager->get_entities(
+				array('class' => com_testimonials_testimonial, 'reverse' => $reverse, 'limit' => $limit, 'offset' => $offset),
+				array('&',
+					'tag' => array_unique($tag_args)
+				)
+			);
+		}
 		
 		// Now Compose the results according to aggregate or not
 		if ($type == 'aggregate') {

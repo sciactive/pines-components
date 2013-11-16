@@ -14,12 +14,9 @@ $customer = (isset($_SESSION['user']) && $_SESSION['user']->has_tag('customer'))
 
 // get a testimonial to have loaded
 $aggregate = $pines->com_testimonials->get_testimonials('aggregate', true, 20, 0, array('rated'));
-$testimonials = $pines->com_testimonials->get_testimonials();
+$testimonials = $pines->com_testimonials->get_testimonials('individual', true, 20, 0, array('approved', 'share'), null, null, null, false, true);
 if (is_array($testimonials)) {
-	$count = count($testimonials) - 1;
-	// Pick a random number between 0 and max index (count - 1)
-	$num = rand(0, $count);
-	$testimonial = $testimonials[$num];
+	$testimonial = $testimonials[0];
 }
 $pines->com_timeago->load();
 $pines->com_testimonials->load();

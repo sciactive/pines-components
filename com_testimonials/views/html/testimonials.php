@@ -30,4 +30,4 @@ $customer_guid = ($logged_in && $customer) ? $_SESSION['user']->guid : '';
 	var customer = <?php echo json_encode($customer); ?>;
 	var customer_guid = <?php echo json_encode($customer_guid); ?>;
 </script>
-<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>components/com_testimonials/includes/testimonial.js"></script>
+<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>components/com_testimonials/includes/<?php echo ($pines->config->debug_mode) ? 'testimonial' : 'testimonial.min'; ?>.js"></script>

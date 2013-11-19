@@ -36,4 +36,4 @@ defined('P_RUN') or die('Direct access prohibited');
 	var brand_color = <?php echo json_encode($pines->config->tpl_bootstrap->brand_color); ?>;
 	var font_color = <?php echo json_encode($pines->config->tpl_bootstrap->font_color); ?>;
 </script>
-<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_bootstrap/js/template.js"></script>
+<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_bootstrap/js/<?php echo ($pines->config->debug_mode) ? 'template' : 'template.min'; ?>.js"></script>

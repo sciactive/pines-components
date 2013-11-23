@@ -71,7 +71,9 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 	<!--[if lt IE 8]>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
-	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+	<?php if (!empty($pines->config->tpl_bootstrap->custom_ie_code)) {
+		echo $pines->config->tpl_bootstrap->custom_ie_code;
+	}  echo $pines->page->render_modules('head', 'module_head'); ?>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<?php if (!empty($pines->config->tpl_bootstrap->font_folder)) { ?>
@@ -247,7 +249,7 @@ $width = ($pines->config->template->width == 'fluid') ? '-fluid' : '';
 		}
 	?></div>
 	<div id="nav-configure" class="<?php echo $nav; ?>">
-		<div id="nav" class="navbar clearfix navbar-fixed-top<?php echo $pines->config->tpl_bootstrap->alt_navbar ? ' navbar-inverse' : ''; ?>">
+		<div id="nav" class="navbar clearfix <?php echo $pines->config->tpl_bootstrap->navbar_fixed ? 'navbar-fixed-top' : ''; ?> <?php echo $pines->config->tpl_bootstrap->alt_navbar ? 'navbar-inverse' : ''; ?>">
 			<div class="navbar-inner">
 				<div class="container<?php echo $width; ?>">
 					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">

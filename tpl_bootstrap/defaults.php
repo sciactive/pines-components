@@ -79,6 +79,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'navbar_fixed',
+		'cname' => 'Navbar Fixed',
+		'description' => 'Navbar is fixed at the top.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
 		'description' => 'Use fancier styling modifications.',
@@ -376,6 +383,13 @@ return array(
 		'name' => 'load_js4',
 		'cname' => 'Load Pines Relative JS 4',
 		'description' => 'You can add a pines relative javascript file to always load with this template. Write the file starting with components/component_name/includes/...',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'custom_ie_code',
+		'cname' => 'Custom IE code',
+		'description' => 'Custom IE code that occurs after the stylesheets are implemented.',
 		'value' => '',
 		'peruser' => true,
 	),

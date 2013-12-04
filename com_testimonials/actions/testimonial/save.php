@@ -45,7 +45,7 @@ if ($_REQUEST['type'] == 'module') {
 			return;
 		}
 	} else {
-		if ( !gatekeeper('com_testimonials/newtestimonial') )
+		if ( !gatekeeper('com_testimonials/newtestimonials') )
 			punt_user(null, pines_url('com_testimonials', 'testimonial/list'));
 		$testimonial = com_testimonials_testimonial::factory();
 	}

@@ -31,6 +31,7 @@ $employee->description = $_REQUEST['description'];
 if ($pines->config->com_hrm->com_calendar)
 	$employee->color = $_REQUEST['color'];
 $employee->phone_ext = preg_replace('/\D/', '', $_REQUEST['phone_ext']);
+$employee->other_phone = preg_replace('/\D/', '', $_REQUEST['other_phone']);
 $employee->workday_length = $_REQUEST['workday_length'] != '' ?  (int) $_REQUEST['workday_length'] : null;
 $employee->pay_type = $_REQUEST['pay_type'];
 if ($employee->pay_type == 'commission') {

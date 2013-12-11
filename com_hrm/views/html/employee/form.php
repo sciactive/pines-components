@@ -114,6 +114,13 @@ $pines->com_pgrid->load();
 				$("#p_muid_rate").hide();
 			}
 		}).change();
+		
+		$('#p_muid_form').find('.input-mask').keyup(function(){
+			var field = $(this);
+			if (field.attr('name').match(/phone$/)) {
+				this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10').replace(/\D*$/, '');
+			}
+		});
 	});
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/save')); ?>">
@@ -198,6 +205,10 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Phone Extension</span>
 					<input class="pf-field" type="number" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Other Phone</span>
+					<input class="pf-field input-mask" type="number" name="other_phone" size="14" value="<?php echo htmlspecialchars($this->entity->other_phone); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Compensation</span>

@@ -81,6 +81,27 @@ return array(
 		'value' => 'Landline',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'use_extension',
+		'cname' => 'Use Phone Extensions on Warboard',
+		'description' => 'The phone extension will be used on the warboard.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'use_other_phone',
+		'cname' => 'Additional Phone Number on Warboard',
+		'description' => 'An additional phone number will be shown on the warboard.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'other_phone_label',
+		'cname' => 'Label for additional phone on Warboard',
+		'description' => 'ie. GV for google voice.',
+		'value' => '',
+		'peruser' => true,
+	),
 );
 
 ?>

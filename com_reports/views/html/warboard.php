@@ -156,6 +156,14 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 			</table>
 		</td>
 		<?php
+		
+		if ($pines->config->com_reports->use_extension && $pines->config->com_reports->use_other_phone)
+			$columns = 5;
+		elseif (!$pines->config->com_reports->use_extension && !$pines->config->com_reports->use_other_phone)
+			$columns = 3;
+		else 
+			$columns = 4;
+		
 		foreach ($this->entity->important as $cur_important) {
 			$imortant_count[$cur_important->guid] = 0;
 			$employees = $cur_important->get_users();
@@ -164,7 +172,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<td colspan="<?php echo floor(($this->entity->columns - 1)/count($this->entity->important)); ?>">
 			<table class="important" id="p_muid_important_<?php echo htmlspecialchars($cur_important->guid); ?>">
 				<tr>
-					<td colspan="4" class="wb_label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
+					<td colspan="<?php echo $columns; ?>" class="wb_label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
 				</tr>
 				<?php
 				foreach ($employees as $cur_employee) {
@@ -176,7 +184,11 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 					<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_employee->job_title); ?></td>
 					<td><?php echo htmlspecialchars(format_phone($cur_employee->phone)); ?></td>
+					<?php if ($pines->config->com_reports->use_extension) { ?>
 					<td><?php echo !empty($cur_employee->phone_ext) ? 'ext '.htmlspecialchars($cur_employee->phone_ext) : ''; ?></td>
+					<?php } if ($pines->config->com_reports->use_other_phone) { ?>
+					<td><?php echo !empty($cur_employee->other_phone) ? $pines->config->com_reports->other_phone_label.' '.htmlspecialchars(format_phone($cur_employee->other_phone)) : ''; ?></td>
+					<?php } ?>
 				</tr>
 				<?php } ?>
 			</table>

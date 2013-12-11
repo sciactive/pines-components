@@ -208,7 +208,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Other Phone</span>
-					<input class="pf-field input-mask" type="number" name="other_phone" size="14" value="<?php echo htmlspecialchars($this->entity->other_phone); ?>" /></label>
+					<input class="pf-field input-mask" type="tel" name="other_phone" size="14" value="<?php echo htmlspecialchars($this->entity->other_phone); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Compensation</span>

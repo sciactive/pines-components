@@ -170,7 +170,11 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
-					<td class="right_justify"><?php echo ($cur_rank['rank'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $cur_location_rankings[$cur_rank['rank'] + 1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php if ($cur_rank['rank'] == 1) {
+                                            echo '0';
+                                        } else {
+                                            echo '-'.$prefix.htmlspecialchars(round(($cur_location_rankings[$cur_rank['rank'] - 1]['mtd'] - $cur_rank['mtd']) * $multiplier, 2));
+                                        } ?>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:

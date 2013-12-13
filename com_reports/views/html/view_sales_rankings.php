@@ -141,6 +141,12 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<tbody>
 				<?php
 				$totals = array('current' => 0.00, 'last' => 0.00, 'mtd' => 0.00, 'goal' => 0.00, 'trend' => 0.00);
+                                $loc_count = 0;
+                                $loc_array = array();
+                                foreach($cur_location_rankings as $cur_rank) {
+                                    $loc_array[$cur_rank['rank']] = $cur_rank['mtd'];
+                                }
+                                
 				foreach($cur_location_rankings as $cur_rank) {
 					// Skip locations with no goal.
 					if ($cur_rank['goal'] <= 0)
@@ -173,7 +179,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php if ($cur_rank['rank'] == 1) {
                                             echo '0';
                                         } else {
-                                            echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $cur_location_rankings[$cur_rank['rank'] - 2]['mtd']) * $multiplier, 2));
+                                            echo $prefix.htmlspecialchars(round(($loc_array[$cur_rank['rank']] - $loc_array[$cur_rank['rank'] - 1]) * $multiplier, 2));
                                         } ?>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
@@ -193,7 +199,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td style="text-align: center;"><?php echo $prefix.htmlspecialchars(round($cur_rank['child_count'] > 0 ? $cur_rank['trend'] / $cur_rank['child_count'] * $multiplier : 0, 2)); ?></td>
 					<?php } ?>
 				</tr>
-				<?php } if ($key == count($this->entity->locations)-1) {
+				<?php $loc_count += 1;} if ($key == count($this->entity->locations)-1) {
 					$totals['pct'] = ($totals['goal'] > 0 ? $totals['trend'] / $totals['goal'] * 100 : 0);
 					if ($totals['pct'] >= $green_status) {
 						$class = 'green';

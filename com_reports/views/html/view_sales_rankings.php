@@ -16,6 +16,13 @@ if ($this->entity->final)
 else
 	$this->note = 'Current as of '.htmlspecialchars(format_date(time(), 'full_long'));
 $pines->com_jstree->load();
+$google_drive = false;
+if (isset($pines->com_googledrive)) {
+    $pines->com_googledrive->export_to_drive('csv');
+    $google_drive = true;
+} else {
+    pines_log("Google Drive is not installed", 'notice');
+}
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/rank_sales']);
@@ -81,7 +88,21 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 							filename: 'sales_rankings',
 							content: rows
 						});
-					}}
+					}},
+                                        <?php // Need to check if Google Drive is installed
+                                            if ($google_drive && !empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                            // First need to set the rows to which we want to export
+                                            setRows(rows);
+                                            // Then we have to check if we have permission to post to user's google drive
+                                            checkAuth();
+                                        }},
+                                        <?php } elseif ($google_drive && empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                            // They have com_googledrive installed but didn't set the client id, so alert them on click
+                                            alert('You need to set the CLIENT ID before you can export to Google Drive');
+                                        }},
+                                        <?php } ?>
 				],
 				pgrid_sortable: true,
 				pgrid_sort_col: 1,
@@ -109,8 +130,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
-					<th style="width: 15%;">Leader</th>
-					<th style="width: 15%;">Mgr</th>
+					<th style="width: 15%;">Lead</th>
+					<th style="width: 15%;">Prize</th>
 					<?php } else { ?>
 					<th style="width: 15%;">Stores</th>
 					<th style="width: 15%;">Avg</th>
@@ -149,18 +170,20 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
-					<td style="text-align: center;"><?php
-					if ($cur_rank['pct'] >= 100)
-						echo '$'.sprintf('%01.0f', $cur_rank['trend'] * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .25 );
-					else
-						echo '$0';
-					?></td>
-					<td style="text-align: center;"><?php
-					if ($cur_rank['pct'] >= 100)
-						echo '$'.sprintf('%01.0f', $cur_rank['trend'] * (($cur_rank['goal'] * $multiplier) >= 80 ? .04 : .03) * .5 );
-					else
-						echo '$0';
-					?></td>
+					<td class="right_justify"><?php echo ($cur_rank['entity'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->locations[$key+1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify">
+						<?php switch ($cur_rank['rank']) {
+							case 1:
+								echo '$1500';
+								break;
+							case 2:
+								echo '$1000';
+								break;
+                                                        default:
+                                                                echo '$0';
+                                                                break;
+						} ?>
+					</td>
 					<?php } else { ?>
 					<td style="text-align: center;"><?php echo (int) $cur_rank['child_count']; ?></td>
 					<td style="text-align: center;"><?php echo $prefix.htmlspecialchars(round($cur_rank['child_count'] > 0 ? $cur_rank['trend'] / $cur_rank['child_count'] * $multiplier : 0, 2)); ?></td>
@@ -233,7 +256,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo ($cur_rank['rank'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
@@ -309,7 +332,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo ($cur_rank['rank'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php // switch ($cur_rank['rank']) {
 							//case 1:

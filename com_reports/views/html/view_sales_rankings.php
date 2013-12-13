@@ -173,7 +173,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php if ($cur_rank['rank'] == 1) {
                                             echo '0';
                                         } else {
-                                            echo '-'.$prefix.htmlspecialchars(round(($cur_location_rankings[$cur_rank['rank'] - 1]['mtd'] - $cur_rank['mtd']) * $multiplier, 2));
+                                            echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $cur_location_rankings[$cur_rank['rank'] - 2]['mtd']) * $multiplier, 2));
                                         } ?>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {

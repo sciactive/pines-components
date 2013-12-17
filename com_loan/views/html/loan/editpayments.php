@@ -333,7 +333,8 @@ switch ($this->entity->payment_frequency) {
 													trigger: 'hover',
 													title: 'Next Payment Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars((string) ($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount']) + $pines->com_sales->round($this->entity->payments[0]['past_due'])))); ?>+'</span>',
 													content: 'Past Due: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['past_due'], true)));?>+'</span><br/>'+<?php echo json_encode(htmlspecialchars($payment_frequency));?>+' Payment: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($this->entity->payments[0]['next_payment_due_amount'], true))); ?>+'</span><br/><span style="font-size:.8em;">Past Due Amount is due immediately.</span>',
-													placement: 'right'
+													placement: 'right',
+													html: true
 												});
 											});
 										</script>

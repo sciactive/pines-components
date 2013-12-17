@@ -11,13 +11,34 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_loan/makepayment') )
-		punt_user(null, pines_url('com_loan', 'loan/makepayment', array('loan_id' => $_REQUEST['loan_id'], 'payment_amount' => $_REQUEST['payment_amount'], 'payment_date_input' => $_REQUEST['payment_date_input'], 'edit' => $_REQUEST['edit'])));
-if ( isset($_REQUEST['loan_id']) ) {
-	$loan = com_loan_loan::factory((int) $_REQUEST['loan_id']);
-	if (!isset($loan->guid)) {
-		pines_error('Requested loan id is not accessible.');
+if ($_REQUEST['type'] == 'ajax') {
+	
+	$pines->page->override = true;
+	header('Content-Type: application/json');
+
+	if ( !gatekeeper('com_loan/makepayment') ) {
+		$result = array('failed' => true);
+		$pines->page->override_doc(json_encode($result));
 		return;
+	}
+
+	if ( isset($_REQUEST['id']) ) {
+		$loan = com_loan_loan::factory((int) $_REQUEST['id']);
+		if (!isset($loan->guid)) {
+			$result = array('no_loan' => true);
+			$pines->page->override_doc(json_encode($result));
+			return;
+		}
+	}
+} else {
+	if ( !gatekeeper('com_loan/makepayment') )
+			punt_user(null, pines_url('com_loan', 'loan/makepayment', array('loan_id' => $_REQUEST['loan_id'], 'payment_amount' => $_REQUEST['payment_amount'], 'payment_date_input' => $_REQUEST['payment_date_input'], 'edit' => $_REQUEST['edit'])));
+	if ( isset($_REQUEST['loan_id']) ) {
+		$loan = com_loan_loan::factory((int) $_REQUEST['loan_id']);
+		if (!isset($loan->guid)) {
+			pines_error('Requested loan id is not accessible.');
+			return;
+		}
 	}
 }
 
@@ -25,18 +46,17 @@ if ( isset($_REQUEST['loan_id']) ) {
 // Get variables.
 $payment_amount = $_REQUEST['payment_amount'];
 
-// Check if entity exists.
-if (!isset($loan->guid)) {
-	pines_notice('The given ID could not be found.');
-	pines_redirect(pines_url('com_loan', 'loan/list'));
-	return;
-}
-
 // Check the format of the payment amount.
 if (!preg_match('/^\$?[0-9]*\.?[0-9]*$/', $payment_amount)) {
-	pines_notice('Please enter a valid payment amount.');
-	pines_redirect(pines_url('com_loan', 'loan/list'));
-	return;
+	if (($_REQUEST['type'] == 'ajax')) {
+		$result = array('error' => true);
+		$pines->page->override_doc(json_encode($result));
+		return;
+	} else {
+		pines_notice('Please enter a valid payment amount.');
+		pines_redirect(pines_url('com_loan', 'loan/list'));
+		return;
+	}
 }
 
 // Remove possible dollar sign from price.
@@ -58,9 +78,15 @@ $payment_amount = $pines->com_sales->round((float)$payment_amount);
 // Create/Append to paid array.
 $remaining_balance = ($loan->payments[0]['remaining_balance']) ? $loan->payments[0]['remaining_balance'] : $loan->principal;
 if($remaining_balance < .01) {
-	pines_notice('The balance is paid. No more payments accepted.');
-	pines_redirect(pines_url('com_loan', 'loan/list'));
-	return;
+	if (($_REQUEST['type'] == 'ajax')) {
+		$result = array('paid' => true);
+		$pines->page->override_doc(json_encode($result));
+		return;
+	} else {
+		pines_notice('The balance is paid. No more payments accepted.');
+		pines_redirect(pines_url('com_loan', 'loan/list'));
+		return;
+	}
 }
 $loan->get_payments_array();
 
@@ -80,15 +106,20 @@ else
 //else
 //	$date_expected = $loan->first_payment_date;
 $date_expected = $loan->first_payment_date;
-if (!$date_received)
-	$date_received = strtotime($_REQUEST['payment_date_input']);
+$date_received = strtotime($_REQUEST['payment_date_input']);
 $date_recorded = strtotime('now');
 
 // Check for valid date
-if(strtotime($date_received) === 0){
-	pines_notice('A valid date for receiving payment is required.');
-	pines_redirect(pines_url('com_loan', 'loan/list'));
-	return;
+if (strtotime($date_received) === 0) {
+	if (($_REQUEST['type'] == 'ajax')) {
+		$result = array('error' => true);
+		$pines->page->override_doc(json_encode($result));
+		return;
+	} else {
+		pines_notice('A valid date for receiving payment is required.');
+		pines_redirect(pines_url('com_loan', 'loan/list'));
+		return;
+	}
 }
 
 // Generate a random ID number for payment.
@@ -126,9 +157,21 @@ $loan->cleanup_pbds();
 //exit;
 
 // Save the payments array.
-$loan->save();
+if ($loan->save()) {
+	if ($_REQUEST['type'] == 'ajax') {
+		$result = array('success' => true);
+	}
+} else {
+	if ($_REQUEST['type'] == 'ajax')
+		$result = array('failed' => false);
+	else
+		pines_notice('Loan Payment was not saved.');
+}
 
-
+if ($_REQUEST['type'] == 'ajax') {
+	$pines->page->override_doc(json_encode($result));
+	return;
+}
 
 // Redirect to overview.
 if ($_REQUEST['edit'])

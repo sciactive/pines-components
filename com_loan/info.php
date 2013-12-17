@@ -25,12 +25,14 @@ return array(
 		'component' => 'com_customer&com_jquery&com_bootstrap&com_pgrid&com_pform'
 	),
 	'abilities' => array(
-		array('listloans', 'List Loans', 'User can see loans.'),
+		array('listloans', 'List Loans', 'User can view the list of loans.'),
+		array('listallloans', 'List All Loans', 'User can search all loans using *.'),
 		array('newloan', 'Create Loans', 'User can create new loans.'),
 		array('editloan', 'Edit Loans', 'User can edit current loans.'),
 		array('editpayments', 'Edit Payments', 'User can edit payments and view the edit log on a loan.'),
 		array('payoffloan', 'Pay Off Loan', 'User can pay off loans.'),
 		array('writeoffloan', 'Write Off Loan', 'User can write off loans.'),
+		array('changecollectioncode', 'Change Collection Code', 'User can change the collection code on a loan.'),
 		array('cancelloan', 'Cancel Loan', 'User can cancel loans.'),
 		array('deletepayments', 'Delete Payments', 'User can delete and restore payments on loans.'),
 		array('makepayment', 'Make Payment', 'User can make payments on loans.'),

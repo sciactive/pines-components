@@ -41,6 +41,10 @@ $loan->first_payment_date = strtotime($_REQUEST['first_payment_date']);
 $loan->payment_frequency = $_REQUEST['payment_frequency']; // per year.
 $loan->compound_frequency = $_REQUEST['compound_frequency'];
 $loan->payment_type = $_REQUEST['payment_type'];
+$loan->name = $loan->customer->name;
+$loan->email = $loan->customer->email;
+$loan->phone = $loan->customer->phone;
+$loan->phone_cell = $loan->customer->phone_cell;
 
 // Check loan process type.
 if($_REQUEST['loan_process_type'] == "go_back"){

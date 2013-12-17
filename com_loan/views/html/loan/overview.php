@@ -381,7 +381,8 @@ $this->note =  'Customer: '.htmlspecialchars($this->entity->customer->name).'<sp
 										trigger: 'hover',
 										title: 'Unpaid Interest: $'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_unpaid'], true))); ?>,
 										content: 'Expected Interest: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_expected'], true))); ?>+'</span><br/>Interest Paid: <span style="float:right;">$'+<?php echo json_encode(htmlspecialchars($pines->com_sales->round($payment['payment_interest_paid'], true))); ?>+' </span><br/><span style="font-size:.8em;">Interest is calculated based on the terms of the loan at the time of payment.</span>',
-										placement: "right"
+										placement: "right",
+										html: true
 									});
 								});
 							</script>

@@ -51,6 +51,43 @@ class com_loan_loan extends entity {
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
+	
+	/**
+	 * Return the entity helper module.
+	 * @return module Entity helper module.
+	 */
+	public function helper() {
+		$this->get_payments_array();
+
+		// It's okay if the paid array previously existed, that will give us an
+		// accurate payments array, which is what we need.
+		if ($this->payments[0]['unpaid_balance'] > 0)
+			$this->unpaid_balance = $this->payments[0]['unpaid_balance'];
+		else
+			$this->unpaid_balance = 0.00;
+
+		if ($this->payments[0]['unpaid_interest'] > 0)
+			$this->unpaid_interest = $this->payments[0]['unpaid_interest'];
+		else
+			$this->unpaid_interest = 0.00;
+
+		$past_due = $this->payments[0]['past_due'] - ($this->payments[0]['unpaid_balance_not_past_due'] + $this->payments[0]['unpaid_interest_not_past_due']);
+		if ($past_due > 0)
+			$this->past_due = $past_due;
+		else
+			$this->past_due = 0.00;
+
+		$num = count($this->paid) - 1;
+
+		if ($this->paid[$num]['payment_status'] == 'partial_not_due') {
+			$this->past_due = null;
+			$this->balance = $this->payments[0]['next_payment_due_amount'];
+		} else
+			$this->balance = $this->past_due + $this->payments[0]['next_payment_due_amount'];
+		
+		$this->save();
+		return new module('com_loan', 'loan/helper');
+	}
 
 	public function info($type) {
 		switch ($type) {
@@ -99,7 +136,7 @@ class com_loan_loan extends entity {
 			$this->id = $pines->entity_manager->new_uid('com_loan_loan');
 		return parent::save();
 	}
-
+	
 	/**
 	 * Print a form to edit the loan.
 	 * @return module The form's module.
@@ -144,6 +181,24 @@ class com_loan_loan extends entity {
 		return $module;
 	}
 
+	/**
+	 * Print a form to change the collection code on the loan.
+	 *
+	 * Uses a page override to only print the form.
+	 *
+	 * @return module The form's module.
+	 */
+	public function collection_code_form() {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_loan', 'form/collection_code', 'content');
+		$module->entity = $this;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
 	/**
 	 * Print a form to make a payment on a loan.
 	 *
@@ -279,6 +334,10 @@ class com_loan_loan extends entity {
 		}
 		$this->payoff_amount = $this->unpaid_interest + $due_interest + $this->payments[0]['remaining_balance'];
 		$this->due_interest = $due_interest;
+		if ($this->payoff_amount == 0) {
+			// No payments made, no payments missed. No payments[0] of information.
+			$this->payoff_amount = $this->payments[0]['scheduled_balance'] + $this->payments[0]['payment_amount_expected'];
+		}
 		return $this->save();
 	}
 
@@ -2564,12 +2623,14 @@ class com_loan_loan extends entity {
 			// create paid array
 			$this->paid = array();
 			$this->paid = $temp_paid;
-		} elseif ($paid_array_adjusted) {
-			// An additional payment after paid array has been altered with extra payments.
-			if (!empty($new_payment))
-				$this->paid[] = $new_payment;
-			$this->paid = $this->paid;
-		} else {
+		} 
+//		elseif ($paid_array_adjusted) {
+//			// An additional payment after paid array has been altered with extra payments.
+//			if (!empty($new_payment))
+//				$this->paid[] = $new_payment;
+//			$this->paid = $this->paid;
+//		} 
+		else {
 			// append to paid array
 				foreach ($temp_paid as $payment_paid) {
 					if (empty($payment_paid))
@@ -2577,8 +2638,6 @@ class com_loan_loan extends entity {
 					$this->paid[] = $payment_paid;
 				}
 		}
-
-
 
 		// Paid Info
 		$num_payments_paid = count($this->paid) - 1;
@@ -2588,11 +2647,6 @@ class com_loan_loan extends entity {
 		else
 			$this->paid[0]['num_payments_paid'] = $num_payments_paid;
 		
-		if (!$delete_payment)
-			$this->paid = $this->array_values_recursive($this->paid);
-		
-		
-
 		// Run Payments array again so that grid will update with correct information.
 		$this->get_payments_array();
 	}
@@ -2610,8 +2664,8 @@ class com_loan_loan extends entity {
 				$arr[$key] = array_values_recursive($val);
 			}
 		}
-	return $arr;
-}
+		return $arr;
+	}
 	
 	/**
 	 * Get the current past due amount.

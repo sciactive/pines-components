@@ -254,7 +254,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			?>
 			<tr <?php echo $class; ?>>
-				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="<?php echo $tx_type == 'SA' ? 'com_sales_sale' : 'com_sales_return'; ?>"><?php echo htmlspecialchars($tx_type.$cur_tx->id); ?></a></td>
+				<td><a data-entity="<?php echo htmlspecialchars($cur_tx->guid); ?>" data-entity-context="<?php echo $tx_type == 'SA' ? 'com_sales_sale' : 'com_sales_return'; ?>"><?php echo htmlspecialchars($cur_tx->id); ?></a></td>
 				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate)); ?></td>
 				<td><?php echo htmlspecialchars($cur_status); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>

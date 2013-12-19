@@ -41,6 +41,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'status_limit',
+		'cname' => 'Status Limit',
+		'description' => 'The limit for how many customers the loan status can be changed on at a time.',
+		'value' => 20,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'collections_codes',
 		'cname' => 'Collections Status Codes',
 		'description' => 'Keep track of status of loans for collections. Uses this format: "Abbreviation:Short Description".',

@@ -73,6 +73,23 @@ class com_loan extends component {
 		return $module;
 	}
 	
+	
+	/**
+	 * Print a form to select a status on loans to search by.
+	 * @param array current state of the grid
+	 * @return module The form's module.
+	 */
+	public function search_status_form($cur_state) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_loan', 'form/searchstatus', 'content');
+		$module->cur_state = json_decode($cur_state);
+		
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
 	/**
 	 * Print a form to make payments.
 	 *
@@ -86,7 +103,25 @@ class com_loan extends component {
 		$pines->page->override = true;
 
 		$module = new module('com_loan', 'form/makepayments', 'content');
-		$module->entity = $this;
+		$module->loan_ids = $loan_ids;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
+	/**
+	 * Print a form to change loan status.
+	 *
+	 * Uses a page override to only print the form.
+	 * 
+	 * @param string $loan_ids A comma separated list of ids
+	 * @return module The form's module.
+	 */
+	public function loan_status_form($loan_ids) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_loan', 'form/loanstatus', 'content');
 		$module->loan_ids = $loan_ids;
 
 		$pines->page->override_doc($module->render());
@@ -106,7 +141,6 @@ class com_loan extends component {
 		$pines->page->override = true;
 
 		$module = new module('com_loan', 'form/cust_history', 'content');
-		$module->entity = $this;
 		$module->loan_ids = $loan_ids;
 
 		$pines->page->override_doc($module->render());

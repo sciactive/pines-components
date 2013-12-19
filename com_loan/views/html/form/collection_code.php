@@ -105,7 +105,7 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <div class="pf-form" id="p_muid_form">
 	<div class="item clearfix">
-		<h4>Shirley Temple <span class="loan-label pull-right">Loan ID: <?php echo htmlspecialchars($this->entity->id); ?></span></h4>
+		<h4><?php echo htmlspecialchars($this->entity->customer->name); ?> <span class="loan-label pull-right">Loan ID: <?php echo htmlspecialchars($this->entity->id); ?></span></h4>
 		<div class="name row-fluid">
 			<div class="span8">
 				<select class="span12" name="collection_code">

@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $loan->collection_code = $_REQUEST['code'];
 
-if ($loan->save())
+if (!is_array($result) && $loan->save())
 	$result = array('success' => true);
 else
 	$result = array('failed' => false);

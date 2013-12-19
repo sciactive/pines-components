@@ -263,15 +263,21 @@ if (!is_array($loan_ids))
 			$c = 1;
 			foreach ($loan_ids as $cur_id) {
 			$cur_loan = $pines->com_loan->get_payment_amounts($cur_id);
-			if ($cur_loan->temp_paid_off) { ?>
-			<tr class="payment-row success">
+			$tag_status = $cur_loan->get_loan_status(true);
+			$display_status = $cur_loan->get_loan_status();
+			if ($cur_loan->temp_paid_off || $tag_status != 'active') { ?>
+			<tr class="payment-row <?php echo ($tag_status == 'paidoff' || $cur_loan->temp_paid_off) ? 'success' : 'warning'; ?>">
 				<td class="vertical-middle entity-link"><a data-entity="<?php echo htmlspecialchars($cur_loan->guid); ?>" data-entity-context="com_loan_loan"><?php echo $cur_loan->id; ?></a></td>
 				<td class="vertical-middle entity-link"><a data-entity="<?php echo htmlspecialchars($cur_loan->customer->guid); ?>" data-entity-context="com_customer_customer"><?php echo htmlspecialchars($cur_loan->customer->name); ?></a></td>
+				<?php if ($tag_status == 'paidoff' || $cur_loan->temp_paid_off) { ?>
 				<td colspan="3" class="vertical-middle text-right text-success" style="font-weight:bold;">Paid Off!</td>
+				<?php } else { ?>
+				<td colspan="3" class="vertical-middle text-right text-error" style="font-weight:bold;"><?php echo $display_status; ?></td>
+				<?php } ?>
 			</tr>
-			<tr class="action-row success">
+			<tr class="action-row <?php echo ($tag_status == 'paidoff' || $cur_loan->temp_paid_off) ? 'success' : 'warning'; ?>">
 				<td colspan="3" class="vertical-middle"><span class="payment-date-label">Last Payment Made</span></td>
-				<td colspan="2" class="vertical-middle text-right"><?php echo htmlspecialchars(format_date($cur_loan->payments[0]['last_payment_made'], 'date_sort'));?></td>
+				<td colspan="2" class="vertical-middle text-right"><?php echo (!empty($cur_loan->paid)) ? htmlspecialchars(format_date($cur_loan->payments[0]['last_payment_made'], 'date_sort')) : 'None Made';?></td>
 			</tr>
 			<?php } else { ?>
 			<tr class="payment-row <?php echo ($cur_loan->temp_past_due > 0) ? 'text-error' : ''; ?>">

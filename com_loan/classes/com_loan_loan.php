@@ -340,6 +340,32 @@ class com_loan_loan extends entity {
 		}
 		return $this->save();
 	}
+	
+	/**
+	 * Get status of a loan
+	 * @param tag bool Whether to return the tag's string or a nicely displayed version
+	 * @return string The string of the tag or a nicely displayed version
+	 */
+	public function get_loan_status($tag = false) {
+		if ($this->has_tag('active'))
+			$status = (!$tag) ? 'Active' : 'active';
+		if ($this->has_tag('paidoff'))
+			$status = (!$tag) ? 'Paid Off' : 'paidoff';
+		if ($this->has_tag('writeoff'))
+			$status = (!$tag) ? 'Written Off' : 'writeoff';
+		if ($this->has_tag('cancelled'))
+			$status = (!$tag) ? 'Cancelled' : 'cancelled';
+		if ($this->has_tag('sold'))
+			$status = (!$tag) ? 'Sold' : 'sold';
+		
+		if (!$status) {
+			$this->add_tag('active');
+			$this->save();
+			$status == (!$tag) ? 'Active' : 'active';
+		}
+		pines_log("The status is:  $status", 'notice');
+		return $status;
+	}
 
 	/**
 	 * Generates an array of payments if payments have been made or missed.

@@ -35,6 +35,9 @@ $this->title = 'Search Loan By Customer'
 			if (data.balance == '$0.00') {
 				row.append('<td><span class="text-success">Paid Off</span></td>');
 				row.append('<td style="text-align:right;"><span class="text-success"><strong>'+pines.safe(data.total_payments_made)+'</strong></span></td>');
+			} else if (data.archived) {
+				row.append('<td><span class="text-warning">Archived</span></td>');
+				row.append('<td style="text-align:right;"><span class="text-warning"><strong>'+pines.safe(data.archived)+'</strong></span></td>');
 			} else if (data.current_past_due != '$0.00') {
 				row.append('<td><span class="text-error">Past Due</span></td>');
 				row.append('<td style="text-align:right;"><span class="text-error"><strong>'+pines.safe(data.current_past_due)+'</strong> <span class="widget-refresh widget-tooltip" title="Refresh to Confirm Amount." data-toggle="tooltip" style="cursor:pointer;"><i class="icon-refresh"></i></span></span></td>');

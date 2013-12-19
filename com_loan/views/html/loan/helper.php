@@ -132,6 +132,16 @@ if ($this->render == 'body' && gatekeeper('com_loan/listloans')) {
 				<td style="font-weight:bold;"><?php echo $frequency;?> Payment</td>
 				<td><?php echo htmlspecialchars('$'.number_format($this->entity->frequency_payment, 2, '.', '')); ?></td>
 			</tr>
+			<?php 
+			$tag_status = $this->entity->get_loan_status(true);
+			$display_status = $this->entity->get_loan_status();
+			?>
+			<tr class="<?php echo ($this->entity->status == 'paid off' || $tag_status == 'paidoff') ? 'success' : (($tag_status == 'active') ? '' : 'warning') ?>">
+				<td style="font-weight:bold;">Loan Status</td>
+				<td>
+					<?php echo $display_status; ?>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	

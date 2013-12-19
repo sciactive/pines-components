@@ -56,6 +56,16 @@ if (isset($location)) {
 		$or = array('|', 'ref' => array('group', $location));
 }
 
+if ($_REQUEST['status_tags']) {
+	$status_tags = explode(',',$_REQUEST['status_tags']);
+	
+	if (isset($or)) {
+		$or['tag'] = $status_tags;
+	} else {
+		$or = array('|', 'tag' => $status_tags);
+	}
+} 
+
 // Determine the type of query.
 if (preg_match('/^\s*$/', $query)) {
 	// Nothing was queried.
@@ -149,6 +159,19 @@ if ($loans) {
 		$today = strtotime('now');
 		$days = format_date_range($due_date, $today, '#days#');
 		$missed_first_payment = ( $due_date < $today  && empty($cur_loan->paid)) ? $days : false;
+		
+		// Figure out Status
+		$cur_status = $cur_loan->get_loan_status();
+		$archived = ($cur_status != 'Active') ? $cur_status : false;
+		
+		// Next due:
+		if ($cur_loan->status == 'paid off')
+			$next_due_payment = 'Paid Off';
+		else if (isset($cur_loan->payments[0]['next_payment_due']))
+			$next_due_payment = format_date($cur_loan->payments[0]['next_payment_due'], "date_short");
+		else
+			$next_due_payment = format_date($cur_loan->first_payment_date, "date_short");
+		
 		$json_struct = (object) array(
 			'guid'					=> $cur_loan->guid,
 			'id'					=> (int) $cur_loan->id,
@@ -159,7 +182,8 @@ if ($loans) {
 			'location_guid'			=> htmlspecialchars($cur_loan->group->guid),
 			'location'				=> htmlspecialchars($cur_loan->group->name),
 			'creation_date'			=> htmlspecialchars(format_date($cur_loan->creation_date, "date_short")),
-			'status'				=> htmlspecialchars(ucwords($cur_loan->status)),
+			'status'				=> htmlspecialchars($cur_status),
+			'archived'				=> htmlspecialchars($archived),
 			'collection_code'		=> (isset($cur_loan->collection_code)) ? htmlspecialchars($cur_loan->collection_code) : '',
 			'principal'				=> "$".htmlspecialchars($pines->com_sales->round($cur_loan->principal, true)),
 			'term'					=> htmlspecialchars($cur_loan->term." ".$cur_loan->term_type),
@@ -169,7 +193,7 @@ if ($loans) {
 			'missed_first_payment'	=> htmlspecialchars($missed_first_payment),
 			'next_payment_amount'	=> "$".htmlspecialchars($pines->com_sales->round($cur_loan->payments[0]['next_payment_due_amount'], true)),
 			'current_past_due'		=> ($cur_loan->payments[0]['past_due'] < .01) ? "$0.00" : '$'.htmlspecialchars($pines->com_sales->round($cur_loan->payments[0]['past_due'], true)),
-			'next_payment_due'		=> (!empty($cur_loan->paid)) ? htmlspecialchars(format_date($cur_loan->entity->payments[0]['next_payment_due'], "date_short")) : htmlspecialchars(format_date($cur_loan->first_payment_date, "date_short")),
+			'next_payment_due'		=> htmlspecialchars($next_due_payment),
 			'total_payments_made'	=> empty($cur_loan->payments[0]['total_interest_paid']) ? "$0.00" : '$'.htmlspecialchars($pines->com_sales->round(($cur_loan->payments[0]['total_principal_paid'] + $cur_loan->payments[0]['total_interest_paid']), true)),
 			'total_principal_paid'	=> empty($cur_loan->payments[0]['total_principal_paid']) ? "$0.00" : '$'.htmlspecialchars($pines->com_sales->round($cur_loan->payments[0]['total_principal_paid'], true)),
 			'total_interest_paid'	=> empty($cur_loan->payments[0]['total_interest_paid']) ? "$0.00" : '$'.htmlspecialchars($pines->com_sales->round($cur_loan->payments[0]['total_interest_paid'], true)),

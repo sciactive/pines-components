@@ -101,7 +101,7 @@ class com_logger extends component implements log_manager_interface {
 			if (!($r = gzopen($cur_file, 'r')))
 				return false;
 			do {
-				$log_data .= gzread($r, 8192);
+				$log_data .= gzread($r, 4096);
 			} while (!gzeof($r));
 		}
 

@@ -38,28 +38,7 @@ if (!is_array($result) && isset($_REQUEST['id']) ) {
 }
 // Perform Action
 if (!is_array($result)) {
-	switch ($_REQUEST['status']) {
-		case 'active':
-			$loan->remove_tag('paidoff', 'writeoff', 'cancelled', 'sold');
-			$loan->add_tag('active');
-			break;
-		case 'paidoff':
-			$loan->remove_tag('active', 'writeoff', 'cancelled', 'sold');
-			$loan->add_tag('paidoff');
-			break;
-		case 'writeoff':
-			$loan->remove_tag('paidoff', 'active', 'cancelled', 'sold');
-			$loan->add_tag('writeoff');
-			break;
-		case 'cancelled':
-			$loan->remove_tag('paidoff', 'writeoff', 'active', 'sold');
-			$loan->add_tag('cancelled');
-			break;
-		case 'sold':
-			$loan->remove_tag('paidoff', 'writeoff', 'cancelled', 'active');
-			$loan->add_tag('sold');
-			break;
-	}
+	$loan->change_loan_tags($_REQUEST['status']);
 }
 
 // Save Results

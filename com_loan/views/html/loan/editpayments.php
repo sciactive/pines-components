@@ -43,6 +43,25 @@ switch ($this->entity->payment_frequency) {
 ?>
 <script type="text/javascript">
 	pines(function(){
+		var width;
+		$(window).on('resize', function(){
+			var thewindow = $(this);
+			var window_width = thewindow.width();
+			if (window_width < 500)
+				width = window_width - 10;
+			else
+				width = 500;
+			
+			var leftoffset = (window_width - width) / 2;
+			
+			if ($('.ui-dialog:visible').length) {
+				$('.ui-dialog:visible').css({
+					'width': width,
+					'left': leftoffset
+				});
+			}
+		}).resize();
+		
 		// Check all payments delete name. (That it's not "Auto-save").
 		$('#delete_all_payments_name_input').change(function() {
 			var rege = /^Auto-save/;
@@ -128,52 +147,33 @@ switch ($this->entity->payment_frequency) {
 		}).change();
 
 
-		var edit_make_payment = true;
 		var loan_id = <?php echo htmlspecialchars($this->entity->guid); ?>;
 		$('#p_muid_make_payment').click(function() {
 			$.ajax({
-				url: <?php echo json_encode(pines_url('com_loan', 'forms/makepayment')); ?>,
+				url: <?php echo json_encode(pines_url('com_loan', 'forms/makepayments')); ?>,
 				type: "POST",
 				dataType: "html",
-				data: {"id": loan_id},
+				data: {"ids": loan_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the make payment form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+					pines.error("An error occured while trying to retrieve the make payments form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
-					if (data == "")
+					if (data == "") {
 						return;
+					}
 					pines.pause();
-					var form = $("<div title=\"Make a Payment\"></div>").html(data+"<br />");
+					var form = $("<div title=\"Make Payment(s)\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
-						width: 425,
+						width: width,
 						modal: true,
 						close: function(){
 							form.remove();
 						},
 						buttons: {
-							"Make Payment": function(){
-								var payment_amount = form.find(":input[name=payment_amount]").val();
-								var payment_date_input = form.find(":input[name=payment_date_input]").val();
-								if (payment_amount == "") {
-									alert('Please specify the payment amount.');
-								} else if (payment_amount < 0) {
-									alert('Please specify a valid payment amount.');
-								} else if (<?php echo json_encode($this->entity->payments[0]['remaining_balance'] ? $this->entity->payments[0]['remaining_balance'] : $this->entity->principal); ?> < .01) {
-									alert('Balance is paid. No more payments accepted.')
-								} else if (payment_date_input == "") {
-									alert('Please specify a date for receiving the payment.');
-								} else {
-									form.dialog('close');
-									// Submit the request status change.
-									pines.post(<?php echo json_encode(pines_url('com_loan', 'loan/makepayment')); ?>, {
-										"loan_id": loan_id,
-										"edit": edit_make_payment,
-										"payment_amount": payment_amount,
-										"payment_date_input": payment_date_input
-									});
-								}
+							"Done": function() {
+								$(this).dialog("close");
 							}
 						}
 					});

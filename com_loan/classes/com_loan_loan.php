@@ -363,8 +363,36 @@ class com_loan_loan extends entity {
 			$this->save();
 			$status == (!$tag) ? 'Active' : 'active';
 		}
-		pines_log("The status is:  $status", 'notice');
 		return $status;
+	}
+	
+	/**
+	 * Change tags on a loan to change the status.
+	 * @param tag string Determines which tag should be put onto the loan.
+	 */
+	public function change_loan_tags($tag) {
+		switch ($tag) {
+			case 'active':
+				$this->remove_tag('paidoff', 'writeoff', 'cancelled', 'sold');
+				$this->add_tag('active');
+				break;
+			case 'paidoff':
+				$this->remove_tag('active', 'writeoff', 'cancelled', 'sold');
+				$this->add_tag('paidoff');
+				break;
+			case 'writeoff':
+				$this->remove_tag('paidoff', 'active', 'cancelled', 'sold');
+				$this->add_tag('writeoff');
+				break;
+			case 'cancelled':
+				$this->remove_tag('paidoff', 'writeoff', 'active', 'sold');
+				$this->add_tag('cancelled');
+				break;
+			case 'sold':
+				$this->remove_tag('paidoff', 'writeoff', 'cancelled', 'active');
+				$this->add_tag('sold');
+				break;
+		}
 	}
 
 	/**
@@ -1054,12 +1082,19 @@ class com_loan_loan extends entity {
 				$this->status = "current";
 			if ($this->remaining_balance < .01) {
 				// Loan is paid off
-				if ($this->status == "current")
+				if ($this->status == "current") {
 					$this->status = "paid off";
+					// Adjust the paid off tag
+					$this->change_loan_tags('paidoff');
+				}
 			} else {
 				// Loan is not paid off
-				if ($this->status == "paid off")
+				if ($this->status == "paid off") {
 					$this->status = "current";
+					// Change to active
+					// Remember you can only make payments on "active" loans so it is safe to make it active.
+					$this->change_loan_tags('active');
+				}
 			}
 			// adjust remaining payments
 			// Calculates the percentage paid on all charges using the current total (adjusted for interest changes).

@@ -101,7 +101,11 @@ class com_logger extends component implements log_manager_interface {
 			if (!($r = gzopen($cur_file, 'r')))
 				return false;
 			do {
-				$log_data .= gzread($r, 4096);
+				$log_data .= gzread($r, 8192);
+				//TO DO: Warn when there are too many logs, 
+				// or put this data into an array - 
+				// string size overflow will happen here depending on how many logs
+				// and memory allocation in php.ini
 			} while (!gzeof($r));
 		}
 

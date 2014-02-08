@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
+$google_drive = false;
+if (isset($pines->com_googledrive)) {
+    $pines->com_googledrive->export_to_drive('csv');
+    $google_drive = true;
+} else {
+    pines_log("Google Drive is not installed", 'notice');
+}
 if (($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep')) || gatekeeper('com_sales/overrideowner'))
 	$pines->com_hrm->load_employee_select();
 if ($pines->config->com_sales->autocomplete_product)
@@ -91,7 +98,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						filename: 'sales',
 						content: rows
 					});
-				}}
+				}},
+                                <?php // Need to check if Google Drive is installed
+                                    if ($google_drive && !empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                        setRows(rows);
+                                        checkAuth();
+                                    }},
+                                    <?php } elseif ($google_drive && empty($pines->config->com_googledrive->client_id)) { ?>
+                                        {type: 'button', title: 'Export to Google Drive', extra_class: 'picon drive-icon', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                                        alert('You need to set the CLIENT ID before you can export to Google Drive');
+                                    }},
+                                    <?php } ?>
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',

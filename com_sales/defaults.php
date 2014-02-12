@@ -81,6 +81,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'use_commission',
+		'cname' => 'Use Commission System',
+		'description' => 'Whether to use the commission system or not.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'add_commission',
 		'cname' => 'Add Commission',
 		'description' => 'When (in the sale process) to calculate and add commission to the employee. This requires HRM integration.',

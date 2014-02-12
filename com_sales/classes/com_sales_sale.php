@@ -309,7 +309,7 @@ class com_sales_sale extends entity {
 			// Perform actions.
 			$this->perform_actions();
 		}
-		if (!$this->added_commission) {
+		if (!$this->added_commission && $pines->config->com_sales->use_commission) {
 			// Add commission.
 			$this->add_commission();
 		}

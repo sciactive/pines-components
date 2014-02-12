@@ -191,14 +191,15 @@ if (isset($pines->com_googledrive)) {
 			<th>Adjustment</th>
 			<th>Cost</th>
 			<th>Profit</th>
+                        <?php if ($pines->config->com_sales->use_commission) { ?>
 			<th>Commission</th>
+                        <?php } ?>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
+                $totals = array();
 		foreach ($this->invoices as $cur_invoice) {
-			if ($cur_sale->status == 'voided')
-				continue;
 			if (!isset($totals[$cur_invoice->group->guid])){
 				$totals[$cur_invoice->group->guid] = array(
 					'location' => $cur_invoice->group,
@@ -221,30 +222,33 @@ if (isset($pines->com_googledrive)) {
 				$totals[$cur_invoice->group->guid]['total_sold'] += $cur_invoice->subtotal;
 				$totals[$cur_invoice->group->guid]['total_net'] += $cur_invoice->subtotal;
 				foreach ($cur_invoice->products as $cur_item) {
-					foreach ($cur_item['stock_entities'] as $cur_stock)
+					foreach ($cur_item['stock_entities'] as $cur_stock) 
 						$totals[$cur_invoice->group->guid]['cost'] += $cur_stock->cost;
+                                        if ($pines->config->com_sales->use_commission) {
+                                            foreach ($cur_item['salesperson']->commissions as $cur_commission) {
+                                                    if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+                                                            $totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+                                                            $commissions[] = $cur_commission;
+                                                    }
+                                            }
+                                        }
 				}
-				foreach ($cur_invoice->products as $cur_product) {
-					foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-						if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
-							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
-							$commissions[] = $cur_commission;
-						}
-					}
-				}
-			} elseif ($cur_invoice->has_tag('return')) {
+			} 
+                        elseif ($cur_invoice->has_tag('return')) {
 				$totals[$cur_invoice->group->guid]['qty_returned']++;
 				$totals[$cur_invoice->group->guid]['qty_net']--;
 				$totals[$cur_invoice->group->guid]['total_returned'] += $cur_invoice->subtotal;
 				$totals[$cur_invoice->group->guid]['total_net'] -= $cur_invoice->subtotal;
-				foreach ($cur_invoice->products as $cur_product) {
-					foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-						if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
-							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
-							$commissions[] = $cur_commission;
-						}
-					}
-				}
+				if ($pines->config->com_sales->use_commission) {
+                                    foreach ($cur_invoice->products as $cur_product) {
+                                            foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+                                                    if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+                                                            $totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+                                                            $commissions[] = $cur_commission;
+                                                    }
+                                            }
+                                    }
+                                }
 			}
 		}
 		foreach ($totals as $cur_total) {
@@ -261,7 +265,9 @@ if (isset($pines->com_googledrive)) {
 			<td class="total">$<?php echo number_format($cur_total['adjustment'], 2, '.', ''); ?></td>
 			<td class="total">$<?php echo number_format($cur_total['cost'], 2, '.', ''); ?></td>
 			<td class="total">$<?php echo number_format($cur_total['profit'], 2, '.', ''); ?></td>
-			<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
+			<?php if ($pines->config->com_sales->use_commission) { ?>
+                        <td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
+                        <?php } ?>
 		</tr>
 		<?php } ?>
 	</tbody>

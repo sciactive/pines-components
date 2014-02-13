@@ -204,6 +204,9 @@ class com_sales_countsheet extends entity {
                     if ($cur_entry->qty <= 0)
                         continue;
                     
+                    // Get the $product for the later checks
+                    $product = $pines->com_sales->get_product_by_code($cur_entry->code);
+                    
                     $stock = (array) $pines->entity_manager->get_entities(
                                     array('class' => com_sales_stock),
                                     $and_selector,
@@ -224,11 +227,9 @@ class com_sales_countsheet extends entity {
                             continue;
                         }
                         
-                        // If we made it this far, get the $product for the later checks
-                        $product = $pines->com_sales->get_product_by_code($cur_entry->code);
                         
                         // Find entries based on location and SKU/barcode
-                        if ($cur_stock->location == $this->location && isset($product) && $cur_stock->product == $product) {
+                        if (!(in_array($cur_stock->guid, $not_selector['guid'])) && $cur_stock->location == $this->location && isset($product) && $cur_stock->product == $product) {
                             // Second round of blocks
                             if ($product->serialized) {
                                 if (!$cur_stock->in_array($this->potential[$cur_entry->code]['closest'])) {
@@ -253,7 +254,7 @@ class com_sales_countsheet extends entity {
                         }
                         
                         // Find entries based on serial
-                        if ($cur_stock->serial == $cur_entry->code && $cur_stock->location != $this->group && $cur_stock->product->serialized) {
+                        if (!(in_array($cur_stock->guid, $not_selector['guid'])) && $cur_stock->serial == $cur_entry->code && $cur_stock->location != $this->group && $cur_stock->product->serialized) {
                             
                             if (!$cur_stock->in_array($this->potential[$cur_entry->code]['entries'])) {
                                 $this->potential[$cur_entry->code]['name'] = $cur_entry->code;
@@ -267,7 +268,7 @@ class com_sales_countsheet extends entity {
                         }
                         
                         // Find entries based on SKU/barcode
-                        if (isset($product) && $cur_stock->product == $product && $cur_stock->location != $this->group) {
+                        if (!(in_array($cur_stock->guid, $not_selector['guid'])) && isset($product) && $cur_stock->product == $product && $cur_stock->location != $this->group) {
                             if (!$cur_stock->in_array($this->potential[$cur_entry->code]['entries'])) {
                                 $this->potential[$cur_entry->code]['name'] = $cur_entry->code;
                                 // Original comment: Entries, since it's in antoher location
@@ -281,7 +282,14 @@ class com_sales_countsheet extends entity {
                         
                     }
                     
+                }
+                unset($cur_entry);
+                
+                pines_log('error', 'second for each entry loop');
+                foreach ($entries as &$cur_entry) {
                     // Check for duplicates
+                    if ($cur_entry->qty <= 0)
+                        continue;
                    
                     $found = false;
                     foreach ($this->matched as $cur_matched) {
@@ -308,8 +316,8 @@ class com_sales_countsheet extends entity {
                             $cur_entry->qty--;
                         }
                     }
-                   unset($cur_entry);
                 }
+                unset($cur_entry);
                 
                 // Get the rest of the invalids
                 $this->invalid = array();

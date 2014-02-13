@@ -53,10 +53,6 @@ if ($pines->config->com_sales->global_countsheets)
 
 if ($_REQUEST['save'] == 'commit') {
 	// Make sure the countsheet has a group.
-        // Seems to be running these calls twice
-        // $countsheet->save() is called and $countsheet->run_count()
-        // And then after this if statment, run_count and save are called again
-        // Does this twice for committing
 	$countsheet->save();
 	// Run the count.
 	$countsheet->run_count();
@@ -84,7 +80,7 @@ if ($countsheet->save()) {
 		return;
 	}
 } else {
-	$countsheet->print_form();
+	$countsheet->print_form(false);
 	pines_error('Error saving countsheet. Do you have permission?');
 	return;
 }

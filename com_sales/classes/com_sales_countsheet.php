@@ -207,6 +207,17 @@ class com_sales_countsheet extends entity {
                 // Loop through all the entries the user inputted against the stock in the location
                 foreach($entries as &$cur_entry) {
                     // Don't need the first if check for quantity since we are looping through each product
+                    $product = $pines->com_sales->get_product_by_code($cur_entry->code);
+                        
+                    $stock = (array) $pines->entity_manager->get_entities(
+                                    array('class' => com_sales_stock, 'limit' => $cur_entry->qty),
+                                    $and_selector,
+                                    $not_selector,
+                                    array('|',
+                                            'strict' => array('serial', $cur_entry->code),
+                                            'ref' => array('product', $product)
+                                        )
+                            );
                     
                     foreach ($stock as $cur_stock) {
                         
@@ -222,9 +233,6 @@ class com_sales_countsheet extends entity {
                                 continue;
                             
                         }
-                        
-                        // Get product code
-                        $product = $pines->com_sales->get_product_by_code($cur_entry->code);
                         
                         // Find entries based on location and SKU/barcode
                         if (isset($product) && $cur_stock->product == $product) {
@@ -243,29 +251,24 @@ class com_sales_countsheet extends entity {
                             }
                             $cur_entry->qty--;
                         }
-                        
                     }
-                    
                 }
                 unset($cur_entry);
                 unset($product);
                 unset($stock);
                 
-                // Might have to move this $stock get entities call inside with limits
-                // Just so we don't get an insane amount of calls
-                pines_log("Start Time for getting stock2: ".time(), "notice");
-                $stock = (array) $pines->entity_manager->get_entities(
-                                array('class' => com_sales_stock),
+                foreach ($entries as &$cur_entry) {
+                    // Make sure the quantity is greater than 0
+                    if ($cur_entry->qty <= 0)
+                        continue;
+                    
+                    $stock = (array) $pines->entity_manager->get_entities(
+                                array('class' => com_sales_stock, 'limit' => 5),
                                 $and_selector,
                                 $not_selector,
                                 array('!&',
                                         'ref' => array('location', $this->group))
                         );
-                
-                foreach ($entries as &$cur_entry) {
-                    // Make sure the quantity is greater than 0
-                    if ($cur_entry->qty <= 0)
-                        continue;
                     
                     foreach ($stock as $cur_stock) {
                         // Find entries based on serial
@@ -298,6 +301,7 @@ class com_sales_countsheet extends entity {
                         }
                     }
                 }
+
 		unset($cur_entry);
 		// Check for duplicates.
 		foreach ($entries as &$cur_entry) {

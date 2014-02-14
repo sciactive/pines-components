@@ -195,15 +195,6 @@ class com_sales_countsheet extends entity {
 		// Work on a copy.
 		$entries = unserialize(serialize($this->entries));
                 
-                // Get all the stock items at this location
-                $stock = (array) $pines->entity_manager->get_entities(
-                                array('class' => com_sales_stock),
-                                $and_selector,
-                                $not_selector,
-                                array('&',
-                                        'ref' => array('location', $this->group)
-                                    )
-                        );
                 // Loop through all the entries the user inputted against the stock in the location
                 foreach($entries as &$cur_entry) {
                     // Don't need the first if check for quantity since we are looping through each product

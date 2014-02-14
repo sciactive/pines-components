@@ -68,19 +68,17 @@ if ($_REQUEST['save'] == 'commit') {
 		$countsheet->status = 'declined';
 }
 
-// Run the count.
-$countsheet->run_count();
 
 if ($countsheet->save()) {
 	if ($countsheet->final) {
 		pines_notice('Committed countsheet ['.$countsheet->guid.']');
 	} else {
 		pines_notice('Saved countsheet ['.$countsheet->guid.']');
-		$countsheet->print_form(false);
+		$countsheet->print_form();
 		return;
 	}
 } else {
-	$countsheet->print_form(false);
+	$countsheet->print_form();
 	pines_error('Error saving countsheet. Do you have permission?');
 	return;
 }

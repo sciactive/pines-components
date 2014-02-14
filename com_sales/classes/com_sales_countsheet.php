@@ -91,16 +91,13 @@ class com_sales_countsheet extends entity {
 	/**
 	 * Print a form to edit the countsheet.
          * 
-         * @param $run boolean Whether or not to run the count.
 	 * @return module The form's module.
 	 */
-	public function print_form($run = true) {
+	public function print_form() {
 		global $pines;
 
 		if (!isset($this->group->guid))
 			$this->group = $_SESSION['user']->group;
-		if ($run)
-                    $this->run_count();
 
 		$module = new module('com_sales', 'countsheet/form', 'content');
 		$module->entity = $this;
@@ -198,7 +195,7 @@ class com_sales_countsheet extends entity {
 		// Work on a copy.
 		$entries = unserialize(serialize($this->entries));
                 
-                
+
 		// Find entries based on location and serial.
 		foreach ($entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)

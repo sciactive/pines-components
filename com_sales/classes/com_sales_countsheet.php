@@ -197,6 +197,8 @@ class com_sales_countsheet extends entity {
                 
                 $all_entries = array();
                 $products = array();
+                $closest_stock_guids = array();
+                $entries_stock_guids = array();
                 foreach ($entries as &$cur_entry) {
                     $product = $pines->com_sales->get_product_by_code($cur_entry->code);
                     $all_entries[$cur_entry->code] = array('entry' => $cur_entry, 'product' => $product);
@@ -231,20 +233,16 @@ class com_sales_countsheet extends entity {
                         $all_entries[$stock->serial]['entry']->qty--;
                         unset($expected_countsheet[$stock->guid]);
                         
-                        // If we don't have any more quantity, take it away
-                        if ($all_entries[$stock->serial]->qty <= 0) {
-                            unset($all_entries[$stock->serial]);
-                            unset($products[$stock->product->sku]);
-                        }
                         
                         
                     } elseif (isset($products[$stock->product->sku])) {
                         // Found the item by barcode/sku
                         $product = $products[$stock->product->sku]['product'];
                         if ($product->serialized) {
-                            if (!$stock->in_array($this->potential[$product->sku]['closest'])) {
+                            if (!isset($closest_stock_guids[$stock->guid])) {
                                 $this->potential[$product->sku]['name'] = $product->sku;
                                 $this->potential[$product->sku]['closest'][] = $stock;
+                                $closest_stock_guids[$stock->guid] = $stock;
                             }
                             $this->potential[$product->sku]['count']++;
                             
@@ -255,12 +253,8 @@ class com_sales_countsheet extends entity {
                             $not_selector['guid'][] = $stock->guid;
                             unset($expected_countsheet[$stock->guid]);
                         }
-                        $products[$product->sku]['entry']->qty--;
+                        $all_entries[$products[$product->sku]['serial']]->qty--;
                         
-                        if ($products[$product->sku]['entry']->qty <= 0) {
-                            unset($all_entries[$products[$product->sku]['serial']]);
-                            unset($products[$product->sku]);
-                        }
                     }
                 }
 
@@ -283,11 +277,12 @@ class com_sales_countsheet extends entity {
 				// If the product isn't serialized, something's wrong, don't save it.
 				if (!$cur_stock->product->serialized)
 					continue;
-				if (!$cur_stock->in_array($this->potential[$cur_entry->code]['entries'])) {
-					$this->potential[$cur_entry->code]['name'] = $cur_entry->code;
-					// Entries, since it's in another location.
-					$this->potential[$cur_entry->code]['entries'][] = $cur_stock;
-				}
+                                if (!isset($entries_stock_guids[$cur_stock->guid])) {
+                                    $this->potential[$cur_entry->code]['name'] = $cur_entry->code;
+                                    // Entries, since it's in another location
+                                    $this->potential[$cur_entry->code]['entries'][] = $cur_stock;
+                                    $entries_stock_guids[$cur_stock->guid] = $cur_stock;
+                                }
 				$this->potential[$cur_entry->code]['count']++;
 				$cur_entry->qty--;
 			}
@@ -312,11 +307,12 @@ class com_sales_countsheet extends entity {
 					)
 				);
 			foreach ($stock as $cur_stock) {
-				if (!$cur_stock->in_array($this->potential[$cur_entry->code]['entries'])) {
-					$this->potential[$cur_entry->code]['name'] = $cur_entry->code;
-					// Entries, since it's in another location.
-					$this->potential[$cur_entry->code]['entries'][] = $cur_stock;
-				}
+                                if (!isset($entries_stock_guids[$cur_stock->guid])) {
+                                    $this->potential[$cur_entry->code]['name'] = $cur_entry->code;
+                                    // Entries, since it's in another location
+                                    $this->potential[$cur_entry->code]['entries'][] = $cur_stock;
+                                    $entries_stock_guids[$cur_stock->guid] = $cur_stock;
+                                }
 				$this->potential[$cur_entry->code]['count']++;
 				$cur_entry->qty--;
 			}

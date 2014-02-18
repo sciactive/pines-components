@@ -195,68 +195,77 @@ class com_sales_countsheet extends entity {
 		// Work on a copy.
 		$entries = unserialize(serialize($this->entries));
                 
-		// Find entries based on location and serial.
-		foreach ($entries as &$cur_entry) {
-			if ($cur_entry->qty <= 0)
-				continue;
-                        $stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock, 'limit' => $cur_entry->qty),
-					$and_selector,
-					$not_selector,
-					array('&',
-						'strict' => array('serial', $cur_entry->code),
-						'ref' => array('location', $this->group)
-					)
-				);
-			foreach ($stock as $cur_stock) {
-				// If the product isn't serialized, something's wrong, don't save it.
-				if (!$cur_stock->product->serialized)
-					continue;
-				$this->matched[] = $cur_stock;
-				$this->matched_count[$cur_stock->product->guid]++;
-				$this->matched_serials[$cur_stock->product->guid][] = $cur_stock->serial;
-				$not_selector['guid'][] = $cur_stock->guid;
-				$cur_entry->qty--;
-			}
-		}
-		unset($cur_entry);
-		// Find entries based on location and SKU/barcode.
-		foreach ($entries as &$cur_entry) {
-			if ($cur_entry->qty <= 0)
-				continue;
-			$product = $pines->com_sales->get_product_by_code($cur_entry->code);
-			if (!isset($product))
-				continue;
-			$stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock, 'limit' => $cur_entry->qty),
-					$and_selector,
-					$not_selector,
-					array('&',
-						'ref' => array(array('location', $this->group), array('product', $product))
-					)
-				);
-			foreach ($stock as $cur_stock) {
-				// If the product is serialized, the entry is incorrect.
-				if ($product->serialized) {
-					if (!$cur_stock->in_array($this->potential[$cur_entry->code]['closest'])) {
-						$this->potential[$cur_entry->code]['name'] = $cur_entry->code;
-						// Closest, since it's in this location.
-						$this->potential[$cur_entry->code]['closest'][] = $cur_stock;
-					}
-					$this->potential[$cur_entry->code]['count']++;
-				} else {
-					$this->matched[] = $cur_stock;
-					$this->matched_count[$cur_stock->product->guid]++;
-					$this->matched_serials[$cur_stock->product->guid] = array();
-					$not_selector['guid'][] = $cur_stock->guid;
-				}
-				$cur_entry->qty--;
-			}
-		}
-		unset($cur_entry);
+                $all_entries = array();
+                $products = array();
+                foreach ($entries as &$cur_entry) {
+                    $product = $pines->com_sales->get_product_by_code($cur_entry->code);
+                    $all_entries[$cur_entry->code] = array('entry' => $cur_entry, 'product' => $product);
+                    
+                    if (isset($product))
+                        $products[$product->sku] = array('product' => $product, 'serial' => $cur_entry->code, 'entry' => $cur_entry);
+                }
+                unset($cur_entry);
+                unset($product);
+                
+                // Create assoc array for expected countsheet
+                $locations_stock = (array) $pines->entity_manager->get_entities(
+                            array('class' => com_sales_stock),
+                            $and_selector,
+                            $not_selector,
+                            array('&',
+                                    'ref' => array('location', $this->group)
+                                )
+                        );
+                
+                // Creating a duplicate array of the stock items so that we can manipulate it
+                $expected_countsheet = array();
+                foreach ($locations_stock as $stock) {
+                    $expected_countsheet[$stock->guid] = $stock;
+                    if (isset($all_entries[$stock->serial]) && $stock->product->serialized) {
+                        // Found the item in our inputted stock
+                        // Need to reduce the stock in our expected countsheet and from the user inputted countsheet
+                        $this->matched[] = $stock;
+                        $this->matched_count[$stock->product->guid]++;
+                        $this->matched_serials[$stock->product->guid][] = $stock->serial;
+                        $not_selector['guid'][] = $stock->guid;
+                        $all_entries[$stock->serial]['entry']->qty--;
+                        unset($expected_countsheet[$stock->guid]);
+                        
+                        // If we don't have any more quantity, take it away
+                        if ($all_entries[$stock->serial]->qty <= 0) {
+                            unset($all_entries[$stock->serial]);
+                            unset($products[$stock->product->sku]);
+                        }
+                        
+                        
+                    } elseif (isset($products[$stock->product->sku])) {
+                        // Found the item by barcode/sku
+                        $product = $products[$stock->product->sku]['product'];
+                        if ($product->serialized) {
+                            if (!$stock->in_array($this->potential[$product->sku]['closest'])) {
+                                $this->potential[$product->sku]['name'] = $product->sku;
+                                $this->potential[$product->sku]['closest'][] = $stock;
+                            }
+                            $this->potential[$product->sku]['count']++;
+                            
+                        } else {
+                            $this->matched[] = $stock;
+                            $this->matched_count[$stock->product->guid]++;
+                            $this->matched_serials[$stock->product->guid][] = array();
+                            $not_selector['guid'][] = $stock->guid;
+                            unset($expected_countsheet[$stock->guid]);
+                        }
+                        $products[$product->sku]['entry']->qty--;
+                        
+                        if ($products[$product->sku]['entry']->qty <= 0) {
+                            unset($all_entries[$products[$product->sku]['serial']]);
+                            unset($products[$product->sku]);
+                        }
+                    }
+                }
+
 		// Find entries based on serial.
-		foreach ($entries as &$cur_entry) {
-			// If there are more than one, it's not a serial.
+		foreach ($all_entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$stock = (array) $pines->entity_manager->get_entities(
@@ -285,10 +294,10 @@ class com_sales_countsheet extends entity {
 		}
 		unset($cur_entry);
 		// Find entries based on SKU/barcode.
-		foreach ($entries as &$cur_entry) {
+		foreach ($all_entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
-			$product = $pines->com_sales->get_product_by_code($cur_entry->code);
+                        $product = $all_entries[$cur_entry->code]['product'];
 			if (!isset($product))
 				continue;
 			$stock = (array) $pines->entity_manager->get_entities(
@@ -315,7 +324,7 @@ class com_sales_countsheet extends entity {
 
 		unset($cur_entry);
 		// Check for duplicates.
-		foreach ($entries as &$cur_entry) {
+		foreach ($all_entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$found = false;
@@ -354,28 +363,21 @@ class com_sales_countsheet extends entity {
 		unset($cur_entry);
 		// All the rest are invalid.
 		$this->invalid = array();
-		foreach ($entries as $cur_entry) {
+		foreach ($all_entries as $cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$this->invalid = array_merge($this->invalid, array_fill(0, $cur_entry->qty, $cur_entry->code));
 		}
-		// Find entries that should be counted, but weren't found.
-		$this->missing = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_stock),
-				$and_selector,
-				$not_selector,
-				array('&',
-					'ref' => array('location', $this->group)
-				)
-			);
-		foreach ($this->missing as $stock) {
-			$this->missing_count[$stock->product->guid]++;
-			if ($stock->product->serialized) {
-				$this->missing_serials[$stock->product->guid][] = $stock->serial;
-			} else {
-				$this->missing_serials[$stock->product->guid] = array();
-			}
-		}
+                // Missing entries are the ones left in the $expected_countsheet
+                foreach ($expected_countsheet as $missing_stock) {
+                    $this->missing[] = $missing_stock;
+                    $this->missing_count[$stock->product->guid]++;
+                    if ($missing_stock->product->serialized) {
+                        $this->missing_serials[$missing_stock->product->guid][] = $missing_stock->serial;
+                    } else {
+                        $this->missing_serials[$missing_stock->product->guid] = array();
+                    }
+                }
 	}
 }
 

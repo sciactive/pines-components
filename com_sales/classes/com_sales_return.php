@@ -340,7 +340,7 @@ class com_sales_return extends entity {
 		if (!$stock_result)
 			pines_notice('Not all stock could be received into inventory while processing. Please check that all stock was correctly entered.');
 		$this->perform_actions();
-		if (!$this->added_commission) {
+		if (!$this->added_commission && $pines->config->com_sales->use_commission) {
 			// Add commission.
 			$this->add_commission();
 		}

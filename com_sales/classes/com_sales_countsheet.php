@@ -195,30 +195,30 @@ class com_sales_countsheet extends entity {
 		// Work on a copy.
 		$entries = unserialize(serialize($this->entries));
                 
-                // Find entries based on location and serial.
-		foreach ($entries as &$cur_entry) {
-			if ($cur_entry->qty <= 0)
-				continue;
-			$stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock, 'limit' => $cur_entry->qty),
-					$and_selector,
-					$not_selector,
-					array('&',
-						'strict' => array('serial', $cur_entry->code),
-						'ref' => array('location', $this->group)
-					)
-				);
-			foreach ($stock as $cur_stock) {
-				// If the product isn't serialized, something's wrong, don't save it.
-				if (!$cur_stock->product->serialized)
-					continue;
-				$this->matched[] = $cur_stock;
-				$this->matched_count[$cur_stock->product->guid]++;
-				$this->matched_serials[$cur_stock->product->guid][] = $cur_stock->serial;
-				$not_selector['guid'][] = $cur_stock->guid;
-				$cur_entry->qty--;
-			}
-		}
+                $all_entries = array();
+                foreach ($entries as &$cur_entry) {
+                    $all_entries[$cur_entry->code] = $cur_entry;
+                }
+                unset($cur_entry);
+                
+                $all_stock = (array) $pines->entity_manager->get_entities(
+                            array('class' => com_sales_stock),
+                            $and_selector,
+                            $not_selector,
+                            array('&',
+                                    'ref' => array('location', $this->group)
+                                )
+                        );
+                
+                foreach ($all_stock as $stock) {
+                    if ($stock->serialized && isset($all_entries[$stock->serial])) {
+                        $this->matched[] = $stock;
+                        $this->matched_count[$stock->product->guid]++;
+                        $this->matched_serials[$stock->product->guid][] = $stock->serial;
+                        $not_selector['guid'][] = $stock->guid;
+                        $all_entries[$stock->serial]->qty--;
+                    }
+                }
 		unset($cur_entry);
 		// Find entries based on serial.
 		foreach ($entries as &$cur_entry) {

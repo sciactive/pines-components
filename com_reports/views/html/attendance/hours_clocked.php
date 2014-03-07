@@ -189,7 +189,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="p_muid_grid">
 	<thead>
 		<tr>
-			<th>Employee</th>
+			<th>Location</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
 			<th>Scheduled</th>
 			<th>Clocked</th>
 			<th>Variance</th>
@@ -198,14 +200,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 		<?php foreach($this->employees as $cur_employee) { ?>
 		<tr title="<?php echo htmlspecialchars($cur_employee['employee']->guid); ?>">
-			<td><?php echo htmlspecialchars($cur_employee['employee']->name); ?></td>
-			<td><?php echo (float) $cur_employee['scheduled']; ?> hours</td>
-			<td><?php echo (float) $cur_employee['clocked']; ?> hours</td>
-			<td><span<?php if ($cur_employee['variance'] < 0) echo ' style="color: red;"'; ?>><?php echo (float) $cur_employee['variance']; ?> hours</span></td>
+                        <td><?php echo htmlspecialchars($cur_employee['employee']->group->name); ?></td>
+                        <td><?php echo htmlspecialchars($cur_employee['employee']->name_first); ?></td>
+                        <td><?php echo htmlspecialchars($cur_employee['employee']->name_last); ?></td>
+			<td><?php echo (float) $cur_employee['scheduled']; ?></td>
+			<td><?php echo (float) $cur_employee['clocked']; ?></td>
+			<td><span<?php if ($cur_employee['variance'] < 0) echo ' style="color: red;"'; ?>><?php echo (float) $cur_employee['variance']; ?></span></td>
 		</tr>
 		<?php } ?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
+                        <td></td>
+                        <td></td>
 			<td><?php echo (float) $this->totals['scheduled']; ?> hours</td>
 			<td><?php echo (float) $this->totals['clocked']; ?> hours</td>
 			<td><span<?php if ($this->totals['variance'] < 0) echo ' style="color: red;"'; ?>><?php echo (float) $this->totals['variance']; ?> hours</span></td>

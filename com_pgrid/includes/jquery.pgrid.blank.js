@@ -1,0 +1,1 @@
+$.fn.pgrid.defaults.pgrid_toolbar_target = "_blank";

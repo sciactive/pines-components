@@ -34,8 +34,28 @@ class com_pgrid extends component {
 	function load() {
 		if (!$this->js_loaded) {
 			global $pines;
-			$module = new module('com_pgrid', 'pgrid', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+                            $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+                            
+                            $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+                            $css[] = $file_root.'components/com_pgrid/includes/jquery.pgrid.'.htmlspecialchars($pines->config->com_pgrid->styling).'.css';
+                            $css[] = $file_root.'components/com_pgrid/includes/jquery.pgrid.'.htmlspecialchars($pines->config->com_pgrid->styling).'.icons.css';
+                            $pines->config->loadcompressedcss = $css;
+                            
+                            $js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+                            $js[] =  $file_root.'components/com_pgrid/includes/'.(($pines->config->debug_mode) ? 'jquery.pgrid.js' : 'jquery.pgrid.min.js');
+                            if ($pines->config->com_pgrid->toolbar_target == '_self') {
+                                $js[] =  $file_root.'components/com_pgrid/includes/jquery.pgrid.self.js';
+                            } else if ($pines->config->com_pgrid->toolbar_target == '_blank') {
+                                $js[] =  $file_root.'components/com_pgrid/includes/jquery.pgrid.blank.js';
+                            } else if ($pines->config->com_pgrid->toolbar_target == 'popup') {
+                                $js[] =  $file_root.'components/com_pgrid/includes/jquery.pgrid.popup.js';
+                            }
+                            $pines->config->loadcompressedjs = $js;
+                        } else {
+                            $module = new module('com_pgrid', 'pgrid', 'head');
+                            $module->render();
+                        }
 			$this->js_loaded = true;
 		}
 	}

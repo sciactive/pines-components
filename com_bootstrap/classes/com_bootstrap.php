@@ -37,8 +37,25 @@ class com_bootstrap extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load() {
+                global $pines;
 		if (!$this->scripts_loaded) {
-			$module = new module('com_bootstrap', 'bootstrap', 'head');
+                        if ($pines->config->compress_cssjs) {
+                            $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+                            // Build CSS
+                            $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+                            $css[] = $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/css/'.($pines->config->debug_mode ? 'bootstrap.css' : 'bootstrap.min.css');
+                            if ($pines->config->com_bootstrap->responsive && file_exists('components/com_bootstrap/includes/themes/'.clean_filename($pines->config->com_bootstrap->theme).'/css/'.($pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css'))) {
+                                $css[] = $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/css/'.$pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css';
+                            }
+                            $css[] = $file_root.'components/com_bootstrap/includes/fontawesome/css/font-awesome.css';
+                            $pines->config->loadcompressedcss = $css;
+                            
+                            $js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+                            $js[] =  $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/js/'.($pines->config->debug_mode ? 'bootstrap.js' : 'bootstrap.min.js');
+                        
+                            $pines->config->loadcompressedjs = $js;
+                        } else
+                            $module = new module('com_bootstrap', 'bootstrap', 'head');
 			// Not needed since no other libraries are loaded.
 			//$module->render();
 			$this->scripts_loaded = true;

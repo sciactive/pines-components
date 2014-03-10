@@ -28,8 +28,16 @@ class com_oxygenicons extends component implements icons_interface {
 
 	public function load() {
 		if (!$this->css_loaded) {
-			$module = new module('com_oxygenicons', 'oxygenicons', 'head');
-			$module->render();
+                        global $pines;
+                        if ($pines->config->compress_cssjs) {
+                            $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+                            $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+                            $css[] = $file_root.'components/com_oxygenicons/includes/oxygen/icons.css';
+                            $pines->config->loadcompressedcss = $css;
+                        } else {
+                            $module = new module('com_oxygenicons', 'oxygenicons', 'head');
+                            $module->render();
+                        }
 			$this->css_loaded = true;
 		}
 	}

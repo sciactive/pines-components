@@ -75,8 +75,8 @@ if ($pines->config->tpl_simple->mobile_menu == "adjusted") {
     $js[] =  $file_root_location.'templates/tpl_simple/js/mobilemenu.js';
 } if ($pines->config->tpl_simple->footer_height == "adjusted" && $pines->config->tpl_simple->footer_type != "fixed") {
     $js[] =  $file_root_location.'templates/tpl_simple/js/adjustedfooter.js';
-} if (!empty($pines->config->tpl_bootstrap->load_js)) {
-    $load_js = explode(',', $pines->config->tpl_bootstrap->load_js);
+} if (!empty($pines->config->tpl_simple->load_js)) {
+    $load_js = explode(',', $pines->config->tpl_simple->load_js);
     foreach ($load_js as $cur_link) {
         $js[] = $file_root_location.$cur_link;
     }

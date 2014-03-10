@@ -54,7 +54,7 @@ $css = ($pines->config->compress_cssjs) ? $pines->config->loadcompressedcss : ar
 $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/style.css';
 $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/custom.css';
 if (!empty($pines->config->tpl_simple->font_folder))
-    $css[] = $file_root.htmlspecialchars($pines->config->tpl_simple->font_folder).'stylesheet.css';
+    $css[] = $file_root_location.htmlspecialchars($pines->config->tpl_simple->font_folder).'stylesheet.css';
 
 if (!empty($pines->config->tpl_simple->link_css)) {
     $link_css = explode(',', $pines->config->tpl_simple->link_css);

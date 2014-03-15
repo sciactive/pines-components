@@ -38,7 +38,19 @@ pines(function(){
 				testimonials_testimonials = testimonials_container.find('.testimonials'),
 				login_container = testimonials_container.find('.login-container'),
 				signup_button = login_container.find('.signup-button');
-
+			
+			// Get Dynamic Info
+			var test_info = testimonials_container.find('.testimonial-info'),
+				save_testimonial_url = test_info.find('.test-info-save-testimonial-url').text(),
+				get_testimonials_url = test_info.find('.test-info-get-testimonial-url').text(),
+				show_entity_help = (test_info.find('.test-info-save-testimonial-url').text() == 'true') ? true : false,
+				viewanonauthor = (test_info.find('.test-info-save-testimonial-url').text() == 'true') ? true : false,
+				logged_in = (test_info.find('.test-info-save-testimonial-url').text() == 'true') ? true : false,
+				customer = (test_info.find('.test-info-save-testimonial-url').text() == 'true') ? true : false,
+				customer_guid_text = test_info.find('.test-info-save-testimonial-url').text(),
+				customer_guid = (customer_guid_text != '') ? parseInt(customer_guid_text) : 0;
+			test_info.remove();
+			
 			// Get all testimonial display javascript variables
 			var test_loader = testimonials_container.find('.testimonial-loader'),
 				loaded_testimonial = testimonials_container.find('.loaded-testimonial'),
@@ -199,7 +211,7 @@ pines(function(){
 						values.review_option_name = check_value(review_name);
 						values.review_option_type = check_value(review_type);
 						values.review_data_type = check_value(review_data_type);
-
+						
 						$.ajax({
 							url: save_testimonial_url,
 							type: "POST",

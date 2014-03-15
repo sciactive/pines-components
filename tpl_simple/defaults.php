@@ -24,6 +24,7 @@ return array(
 			'twocol-sideleft (Two columns, left sidebar.)' => 'twocol-sideleft',
 			'twocol-sideright (Two columns, right sidebar.)' => 'twocol-sideright',
 			'full-page (Full page.)' => 'full-page',
+			'full-fluid-page (Full Fluid page.)' => 'full-fluid-page',
 		),
 		'peruser' => true,
 	),

@@ -32,9 +32,17 @@ class com_jqueryuitouch extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load() {
+		global $pines;
 		if (!$this->js_loaded) {
-			$module = new module('com_jqueryuitouch', 'jqueryuitouch', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_jqueryitouch/includes/'.($pines->config->debug_mode ? 'jquery.ui.touch-punch.js' : 'jquery.ui.touch-punch.min.js');
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_jqueryuitouch', 'jqueryuitouch', 'head');
+				$module->render();
+			}
 			$this->js_loaded = true;
 		}
 	}

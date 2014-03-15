@@ -203,5 +203,23 @@ $pines->com_testimonials->load();
 			</div>
 		</div>
 	</div>
+	<div class="testimonial-info hide">
+		<?php
+		$save_testimonial = pines_url('com_testimonials', 'testimonial/save');
+		$get_testimonials = pines_url('com_testimonials', 'testimonial/get_testimonials');
+		$show_entity_help = gatekeeper('com_testimonials/showentityhelp');
+		$viewanonauthor = gatekeeper('com_testimonials/viewanonauthor');
+		$logged_in = !empty($_SESSION['user']);
+		$customer_logged_in = ($logged_in && $_SESSION['user']->has_tag('customer'));
+		$customer_guid = ($logged_in && $customer) ? $_SESSION['user']->guid : '';
+		?>
+		<div class="test-info-save-testimonial-url"><?php echo $save_testimonial; ?></div>
+		<div class="test-info-get-testimonial-url"><?php echo $get_testimonials; ?></div>
+		<div class="test-info-show-entity-help"><?php echo ($show_entity_help) ? 'true' : 'false'; ?></div>
+		<div class="test-info-view-anon-author"><?php echo ($viewanonauthor) ? 'true' : 'false'; ?></div>
+		<div class="test-info-logged-in"><?php echo ($logged_in) ? 'true' : 'false'; ?></div>
+		<div class="test-info-customer-logged-in"><?php echo ($customer_logged_in) ? 'true' : 'false'; ?></div>
+		<div class="test-info-customer-guid"><?php echo ($customer_guid) ? $customer_guid : ''; ?></div>
+	</div>
 </div>
 	

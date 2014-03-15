@@ -179,7 +179,7 @@ if (is_array($pines->config->loadcompressedjs)) {
                 </div>
         </div>
     </div>
-    <div id="page" class="container<?php echo $width; ?> <?php echo $page; ?>">
+    <div id="page" class="<?php echo ($pines->config->tpl_simple->variant == 'full-fluid-page') ? '' : (($width) ? 'container'.$width : 'container');  ?> <?php echo $page; ?>">
             <div class="row-fluid">
                     <div id="breadcrumbs" class="span12"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
             </div>
@@ -194,7 +194,7 @@ if (is_array($pines->config->loadcompressedjs)) {
                                     <?php if ($pines->config->tpl_simple->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_side'); } ?>&nbsp;
                             </div>
                             <?php } ?>
-                            <div class="<?php echo $pines->config->tpl_simple->variant == 'full-page' ? 'span12' : ($pines->config->tpl_simple->variant == 'threecol' ? 'span6' : 'span9'); ?>">
+                            <div class="<?php echo ($pines->config->tpl_simple->variant == 'full-page' || $pines->config->tpl_simple->variant == 'full-fluid-page') ? 'span12' : ($pines->config->tpl_simple->variant == 'threecol' ? 'span6' : 'span9'); ?>">
                                     <div id="content_container">
                                             <div class="row-fluid">
                                                     <div id="content_top_left" class="span6"><?php echo $pines->page->render_modules('content_top_left'); ?></div>

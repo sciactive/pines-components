@@ -28,16 +28,22 @@ class com_oxygenicons extends component implements icons_interface {
 
 	public function load() {
 		if (!$this->css_loaded) {
-                        global $pines;
-                        if ($pines->config->compress_cssjs) {
-                            $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
-                            $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
-                            $css[] = $file_root.'components/com_oxygenicons/includes/oxygen/icons.css';
-                            $pines->config->loadcompressedcss = $css;
-                        } else {
-                            $module = new module('com_oxygenicons', 'oxygenicons', 'head');
-                            $module->render();
-                        }
+				global $pines;
+				if ($pines->config->compress_cssjs) {
+					$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+					$css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+					if ($pines->config->com_oxygenicons->use_icon_sprite) {
+						$css[] = $file_root.'components/com_oxygenicons/includes/oxygen/icons-sprite.css';
+					} else if ($pines->config->com_oxygenicons->use_icon_sprite_cdn) { 
+						$css[] = $file_root.'components/com_oxygenicons/includes/oxygen/icons-sprite-cdn.css';
+					} else {
+						$css[] = $file_root.'components/com_oxygenicons/includes/oxygen/icons.css';
+					}
+					$pines->config->loadcompressedcss = $css;
+				} else {
+					$module = new module('com_oxygenicons', 'oxygenicons', 'head');
+					$module->render();
+				}
 			$this->css_loaded = true;
 		}
 	}

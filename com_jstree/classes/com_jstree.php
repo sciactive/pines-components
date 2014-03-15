@@ -32,9 +32,22 @@ class com_jstree extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load() {
+		global $pines;
 		if (!$this->js_loaded) {
-			$module = new module('com_jstree', 'jstree', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_jstree/includes/'.($pines->config->debug_mode ? 'jquery.jstree.js' : 'jquery.jstree.min.js');
+				if ($pines->depend->check('component', 'com_uasniffer') && $pines->depend->check('browser', 'mobile')) {
+					$js[] =  $file_root.'components/com_jstree/includes/jquery.jstree.options.mobile.js';
+				} else {
+					$js[] =  $file_root.'components/com_jstree/includes/jquery.jstree.options.js';
+				}
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_jstree', 'jstree', 'head');
+				$module->render();
+			}
 			$this->js_loaded = true;
 		}
 	}

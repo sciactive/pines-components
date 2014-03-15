@@ -97,14 +97,25 @@ class tpl_simple extends template {
 	public function load_template_css($files) {
             global $pines;
             $last_mod = 0;
-            foreach ($files as $cur_url) {
-               if (preg_match('/^htt/', $cur_url))
+			$root = $_SERVER['DOCUMENT_ROOT'].htmlspecialchars($pines->config->location);
+            foreach ($files as &$cur_url) {
+				$regex = '/'.preg_quote($root).'/';
+				if (preg_match('/^htt/', $cur_url))
                     continue;
-               $mtime = filemtime($cur_url);
-               $last_mod = ($mtime > $last_mod) ? $mtime : $last_mod;
+				if (preg_match('/'.preg_quote($root, '/').'/', $cur_url)) {
+					$cur_url = preg_replace('/'.preg_quote($root, '/').'/', '', $cur_url);
+				}
+				$mtime = filemtime($cur_url);
+				$last_mod = ($mtime > $last_mod) ? $mtime : $last_mod;
             }
+			unset($cur_url);
+			
+			// Fix the root if location starts with htt
+			if (preg_match('/^htt/', $pines->config->location))
+				$root = $_SERVER['DOCUMENT_ROOT'];
+			
             $links = urlencode(implode('%%%', $files));
-            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildcss.php?mtime=".$last_mod."&css=" . $links;
+            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildcss.php?mtime=".$last_mod."&root=".$root."&css=" . $links;
             return $url;
 	}
         
@@ -120,16 +131,27 @@ class tpl_simple extends template {
 	public function load_template_js($files) {
             global $pines;
             $last_mod = 0;
-            foreach ($files as $cur_url) {
-               $mtime = filemtime($cur_url);
-               $last_mod = ($mtime > $last_mod) ? $mtime : $last_mod;
+			$root = $_SERVER['DOCUMENT_ROOT'].htmlspecialchars($pines->config->location);
+            foreach ($files as &$cur_url) {
+				if (preg_match('/^htt/', $cur_url))
+                    continue;
+				if (preg_match('/'.preg_quote($root, '/').'/', $cur_url)) {
+					$cur_url = preg_replace('/'.preg_quote($root, '/').'/', '', $cur_url);
+				}
+				$mtime = filemtime($cur_url);
+				$last_mod = ($mtime > $last_mod) ? $mtime : $last_mod;
             }
-            $system = $_SERVER['DOCUMENT_ROOT'].htmlspecialchars($pines->config->location).'system/includes/js.php';
+			unset($cur_url);
+			
+			// Fix the root if location starts with htt
+			if (preg_match('/^htt/', $pines->config->location))
+				$root = $_SERVER['DOCUMENT_ROOT'];
+			
+            $system = $root.'system/includes/js.php';
             $system_mod = filemtime($system);
             $last_mod = ($system_mod > $last_mod) ? $system_mod : $last_mod;
             $links = urlencode(implode('%%%', $files));
-            $loc = htmlspecialchars($pines->config->location);
-            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildjs.php?loc=".$loc."&mtime=".$last_mod."&js=" . $links;
+            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildjs.php?mtime=".$last_mod."&root=".$root."&js=" . $links;
             return $url;
 	}
 }

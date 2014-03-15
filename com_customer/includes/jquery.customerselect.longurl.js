@@ -1,0 +1,1 @@
+pines.com_customer_autocustomer_url = pines.rela_location+'index.php?option=com_customer&action=customer/search';

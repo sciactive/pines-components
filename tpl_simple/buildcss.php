@@ -20,10 +20,16 @@ if (
 
 require('compresscss.php');
 $files = $_REQUEST['css'];
+$root = $_REQUEST['root'];
 $css = explode('%%%', $files);
-array_walk($css, function( &$val) {
-    $val = file_get_contents( $val );
-});
+foreach ($css as &$cur_css) {
+	if (preg_match('/^htt/', $cur_css)) {
+		$cur_css = file_get_contents( $cur_css );
+    } else {
+		$cur_css = file_get_contents( $root.$cur_css );
+	}
+}
+unset($cur_css);
 $css = implode($css);
 $C = new CSS_Compress($css);
 $output_css = $C->get_css();

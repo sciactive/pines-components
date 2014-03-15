@@ -11,11 +11,6 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<style type="text/css">
-    .drive-icon {
-        background: url('<?php echo $pines->config->full_location; ?>components/com_googledrive/includes/driveicon.png');
-    }
-</style>
 <script type="text/javascript">
     var CLIENT_ID = '<?php echo $pines->config->com_googledrive->client_id;?>';
     var SCOPES = '<?php echo (!empty($pines->config->com_googledrive->scopes_export)) ? $pines->config->com_googledrive->scopes_export : 'https://www.googleapis.com/auth/drive';?>';

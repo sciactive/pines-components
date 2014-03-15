@@ -1,0 +1,1 @@
+pines.com_sales_autoproduct_url  = pines.rela_location+'sales/product/autocomplete';

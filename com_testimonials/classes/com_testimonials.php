@@ -30,9 +30,22 @@ class com_testimonials extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load() {
+		global $pines;
 		if (!$this->js_loaded) {
-			$module = new module('com_testimonials', 'testimonials', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				// Build CSS
+				$css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+				$css[] = $file_root.'components/com_testimonials/includes/'.($pines->config->debug_mode ? 'testimonial.css' : 'testimonial.min.css');
+				$pines->config->loadcompressedcss = $css;
+
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_testimonials/includes/'.($pines->config->debug_mode ? 'testimonial.js' : 'testimonial.min.js');
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_testimonials', 'testimonials', 'head');
+				$module->render();
+			}
 			$this->js_loaded = true;
 		}
 	}

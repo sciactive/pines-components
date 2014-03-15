@@ -917,9 +917,26 @@ class com_sales extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	public function load_product_select() {
+		global $pines;
 		if (!$this->js_loaded_product) {
-			$module = new module('com_sales', 'scripts/product_select', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_sales/includes/'.($pines->config->debug_mode ? 'jquery.productselect.js' : 'jquery.productselect.min.js');
+				
+				// This component needs a dynamic variable.
+				$auto_url = pines_url('com_sales', 'product/autocomplete');
+				if (preg_match('/\?/', $auto_url)) {
+					$js[] =  $file_root.'components/com_sales/includes/jquery.productselect.longurl.js';
+				} else {
+					$js[] =  $file_root.'components/com_sales/includes/jquery.productselect.shorturl.js';
+				}
+				
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_sales', 'scripts/product_select', 'head');
+				$module->render();
+			}
 			$this->js_loaded_product = true;
 		}
 	}

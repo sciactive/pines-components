@@ -18,21 +18,25 @@ if (
 }
 
 $files = $_REQUEST['js'];
-$loc = $_REQUEST['loc'];
-
+$root = $_REQUEST['root'];
 $files = explode('%%%', $files);
 $output_js = "";
 $system_js =
-file_get_contents($_SERVER['DOCUMENT_ROOT'].$loc.'/system/includes/pines.min.js')."\n".
+file_get_contents($root.'/system/includes/pines.min.js')."\n".
 'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
 'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
 "var JSON;JSON||pines.loadjs(pines.rela_location+\"system/includes/json2.min.js\");\n";
 foreach($files as $file) {
-    $output_js .= file_get_contents($file).";\n";
+	if (preg_match('/^htt/', $file)) {
+		$output_js .= file_get_contents($file).";\n";
+    } else {
+		$output_js .= file_get_contents($root.$file).";\n";
+	}
+    
 }
 
-$length = strlen($system_js) + strlen($outout_js);
-//header('Content-Length: '.$length);
+$length = strlen($system_js) + strlen($output_js);
+header('Content-Length: '.$length);
 header('Last-Modified: '.gmdate('r', $mod_date));
 header('Cache-Control: max-age=604800, public');
 header('Expires: '.gmdate('r', time()+604800));

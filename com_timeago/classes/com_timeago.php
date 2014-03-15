@@ -32,9 +32,17 @@ class com_timeago extends component {
 	 * This will place the required scripts into the document's head section.
 	 */
 	function load() {
+		global $pines;
 		if (!$this->js_loaded) {
-			$module = new module('com_timeago', 'timeago', 'head');
-			$module->render();
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_timeago/includes/'.($pines->config->debug_mode ? 'jquery.timeago.js' : 'jquery.timeago.min.js');
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_timeago', 'timeago', 'head');
+				$module->render();
+			}
 			$this->js_loaded = true;
 		}
 	}

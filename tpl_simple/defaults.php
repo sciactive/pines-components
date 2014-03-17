@@ -79,14 +79,21 @@ return array(
 		'value' => (isset($_SESSION['user']->group) && is_callable(array($_SESSION['user']->group, 'get_logo'))) ? $_SESSION['user']->group->get_logo() : $pines->config->location.$pines->config->upload_location.'logos/default_logo.png',
 		'peruser' => true,
 	),
-        array(
+    array(
 		'name' => 'show_navigation',
 		'cname' => 'Show navbar.',
 		'description' => 'Show the Main Navbar',
 		'value' => true,
 		'peruser' => true,
 	),
-        array(
+    array(
+		'name' => 'navbar_fixed',
+		'cname' => 'Navbar Fixed to Top',
+		'description' => 'Fix the navbar to the top of the page.',
+		'value' => true,
+		'peruser' => true,
+	),
+    array(
 		'name' => 'navbar_trigger',
 		'cname' => 'Navbar Trigger',
 		'description' => 'Trigger menu items with click or hover.',
@@ -97,7 +104,7 @@ return array(
 		),
 		'peruser' => true,
 	),
-        array(
+    array(
 		'name' => 'mobile_menu',
 		'cname' => 'Mobile Menu',
 		'description' => 'Use the mobile menu from bootstrap or an adjusted one.',

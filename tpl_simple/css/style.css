@@ -101,6 +101,13 @@ display: inline-block;
     padding-right: 5px;
 }
 
+.row-fluid [class*="span"] {
+	min-height: 0;
+}
+#nav-configure {
+	margin-bottom: 50px;
+}
+
 /* Footer Configurations */
 #footer {
     background-color: #eee;

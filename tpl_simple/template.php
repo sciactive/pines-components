@@ -134,7 +134,7 @@ if (is_array($pines->config->loadcompressedjs)) {
     ?></div>
     <?php if ($pines->config->tpl_simple->show_navigation) { ?>
     <div id="nav-configure" class="<?php echo $nav; ?>">
-            <div id="nav" class="navbar clearfix navbar-fixed-top">
+            <div id="nav" class="navbar clearfix <?php echo $pines->config->tpl_simple->navbar_fixed ? 'navbar-fixed-top' : ''; ?>">
                     <div class="navbar-inner">
                             <div class="container<?php echo $width; ?>">
                                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -230,7 +230,8 @@ if (is_array($pines->config->loadcompressedjs)) {
         </div>
     </div>
     <div id="bottom"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
-    <?php 
+    <link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
+	<?php 
     if ($pines->config->compress_cssjs) {
         // Render this stuff at the bottom because anything important will
         // Already be safely added to the top.

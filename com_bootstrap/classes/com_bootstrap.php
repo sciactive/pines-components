@@ -45,7 +45,7 @@ class com_bootstrap extends component {
                             $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
                             $css[] = $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/css/'.($pines->config->debug_mode ? 'bootstrap.css' : 'bootstrap.min.css');
                             if ($pines->config->com_bootstrap->responsive && file_exists('components/com_bootstrap/includes/themes/'.clean_filename($pines->config->com_bootstrap->theme).'/css/'.($pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css'))) {
-                                $css[] = $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/css/'.$pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css';
+                               $css[] = $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/css/'.($pines->config->debug_mode ? 'bootstrap-responsive.css' : 'bootstrap-responsive.min.css');
                             }
                             $css[] = $file_root.'components/com_bootstrap/includes/fontawesome/css/font-awesome.css';
                             $pines->config->loadcompressedcss = $css;

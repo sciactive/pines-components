@@ -1,1 +1,1 @@
-pines.com_customer_autocustomer_url = pines.rela_location+'customer/customer/search';
+pines.com_customer_autocustomer_url = pines.full_location+'customer/customer/search';

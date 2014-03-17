@@ -19,12 +19,14 @@ if (
 
 $files = $_REQUEST['js'];
 $root = $_REQUEST['root'];
+$full = $_REQUEST['full'];
+$rela = $_REQUEST['rela'];
 $files = explode('%%%', $files);
 $output_js = "";
 $system_js =
 file_get_contents($root.'/system/includes/pines.min.js')."\n".
-'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
-'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
+'pines.full_location = "'.$full."\"\n".
+'pines.rela_location = "'.$rela."\"\n".
 "var JSON;JSON||pines.loadjs(pines.rela_location+\"system/includes/json2.min.js\");\n";
 foreach($files as $file) {
 	if (preg_match('/^htt/', $file)) {

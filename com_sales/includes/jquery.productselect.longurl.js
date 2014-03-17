@@ -1,1 +1,1 @@
-pines.com_sales_autoproduct_url  = pines.rela_location+'index.php?option=com_sales&action=product/autocomplete';
+pines.com_sales_autoproduct_url = pines.full_location+'/index.php?option=com_sales&action=product/autocomplete';

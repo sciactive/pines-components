@@ -98,7 +98,7 @@ class tpl_simple extends template {
             global $pines;
             $last_mod = 0;
 			$root = $_SERVER['DOCUMENT_ROOT'].htmlspecialchars($pines->config->location);
-            foreach ($files as &$cur_url) {
+			foreach ($files as &$cur_url) {
 				$regex = '/'.preg_quote($root).'/';
 				if (preg_match('/^htt/', $cur_url))
                     continue;
@@ -115,7 +115,7 @@ class tpl_simple extends template {
 				$root = $_SERVER['DOCUMENT_ROOT'];
 			
             $links = urlencode(implode('%%%', $files));
-            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildcss.php?mtime=".$last_mod."&root=".$root."&css=" . $links;
+            $url = htmlspecialchars($pines->config->compressed_url_root).'templates/tpl_simple/buildcss.php?mtime='.$last_mod.'&root='.$root.'&css='.$links;
             return $url;
 	}
         
@@ -132,6 +132,8 @@ class tpl_simple extends template {
             global $pines;
             $last_mod = 0;
 			$root = $_SERVER['DOCUMENT_ROOT'].htmlspecialchars($pines->config->location);
+			$full_location = 'http'.(($_SERVER['HTTPS'] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX));
+			$rela_location = substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX));
             foreach ($files as &$cur_url) {
 				if (preg_match('/^htt/', $cur_url))
                     continue;
@@ -151,7 +153,7 @@ class tpl_simple extends template {
             $system_mod = filemtime($system);
             $last_mod = ($system_mod > $last_mod) ? $system_mod : $last_mod;
             $links = urlencode(implode('%%%', $files));
-            $url = htmlspecialchars($pines->config->compressed_url_root)."templates/tpl_simple/buildjs.php?mtime=".$last_mod."&root=".$root."&js=" . $links;
+            $url = htmlspecialchars($pines->config->compressed_url_root).'templates/tpl_simple/buildjs.php?mtime='.$last_mod.'&root='.$root.'&full='.$full_location.'&rela='.$rela_location.'&js='.$links;
             return $url;
 	}
 }

@@ -37,8 +37,6 @@ foreach($files as $file) {
     
 }
 
-$length = strlen($system_js) + strlen($output_js);
-header('Content-Length: '.$length);
 header('Last-Modified: '.gmdate('r', $mod_date));
 header('Cache-Control: max-age=604800, public');
 header('Expires: '.gmdate('r', time()+604800));

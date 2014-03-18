@@ -63,9 +63,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             background-color: transparent !important;
 	}
 }
-.navbar-inner .dropdown-menu {
-    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
-}
 /*.navbar-inner .dropdown-menu b.caret {
     color: #D95825 !important;
 }

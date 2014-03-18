@@ -1,0 +1,124 @@
+/* ADJUST PGRID */
+
+/* the toolbar background */
+.ui-pgrid .ui-widget-header {
+	background: #eee;
+}
+/* the row backgrounds */
+.ui-pgrid .ui-state-default.ui-pgrid-table-row-visible {
+	background: #eee;
+	font-size: .95em;
+}
+.ui-pgrid .ui-state-hover.ui-pgrid-table-row-visible {
+	background: #ddd;
+}
+.ui-pgrid .ui-state-active,
+.ui-pgrid .ui-widget-content .ui-state-active, 
+.ui-pgrid .ui-widget-header .ui-state-active {
+	background: #B9E0F5;
+}
+/* the toolbar buttons */
+.ui-pgrid button.ui-state-default {
+	background: #ddd;
+	border: 1px solid #ccc;
+}
+.ui-pgrid button.ui-state-hover {
+	border: 1px solid #aaa;
+}
+/* adjust row colors and headings */
+.ui-pgrid .ui-state-default.ui-pgrid-table-row-visible td {
+	border-color: #aaa;
+	padding: 4px;
+}
+.ui-pgrid .ui-pgrid-table-row-selected.ui-state-active td {
+	border-color: #7BA2AC;
+}
+.ui-pgrid-table thead th.ui-pgrid-table-header-resizeable {
+	background: none repeat scroll 0 0 #DDDDDD;
+	border-bottom: 2px solid #AAAAAA;
+	border-left-color: #AAAAAA;
+	border-right: 1px dotted #AAAAAA;
+	-moz-box-shadow: 1px 0 1px rgba(255, 255, 255, 0.6) inset;
+	box-shadow: 1px 0 1px rgba(255, 255, 255, 0.6) inset;
+	color: #666666;
+	font-size: 0.95em;
+	padding: 2px 4px;
+	text-shadow: 1px 1px #EEEEEE;
+	text-transform: uppercase;
+}
+/* separate the tools from grid */
+.ui-pgrid > .ui-pgrid-table-viewport.ui-widget-content {
+	margin-top: 3px;
+}
+/* icon sort col */
+.ui-pgrid .ui-pgrid-table thead th.ui-icon.ui-pgrid-table-icon-hidden,
+.ui-pgrid .ui-icon.ui-pgrid-table-expander.ui-icon-triangle-1-s {
+	border-bottom: 2px solid #aaa;
+	border-color: #aaa;
+}
+/* icon sort col */
+.ui-pgrid .ui-icon.ui-icon-triangle-1-s,
+.ui-pgrid .ui-icon.ui-icon-triangle-1-n {
+	background: none;
+	top: 0;
+}
+/* icon on asc sort col */
+.ui-pgrid .ui-icon.ui-icon-triangle-1-s:before {
+	border-left: 5px solid rgba(0, 0, 0, 0);
+	border-right: 5px solid rgba(0, 0, 0, 0);
+	border-top: 5px solid #666666;
+	content: "";
+	display: block;
+	height: 0;
+	width: 0;
+}
+/* icon on desc sort col */
+.ui-pgrid .ui-icon.ui-icon-triangle-1-n:before {
+	border-left: 5px solid rgba(0, 0, 0, 0);
+	border-right: 5px solid rgba(0, 0, 0, 0);
+	border-bottom: 5px solid #666666;
+	content: "";
+	display: block;
+	height: 0;
+	width: 0;
+}
+/* icon used to eliminate columns */
+.ui-pgrid .ui-icon.ui-pgrid-table-expander.ui-icon-triangle-1-s:before {
+	margin-left: 3px;
+	margin-top: -1px;
+}
+/* footer buttons */
+.ui-pgrid-footer .ui-pgrid-footer-pager-container button {
+	color: #666666;
+	font-size: 0.95em;
+	font-weight: bold;
+	margin: 2px;
+	padding: 3px 5px;
+	text-shadow: 1px 1px #EEEEEE;
+	text-transform: uppercase;
+}
+.ui-pgrid-footer .ui-pgrid-footer-filter-container,
+.ui-pgrid-footer .ui-pgrid-footer-count-container,
+.ui-pgrid-footer .ui-pgrid-footer-resize-container,
+.ui-pgrid-footer .ui-pgrid-footer-pager-container {
+	color: #666666;
+	font-size: 0.95em;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.ui-pgrid-footer .ui-pgrid-footer-pager-container {
+	color: #999;
+}
+/* filter x - prettier */
+.ui-pgrid-footer .ui-pgrid-footer-filter-container button {
+	font-size: 0;
+	height: 26px;
+	padding: 0;
+}
+.ui-pgrid-footer .ui-pgrid-footer-filter-container button:before {
+	content: "\00d7";
+	font-size: 20px;
+	line-height: 20px;
+	overflow: hidden;
+	padding: 0 10px;
+}

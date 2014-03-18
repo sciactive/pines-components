@@ -144,14 +144,21 @@ return array(
 		'value' => '',
 		'peruser' => true,
 	),
-        array(
+    array(
+		'name' => 'override_pgrid_aristo',
+		'cname' => 'Use Aristo Pgrid Override Styles.',
+		'description' => 'Use on light template designs and with jquery theme aristo. Makes the grid much more readable and modern looking.',
+		'value' => true,
+		'peruser' => true,
+	),
+    array(
 		'name' => 'link_css',
 		'cname' => 'Link Pines Relative CSS List',
 		'description' => 'Comma Separate a list of urls to link to the template. NOT loaded with JavaScript. Write the file starting with components/component_name/includes/...',
 		'value' => '',
 		'peruser' => true,
 	),
-        array(
+    array(
 		'name' => 'load_js',
 		'cname' => 'Load Pines Relative JS List',
 		'description' => 'Comma Separate a list of urls to pines load in the template. Loaded WITH JavaScript. Write the url starting with components/component_name/includes/... or media/website/js/...',

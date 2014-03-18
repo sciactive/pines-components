@@ -52,6 +52,9 @@ $file_root_location = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config-
 // - If using font-awesome, put the font folder into templates/
 $css = ($pines->config->compress_cssjs) ? $pines->config->loadcompressedcss : array();
 $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/style.css';
+if ($pines->config->tpl_simple->override_pgrid_aristo) {
+	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/pgrid-aristo.css';
+}
 $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/custom.css';
 if (!empty($pines->config->tpl_simple->font_folder))
     $css[] = $file_root_location.htmlspecialchars($pines->config->tpl_simple->font_folder).'stylesheet.css';

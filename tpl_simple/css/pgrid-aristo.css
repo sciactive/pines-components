@@ -122,3 +122,6 @@
 	overflow: hidden;
 	padding: 0 10px;
 }
+.ui-pgrid-footer {
+    margin-top: 3px;
+}

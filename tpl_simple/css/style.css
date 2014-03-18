@@ -101,6 +101,11 @@ display: inline-block;
 .row-fluid [class*="span"] {
 	min-height: 0;
 }
+
+.dropdown-submenu > .dropdown-menu {
+	left: 99.5%;
+}
+
 #nav-configure {
 	margin-bottom: 50px;
 }

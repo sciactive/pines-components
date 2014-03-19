@@ -1,0 +1,58 @@
+#nav-configure {
+	margin-bottom: 70px;
+}
+.navbar .nav > li > a {
+	padding: 15px;
+}
+.module_title.page-header {
+	margin: 0;
+	background: #eee;
+	padding: 5px;
+	border:1px solid #ddd;
+	border-bottom: none;
+}
+.module_title.page-header h2,
+.module_title.page-header h3 {
+	margin: 0;
+}
+
+.module_title.page-header small {
+	font-size: 12px;
+}
+.module_content {
+	border: 1px solid #ddd;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+h1 {
+	font-size: 20px;
+	line-height: 30px;
+}
+h2 {
+	font-size: 18px;
+	line-height: 25px;
+}
+h3 {
+	font-size: 16px;
+	line-height: 20px;
+}
+h4 { 
+	font-size: 14px;
+}
+h5 {
+	font-size: 13px;
+}
+h6 {
+	font-size: 12px;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: #555555;
+	text-shadow: 1px 1px #fff;
+}
+#bottom {
+	height: 0;
+	overflow: hidden;
+}
+#footer {
+	margin-top: 10px;
+}

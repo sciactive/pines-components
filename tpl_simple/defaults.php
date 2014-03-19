@@ -144,6 +144,13 @@ return array(
 		'value' => '',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'use_backend_css',
+		'cname' => 'Use Backend Styling',
+		'description' => 'Use styling that suits the backend.',
+		'value' => false,
+		'peruser' => true,
+	),
     array(
 		'name' => 'override_pgrid_aristo',
 		'cname' => 'Use Aristo Pgrid Override Styles.',

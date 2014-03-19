@@ -55,6 +55,9 @@ $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_temp
 if ($pines->config->tpl_simple->override_pgrid_aristo) {
 	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/pgrid-aristo.css';
 }
+if ($pines->config->tpl_simple->use_backend_css) {
+	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/backend.css';
+}
 $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/custom.css';
 if (!empty($pines->config->tpl_simple->font_folder))
     $css[] = $file_root_location.htmlspecialchars($pines->config->tpl_simple->font_folder).'stylesheet.css';

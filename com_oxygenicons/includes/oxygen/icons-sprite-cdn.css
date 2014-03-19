@@ -1523,4 +1523,4 @@ body .btn .picon-32 {
 .picon-zoom-original:before { background-position: -144px -1314px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .picon-zoom-out:before { background-position: -144px -1332px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .picon-zoom-select:before { background-position: -144px -1350px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
-.drive-icon:before {background: url("http://10.200.202.110/pines/components/com_googledrive/includes/driveicon.png"); width: 16px; height: 16px; content: ""; display:inline-block; }
+.drive-icon:before {background: url("driveicon.png"); width: 16px; height: 16px; content: ""; display:inline-block; }

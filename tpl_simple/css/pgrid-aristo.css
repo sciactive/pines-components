@@ -30,7 +30,7 @@
 .ui-pgrid .ui-state-default.ui-pgrid-table-row-visible td,
 .ui-pgrid .ui-state-default td {
 	border-color: #aaa;
-	padding: 4px;
+	padding: 2px 4px;
 }
 .ui-pgrid .ui-pgrid-table-row-selected.ui-state-active td {
 	border-color: #7BA2AC;

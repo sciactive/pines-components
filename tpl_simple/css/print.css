@@ -1,6 +1,10 @@
 html, body {
 	height: auto !important;
 }
+@page {
+	margin: .75in .25in;
+	page-break-inside: avoid;
+}
 body {
 	background: #fff !important;
 }
@@ -16,15 +20,14 @@ pre {
 	border-left: none;
 	border-right: none;
 	background-color: inherit;
+	font-size: 12px;
+	line-height: 12px;
+	border: none;
+	page-break-before: avoid !important;
+	display: inline;
 }
 
-/* Print Fix Config */
-body,
-body.printfix #column_container,
-body.printfix #column_container > .container-fluid,
-body.printfix #column_container > .container-fluid > .row-fluid,
-body.printfix #column_container > .container-fluid > .row-fluid > div,
-body.printfix #content_container {
+#column_container [class*="span"] {
 	position: static !important;
 	float: none !important;
 	width: 100% !important;
@@ -34,28 +37,19 @@ body.printfix #content_container {
 	border: 0 none !important;
 	overflow: visible !important;
 }
-body.printfix #top,
-body.printfix #header,
-body.printfix #main_menu,
-body.printfix #pre_content,
-body.printfix #post_content,
-body.printfix #footer,
-body.printfix #bottom,
-body.printfix #left,
-body.printfix #right {
+
+body #top,
+body #header,
+body #nav-configure,
+body #main_menu,
+body #right,
+body #pre_content,
+body #post_content,
+body #footer,
+body #bottom,
+body #left,
+body #right {
 	display: none !important;
-}
-body.printheader #header,
-body.printheader #header > .container-fluid {
-	display: block !important;
-	padding: 0 !important;
-	margin: 0 !important;
-}
-body.printheader #header {
-	margin: 0 0 1em !important;
-}
-body.printheader #page_title {
-	margin-left: 0!important;
 }
 
 /* Modules Fixes */
@@ -64,9 +58,18 @@ body.printheader #page_title {
 	padding: 0 !important;
 	border: none !important;
 }
+.module_content {
+	border: medium none;
+	page-break-before: avoid !important;
+}
 .module .module_title, .module .module_content {
     padding-left: 0;
     padding-right: 0;
+}
+.module_title.page-header {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border: medium none;
+	page-break-after: avoid !important;
 }
 
 /* Pines Notify */

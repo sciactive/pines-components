@@ -23,10 +23,6 @@ div.navbar-fixed-top {
 div.module.content_page.content_page_full {
     margin-top: 0 !important;
 }
-div.module.content_page.content_page_full > .module_content {
-    margin-left: -20px;
-    margin-right: -20px; 
-}
 div#column_container {
     padding-top: 0px !important;
 }

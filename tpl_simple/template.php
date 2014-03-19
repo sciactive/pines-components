@@ -236,7 +236,7 @@ if (is_array($pines->config->loadcompressedjs)) {
         </div>
     </div>
     <div id="bottom"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
-    <link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $pines->config->tpl_simple->print_css; ?>" media="print" rel="stylesheet" type="text/css" />
 	<?php 
     if ($pines->config->compress_cssjs) {
         // Render this stuff at the bottom because anything important will

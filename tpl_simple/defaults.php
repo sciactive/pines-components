@@ -13,6 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 pines_session();
 
+$print_url = htmlspecialchars($pines->config->location).'templates/'.htmlspecialchars($pines->current_template).'/css/print.css';
+
 return array(
 	array(
 		'name' => 'variant',
@@ -156,6 +158,13 @@ return array(
 		'cname' => 'Use Aristo Pgrid Override Styles.',
 		'description' => 'Use on light template designs and with jquery theme aristo. Makes the grid much more readable and modern looking.',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'print_css',
+		'cname' => 'Print CSS URL',
+		'description' => 'Provide a custom print css URL instead of the default print.css. Use the whole URL, including http.',
+		'value' => $print_url,
 		'peruser' => true,
 	),
     array(

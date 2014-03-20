@@ -1,4 +1,4 @@
-[class^="picon"]:before {
+[class*="picon"]:before {
 	background-image: url(icons-sprite-16.png);
 	vertical-align: text-top;
 }

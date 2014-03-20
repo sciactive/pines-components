@@ -1,4 +1,4 @@
-[class^="picon"]:before {
+[class*="picon"]:before {
 	background-image: url('http://lh5.ggpht.com/THdYcAiTZoXI08ffj9j6KzMFyeoY5gUJUilMUd-UaeL8T2MLlaAGkm2NCRMqdWdfTJBPPXxnPxTq2bDz0Pcg=s1528');
 	vertical-align: text-top;
 }

@@ -45,8 +45,7 @@ foreach ($widgets as $cur_component => $cur_widget_set) {
 }
 
 // Reset the column array.
-reset($dashboard->tabs[$_REQUEST['key']]['columns']);
-
+$array_keys = array_keys($dashboard->tabs[$_REQUEST['key']]['columns']);
 // Add all the new widgets.
 $add_widgets = json_decode($_REQUEST['widgets'], true);
 foreach ($add_widgets as $cur_widget) {
@@ -54,7 +53,7 @@ foreach ($add_widgets as $cur_widget) {
 		$pines->page->override_doc(json_encode(false));
 		return;
 	}
-	$key = key($dashboard->tabs[$_REQUEST['key']]['columns']);
+	$key = $array_keys[0];
 	$dashboard->tabs[$_REQUEST['key']]['columns'][$key]['widgets'][uniqid()] = array(
 		'component' => $cur_widget['component'],
 		'widget' => $cur_widget['widget'],

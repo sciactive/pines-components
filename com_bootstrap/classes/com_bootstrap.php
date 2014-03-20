@@ -52,6 +52,7 @@ class com_bootstrap extends component {
                             
                             $js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
                             $js[] =  $file_root.'components/com_bootstrap/includes/themes/'.htmlspecialchars(clean_filename($pines->config->com_bootstrap->theme)).'/js/'.($pines->config->debug_mode ? 'bootstrap.js' : 'bootstrap.min.js');
+                            $js[] =  $file_root.'components/com_bootstrap/includes/'.($pines->config->debug_mode ? 'pines.get_columns.js' : 'pines.get_columns.min.js');
                         
                             $pines->config->loadcompressedjs = $js;
                         } else

@@ -1,0 +1,20 @@
+.fc.ui-widget tr[class*="fc-slot"]:hover, 
+.fc.ui-widget td[class*="fc-day"]:hover {
+	background: none repeat scroll 0 0 rgba(240, 240, 240, 0.6);
+	cursor: pointer;
+}
+.fc.ui-widget .ui-widget-header {
+	background: none repeat scroll 0 0 #EEEEEE;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+	font-size: 0.9em;
+	line-height: 18px;
+	text-shadow: 1px 1px #FFFFFF;
+}
+.fc.ui-widget .fc-button.ui-state-default {
+	background: #eee;
+	text-shadow: 1px 1px #fff;
+}
+.fc.ui-widget .fc-button.ui-state-default.ui-state-active {
+	background: #B9E0F5;
+	text-shadow: 1px 1px #fff;
+}

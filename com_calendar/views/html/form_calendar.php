@@ -15,12 +15,12 @@ $pines->com_jstree->load();
 $pines->com_ptags->load();
 if ($pines->config->com_calendar->com_customer)
 	$pines->com_customer->load_customer_select();
+
+
 ?>
 <style type="text/css" >
 	#p_muid_filter button {
-		padding: 4px;
-		font-size: 8px;
-		line-height: 10px;
+		padding: 10px;
 	}
 	.p_muid_btn {
 		display: inline-block;
@@ -28,7 +28,16 @@ if ($pines->config->com_calendar->com_customer)
 		height: 16px;
 	}
 	#p_muid_actions button {
-		padding: 0.2em;
+		padding: 10px;
+	}
+	#p_muid_employee {
+		margin: 0 10px;
+		height: 42px;
+		padding: 10px;
+		width: 300px;
+	}
+	.well .content #p_muid_actions {
+		margin: 4px 0;
 	}
 	#p_muid_actions button .ui-button-text {
 		padding: 0;
@@ -40,6 +49,7 @@ if ($pines->config->com_calendar->com_customer)
 	}
 	.calendar_form .combobox {
 		position: relative;
+		display: inline-block;
 	}
 	.calendar_form .combobox input {
 		padding-right: 32px;
@@ -65,11 +75,61 @@ if ($pines->config->com_calendar->com_customer)
 	* html .ui-autocomplete {
 		height: 200px;
 	}
+	@media (max-width: 900px) {
+		#p_muid_filter,
+		#p_muid_actions,
+		#p_muid_employee {
+			display: block;
+			margin: 4px auto;
+			float: none;
+			text-align: center;
+		}
+	}
 </style>
 <script type='text/javascript'>
 	pines(function(){
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
+		var filter_loaded = <?php  echo json_encode($_REQUEST['filter']); ?>;
+		var combo_box = $(".combobox", ".calendar_form");
+		var employee_select = $("#p_muid_employee");
+		var filter_container = $('#p_muid_filter');
+		var filter_buttons = filter_container.find('button');
+		var change_filter_page = function(filter_type){
+			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
+				view_type: <?php echo json_encode($this->view_type); ?>,
+				start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+				end: <?php echo json_encode(format_date($this->date[1] - 1, 'date_sort', '', $this->timezone)); ?>,
+				location: <?php echo json_encode((string) $this->location->guid); ?>,
+				employee: <?php echo json_encode((string) $this->employee->guid); ?>,
+				descendants: <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
+				filter: filter_type
+			});
+		};
+		var trigger_filter = function(filter_type) {
+			if (filter_loaded == filter_type)
+				return;
+			// Save State
+			var state = {};
+			state.filter = filter_type;
+			cur_state = JSON.stringify(state);
+			$.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_calendar/editcalendar", state: cur_state}, function(){
+				change_filter_page(filter_type);
+			});
+		};
+		
+		// Capture Filter Event
+		filter_buttons.click(function(){
+			var button = $(this);
+			var button_type = button.attr('data-value');
+			if (button.hasClass('active'))
+				return;
+			filter_buttons.removeClass('active');
+			button.addClass('active');
+			trigger_filter(button_type);
+		});
+		
 		var change_counter = 0;
-		$("#p_muid_employee").change(function(){
+		employee_select.change(function(){
 			if (change_counter > 0)
 				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 					"view_type": <?php echo json_encode($this->view_type); ?>,
@@ -83,7 +143,7 @@ if ($pines->config->com_calendar->com_customer)
 			change_counter++;
 		}).change();
 
-		$(".combobox", ".calendar_form").each(function(){
+		combo_box.each(function(){
 			var box = $(this);
 			var autobox = box.children("input").autocomplete({
 				minLength: 0,
@@ -100,17 +160,7 @@ if ($pines->config->com_calendar->com_customer)
 			});
 		});
 
-		$("#p_muid_filter").delegate("button", "click", function() {
-			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
-				view_type: <?php echo json_encode($this->view_type); ?>,
-				start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
-				end: <?php echo json_encode(format_date($this->date[1] - 1, 'date_sort', '', $this->timezone)); ?>,
-				location: <?php echo json_encode((string) $this->location->guid); ?>,
-				employee: <?php echo json_encode((string) $this->employee->guid); ?>,
-				descendants: <?php echo $this->descendants ? '"true"' : '"false"'; ?>,
-				filter: $(this).attr("data-value")
-			});
-		});
+		
 		<?php if ($pines->config->com_calendar->com_customer) { ?>
 		$("#p_muid_new_interaction [name=interaction_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -583,15 +633,9 @@ if ($pines->config->com_calendar->com_customer)
 	};
 	<?php } ?>
 </script>
-<?php if (!$this->is_widget) { ?>
-<div id="p_muid_filter" class="btn-group" style="padding: 0; margin: 0;">
-	<button class="btn btn-mini<?php echo ($this->filter == 'all') ? ' active' : ''; ?>" type="button" data-value="all" title="Show all calendar events.">all</button>
-	<button class="btn btn-mini<?php echo ($this->filter == 'shifts') ? ' active' : ''; ?>" type="button" data-value="shifts" title="Show scheduled employee shifts.">shifts</button>
-	<button class="btn btn-mini<?php echo ($this->filter == 'appointments') ? ' active' : ''; ?>" type="button" data-value="appointments" title="Show customer appointments.">appts</button>
-	<button class="btn btn-mini<?php echo ($this->filter == 'events') ? ' active' : ''; ?>" type="button" data-value="events" title="Show calendar events.">events</button>
-</div>
-<?php } if (!$this->is_widget || gatekeeper('com_calendar/managecalendar') || gatekeeper('com_calendar/editcalendar')) { ?>
-<div style="margin: 0.75em 0;" id="p_muid_actions">
+<div class="clearfix">
+<?php if (!$this->is_widget || gatekeeper('com_calendar/managecalendar') || gatekeeper('com_calendar/editcalendar')) { ?>
+<div id="p_muid_actions" class="pull-left btn-group">
 	<?php if (!$this->is_widget) { ?>
 	<button class="btn btn-mini" type="button" onclick="pines.<?php echo $this->cal_muid; ?>_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<?php } if (gatekeeper('com_calendar/managecalendar') || gatekeeper('com_calendar/editcalendar')) { ?>
@@ -605,7 +649,7 @@ if ($pines->config->com_calendar->com_customer)
 </div>
 <?php } if (!$this->is_widget) { ?>
 <div>
-	<select id="p_muid_employee" name="employee" style="width: 100%;">
+	<select id="p_muid_employee" class="pull-left" name="employee">
 		<option value="all"><?php echo htmlspecialchars($this->location->name); ?></option>
 		<?php
 		// Load employees for this location.
@@ -618,7 +662,16 @@ if ($pines->config->com_calendar->com_customer)
 		} ?>
 	</select>
 </div>
-<?php } if ($pines->config->com_calendar->com_customer) { ?>
+<?php } if (!$this->is_widget) { ?>
+<div id="p_muid_filter" class="btn-group pull-left">
+	<button class="btn btn-mini<?php echo (isset($this->pgrid_state->filter)) ? (($this->pgrid_state->filter == 'all') ? ' active' : '') : (($this->filter == 'all') ? ' active' : ''); ?>" type="button" data-value="all" title="Show all calendar events.">all</button>
+	<button class="btn btn-mini<?php echo (isset($this->pgrid_state->filter)) ? (($this->pgrid_state->filter == 'shifts') ? ' active' : '') : (($this->filter == 'shifts') ? ' active' : ''); ?>" type="button" data-value="shifts" title="Show scheduled employee shifts.">shifts</button>
+	<button class="btn btn-mini<?php echo (isset($this->pgrid_state->filter)) ? (($this->pgrid_state->filter == 'appointments') ? ' active' : '') : (($this->filter == 'appointments') ? ' active' : ''); ?>" type="button" data-value="appointments" title="Show customer appointments.">appts</button>
+	<button class="btn btn-mini<?php echo (isset($this->pgrid_state->filter)) ? (($this->pgrid_state->filter == 'events') ? ' active' : '') : (($this->filter == 'events') ? ' active' : ''); ?>" type="button" data-value="events" title="Show calendar events.">events</button>
+</div>
+<?php } ?> 
+</div>
+<?php if ($pines->config->com_calendar->com_customer) { ?>
 <div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
 	<div class="pf-form">
 		<div class="pf-element">

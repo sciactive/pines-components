@@ -110,6 +110,9 @@ display: inline-block;
 #footer {
     background-color: #eee;
     padding: 20px 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 #copyright {
     text-align: center;
@@ -174,6 +177,9 @@ display: inline-block;
     }
 }
 @media (max-width:979px) {
+	body #nav-configure {
+		margin-bottom: 0;
+	}
     .navbar ul.nav {
         margin-left: 0px;
         margin-top: 20px;

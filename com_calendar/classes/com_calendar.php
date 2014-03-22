@@ -139,8 +139,8 @@ class com_calendar extends component {
 		}
 
 		$calendar_head = new module('com_calendar', 'show_calendar_head', 'head');
+		$form = new module('com_calendar', 'form_calendar', 'content');
 		$calendar = new module('com_calendar', 'show_calendar', 'content');
-		$form = new module('com_calendar', 'form_calendar', 'right');
 
 		// Datespan of the calendar.
 		$date_start = strtotime('00:00:00', $start);
@@ -156,7 +156,13 @@ class com_calendar extends component {
 		$calendar->location = $form->location = $location;
 		$calendar->descendants = $form->descendants = $descendants;
 		$calendar->filter = $form->filter = $filter;
+		
+		// Cur State
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$calendar->pgrid_state = $form->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_calendar/editcalendar']);
 
+		$calendar->filter = $form->filter = (isset($calendar->pgrid_state->filter)) ? $calendar->pgrid_state->filter : $filter;
+		
 		date_default_timezone_set($cur_timezone);
 
 		// So the form can access the calendar.

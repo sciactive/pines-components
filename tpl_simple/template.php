@@ -55,6 +55,9 @@ $css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_temp
 if ($pines->config->tpl_simple->override_pgrid_aristo) {
 	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/pgrid-aristo.css';
 }
+if ($pines->config->tpl_simple->override_calendar_aristo) {
+	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/calendar-aristo.css';
+}
 if ($pines->config->tpl_simple->use_backend_css) {
 	$css[] =  $file_root_location.'templates/'.htmlspecialchars($pines->current_template).'/css/backend.css';
 }
@@ -185,7 +188,7 @@ if (is_array($pines->config->loadcompressedjs)) {
                 </div>
         </div>
     </div>
-    <div id="page" class="<?php echo ($pines->config->tpl_simple->variant == 'full-fluid-page') ? '' : (($width) ? 'container'.$width : 'container');  ?> <?php echo $page; ?>">
+    <div id="page" class="<?php echo ($pines->config->tpl_simple->variant == 'full-fluid-page') ? 'full-fluid-page' : (($width) ? 'container'.$width : 'container');  ?> <?php echo $page; ?>">
             <div class="row-fluid">
                     <div id="breadcrumbs" class="span12"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
             </div>

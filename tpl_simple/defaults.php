@@ -161,6 +161,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'override_calendar_aristo',
+		'cname' => 'Use Aristo Calendar Override Styles.',
+		'description' => 'Use on light template designs and with jquery theme aristo. Makes the calendar much more readable and modern looking.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'print_css',
 		'cname' => 'Print CSS URL',
 		'description' => 'Provide a custom print css URL instead of the default print.css. Use the whole URL, including http.',

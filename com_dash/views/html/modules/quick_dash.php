@@ -14,7 +14,8 @@ $pines->icons->load();
 ?>
 <script type="text/javascript">
 	pines(function(){
-		$("#p_muid_button button").one("click", function(){
+		$(".quick-dash button").one("click", function(){
+			console.log('here');
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_dash', 'quick_dash')); ?>,
 				type: "POST",
@@ -53,11 +54,11 @@ $pines->icons->load();
 		background-position: top center;
 	}
 </style>
-<div id="p_muid_button" style="text-align: center;">
+<div id="p_muid_button" class="quick-dash" style="text-align: center;">
 	<button class="btn" title="See your dashboard in a popup dialog.">
 		<span class="picon picon-32 picon-dashboard-show">Quick Dash</span>
 	</button>
 </div>
 <div id="p_muid_quick_dash" style="display: none;" title="Dashboard">
-	<div class="picon picon-32 picon-throbber" style="height: 32px; background-repeat: no-repeat; background-position: center;"></div>
+	<div class="picon picon-32 picon-throbber" style="height: 32px; background-repeat: no-repeat; background-position: center; text-align:center;"></div>
 </div>

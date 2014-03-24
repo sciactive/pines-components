@@ -173,6 +173,9 @@ if (is_array($pines->config->loadcompressedjs)) {
                                     <div class="nav-collapse">
                                             <?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
                                     </div>
+									<?php if ($pines->config->tpl_simple->use_quick_dash_button) { ?>
+									<div onclick="$('.quick-dash button').click();" class="quick-dash-button"><i class="icon-dashboard"></i> Quick Dash</div>
+									<?php } ?>
                             </div>
                     </div>
             </div>

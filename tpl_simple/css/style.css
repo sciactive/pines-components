@@ -52,6 +52,20 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     margin-bottom: 0;
     width: auto;
 }
+.quick-dash-button {
+	padding: 15px;
+	cursor: pointer;
+	background: #eee;
+	color: #666;
+	text-transform: uppercase;
+	font-size: .9em;
+	text-shadow: 1px 1px #fff;
+	display: inline-block;
+	margin-left: -10px;
+}
+.quick-dash-button:hover {
+	background: #E5E5E5;
+}
 @media (max-width:767px) {
 	.navbar-inner .dropdown-menu {
             background-image: none !important;
@@ -190,4 +204,7 @@ display: inline-block;
     div#page {
         margin-top: 0px !important;
     }
+	.quick-dash-button {
+		display: none;
+	}
 }

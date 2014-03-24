@@ -153,6 +153,13 @@ return array(
 		'value' => false,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'use_quick_dash_button',
+		'cname' => 'Use Quick Dash Button',
+		'description' => 'Let tpl_simple put a quick dash button in your menu bar - only on desktop view. Use per condition to control when the button appears! You need to put the quick dash module in a module that does not show and apply the same conditions to it.',
+		'value' => false,
+		'peruser' => true,
+	),
     array(
 		'name' => 'override_pgrid_aristo',
 		'cname' => 'Use Aristo Pgrid Override Styles.',

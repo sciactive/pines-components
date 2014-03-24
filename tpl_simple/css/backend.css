@@ -48,7 +48,12 @@ h5 {
 h6 {
 	font-size: 12px;
 }
-h1, h2, h3, h4, h5, h6 {
+.module_title.page-header h1,
+.module_title.page-header h2,
+.module_title.page-header h3,
+.module_title.page-header h4,
+.module_title.page-header h5,
+.module_title.page-header h6 {
 	color: #555555;
 	text-shadow: 1px 1px #fff;
 }

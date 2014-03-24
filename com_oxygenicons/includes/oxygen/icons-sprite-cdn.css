@@ -1524,4 +1524,4 @@ body .btn .picon-32 {
 .picon-zoom-out:before { background-position: -144px -1332px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .picon-zoom-select:before { background-position: -144px -1350px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .drive-icon:before {background: url("http://lh6.ggpht.com/0VD9N7NeXpmcvEH93F1l_ns2B0iMzYnOc1VOVWQZb_h7Ywe2wvfvJmlyX1k59ehSt7arVvZ6ePQnPnWjKi8=s16"); width: 16px; height: 16px; content: ""; display:inline-block; }
-.picon-32.picon-throbber:before {background: url("throbber.gif"); width: 32px; height: 32px; content: ""; display:inline-block; }
+.picon-32.picon-throbber:before {background: url("http://lh4.ggpht.com/F8ufQkegK5SEU6KamDos-QhLYa_GD2reAFC88-hX3obVO8NXlomYKqO2vlGqUsVoSlOos3jysrJzkJTst3em=s32"); width: 32px; height: 32px; content: ""; display:inline-block; }

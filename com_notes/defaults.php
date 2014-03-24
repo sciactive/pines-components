@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'notes_disabled',
+		'cname' => 'Notes Disabled',
+		'description' => 'The notes will be disabled.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'editor_position',
 		'cname' => 'Editor Position',
 		'description' => 'The position on the page of the note editor.',

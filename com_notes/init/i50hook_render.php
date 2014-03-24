@@ -16,6 +16,8 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 function com_notes__attach_note_editors() {
 	global $pines;
+	if ($pines->config->com_notes->notes_disabled) 
+		return;
 	foreach ((array) $pines->page->modules['content'] as $cur_module) {
 		// It can't be a module from this component.
 		if ($cur_module->component == 'com_notes')

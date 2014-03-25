@@ -633,29 +633,27 @@ class com_mailer extends component {
                 CURLOPT_POSTFIELDS => $params
             ));
             $result = curl_exec($ch);
-            
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            // Response is in json
+            $result_message = json_decode($result);
+            curl_close($ch);
             switch ($http_code) {
                 case 200:
                     // Good to go
                     break;
                 case 400:
                     pines_log("SendGrid returned Invalid Input 400 error.", 'error');
-                    curl_close($ch);
+                    pines_log($result);
                     return false;
                 case 500:
                     pines_log('SendGrid returned Application Error 500 error.', 'error');
-                    curl_close($ch);
+                    pines_log($result);
                     return false;
                 default:
                     pines_log('SendGrid returned unrecognized response. Code: '.$http_code, 'error');
-                    curl_close($ch);
+                    pines_log($result);
                     return false;
             }
-            
-            // Response is in json
-            $result_message = json_decode($result);
-            curl_close($ch);
             
             // Look at the 'message' key. Either success or error
             if ($result_message->message == 'success') {

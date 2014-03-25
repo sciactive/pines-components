@@ -643,15 +643,15 @@ class com_mailer extends component {
                     break;
                 case 400:
                     pines_log("SendGrid returned Invalid Input 400 error.", 'error');
-                    pines_log($result);
+                    pines_log($result, 'error');
                     return false;
                 case 500:
                     pines_log('SendGrid returned Application Error 500 error.', 'error');
-                    pines_log($result);
+                    pines_log($result, 'error');
                     return false;
                 default:
                     pines_log('SendGrid returned unrecognized response. Code: '.$http_code, 'error');
-                    pines_log($result);
+                    pines_log($result, 'error');
                     return false;
             }
             

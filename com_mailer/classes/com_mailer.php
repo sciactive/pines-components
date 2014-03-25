@@ -622,7 +622,7 @@ class com_mailer extends component {
                 'x-smtpapi' => json_encode($xsmtpapi),
                 'subject'   => $subject,
                 'html'      => $message,
-                'from'      => $from,
+                'from'      => $from_email,
                 'replyto'   => $from,
                 'to'        => $to_email,
             );

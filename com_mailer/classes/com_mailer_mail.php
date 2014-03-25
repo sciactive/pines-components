@@ -278,16 +278,23 @@ class com_mailer_mail {
 			$to = $this->recipient;
 			$subject = $this->subject;
 		}
-		// Add from headers.
-		$required_headers['From'] = $this->sender;
-		$required_headers['Return-Path'] = $this->sender;
-		$required_headers['Reply-To'] = $this->sender;
-		$required_headers['X-Sender'] = $this->sender;
-		$headers = $this->buildHeaders($required_headers);
-		$message = $this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
-
-		// Now send the mail.
-		return mail($to, $subject, $message, $headers, $pines->config->com_mailer->additional_parameters);
+                
+                // Config option to use sendgrid instead of our stmp server
+                if ($pines->config->com_mailer->sendgrid) {                    
+                    return $pines->com_mailer->sendgridit(str_replace('"', '', $to), $this->sender, $subject, $this->message, $this->attachments, $this->categories, $this->has_template);
+                    
+                } else {
+                    // Add from headers.
+                    $required_headers['From'] = $this->sender;
+                    $required_headers['Return-Path'] = $this->sender;
+                    $required_headers['Reply-To'] = $this->sender;
+                    $required_headers['X-Sender'] = $this->sender;
+                    $headers = $this->buildHeaders($required_headers);
+                    $message = $this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
+                    
+                    // Now send the mail.
+                    return mail($to, $subject, $message, $headers, $pines->config->com_mailer->additional_parameters);
+                }
 	}
 }
 

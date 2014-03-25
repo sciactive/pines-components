@@ -623,7 +623,7 @@ class com_mailer extends component {
                 'subject'   => $subject,
                 'html'      => $message,
                 'from'      => $from_email,
-                'replyto'   => $from,
+                'replyto'   => $from_email,
                 'to'        => $to_email,
             );
             

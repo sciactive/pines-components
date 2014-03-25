@@ -583,8 +583,8 @@ class com_mailer extends component {
                 $to_email[] = $to;
             }
             $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
-            if ($matching > 0) {
-                $from_email = $matches[2];
+            if ($matching_from > 0) {
+                $from_email = $matches_from[2];
             } else {
                 $from_email = $from;
             }

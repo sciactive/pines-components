@@ -575,11 +575,18 @@ class com_mailer extends component {
             global $pines;
             // Format email
             $to_email = array();
+            $from_email;
             $matching = preg_match("/(.*)<(.*)>/", $to, $matches);
             if ($matching > 0) {
                 $to_email[] = $matches[2];
             } else {
                 $to_email[] = $to;
+            }
+            $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
+            if ($matching > 0) {
+                $from_email = $matches[2];
+            } else {
+                $from_email = $from;
             }
             
             // Construct the array

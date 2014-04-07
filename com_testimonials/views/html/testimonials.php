@@ -14,3 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 <link rel="stylesheet" type="text/css" href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_testimonials/includes/<?php echo ($pines->config->debug_mode) ? 'testimonial' : 'testimonial.min'; ?>.css">
 <script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>components/com_testimonials/includes/<?php echo ($pines->config->debug_mode) ? 'testimonial' : 'testimonial.min'; ?>.js"></script>
+<?php if ($pines->config->com_testimonials->scroll_load) { ?>
+<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>components/com_testimonials/includes/<?php echo ($pines->config->debug_mode) ? 'testimonial.scroll.load' : 'testimonial.scroll.load.min'; ?>.js"></script>
+<?php } ?>

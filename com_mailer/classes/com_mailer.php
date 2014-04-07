@@ -449,8 +449,20 @@ class com_mailer extends component {
 		}
 		unset($templates, $cur_template);
 		// If there is no template, use a default one.
-		if (!$template)
-			$template = com_mailer_template::factory();
+                // Here, we can indicate that this email does not have a template
+                $has_template = true;
+		if (!$template) {
+                    $template = com_mailer_template::factory();
+                    // We don't want to use the default template in the factory method
+                    // We want to use the default template that we have in sendgrid
+                    if ($pines->config->com_mailer->sendgrid && $pines->config->com_mailer->sendgrid_default_template) {
+                        $has_template = false;
+                        $template->content = '#content#';
+                        $template->document = '#content#';
+                    }
+                    $has_template = false;
+                }
+			//$template = com_mailer_template::factory();
 
 		// Build the body of the email.
 		$body['content'] = str_replace('#content#', $body['content'], str_replace('#content#', $template->content, $template->document));
@@ -527,7 +539,7 @@ class com_mailer extends component {
 			}
 		}
 		unset($cur_field);
-
+                
 		// Build the mail object.
 		$email = com_mailer_mail::factory($from, isset($recipient->name) ? "\"".str_replace('"', '', $recipient->name)."\" <{$recipient->email}>" : $recipient->email, $body['subject'], $body['content']);
 		if ($rendition) {
@@ -536,12 +548,131 @@ class com_mailer extends component {
 			if ($rendition->bcc)
 				$email->addHeader('BCC', $rendition->bcc);
 		}
+                
+                // Set a property on $email to indicate if it needs a template or not
+                $email->has_template = $has_template;
+                // Setting categories to track email
+                $email->categories = $mail;
 
 		// Now finish up.
 		if ($send)
 			return $email->send();
 		return $email;
 	}
+        
+        /**
+         * Send an email via SendGrid
+         * @param string $to The recipient of the email
+         * @param string $from The sender of the email
+         * @param string $message The html message to send
+         * @param array $attachments An array of file paths to include with email
+         * @param array $categories An array of tags to be added to the email for analytics
+         * @param bool $has_template A boolean indicating whether the emails is already using a predefined template
+         * @return bool true if the email was sent, else false
+         * 
+         */
+        public function sendgridit($to, $from, $subject, $message, $attachments, $categories, $has_template=true) {
+            global $pines;
+            // Format email
+            $to_email = array();
+            $from_email;
+            $matching = preg_match("/(.*)<(.*)>/", $to, $matches);
+            if ($matching > 0) {
+                $to_email[] = $matches[2];
+            } else {
+                $to_email[] = $to;
+            }
+            $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
+            if ($matching_from > 0) {
+                $from_email = $matches_from[2];
+            } else {
+                $from_email = $from;
+            }
+            
+            // Construct the array
+            // We define the to array in the X-SMTPAPI header because this hides email addresses from others if $to is an array
+            // At this moment, it is a string, but this will be handy for when this function handles an array of email addresses
+            $xsmtpapi = array(
+                'to' => $to_email
+            );
+            
+            // If the message has a template, then disable our global template
+            if ($has_template) {
+                $xsmtpapi['filters'] = array(
+                    'template' => array(
+                        'settings' => array(
+                            'enable' => 0
+                        ),
+                    ),
+                );
+            }
+            
+            if ($categories) {
+                $xsmtpapi['category'] = array();
+                foreach ($categories as $category) {
+                    $xsmtpapi['category'][] = $category;
+                }
+            }
+            
+            // Note that we have to include a to variable even though we already set it in the x-smtpapi header
+            // The X-SMTPAPI will override the to field here and it won't let multiple recipients see other people's emails
+            $params = array(
+                'api_user'  => $pines->config->com_mailer->sendgrid_api_user,
+                'api_key'   => $pines->config->com_mailer->sendgrid_api_key,
+                'x-smtpapi' => json_encode($xsmtpapi),
+                'subject'   => $subject,
+                'html'      => $message,
+                'from'      => $from_email,
+                'replyto'   => $from_email,
+                'to'        => $to_email,
+            );
+            
+            // Need to add any attachments
+            foreach ($attachments as $attachment) {
+                $params['files['.basename($attachment).']'] = '@'.$attachment;
+            }
+            
+            $ch = curl_init();
+            curl_setopt_array($ch, array(
+                CURLOPT_URL => $pines->config->com_mailer->sendgrid_url,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => $params
+            ));
+            $result = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            // Response is in json
+            $result_message = json_decode($result);
+            curl_close($ch);
+            switch ($http_code) {
+                case 200:
+                    // Good to go
+                    break;
+                case 400:
+                    pines_log("SendGrid returned Invalid Input 400 error.", 'error');
+                    pines_log($result, 'error');
+                    return false;
+                case 500:
+                    pines_log('SendGrid returned Application Error 500 error.', 'error');
+                    pines_log($result, 'error');
+                    return false;
+                default:
+                    pines_log('SendGrid returned unrecognized response. Code: '.$http_code, 'error');
+                    pines_log($result, 'error');
+                    return false;
+            }
+            
+            // Look at the 'message' key. Either success or error
+            if ($result_message->message == 'success') {
+                pines_log("Email successfully sent to: ".$to, 'notice');
+                return true;
+            } else {
+                pines_log("Email was not successfully sent to: ".$to, 'notice');
+                pines_log("SendGrid Reponse Message: ".$result_message);
+                return false;
+            }
+            
+        }
 }
 
 ?>

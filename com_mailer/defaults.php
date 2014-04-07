@@ -59,6 +59,36 @@ return array(
 		'value' => '-femail@example.com',
 		'peruser' => true,
 	),
+        array(
+                'name' => 'sendgrid',
+                'cname' => 'Send Emails via SendGrid',
+                'description' => 'Enabling this will try to send emails via SendGrid',
+                'value' => false,
+        ),
+        array(
+                'name' => 'sendgrid_default_template',
+                'cname' => 'Use SendGrid Default Template',
+                'description' => 'When using SendGrid, default to the SendGrid template instead of default Pines.',
+                'value' => false,
+        ),
+        array(
+                'name' => 'sendgrid_url',
+                'cname' => 'SendGrid API URL',
+                'description' => 'The URL to POST to for SendGrid',
+                'value' => 'https://api.sendgrid.com/api/mail.send.json'
+        ),
+        array(
+                'name' => 'sendgrid_api_user',
+                'cname' => 'SendGrid Username',
+                'description' => 'Your SendGrid Account Username',
+                'value' => ''
+        ),
+        array(
+                'name' => 'sendgrid_api_key',
+                'cname' => 'SendGrid Password',
+                'description' => 'Your SendGrid Account Password',
+                'value' => ''
+        ),
 );
 
 ?>

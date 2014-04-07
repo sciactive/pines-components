@@ -4,7 +4,8 @@ pines(function(){
 	var scroll_handler = function(){
 		page_testimonials.each(function(){
 			var testimonial = $(this);
-			var test_offset = testimonial.offset().top - 300;
+			var data_offset = (testimonial.attr('data-offset') != undefined) ? parseInt(testimonial.attr('data-offset')) : 300;
+			var test_offset = testimonial.offset().top - data_offset;
 			var scroll_point = $(window).scrollTop();
 			var scroll_point_hit = (scroll_point + $(window).height() == $(document).height()) ? true : (test_offset < scroll_point);
 			if (!testimonial.hasClass('loaded') && scroll_point_hit) {

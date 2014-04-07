@@ -683,8 +683,25 @@ $font_light = (preg_match('/^#[a-fA-F0-9]{6}$/', $pines->config->com_testimonial
 				<hr/>
 				<p id="initialize-manually" class="help-info-plain clearfix">Initialize your module manually by adding the class <strong>manual-trigger</strong> to the element with class <strong>testimonial-box</strong> or its parent. Then, call this global function using the testimonial-box element.</p>
 				<code class="help-code">window.create_testimonial_module($('.testimonial-box'))</code>
-				<p class="alert help-info-plain clearfix" style="margin: 20px;"><i class="icon-info-sign"></i> Add Class <strong>scroll-load</strong> to a manual trigger testimonial box (and set visibility:hidden) and enable scroll load on com_testimonials and the testimonials will not load until the user scrolls on the page. Useful to minimize page load time, especially for when the testimonial elements are lower in the DOM. <br/><br/> <small>You will not need to manually call the testimonial module because the scroll load will take care of it for you.</small></p>
-				<code class="help-code"><div class="testimonial-box manual-trigger scroll-load" style="visibility: hidden;">...</div></code>
+				<p class="alert help-info-plain clearfix" style="margin: 20px;">
+					<i class="icon-info-sign"></i> 
+					Add class <strong>scroll-load</strong> to a manual trigger 
+					testimonial box (and set visibility:hidden) and enable 
+					scroll load on com_testimonials and the testimonials will 
+					not load until the user scrolls on the page. Useful to 
+					minimize page load time, especially for when the testimonial
+					elements are lower in the DOM and not initially visible. <br/><br/>
+					<small>
+					You can add <strong>data-offset</strong> as an attribute 
+					with a number to provide the number of pixels to reach
+					above the element at which to begin the load. (The default is 300).
+					</small><br/><br/>
+					<small>
+					You will not need to manually call the testimonial module 
+					because the scroll load will take care of it for you.
+					</small>
+				</p>
+				<code class="help-code"><div class="testimonial-box manual-trigger scroll-load" style="visibility: hidden;" data-offset="400">...</div></code>
 			</div>
 		</div>
 	</div>

@@ -83,11 +83,17 @@ all.each(function(){
         }
         
         function makeSearch() {
-            var h = (ps.outerHeight() - 14 ) / 2;
-            var wrapper = '<span style="position: relative;"></span>';
-            var btn = '<a style="text-decoration: none; cursor: pointer; z-index: 3; position: absolute; padding: '+ h +'px; right: 0px;"><i style="font-size: 14px;" class="icon-search"></i></a>';
+            var h = ps.outerHeight();
+			if (!h) {
+				setTimeout(function(){
+					makeSearch();
+				}, 200);
+				return;
+			}
+			var wrapper = '<span class="noauto-wrapper" style="position: relative; font-size: '+h+'px; line-height: '+h+'px; "></span>';
+            var btn = '<a class="searchbtn" style="top: 0; height: '+h+'px; text-decoration: none; cursor: pointer; z-index: 3; position: absolute; padding: 0 5px; right: 0px;"><i style="font-size: 14px;" class="icon-search"></i></a>';
             ps.wrap(wrapper).after(btn);
-            ps.next('a').click(function() {
+			ps.next('a').click(function() {
                 searchOrAppend();
             });
         }

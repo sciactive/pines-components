@@ -293,6 +293,12 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+        array(
+                'name' => 'no_autocomplete',
+                'cname' => 'Disable Autocomplete for Customer Select',
+                'description' => 'Enabling this option will not use autocomplete to send multiple requests for a customer query.',
+                'value' => false,
+        ),
 );
 
 ?>

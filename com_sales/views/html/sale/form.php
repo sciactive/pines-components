@@ -298,11 +298,18 @@ if ($pines->config->com_sales->com_esp) {
 								open: function(){if (textbox.val() == "") textbox.autocomplete("close");},
 								select: function(event, ui){select(ui.item.value); return false;}
 							});
-							<?php } ?>
-							textbox.keydown(function(e){
+							<?php } 
+                                                        if ($pines->config->com_sales->no_autocomplete_product) { ?>
+
+                                                        textbox.on('product_selected', function(){
+                                                           select(textbox.val()); 
+                                                        });
+                                                        <?php } else { ?>
+                                                            textbox.keydown(function(e){
 								if (e.keyCode == 13)
 									select(textbox.val());
 							});
+                                                        <?php } ?>
 						}
 					},
 					{type: 'separator'},
@@ -1676,24 +1683,20 @@ if ($pines->config->com_sales->com_esp) {
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
 			<input class="pf-field" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlspecialchars("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') echo 'disabled="disabled" '; ?>/>
-		</label>
+                </label>
 	</div>
 	<?php } ?>
 	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
 		<table id="p_muid_category_grid">
 			<thead>
 				<tr>
-					<th>Order</th>
 					<th>Name</th>
-					<th>Products</th>
 				</tr>
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
 				<tr title="<?php echo htmlspecialchars($category->guid); ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
-					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
-					<td><?php echo htmlspecialchars($category->name); ?></td>
-					<td><?php echo count($category->products); ?></td>
+                                    <td><?php echo htmlspecialchars($category->name); ?></td>
 				</tr>
 			<?php } ?>
 			</tbody>

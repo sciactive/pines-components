@@ -468,6 +468,12 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+        array(
+                'name' => 'no_autocomplete_product',
+                'cname' => 'Disable Autocomplete For Product Select',
+                'description' => 'Enabling this option will disable autocomplete searching for products',
+                'value' => false,
+        ),
 );
 
 ?>

@@ -922,7 +922,11 @@ class com_sales extends component {
 			if ($pines->config->compress_cssjs) {
 				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
 				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
-				$js[] =  $file_root.'components/com_sales/includes/'.($pines->config->debug_mode ? 'jquery.productselect.js' : 'jquery.productselect.min.js');
+                                if ($pines->config->com_sales->no_autocomplete_product) {
+                                    $js[] =  $file_root.'components/com_sales/includes/'.($pines->config->debug_mode ? 'jquery.productselect.noauto.js' : 'jquery.productselect.noauto.min.js');
+                                } else {
+                                    $js[] =  $file_root.'components/com_sales/includes/'.($pines->config->debug_mode ? 'jquery.productselect.js' : 'jquery.productselect.min.js');
+                                }
 				
 				// This component needs a dynamic variable.
 				$auto_url = pines_url('com_sales', 'product/autocomplete');

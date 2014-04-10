@@ -206,16 +206,23 @@ if ($pines->config->com_sales->autocomplete_product)
 									}
 								});
 							};
-							<?php if ($pines->config->com_sales->autocomplete_product) { ?>
+                                                        <?php if ($pines->config->com_sales->autocomplete_product) { ?>
 							textbox.productselect({
 								open: function(){if (textbox.val() == "") textbox.autocomplete("close");},
 								select: function(event, ui){select(ui.item.value); return false;}
 							});
-							<?php } ?>
-							textbox.keydown(function(e){
+							<?php } 
+                                                        if ($pines->config->com_sales->no_autocomplete_product) { ?>
+
+                                                        textbox.on('product_selected', function(){
+                                                           select(textbox.val()); 
+                                                        });
+                                                        <?php } else { ?>
+                                                            textbox.keydown(function(e){
 								if (e.keyCode == 13)
 									select(textbox.val());
 							});
+                                                        <?php } ?>
 						}
 					},
 					{type: 'separator'},

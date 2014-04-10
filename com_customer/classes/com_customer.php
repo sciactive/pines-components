@@ -74,7 +74,11 @@ class com_customer extends component {
 			if ($pines->config->compress_cssjs) {
 				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
 				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
-				$js[] =  $file_root.'components/com_customer/includes/'.($pines->config->debug_mode ? 'jquery.customerselect.js' : 'jquery.customerselect.min.js');
+                                if ($pines->config->com_customer->no_autocomplete) {
+                                    $js[] = $js[] =  $file_root.'components/com_customer/includes/'.($pines->config->debug_mode ? 'jquery.customerselect.noauto.js' : 'jquery.customerselect.noauto.min.js');
+                                } else {
+                                    $js[] =  $file_root.'components/com_customer/includes/'.($pines->config->debug_mode ? 'jquery.customerselect.js' : 'jquery.customerselect.min.js');
+                                }
 				
 				// This component needs a dynamic variable.
 				$auto_url = pines_url('com_customer', 'customer/search');

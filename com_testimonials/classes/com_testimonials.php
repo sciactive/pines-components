@@ -41,6 +41,11 @@ class com_testimonials extends component {
 
 				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
 				$js[] =  $file_root.'components/com_testimonials/includes/'.($pines->config->debug_mode ? 'testimonial.js' : 'testimonial.min.js');
+				
+				if ($pines->config->com_testimonials->scroll_load) {
+					$js[] =  $file_root.'components/com_testimonials/includes/'.($pines->config->debug_mode ? 'testimonial.scroll.load.js' : 'testimonial.scroll.load.min.js');
+				}
+				
 				$pines->config->loadcompressedjs = $js;
 			} else {
 				$module = new module('com_testimonials', 'testimonials', 'head');

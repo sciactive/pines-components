@@ -22,7 +22,7 @@ all.each(function(){
         $('body').append(modal_markup);
         var product_modal = $('#productmodal');
         var product_body = $('#productmodal .modal-body');
-        var throbber = $('#productmodal #productthrobber');
+        var throbber = $('#productmodal #product_throbber');
         function searchHandler() {
             search_term = ps.val();
             $.ajax({
@@ -72,7 +72,6 @@ all.each(function(){
         }
         
         function searchOrAppend() {
-            console.log(ps.val());
             if (ps.val() == '') return;
             if (ps.val() != search_term && ps.val() != found_result) {
                 product_body.html(throbber);
@@ -105,7 +104,6 @@ all.each(function(){
         ps.off('keypress');
         ps.unbind('keypress');
         ps.keypress(function(e) {
-            console.log(e.keyCode);
             if (e.keyCode == 13) {
                 searchOrAppend();
                 e.preventDefault();

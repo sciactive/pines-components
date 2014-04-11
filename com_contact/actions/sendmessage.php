@@ -28,7 +28,7 @@ $msg .= "\r\n\r\n";
 $msg .= "Customer Name:	$name\r\n";
 $msg .= "Phone:			$phone\r\n";
 $msg .= "E-mail:		$email";
-$mail = com_mailer_mail::factory($send_to, $send_to, $subject, $msg);
+$mail = com_mailer_mail::factory($pines->config->com_mailer->from_address, $send_to, $subject, $msg);
 if ($mail->send()) {
 	pines_notice('Your message has been sent.');
 	pines_redirect(pines_url('com_contact', 'thanks'));

@@ -89,6 +89,18 @@ return array(
                 'description' => 'Your SendGrid Account Password',
                 'value' => ''
         ),
+        array(
+                'name' => 'bypass_sendgrid_list',
+                'cname' => 'Bypass SendGrid\'s List Management',
+                'description' => 'This option is a SendGrid filter which will bypass unsubscribed and bounced emails',
+                'value' => false
+        ),
+        array(
+                'name' => 'domain_bypass',
+                'cname' => 'Domain to bypass emails',
+                'description' => 'The domain name to check to bypass SendGrid\'s List Management',
+                'value' => ''
+        ),
 );
 
 ?>

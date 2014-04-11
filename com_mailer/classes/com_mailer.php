@@ -574,14 +574,24 @@ class com_mailer extends component {
         public function sendgridit($to, $from, $subject, $message, $attachments, $categories, $has_template=true) {
             global $pines;
             // Format email
+            $emails_exploded = explode(",", $to);
             $to_email = array();
             $from_email;
-            $matching = preg_match("/(.*)<(.*)>/", $to, $matches);
-            if ($matching > 0) {
-                $to_email[] = $matches[2];
-            } else {
-                $to_email[] = $to;
+            $bypass_domain = false;
+            foreach ($emails_exploded as $cur_email) {
+                $matching = preg_match("/(.*)<(.*)>/", $cur_email, $matches);
+                if ($matching > 0) {
+                    $to_email[] = str_replace(' ', '', $matches[2]);
+                } else {
+                    $to_email[] = str_replace(' ', '', $cur_email);
+                }
+                if ($pines->config->com_mailer->bypass_sendgrid_list) {
+                    if (strpos(end($to_email), $pines->config->com_mailer->domain_bypass) !== false) {
+                        $bypass_domain = true;
+                    }
+                }
             }
+            
             $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
             if ($matching_from > 0) {
                 $from_email = $matches_from[2];
@@ -591,19 +601,26 @@ class com_mailer extends component {
             
             // Construct the array
             // We define the to array in the X-SMTPAPI header because this hides email addresses from others if $to is an array
-            // At this moment, it is a string, but this will be handy for when this function handles an array of email addresses
             $xsmtpapi = array(
-                'to' => $to_email
+                'to' => $to_email,
+                'filters' => array(),
             );
             
             // If the message has a template, then disable our global template
             if ($has_template) {
-                $xsmtpapi['filters'] = array(
-                    'template' => array(
+                $xsmtpapi['filters']['template'] = array(
                         'settings' => array(
                             'enable' => 0
                         ),
-                    ),
+                );
+            }
+            
+            // Check if we want to enable the bypass_list_management filter
+            if ($bypass_domain) {
+                $xsmtpapi['filters']['bypass_list_management'] = array(
+                        'settings' => array(
+                            'enable' => 1
+                        ),
                 );
             }
             
@@ -613,7 +630,7 @@ class com_mailer extends component {
                     $xsmtpapi['category'][] = $category;
                 }
             }
-            
+
             // Note that we have to include a to variable even though we already set it in the x-smtpapi header
             // The X-SMTPAPI will override the to field here and it won't let multiple recipients see other people's emails
             $params = array(

@@ -110,8 +110,7 @@ class com_user extends component implements user_manager_interface {
 			if (!preg_match($pines->config->com_user->valid_regex, $username))
 				return array('result' => false, 'message' => $pines->config->com_user->valid_regex_notice);
 			$selector = array('&',
-					'tag' => array('com_user', 'user'),
-					'match' => array('username', '/^'.preg_quote($username, '/').'$/i')
+					'strict' => array('username', $username)
 				);
 			if (isset($id) && $id > 0)
 				$selector['!guid'] = $id;
@@ -131,8 +130,7 @@ class com_user extends component implements user_manager_interface {
 			if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $username))
 				return array('result' => false, 'message' => 'Email must be a correctly formatted address.');
 			$selector = array('&',
-					'tag' => array('com_user', 'user'),
-					'match' => array('email', '/^'.preg_quote($username, '/').'$/i')
+					'strict' => array('email', $username)
 				);
 			if (isset($id) && $id > 0)
 				$selector['!guid'] = $id;
@@ -168,8 +166,7 @@ class com_user extends component implements user_manager_interface {
 		if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
 			return array('result' => false, 'message' => 'Email must be a correctly formatted address.');
 		$selector = array('&',
-				'tag' => array('com_user', 'user'),
-				'match' => array('email', '/^'.preg_quote($email, '/').'$/i')
+				'strict' => array('email', $email)
 			);
 		if (isset($id) && $id > 0)
 			$selector['!guid'] = $id;

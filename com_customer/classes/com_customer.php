@@ -197,7 +197,6 @@ class com_customer extends component {
 		$ssn = str_replace('-', '', $ssn);
 		
 		$selector = array('&',
-				'tag' => array('com_customer', 'customer'),
 				'strict' => array('ssn', $ssn)
 			);
 		if (isset($id) && $id > 0)

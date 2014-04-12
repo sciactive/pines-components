@@ -96,6 +96,12 @@ return array(
 		),
 		'peruser' => true,
 	),
+	array(
+		'name' => 'no_autocomplete_employee',
+		'cname' => 'Disable Autocomplete For Employee Select',
+		'description' => 'Enabling this option will disable autocomplete searching for employees.',
+		'value' => false,
+	),
 );
 
 ?>

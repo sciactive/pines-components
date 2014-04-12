@@ -585,11 +585,10 @@ class com_mailer extends component {
                 } else {
                     $to_email[] = str_replace(' ', '', $cur_email);
                 }
-                if ($pines->config->com_mailer->bypass_sendgrid_list) {
-                    if (strpos(end($to_email), $pines->config->com_mailer->domain_bypass) !== false) {
-                        $bypass_domain = true;
-                    }
-                }
+            }
+            
+            if ($pines->config->com_mailer->bypass_sendgrid_list && strpos($to, $pines->config->com_mailer->domain_bypass) !== false) {
+                $bypass_domain = true;
             }
             
             $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);

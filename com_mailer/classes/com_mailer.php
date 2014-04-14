@@ -579,12 +579,7 @@ class com_mailer extends component {
             $from_email;
             $bypass_domain = false;
             foreach ($emails_exploded as $cur_email) {
-                $matching = preg_match("/(.*)<(.*)>/", $cur_email, $matches);
-                if ($matching > 0) {
-                    $to_email[] = str_replace(' ', '', $matches[2]);
-                } else {
-                    $to_email[] = str_replace(' ', '', $cur_email);
-                }
+                $to_email[] = trim($cur_email);
             }
             
             if ($pines->config->com_mailer->bypass_sendgrid_list && strpos($to, $pines->config->com_mailer->domain_bypass) !== false) {
@@ -602,11 +597,14 @@ class com_mailer extends component {
             // We define the to array in the X-SMTPAPI header because this hides email addresses from others if $to is an array
             $xsmtpapi = array(
                 'to' => $to_email,
-                'filters' => array(),
             );
             
             // If the message has a template, then disable our global template
             if ($has_template) {
+                if (!isset($xsmtpapi['filters'])) {
+                    $xsmtpapi['filters'] = array();
+                }
+                
                 $xsmtpapi['filters']['template'] = array(
                         'settings' => array(
                             'enable' => 0
@@ -616,6 +614,10 @@ class com_mailer extends component {
             
             // Check if we want to enable the bypass_list_management filter
             if ($bypass_domain) {
+                if (!isset($xsmtpapi['filters'])) {
+                    $xsmtpapi['filters'] = array();
+                }
+                
                 $xsmtpapi['filters']['bypass_list_management'] = array(
                         'settings' => array(
                             'enable' => 1
@@ -624,6 +626,11 @@ class com_mailer extends component {
             }
             
             if ($categories) {
+                
+                if (!isset($xsmtpapi['filters'])) {
+                    $xsmtpapi['filters'] = array();
+                }
+                
                 $xsmtpapi['category'] = array();
                 foreach ($categories as $category) {
                     $xsmtpapi['category'][] = $category;

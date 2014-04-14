@@ -601,37 +601,15 @@ class com_mailer extends component {
             
             // If the message has a template, then disable our global template
             if ($has_template) {
-                if (!isset($xsmtpapi['filters'])) {
-                    $xsmtpapi['filters'] = array();
-                }
-                
-                $xsmtpapi['filters']['template'] = array(
-                        'settings' => array(
-                            'enable' => 0
-                        ),
-                );
+                $xsmtpapi['filters']['template']['settings']['enable'] = 0;
             }
             
             // Check if we want to enable the bypass_list_management filter
             if ($bypass_domain) {
-                if (!isset($xsmtpapi['filters'])) {
-                    $xsmtpapi['filters'] = array();
-                }
-                
-                $xsmtpapi['filters']['bypass_list_management'] = array(
-                        'settings' => array(
-                            'enable' => 1
-                        ),
-                );
+                $xsmtpapi['filters']['bypass_list_management']['settings']['enable'] = 1;
             }
             
             if ($categories) {
-                
-                if (!isset($xsmtpapi['filters'])) {
-                    $xsmtpapi['filters'] = array();
-                }
-                
-                $xsmtpapi['category'] = array();
                 foreach ($categories as $category) {
                     $xsmtpapi['category'][] = $category;
                 }
@@ -642,7 +620,7 @@ class com_mailer extends component {
             $params = array(
                 'api_user'  => $pines->config->com_mailer->sendgrid_api_user,
                 'api_key'   => $pines->config->com_mailer->sendgrid_api_key,
-                'x-smtpapi' => json_encode($xsmtpapi),
+                'x-smtpapi' => json_encode($xsmtpapi, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP),
                 'subject'   => $subject,
                 'html'      => $message,
                 'from'      => $from_email,

@@ -20,6 +20,5 @@ account:<br />
 <br />
 <a href="#verify_link#" target="_blank">#verify_link#</a><br />
 <br />
-<?php if ($pines->config->com_user->use_custom_email_verification) echo $pines->config->com_user->custom_email_verification.'<br /><br />'; ?>
 Regards,<br />
 #system_name#

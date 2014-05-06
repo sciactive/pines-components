@@ -121,20 +121,6 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'use_custom_email_verification',
-		'cname' => 'Use custom email verification HTML',
-		'description' => 'In the email verification, use custom HTML appended after confirmation link.',
-		'value' => false,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'custom_email_verification',
-		'cname' => 'Custom email verification HTML',
-		'description' => 'The custom HTML to append in the email verification email.',
-		'value' => 'For any questions or help with our online services, email <a rel="nofollow" style="text-decoration:none; color:#000"><strong>reply@example.com</strong></a>.',
-		'peruser' => true,
-	),
-	array(
 		'name' => 'default_domain',
 		'cname' => 'Default Login Domain',
 		'description' => 'When using email address as username, the domain name listed here will be automatically appended to short logins. For example, you could put "sciactive.com" to be able to sign in with "hunter" instead of "hunter@sciactive.com".',

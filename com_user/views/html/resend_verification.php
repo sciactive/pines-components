@@ -22,7 +22,7 @@ top: auto;
 pines(function(){$.pnotify({
 	type: 'info',
 	title: 'Email Verification',
-	text: 'You haven\'t verified your email address yet. <a href="javascript:void(0);" class="resend">Request another verification email</a> if you\'re having trouble.',
+	text: 'You haven\'t verified your email address yet. <a href="javascript:void(0);" class="resend badge badge-info">Request another verification email</a> if you\'re having trouble.',
 	hide: false,
 	addclass: "p_muid_notice",
 	stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},

@@ -282,6 +282,8 @@ class com_user extends component implements user_manager_interface {
 				if ($pass)
 					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $tmp_user->group->abilities);
 			}
+		} else {
+			$_SESSION['abilities'] = $tmp_user->abilities;
 		}
 		$_SESSION['user'] = $tmp_user;
 		pines_session('close');

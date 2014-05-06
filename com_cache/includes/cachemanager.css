@@ -1,0 +1,152 @@
+/*
+ * com_cache's CSS
+ * 
+ * @package Components\cache
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Angela Murrell <amasiell.g@gmail.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+ 
+.p_cache_cachemanager td.edit-directive {
+	cursor: pointer;
+}
+.p_cache_cachemanager .alert-info hr {
+	border-top-color: #6FBCE2;
+}
+.p_cache_cachemanager .well hr {
+	border-top-color: #ddd;
+}
+.p_cache_cachemanager .alert-success hr {
+	border-top-color: #94D695;
+}
+.p_cache_cachemanager td.edit-name {
+	text-transform: uppercase;
+	font-size: 13px;
+	font-weight: bold;
+}
+.p_cache_cachemanager .tooltip {
+	line-height: 12px;
+	font-size: 12px;
+}
+.p_cache_cachemanager .tooltip-inner {
+	text-align: left;
+	padding: 10px;
+}
+.p_cache_cachemanager .edit-helper {
+	color: #003399;
+	font-size: 18px;
+	cursor: pointer;
+}
+.p_cache_cachemanager .text-center {
+	text-align: center !important;
+}
+.p_cache_cachemanager tr.well {
+	color: #bbb;
+}
+.p_cache_cachemanager .save-info {
+	margin-top: 10px;
+}
+.p_cache_cachemanager li.span4 {
+	height: 370px;
+	padding: 19px;
+	transition: all 325ms linear 0s;
+	position: relative;
+}
+.p_cache_cachemanager li.span4.readmore {
+	height: 150px; 
+	overflow: hidden;
+}
+/*	.p_cache_cachemanager li.span4 .readless {
+	visibility: hidden;
+}*/
+.p_cache_cachemanager li.span4 .readless:after {
+	content: 'Read Less...';
+	position: absolute;
+	display: block;
+	bottom: 4px;
+	right: 10px;
+	font-weight:bold;
+	cursor: pointer;
+}
+.p_cache_cachemanager li.span4.readmore:after {
+	content: 'Read More...';
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	font-weight:bold;
+	cursor: pointer;
+	background: inherit;
+	width: 100%;
+	text-align:right;
+	display:block;
+	padding-bottom:4px;
+}
+.p_cache_cachemanager .show-small {
+	display: none;
+}
+.p_cache_cachemanager .full-field {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 30px;
+	width: 100%;
+}
+.p_cache_cachemanager .example-list {
+	counter-reset: list;
+	margin-left: 40px;
+}
+.p_cache_cachemanager .example-list li {
+	margin: 20px 0;
+	list-style: none;
+	position: relative;
+}
+.p_cache_cachemanager .example-list li:before {
+	position: absolute;
+	left: -30px;
+	background: none repeat scroll 0 0 #666666;
+	border: 2px solid #333333;
+	border-radius: 20px;
+	color: #FFFFFF;
+	content: counter(list, decimal);
+	counter-increment: list;
+	display: inline-block;
+	font-size: 12px;
+	font-weight: bold;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	width: 20px;
+}
+.p_cache_cachemanager .exception-btn {
+	text-transform: uppercase; 
+	font-size:9px;
+}
+.p_cache_cachemanager .tr-lined td:first-child {
+	font-weight: bold;
+}
+.p_cache_cachemanager .directives-table tr:not(.tr-lined):not(.add-parent):not(.show-small) td:first-child:before {
+	content: "\f101";
+	padding: 0 5px 0 10px;
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	color: #999;
+}
+.p_cache_cachemanager .directives-table tr:not(.tr-lined):not(.add-parent) td:first-child {
+	color: #777;
+}
+@media (max-width: 1200px) {
+	.p_cache_cachemanager .hide-small {
+		display: none;
+	}
+	.p_cache_cachemanager .show-small {
+		display: table-row;
+	}
+	.p_cache_cachemanager li.span4 {
+		height: auto;
+	}
+}
+ 

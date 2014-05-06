@@ -333,11 +333,21 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 		<?php } ?>
 
 		var reload_widget = function(widget){
+			// Make url unique per widget, so that caching can be utilized.
+			// Right now the keys would be different per dashboard so that's
+			// not a good way to manage caching per type of widget.
+			
+			// First check out if the url has a question mark or not
+			var start_url = <?php echo json_encode(pines_url('com_dash', 'dashboard/widget_json')); ?>;
+			var symbol = (start_url.match(/\?/)) ? '&' : '?';
+			var unique_name = symbol+widget.children(".unique-name").text();
+			var end_url = start_url+unique_name;
+			var tab_guid = <?php echo json_encode($this->entity->guid); ?>;
 			$.ajax({
-				url: <?php echo json_encode(pines_url('com_dash', 'dashboard/widget_json', array('id' => (string) $this->entity->guid))); ?>,
+				url: end_url,
 				type: "POST",
 				dataType: "json",
-				data: {"key": widget.children(".key").text()},
+				data: {"key": widget.children(".key").text(), 'id': tab_guid},
 				beforeSend: function(){
 					widget.find("> .widget_header .title").text("Loading...").end().children(".content").html("<div class=\"p_muid_loading picon picon-32 picon-throbber\"></div>");
 				},
@@ -399,6 +409,17 @@ $max_columns = $pines->config->com_bootstrap->grid_columns;
 						continue 2;
 				} ?>
 			<div class="object well clearfix">
+				<?php 
+				if (!empty($cur_widget['options'])) {
+					$unique_name = 'widgetname='.$cur_widget['widget'];
+					foreach ($cur_widget['options'] as $cur_option) {
+						$unique_name .= '&'.$cur_option['name'].'='.$cur_option['value'];
+					}
+				} else {
+					$unique_name = 'widgetname='.$cur_widget['widget'];
+				}
+				?>
+				<div class="unique-name" style="display: none;"><?php echo htmlspecialchars($unique_name); ?></div>
 				<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_w_key); ?></div>
 				<div class="options" style="display: none;"><?php echo htmlspecialchars(json_encode($cur_widget['options'])); ?></div>
 				<div class="alert-info widget_header clearfix"<?php echo $this->editable ? '' : ' style="cursor: default;"'; ?>>

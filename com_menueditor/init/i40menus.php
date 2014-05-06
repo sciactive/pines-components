@@ -11,6 +11,9 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (XMLREQUEST)
+	return;
+
 $entries = (array) $pines->entity_manager->get_entities(
 		array('class' => com_menueditor_entry),
 		array('&',

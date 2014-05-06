@@ -11,6 +11,9 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (XMLREQUEST)
+	return;
+
 if ($pines->config->com_content->show_cat_menus) {
 	$categories = (array) $pines->entity_manager->get_entities(
 			array('class' => com_content_category),

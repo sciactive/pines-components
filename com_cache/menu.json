@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/system/cachemanager",
+		"text": "Cache Manager",
+		"href": ["com_cache","manager"],
+		"depend": {
+			"ability": "com_cache/managecache"
+		}
+	}
+]

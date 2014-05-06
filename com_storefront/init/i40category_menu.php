@@ -14,6 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!$pines->config->com_storefront->show_categories)
 	return;
 
+if (XMLREQUEST)
+	return;
+
 $categories = (array) $pines->entity_manager->get_entities(
 		array('class' => com_sales_category),
 		array('&',

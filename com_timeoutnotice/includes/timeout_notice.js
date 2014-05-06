@@ -27,8 +27,7 @@ pines(function(){
 					title: "Login",
 					width: 450,
 					close: function(){
-						interval = setInterval(check_timeout, 120000);
-						check_timeout();
+						check_time('check');
 					},
 					buttons: {
 						"Login": function(){
@@ -66,11 +65,6 @@ pines(function(){
 	};
 
 	var logged_out = function(){
-		if (interval)
-			clearInterval(interval);
-		else
-			return;
-		interval = false;
 		switch (pines.com_timeoutnotice.action) {
 			case "dialog":
 			default:
@@ -85,67 +79,98 @@ pines(function(){
 		}
 	}
 
-	var session_notice;
-	var timeout;
-	var check_timeout = function(){
+	var session_notice = false;
+	var make_extend = function() {
+		if (session_notice && session_notice.is(":visible"))
+			return;
+		session_notice = $.pnotify({
+			title: "Session Timeout",
+			text: "Your session is about to expire. <a href=\"javascript:void(0)\" class=\"extend_session\">Click here to stay logged in.</a>",
+			icon: "picon picon-user-away",
+			hide: false,
+			history: false,
+			mouse_reset: false
+		});
+		session_notice.find("a.extend_session").click(function(){
+			$.ajax({
+				url: pines.com_timeoutnotice.extend_url,
+				type: "GET",
+				dataType: "json",
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to extend your session:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					session_notice.pnotify_remove();
+					if (!data) {
+						logged_out();
+						return;
+					}
+					alert("Your session has been extended.");
+				}
+			});
+		});
+	};
+	
+	var make_logout = function() {
+		if (session_notice) {
+			session_notice.pnotify_remove();
+			session_notice = false;
+		}
+		logged_out();
+	};
+
+	var set_extend = false;
+	var set_timedout = false;
+	var extend_time = false;
+	var timedout_time = false;
+	var check_time = function(type){
 		$.ajax({
 			url: pines.com_timeoutnotice.check_url,
 			type: "GET",
 			dataType: "json",
 			success: function(data){
+				// If false, immediately get out.
 				if (!data) {
-					if (session_notice)
-						session_notice.pnotify_remove();
-					logged_out();
+					make_logout();
 					return;
 				}
-				if (data > 60) {
-					if (timeout)
-						clearTimeout(timeout);
-					if (session_notice && session_notice.is(":visible"))
+				// If we need to check timed out.
+				if (type == 'timedout' && data <= 0) {
+					make_logout();
+					return;
+				}
+				// If we need to check extend time
+				if (type == 'extend' && data <= 60) {
+					make_extend();
+					return;
+				}
+				
+				// If we are not simply checking, we came from above, and
+				// should clear the time outs.
+				if (type != 'check') {
+					// Extend and/or timedout need to be re-calculated.
+					if (session_notice) {
 						session_notice.pnotify_remove();
+						session_notice = false;
+					}
+					clearTimeout(set_extend);
+					clearTimeout(set_timedout);
 				}
-				if (data < 260) {
-					timeout = setTimeout(function(){
-						setTimeout(check_timeout, 21000);
-						setTimeout(check_timeout, 41000);
-						setTimeout(check_timeout, 61000);
-						if (session_notice) {
-							if (!session_notice.is(":visible"))
-								session_notice.pnotify_display();
-						} else {
-							session_notice = $.pnotify({
-								title: "Session Timeout",
-								text: "Your session is about to expire. <a href=\"javascript:void(0)\" class=\"extend_session\">Click here to stay logged in.</a>",
-								icon: "picon picon-user-away",
-								hide: false,
-								history: false,
-								mouse_reset: false
-							});
-							session_notice.find("a.extend_session").click(function(){
-								$.ajax({
-									url: pines.com_timeoutnotice.extend_url,
-									type: "GET",
-									dataType: "json",
-									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to extend your session:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
-									},
-									success: function(data){
-										session_notice.pnotify_remove();
-										if (!data) {
-											logged_out();
-											return;
-										}
-										alert("Your session has been extended.");
-									}
-								});
-							});
-						}
-					}, (data - 60) * 1000);
-				}
+				
+				// All other situations, create check-back times.
+				extend_time = ((data - 60) * 1000);
+				timedout_time = (data * 1000);
+				
+				// Make the Notice
+				set_extend = setTimeout(function(){
+					check_time('extend');
+				}, extend_time);
+				
+				set_timedout = setTimeout(function(){
+					check_time('timedout');
+				}, timedout_time);
 			}
 		});
 	};
-
-	var interval = setInterval(check_timeout, 120000);
+	check_time('check');
 });

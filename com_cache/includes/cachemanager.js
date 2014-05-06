@@ -1,0 +1,862 @@
+/*
+ * com_cache's JS
+ * 
+ * @package Components\cache
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Angela Murrell <amasiell.g@gmail.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+
+pines(function(){
+	var container = $('.p_cache_cachemanager');
+	var item_modal = container.find('.item.modal');
+	var directive_modal = container.find('.edit-directive.modal');
+	var refresh_items = container.find('.refresh-item');
+	var refresh_submit = container.find('.refresh-submit');
+	var edit_directives = container.find('td.edit-directive');
+	var edit_symbol = container.find('.edit-symbol');
+	var edit_helper = container.find('.edit-helper');
+	var other_helpers = container.find('.helper');
+	var disable_btn = container.find('.disable-directive-btn');
+	var disable_name = container.find('.disable-directive-name');
+	var disable_btn_name = container.find('.disable-directive-button-name');
+	var delete_btn = container.find('.delete-directive-btn');
+	var directive_manage = directive_modal.find('[name=manage]');
+	var directive_save_btn = directive_modal.find('.item-submit');
+	var directive_save_info = directive_modal.find('.save-info');
+	var directive_check_edit = directive_modal.find('.check-edit');
+	var add_btn = container.find('.submit-new');
+	var add_info = container.find('.add-info');
+	var add_fields = container.find('.add');
+	var show_add_modal_btn = container.find('.show-add-modal');
+	var add_modal = container.find('.add-modal');
+	var add_domain_field = container.find('.add[name=domain]');
+	var edit_setting_btn = container.find('.edit-setting-btn');
+	var cache_setting = container.find('.cache-setting');
+	var domain_refresh_submits = container.find('button.refresh-domain');
+	var example_div = container.find('.example');
+	var exception_modal = container.find('.exception.modal');
+	var exception_readmore_link = container.find('.exception-readmore-link');
+	var exception_readmore = container.find('.exception-readmore');
+	var submit_exceptions = container.find('.submit-exceptions');
+	var details_modal = container.find('.details.modal');
+	var view_details_btns = container.find('.view-domain');
+
+	var urls_container = container.find('.cache-urls');
+	var save_edit_url = urls_container.find('.save-edit-url').text();
+	var cache_manager_url = urls_container.find('.cache-manager-url').text();
+	var domain_explore_url = urls_container.find('.domain-explore-url').text();
+	var refresh_url = urls_container.find('.refresh-url').text();
+	var save_url = urls_container.find('.save-url').text();
+	urls_container.remove();
+
+	function save_directive() {
+		var values = {};
+		values.component = (directive_modal.find('[name=component]').val() == 'Home') ? '' : directive_modal.find('[name=component]').val();
+		values.caction = directive_modal.find('[name=action]').val();
+		values.cachequery = directive_modal.find('[name=cachequery]').val();
+		values.cacheloggedin = directive_modal.find('[name=cacheloggedin]').val();
+		values.cachetime = directive_modal.find('[name=cachetime]').val();
+		values.domain = directive_modal.find('[name=domain]').val();
+		values.maintain_exceptions = directive_modal.find('.exception-btn').attr('data-exceptions');
+		values.manage = directive_modal.find('[name=manage]').val();
+
+		$.ajax({
+			url: save_edit_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				directive_save_btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('edit-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					directive_save_btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('edit-cancel');
+				} else {
+					// Change header location.
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+
+	function change_settings(field, btn) {
+		var field_value = field.val();
+		var field_name = field.attr('name');
+		var values = {};
+		if (field_name == 'cache_on')
+			values.cache_on = field_value;
+		else if (field_name == 'parent_directory')
+			values.parent_directory = field_value;
+		else if (field_name == 'delete_cacheoptions')
+			values.delete_cacheoptions = field_value;
+		$.ajax({
+			url: save_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('setting-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('add-cancel').addClass('setting-cancel');
+				} else {
+					// Change header location.
+					//directive_save_btn.html('<i class="icon-ok"></i>');
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+
+	function add_directive(cur_add_fields, cur_add_btn, cur_add_info) {
+		var values = {};
+		values.component = (cur_add_fields.filter('[name=component]').val() == 'Home') ? '' : cur_add_fields.filter('[name=component]').val();
+		values.caction = cur_add_fields.filter('[name=action]').val();
+		values.cachequery = cur_add_fields.filter('[name=cachequery]').val();
+		values.cacheloggedin = cur_add_fields.filter('[name=cacheloggedin]').val();
+		values.cachetime = cur_add_fields.filter('[name=cachetime]').val();
+		values.domain = cur_add_fields.filter('[name=domain]').val();
+
+		$.ajax({
+			url: save_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				cur_add_btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('add-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					cur_add_info.fadeIn();
+					cur_add_btn.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('add-cancel');
+				} else {
+					// Change header location.
+					//directive_save_btn.html('<i class="icon-ok"></i>');
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+
+	function refresh_file() {
+		var values = {};
+		values.domain = item_modal.find('[name=refresh_domain]').val();
+		values.file_name = item_modal.find('[name=file_name]').val();
+
+		$.ajax({
+			url: refresh_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				refresh_submit.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('refresh-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					refresh_submit.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('refresh-cancel');
+				} else {
+					// Change header location.
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+
+	function refresh_domain(domain) {
+		var values = {};
+		values.domain = domain;
+
+		$.ajax({
+			url: refresh_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				refresh_submit.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('refresh-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					refresh_submit.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('refresh-cancel');
+				} else {
+					// Change header location.
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+
+	function validate_add_fields(cur_fields, cur_add_btn){
+		var count = 0;
+		cur_fields.each(function(){
+			var field = $(this);
+			if (!(field.attr('name') == 'action') && field.val() == '') {
+				count++;
+			}
+		});
+		if (count != 0) {
+			cur_add_btn.removeClass('btn-success').addClass('btn-info');
+		} else {
+			cur_add_btn.addClass('btn-success').removeClass('btn-info');
+		}
+	}
+
+	function generate_exceptions(exceptions) {
+		var remove_td = '<td style="width: 30px;vertical-align:middle;" class="text-center"><button class="btn-danger btn remove-exception"><i class="icon-remove"></i></button></td>';
+		var isset_html = $('<div></div>');
+		var value_html = $('<div></div>');
+		$.each(exceptions, function(exception_type, cur_exceptions){
+			if (exception_type == 'isset') {
+				$.each(cur_exceptions, function(index, name){
+					var cur_isset_html = $('<tr></tr>');
+					cur_isset_html.append('<td class="name">'+name+'</td>');
+					cur_isset_html.append(remove_td);
+					isset_html.append(cur_isset_html);
+				});
+			} else if (exception_type == 'value') {
+				$.each(cur_exceptions, function(name, values_array){
+					$.each(values_array, function(index, cur_value){
+						var cur_value_html = $('<tr></tr>');
+						cur_value_html.append('<td class="name">'+name+'</td>');
+						cur_value_html.append('<td class="value">'+cur_value+'</td>');
+						cur_value_html.append(remove_td);
+						value_html.append(cur_value_html);
+					});
+				});
+			}
+		});
+		var gen_exceptions = {};
+		gen_exceptions.isset = isset_html.html();
+		gen_exceptions.value = value_html.html();
+		return gen_exceptions;
+	}
+
+	function refactor_exceptions() {
+		var isset_table = exception_modal.find('.table.isset');
+		var isset_rows = isset_table.find('tbody tr');
+		var value_table = exception_modal.find('.table.value');
+		var value_rows = value_table.find('tbody tr');
+
+		var exceptions = {};
+		exceptions.isset = [];
+		exceptions.value = {};
+
+		isset_rows.each(function(){
+			var name = $(this).find('td.name').text();
+			exceptions.isset.push(name);
+		});
+		value_rows.each(function(){
+			var name = $(this).find('td.name').text();
+			var value = $(this).find('td.value').text();
+			if (exceptions.value[name] == undefined) {
+				exceptions.value[name] = [];
+			}
+			exceptions.value[name].push(value);
+		});
+
+		if (!isset_rows.length && !value_rows.length)
+			var new_exceptions = '';
+		else
+			var new_exceptions = JSON.stringify(exceptions)
+		exception_modal.find('[name="exceptions"]').val(new_exceptions).change();
+	}
+
+
+	function save_exceptions() {
+		var values = {};
+		values.component = exception_modal.find('[name=component]').val();
+		values.caction = exception_modal.find('[name=caction]').val();
+		values.domain = exception_modal.find('[name=domain]').val();
+		values.exceptions = exception_modal.find('[name=exceptions]').val();
+
+		$.ajax({
+			url: save_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				submit_exceptions.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('exceptions-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					submit_exceptions.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('exceptions-cancel');
+				} else {
+					// Change header location.
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+	
+	function get_folder_files(path, files_container){
+		$.ajax({
+			url: domain_explore_url,
+			type: "POST",
+			dataType: "json",
+			data: {'path' : path},
+			beforeSend: function() {
+				files_container.html('<div style="margin: 30px; text-align:center;"><i class="icon-spin icon-spinner icon-2x"></i><br/><br/>Loading</div>');
+			},
+			error: function(){
+				files_container.html('<div class="text-error" style="margin: 30px; text-align:center;"><i class="icon-remove icon-2x"></i><br/><br/>Error</div>');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					files_container.html('<div class="text-error" style="margin: 30px; text-align:center;"><i class="icon-remove icon-2x"></i><br/><br/>Error</div>');
+				} else if (!data.length) {
+					files_container.html('<div class="text-center">There are no files in this directory.</div>');
+				} else {
+					var files_table = $('<table class="table table-bordered table-hover"></table>');
+					var files_thead = $('<thead><th>File Name</th><th>Last Cached</th></thead>');
+					var files_tbody = $('<tbody></tbody>');
+					files_table.append(files_thead);
+
+					$.each(data, function(index, value){
+						var cur_tr = $('<tr></tr>');
+						cur_tr.append('<td>'+pines.safe(value.filename)+'</td>');
+						cur_tr.append('<td><span class="mtime" title="'+pines.safe(value.timeago)+'">'+pines.safe(value.mtime)+'</span></td>');
+						files_tbody.append(cur_tr);
+					});
+
+					files_table.append(files_thead).append(files_tbody);
+					files_table.find('.mtime').timeago();
+					files_container.hide().html('').append(files_table).fadeIn();
+				}
+			}
+		});
+	}
+
+	function get_domain_folders(domain, folders_container, files_container){
+		$.ajax({
+			url: domain_explore_url,
+			type: "POST",
+			dataType: "json",
+			data: {'domain' : domain},
+			beforeSend: function() {
+				folders_container.html('<div style="margin: 30px; text-align:center;"><i class="icon-spin icon-spinner icon-2x"></i><br/><br/>Loading</div>');
+				files_container.html('<div class="text-center">Select a folder from which to view files.</div>');
+			},
+			error: function(){
+				folders_container.html('<div class="text-error" style="margin: 30px; text-align:center;"><i class="icon-remove icon-2x"></i><br/><br/>Error</div>');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					folders_container.html('<div class="text-error" style="margin: 30px; text-align:center;"><i class="icon-remove icon-2x"></i><br/><br/>Error</div>');
+				} else {
+					var new_tree = $('<div class="new-tree"></div>');
+					new_tree.jstree({
+						"plugins" : [ "themes", "json_data", "ui" ],
+						"json_data" : data,
+						"ui" : {
+							"select_limit" : 1,
+							"initially_select" : ['localhost']
+						}
+					}).bind("select_node.jstree", function(e, data){
+						// Every time I select one, try to get files.
+						var path = data.inst.get_selected().attr("data-path");
+						get_folder_files(path, files_container);
+						// Show the files below the jstree in overflow auto.
+					});
+					folders_container.hide().html('').append(new_tree).fadeIn();
+				}
+			}
+		});
+	}
+	
+	
+	container.on('click', '.readmore', function(){
+		var li = $(this);
+		var readless = li.find('.readless');
+		li.removeClass('readmore');
+		setTimeout(function(){
+			readless.addClass('in');
+		}, 350);
+	});
+
+	container.on('click', '.readless', function(){
+		$(this).removeClass('in').closest('li').addClass('readmore');
+	});
+
+	refresh_items.click(function(){
+		var name = $(this).attr('data-name');
+		var file_name = $(this).attr('data-filename');
+		item_modal.find('.item-name').text(name);
+		item_modal.find('[name=file_name]').val(file_name);
+		item_modal.modal();
+	});
+
+	item_modal.find('[name=refresh_domain]').change(function(){
+		if ($(this).val() != '')
+			refresh_submit.addClass('btn-success').removeClass('btn-info');
+		else {
+			refresh_submit.removeClass('btn-success btn-danger').addClass('btn-info');
+		}
+	});
+
+	refresh_submit.click(function(){
+		if (refresh_submit.hasClass('refresh-success')) {
+			refresh_submit.removeClass('btn-danger').addClass('btn-info')
+			.html('Refresh');
+			item_modal.find('[name=refresh_domain]').val();
+			return;
+		}
+		if (!refresh_submit.hasClass('btn-success'))
+			return;
+		refresh_submit.html('<i class="icon-spin icon-spinner"></i>');
+		refresh_file();
+	});
+
+	domain_refresh_submits.click(function(){
+		var cur_domain_refresh = $(this);
+		var domain = cur_domain_refresh.attr('data-domain');
+		if (cur_domain_refresh.hasClass('refresh-success')) {
+			cur_domain_refresh.removeClass('btn-danger')
+			.html('<i class="icon-refresh"></i>');
+			return;
+		}
+		if (cur_domain_refresh.hasClass('btn-danger'))
+			return;
+		cur_domain_refresh.html('<i class="icon-spin icon-spinner"></i>');
+		refresh_domain(domain);
+	});
+
+	edit_directives.hover(function(){
+		var cell = $(this);
+		var width = cell.width();
+		var offset = cell.offset();
+		var top = offset.top;
+		var left = offset.left;
+		edit_symbol.attr('style','position: absolute; top:'+(top+5)+'px; left:'+(left+width)+'px;');
+		if (cell.hasClass('no-icon'))
+			return;
+		edit_symbol.show();
+	}, function(){
+		edit_symbol.hide();
+	});
+
+	edit_directives.click(function(){
+		var cell = $(this);
+		var tr = cell.closest('tr');
+		var name = tr.find('[data-name]').attr('data-name');
+		var tr_component = tr.find('td.component').text();
+		var tr_action = tr.find('td.action').text();
+		var tr_cachequery = tr.find('td.cachequery').text().replace(/\s/g, '');
+		var tr_cacheloggedin = tr.find('td.cacheloggedin').text();
+		var tr_cachetime = tr.find('td.cachetime').text();
+		var tr_domain = tr.find('td.domain').text();
+		var exception_btn = (tr.find('.exception-btn').length) ? tr.find('.exception-btn') : undefined;
+
+		// Find exception btn and remove it.
+		directive_modal.find('.exception-btn').remove();
+		directive_modal.find('.item-name').text(name);
+		directive_modal.find('[name=component]').val(tr_component);
+		directive_modal.find('[name=action]').val(tr_action);
+		// Set all options to false selected.
+		directive_modal.find('option').prop('selected', false);
+		directive_modal.find('[name=cachequery]').find("option:contains('"+tr_cachequery+"')").prop('selected', true);
+		directive_modal.find('[name=cachequery]').attr('data-orig', tr_cachequery);
+
+		var exception_span = tr.find('.exceptions-span');
+		var exception_btn = tr.find('.exception-btn');
+		var tr_exceptions = (exception_btn.length) ? exception_btn.attr("data-exceptions").replace(/"/g, '&quot;') : ((exception_span.length) ? exception_span.attr('data-exceptions').replace(/"/g, '&quot;') : '');
+		var btn_class = (exception_btn.hasClass('btn-success')) ? 'btn-success' : '';
+		var exceptions_button = '<button style="width:48%; float:right;padding:4px;" class="btn btn-mini exception-btn '+btn_class+'" data-name="'+name+'" data-component="'+tr_component+'" data-action="'+tr_action+'" data-domain="'+tr_domain+'" data-exceptions="'+tr_exceptions+'">Exceptions</button>';
+		if (exception_btn.length) {
+			directive_modal.find('[name=cachequery]').after(exceptions_button).css('width', '48%').removeClass('full-field');
+		} else {
+			directive_modal.find('[name=cachequery]').removeAttr('style').addClass('full-field').after(exceptions_button);
+			directive_modal.find('.exception-btn').addClass('hide');
+		}
+		directive_modal.find('[name=cacheloggedin]').find("option:contains('"+tr_cacheloggedin+"')").prop('selected', true);
+		directive_modal.find('[name=cacheloggedin]').attr('data-orig', tr_cacheloggedin);
+		directive_modal.find('[name=cachetime]').val(tr_cachetime).attr('data-orig', tr_cachetime);
+		directive_modal.find('[name=domain]').val(tr_domain).attr('data-orig', tr_domain);
+
+		// Make it say enable for the disable section:
+		if (tr.find('span[data-name]').length && tr.find('span[data-name]').text() != ('No Files')) {
+			disable_name.text('Enable');
+			disable_btn_name.text('Enable');
+			disable_btn.addClass('btn-success').removeClass('btn-warning');
+		} else {
+			disable_name.text('Disable');
+			disable_btn_name.text('Only Disable');
+			disable_btn.removeClass('btn-success').addClass('btn-warning');
+		}
+		directive_save_btn.addClass('btn-info').removeClass('btn-success');
+		directive_save_info.hide();
+		cell.addClass('cur-edit');
+		directive_modal.modal();
+	});
+
+	container.find('[name=cachetime]').keyup(function(){
+		this.value = this.value.replace(/\D/, '');
+	});
+
+	edit_helper.add(other_helpers).tooltip();
+
+	disable_btn.click(function(){
+		if (disable_btn.hasClass('disabled'))
+			return;
+
+		disable_btn.toggleClass('active');
+		if (disable_btn.hasClass('active')) {
+			// Dim out the delete button, alter the input
+			delete_btn.addClass('disabled');
+			if (disable_btn.hasClass('btn-success'))
+				directive_manage.val('enable').change();
+			else
+				directive_manage.val('disable').change();
+		} else {
+			delete_btn.removeClass('disabled');
+			directive_manage.val('').change();
+		}
+	});
+
+	delete_btn.click(function(){
+		if (delete_btn.hasClass('disabled'))
+			return;
+
+		delete_btn.toggleClass('active');
+		if (delete_btn.hasClass('active')) {
+			// Dim out the delete button, alter the input
+			disable_btn.addClass('disabled');
+			directive_manage.val('delete').change();
+		} else {
+			disable_btn.removeClass('disabled');
+			directive_manage.val('').change();
+		}
+	});
+
+	directive_manage.change(function(){
+		if (directive_manage.val() != '') {
+			directive_save_btn.removeClass('btn-info').addClass('btn-success');
+			directive_save_info.fadeIn();
+		} else if (!directive_manage.hasClass('altered')) {
+			// If other fields altered it, we wouldnt want to undo the save info or btn-success
+			directive_save_btn.addClass('btn-info').removeClass('btn-success');
+			directive_save_info.hide();
+		}
+	});
+
+	directive_check_edit.change(function(){
+		var check = $(this);
+		if (check.val() != check.attr('data-orig')) {
+			directive_save_btn.removeClass('btn-info').addClass('btn-success');
+			directive_save_info.fadeIn();
+			directive_manage.addClass('altered');
+		} else if (directive_manage.val() == '') {
+			directive_save_btn.addClass('btn-info').removeClass('btn-success');
+			directive_save_info.hide();
+		}
+	});
+
+	directive_save_btn.click(function(){
+		if (!directive_save_btn.hasClass('btn-success'))
+			return;
+		else {
+			directive_save_btn.html('<i class="icon-spin icon-spinner"></i>');
+			// Use ajax
+			// Change window location to refresh this whole page.
+			save_directive();
+		}
+	});
+
+	add_fields.change(function(){
+		var tr_parent = $(this).closest('tr.add-parent');
+		var modal_form = (!tr_parent.length);
+		var cur_add_fields = (modal_form) ? add_modal.find('.add') : tr_parent.find('.add');
+		var cur_add_btn = (modal_form) ? add_modal.find('.submit-new') : tr_parent.find('.submit-new');
+
+		add_info.hide();
+		if (cur_add_fields.filter('[name=component]').val() == 'Home')
+			cur_add_fields.filter('[name=action]').val('').addClass('disabled').attr('disabled', 'disabled');
+		else
+			cur_add_fields.filter('[name=action]').removeClass('disabled').removeAttr('disabled');
+
+		validate_add_fields(cur_add_fields, cur_add_btn);
+	});
+
+	add_btn.click(function(){
+		var cur_add_btn = $(this);
+		var cur_add_parent = cur_add_btn.closest('.add-parent');
+		var cur_add_fields = cur_add_parent.find('.add');
+		var cur_add_info = (cur_add_parent.find('.add-info').length) ? cur_add_parent.find('.add-info') : container.find('.add-info-after-table');
+
+		if (!cur_add_btn.hasClass('btn-success'))
+			return;
+		else {
+			cur_add_btn.html('<i class="icon-spin icon-spinner"></i>');
+			// Use ajax
+			// Change window location to refresh this whole page.
+			add_directive(cur_add_fields, cur_add_btn, cur_add_info);
+		}
+	});
+
+	show_add_modal_btn.click(function(){
+		// reset all fields.
+		add_btn.removeClass('btn-success').addClass('.btn-info');
+		add_info.hide();
+		add_fields.removeClass('disabled').removeAttr('disabled').val('');
+		add_modal.modal();
+	});
+
+	container.on('click', '.add-cancel', function(){
+		var cur_btn = $(this);
+		if (cur_btn.hasClass('submit-new')) {
+			cur_btn.removeClass('add-cancel');
+		}
+		add_btn.removeClass('btn-success btn-danger').addClass('btn-info').html('<i class="icon-plus"></i> Add');
+		add_info.hide();
+		add_fields.removeClass('disabled').removeAttr('disabled').val('');
+	});
+
+	container.on('click', '.edit-cancel', function(){
+		var cur_btn = $(this);
+		if (cur_btn.hasClass('item-submit')) {
+			cur_btn.removeClass('edit-cancel');
+		}
+		directive_save_btn.removeClass('btn-success btn-danger').addClass('btn-info').html('Save');
+		directive_save_info.hide();
+		disable_btn.add(delete_btn).removeAttr('disabled').removeClass('active disabled');
+		directive_manage.val('');
+		directive_modal.modal('hide');
+	});
+
+	add_domain_field.focusin(function(){
+		var cur_domain_field = $(this);
+		if (cur_domain_field.val() == '') {
+			cur_domain_field.val('all').select();
+		}
+	}).focusout(function(){
+		$(this).change();
+	});
+
+	edit_setting_btn.click(function(){
+		var cur_btn = $(this);
+		var setting_field = cur_btn.closest('tr').find('.cache-setting');
+		if (cur_btn.hasClass('btn-info')) {
+			if (setting_field.val() == setting_field.attr('data-orig')) {
+				setting_field.attr('disabled', 'disabled');
+				cur_btn.removeClass('btn-success btn-info');
+			}
+		} else if (cur_btn.hasClass('btn-success')) {
+			// Save it
+			// Check if import
+			if (cur_btn.hasClass('import')) {
+				var import_value = container.find('[name=import]').val();
+				import_value = import_value.replace(/\..*$/, '');
+				if (cache_manager_url.match(/\?/)) {
+					var cache_url = cache_manager_url+'&import='+import_value;
+				} else {
+					var cache_url = cache_manager_url+'?import='+import_value;
+				}
+				location.href = cache_url;
+				return;
+			}
+			cur_btn.html('<i class="icon-spin icon-spinner"></i>')
+			change_settings(setting_field, cur_btn);
+		} else if (cur_btn.hasClass('setting-cancel')) {
+			// Revert to original setting: 
+			setting_field.val(setting_field.attr('data-orig'));
+			cur_btn.removeClass('btn-danger setting-cancel').addClass('btn-info')
+			.html('<i class="icon-pencil"></i> Edit');
+		} else {
+			setting_field.removeAttr('disabled');
+			cur_btn.addClass('btn-info');
+		}
+	});
+
+	cache_setting.change(function(){
+		var cur_setting = $(this);
+		var cur_btn = cur_setting.closest('tr').find('.edit-setting-btn');
+		if (cur_setting.val() != cur_setting.attr('data-orig')) {
+			cur_btn.html('<i class="icon-save"></i> Save').addClass('btn-success').removeClass('btn-danger btn-info');
+		} else {
+			cur_btn.html('<i class="icon-pencil"></i> Edit').removeClass('btn-success').addClass('btn-info');
+		}
+	});
+
+	container.find('.show-import').click(function(){
+		container.find('.show-import-table').fadeIn();
+	});
+
+	container.find('.show-example').click(function(){
+		if (example_div.is(':visible'))
+			example_div.fadeOut();
+		else {
+			example_div.fadeIn();
+		}
+	});
+
+	container.on('click', '.exception-btn', function(){
+		var cur_btn = $(this);
+		var name = cur_btn.attr('data-name');
+		var component = cur_btn.attr('data-component');
+		var action = cur_btn.attr('data-action');
+		var domain = cur_btn.attr('data-domain');
+		var get_exceptions = cur_btn.attr('data-exceptions');
+		if (get_exceptions == '') {
+			var isset_html = '';
+			var value_html = '';
+		} else {
+			var clean_exceptions = get_exceptions.replace(/&quot;/, '"');
+			var exceptions = JSON.parse(clean_exceptions);
+			var isset_html = generate_exceptions(exceptions).isset;
+			var value_html = generate_exceptions(exceptions).value;
+		}
+		exception_modal.find('.item-name').text(name);
+		exception_modal.find('[name=component]').val(component);
+		exception_modal.find('[name=caction]').val(action);
+		exception_modal.find('[name=domain]').val(domain);
+		exception_modal.find('[name=orig_exceptions]').val(get_exceptions);
+		exception_modal.find('[name=exceptions]').val(get_exceptions);
+		exception_modal.find('.table.isset tbody').html(isset_html);
+		exception_modal.find('.table.value tbody').html(value_html);
+
+		exception_modal.find('.remove-exception').click(function(){
+			var tr = $(this).closest('tr');
+			tr.remove();
+			// Refactor the hidden input.
+			refactor_exceptions();
+		});
+
+		exception_modal.modal();
+	});
+
+	exception_readmore_link.click(function(){
+		exception_readmore.toggleClass('hide');
+		refactor_exceptions();
+	});
+
+	exception_modal.find('.add-isset-btn').click(function(){
+		var isset_table = exception_modal.find('.table.isset tbody');
+		var tr = $(this).closest('tr');
+		var name_input = tr.find('[name=add_isset]');
+		var name = name_input.val();
+		if (name == '')
+			return;
+
+		var validate = true;
+		// Check if name and value combo exists?
+		isset_table.find('td.name').each(function(){
+			var cur_td = $(this);
+			if (cur_td.text() == name) {
+				pines.notice('That variable name is already an exception.', 'notice');
+				validate = false;
+				return;
+			}
+		});
+		name_input.val('');
+		if (!validate)
+			return;
+		var remove_td = '<td style="width: 30px;vertical-align:middle;" class="text-center"><button class="btn-danger btn remove-exception"><i class="icon-remove"></i></button></td>';
+		var isset = $('<tr></tr>');
+
+		isset.append('<td class="name">'+name+'</td>');
+		isset.append(remove_td);
+
+		isset_table.append(isset);
+		exception_modal.find('.remove-exception').click(function(){
+			var tr = $(this).closest('tr');
+			tr.remove();
+			// Refactor the hidden input.
+			refactor_exceptions();
+		});
+		refactor_exceptions();
+	});
+
+	exception_modal.find('.add-value-btn').click(function(){
+		var value_table = exception_modal.find('.table.value tbody');
+		var tr = $(this).closest('tr');
+		var name_input = tr.find('[name=add_value_name]');
+		var name = name_input.val();
+		var value_input = tr.find('[name=add_value]')
+		var cur_value = value_input.val();
+		if (name == '' || cur_value == '')
+			return;
+
+		var validate = true;
+		// Check if name and value combo exists?
+		value_table.find('td.name').each(function(){
+			var cur_td = $(this);
+			if (cur_td.text() == name) {
+				var value_td = cur_td.closest('tr').find('td.value').text();
+				if (value_td == cur_value) {
+					pines.notice('That combination of name and value exists.', 'notice');
+					validate = false;
+					return;
+				}
+			}
+		});
+		name_input.add(value_input).val('');
+		if (!validate)
+			return;
+		var remove_td = '<td style="width: 30px;vertical-align:middle;" class="text-center"><button class="btn-danger btn remove-exception"><i class="icon-remove"></i></button></td>';
+		var value = $('<tr></tr>');
+
+		value.append('<td class="name">'+name+'</td>');
+		value.append('<td class="value">'+cur_value+'</td>');
+		value.append(remove_td);
+
+		value_table.append(value);
+		exception_modal.find('.remove-exception').click(function(){
+			var tr = $(this).closest('tr');
+			tr.remove();
+			// Refactor the hidden input.
+			refactor_exceptions();
+		});
+		refactor_exceptions();
+	});
+
+	exception_modal.find('[name=exceptions]').change(function(){
+		var cur_exceptions = $(this);
+		var cur_exceptions_value = cur_exceptions.val();
+		var orig_exceptions = exception_modal.find('[name=orig_exceptions]').val();
+
+		if (orig_exceptions == cur_exceptions_value) {
+			submit_exceptions.addClass('btn-info').removeClass('btn-success');
+		} else {
+			submit_exceptions.removeClass('btn-info').addClass('btn-success');
+		}
+	});
+
+	submit_exceptions.click(function(){
+		if (submit_exceptions.hasClass('btn-success')) {
+			// Submit for saving
+			submit_exceptions.html('<i class="icon-spin icon-spinner"></i>');
+			save_exceptions();
+		} else if (submit_exceptions.hasClass('exceptions-cancel')) {
+			submit_exceptions.html('<i class="icon-plus"></i> Save').addClass('btn-info').removeClass('btn-success btn-danger');
+		}
+	});
+
+	// The actual cancel button.
+	container.find('.cancel-exceptions').click(function(){
+		submit_exceptions.html('<i class="icon-plus"></i> Save').addClass('btn-info').removeClass('btn-success btn-danger');
+	});
+	
+	// Details
+	view_details_btns.click(function(){
+		var domain = $(this).attr('data-domain');
+		details_modal.find('.item-name').text(domain);
+		var folders_container = details_modal.find('.jstree-container');
+		var files_container = details_modal.find('.files-container');
+		// Ajax Call to get json_data for jstree
+		// Make a jstree in that ajax call.
+		get_domain_folders(domain, folders_container, files_container);
+		details_modal.modal();
+	});
+	
+	var num_directives = container.find('.directives-table tbody tr').length;
+	container.find('.num-directives').html(num_directives - 1); // the add one.
+});

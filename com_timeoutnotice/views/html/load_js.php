@@ -14,7 +14,7 @@ $timeout = $pines->config->com_timeoutnotice->timeout;
 ?>
 <script type="text/javascript">
 	pines.com_timeoutnotice = {
-		"check_url": '<?php echo htmlspecialchars($pines->config->location); ?>components/com_timeoutnotice/actions/check.php?timeout=<?php echo htmlspecialchars($timeout); ?>',
+		"check_url": pines.rela_location+'components/com_timeoutnotice/actions/check.php?timeout=<?php echo htmlspecialchars($timeout); ?>',
 		"login_url": <?php echo json_encode(pines_url('com_timeoutnotice', 'login')); ?>,
 		"loginpage_url": <?php echo json_encode(pines_url('com_timeoutnotice', 'loginpage')); ?>,
 		"extend_url": <?php echo json_encode(pines_url('com_timeoutnotice', 'extend')); ?>,

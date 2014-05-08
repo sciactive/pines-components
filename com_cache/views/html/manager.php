@@ -247,7 +247,7 @@ $get_file_count = $this->get_file_count;
 									$use_tr_line = false;
 								}
 						?>
-						<tr class="<?php echo ($cur_options['disabled']) ? 'well' : ''; echo ($use_tr_line) ? 'tr-lined' : ''; ?>">
+						<tr class="<?php echo ($cur_options['disabled']) ? 'well' : ''; echo ($use_tr_line) ? ' tr-lined' : ''; ?>">
 							<td class="edit-directive component"><?php echo ($name == 'home') ? 'Home' : htmlspecialchars($component); ?></td>
 							<td class="edit-directive action"><?php echo htmlspecialchars($action); ?></td>
 							<td class="edit-directive cachequery hide-small" <?php echo ($cur_options['cachequery']) ? '' : 'colspan="2"'; ?>>

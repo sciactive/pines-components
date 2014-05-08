@@ -117,6 +117,8 @@ pines(function(){
 			session_notice = false;
 		}
 		logged_out();
+		clearTimeout(set_extend);
+		clearTimeout(set_timedout);
 	};
 
 	var set_extend = false;

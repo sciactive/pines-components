@@ -373,18 +373,32 @@ pines(function(){
 		});
 	}
 	
+	var get_readmore_heights = function(selector){
+		container.find(selector+'.readmore').each(function(){
+			var cur_readmore = $(this);
+			if (cur_readmore.attr('data-height') == undefined) {
+				cur_readmore.css('visibility', 'hidden');
+				cur_readmore.css('height', 'auto');
+				var height = cur_readmore.outerHeight();
+				cur_readmore.removeAttr('style');
+				cur_readmore.attr('data-height', height);
+			}
+		});
+	};
+	get_readmore_heights('li.span4');
 	
 	container.on('click', '.readmore', function(){
-		var li = $(this);
-		var readless = li.find('.readless');
-		li.removeClass('readmore');
+		var element = $(this);
+		var readless = element.find('.readless');
+		element.removeClass('readmore');
+		element.animate({'height': element.attr('data-height')}, 'fast');
 		setTimeout(function(){
 			readless.addClass('in');
 		}, 350);
 	});
 
 	container.on('click', '.readless', function(){
-		$(this).removeClass('in').closest('li').addClass('readmore');
+		$(this).removeClass('in').closest('li, .alert').removeAttr('style').addClass('readmore');
 	});
 
 	refresh_items.click(function(){
@@ -695,6 +709,7 @@ pines(function(){
 			example_div.fadeOut();
 		else {
 			example_div.fadeIn();
+			get_readmore_heights('.example-info');
 		}
 	});
 

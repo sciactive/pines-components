@@ -88,7 +88,44 @@ $get_file_count = $this->get_file_count;
 					View an <a class="show-example" href="javascript:void(0);">example and flowchart</a> of how files are cached.
 				</div>
 			</div>
-			<hr/>
+			<div class="example hide">
+				<h1 class="text-center dotted"><span>How Caching is Implemented</span></h1>
+			</div>
+			<div class="row-fluid example hide">
+				<div class="span3">
+					<p><strong>Caching is implemented by the following flow of files and includes:</strong></p>
+					<hr/>
+					<div class="alert example-info readmore">
+						<h5>System Files</h5>
+						<p><strong>Index.php</strong> is the access point to pines. Every action is ran through this point of entry.</p>
+						<span class="readless fade">
+							<p><strong>phpcache.php</strong> is immediately included to determine if the requested option/action combination should be cached.</p>
+							<p><strong>load inits/run action</strong> is the standard process where pines does all of its initial thinking and then processes the action to get the appropriate output.</p>
+						</span>
+					</div>
+					<div class="alert alert-info example-info readmore">
+						<h5>Caching Mechanisms</h5>
+						<p><strong>get cached file</strong> is responsible for maintaining the session time, notices, errors, and adjusting http/https links. This technically happens inside of the phpcache.php file.</p>
+						<span class="readless fade">
+							<p><strong>generate cache file</strong> happens around i90 render (the last phase of loading pines and where output buffering is on) and was set by phpcache.php to make a copy of the output for later use.</p>
+						</span>
+					</div>
+					<div class="alert alert-success example-info readmore">
+						<h5>Output</h5>
+						<p><strong>echo output</strong> occurs from either obtaining the cached html file, or constructing it from the inits. 
+						<span class="readless fade">
+							Notice the arrows emphasizing that the output is echoed from normal inits OR right after generating the cache file.
+						</span>
+						</p>
+					</div>
+				</div>
+				<div class="span9">
+					<div class="text-center"><img src="/components/com_cache/includes/cache-flowchart.jpg" style=""></div>
+				</div>
+			</div>
+			<div class="example hide">
+				<h1 class="text-center dotted"><span>Cache Storage Architecture</span></h1>
+			</div>
 			<div class="row-fluid example hide">
 				<div class="span3">
 					<h3>Example: </h3>

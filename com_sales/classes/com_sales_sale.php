@@ -1579,7 +1579,7 @@ class com_sales_sale extends entity {
 		foreach ($tax_fees as $key => $cur_tax_fee) {
 			foreach($cur_tax_fee->locations as $cur_location) {
 				// If we're in one of its groups, don't remove it.
-				if ($_SESSION['user']->in_group($cur_location))
+				if (isset($_SESSION['user']) && $_SESSION['user']->in_group($cur_location))
 					continue 2;
 			}
 			// We're not in any of its groups, so remove it.

@@ -90,6 +90,18 @@ return array(
         'description'   => 'The url to POST to confirm if a user is still on their channel',
         'value' => ''
     ),
+    array(
+        'name'  => 'customer_pic',
+        'cname' => 'The Customer Pic URL',
+        'description'   => 'The url of the customer picture for chat',
+        'value' => 'components/com_gae_chat/includes/customer.jpg'
+    ),
+    array(
+        'name'  => 'employee_pic',
+        'cname' => 'The Employee Pic URL',
+        'description'   => 'The url of the employee picture for chat',
+        'value' => 'components/com_gae_chat/includes/employee.jpg'
+    ),
 );
 
 ?>

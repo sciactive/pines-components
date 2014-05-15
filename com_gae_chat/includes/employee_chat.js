@@ -23,8 +23,8 @@ pines(function() {
     chatHistory = {};
     needToRestartChannels = false;
     
-    var customer_pic_url = "//pic_url";
-    var employee_pic_url = "//pic_url";
+    var customer_pic_url = $("#chat_customer_pic").attr('data-url');
+    var employee_pic_url = $("#chat_employee_pic").attr('data-url');
     
     var main_chat_window = $("#main-chat-window");
     var main_chat_body = $("#main-chat-body");
@@ -609,7 +609,7 @@ pines(function() {
      */
     function appendChannelMessage(channel, message, username, timestamp, chat_id, is_employee, message_id) {
         if (is_employee) {
-            var chat_message = '<li class="chat-message"><span class="chat-img pull-right"><img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle"/></span>' +
+            var chat_message = '<li class="chat-message"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                 '<div class="chat-message-right clearfix"><div class="header">' +
                   '<small class="text-muted">' +
                   '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small>'+
@@ -619,7 +619,7 @@ pines(function() {
         //playNotification();
         notifyMe(username, message, username);
         //alertTabTitle("A New Message");
-        var chat_message = '<li class="chat-message"><span class="chat-img pull-left"><img src="https://graph.facebook.com/108Solutions/picture?type=square" alt="User Avatar" class="img-circle"/></span>' +
+        var chat_message = '<li class="chat-message"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                                 '<div class="chat-message-left clearfix"><div class="header"><strong class="primary-font">' + username + '</strong> ' +
                                 '<small class="pull-right text-muted">' +
                                 '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small></div>' +

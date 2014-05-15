@@ -18,8 +18,8 @@ getTokenURL = $("#get_token_url").attr('data-url');
 onlineTestURL = $("#online_test_url").attr('data-url');
 onlineCheckURL = $("#send_online_check_url").attr('data-url');
 
-var user_pic_url = "//pic_url";
-var employee_pic_url = "//pic_url";
+var customer_pic_url = $("#chat_customer_pic").attr('data-url');
+var employee_pic_url = $("#chat_employee_pic").attr('data-url');
 var chat_body = $("#main-chat-body");
 var chat_messages = $("#main-chat-messages");
 var chat_header = $("#main-chat-header");
@@ -335,13 +335,13 @@ function handleChatHistory(data) {
  */
 function appendChannelMessage(message, username, timestamp, is_employee) {
     if (is_employee) {
-        var chat_message = '<li class="left clearfix chat-message"><span class="chat-img pull-left"><img src="https://graph.facebook.com/108Solutions/picture?type=square" alt="User Avatar" class="img-circle"/></span>' +
+        var chat_message = '<li class="left clearfix chat-message"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                             '<div class="chat-message-left"><div class="header"><strong class="primary-font chat-username">' + username + '</strong> ' +
                             '<small class="pull-right text-muted">' +
                             '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small></div>' +
                                 '<p>' + message + '</p></div></li>';
     } else {
-        var chat_message = '<li class="right clearfix chat-message"><span class="chat-img pull-right"><img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle"/></span>' +
+        var chat_message = '<li class="right clearfix chat-message"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
             '<div class="chat-message-right"><div class="header">' +
               '<small class="text-muted">' +
               '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small>'+

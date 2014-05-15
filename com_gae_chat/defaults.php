@@ -102,6 +102,12 @@ return array(
         'description'   => 'The url of the employee picture for chat',
         'value' => 'components/com_gae_chat/includes/employee.jpg'
     ),
+    array(
+        'name'  => 'html_position',
+        'cname' => 'The positioning of the chat html',
+        'description'   => 'The module position for the chat html',
+        'value' => 'bottom'
+    ),
 );
 
 ?>

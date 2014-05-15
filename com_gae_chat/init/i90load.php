@@ -25,12 +25,12 @@ if ($pines->config->com_gae_chat->domain_specific && preg_match('#'.$pines->conf
 }
 
 if ($employee && gatekeeper('com_gae_chat/employeechat')) {
-        $module = new module('com_gae_chat', 'chat_html', 'bottom');
+        $module = new module('com_gae_chat', 'chat_html', $pines->config->com_gae_chat->html_position);
         unset($module);
         $pines->com_timeago->load();
         $pines->com_gae_chat->load_employee_js();
 } elseif (!$employee) {
-        $module = new module('com_gae_chat', 'chat_html', 'bottom');
+        $module = new module('com_gae_chat', 'chat_html', $pines->config->com_gae_chat->html_position);
         unset($module);
         $pines->com_timeago->load();
         $pines->com_gae_chat->load_customer_js();

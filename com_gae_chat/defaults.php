@@ -76,7 +76,7 @@ return array(
         'name'  => 'pines_token_url',
         'cname' => 'URL to get a channels token',
         'description'   => 'The url to POST to get a token',
-        'value' => '/gae_chat/chat'
+        'value' => pines_url('com_gae_chat', 'chat')
     ),
     array(
         'name'  => 'ping_test_url',

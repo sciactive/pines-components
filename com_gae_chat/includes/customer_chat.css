@@ -1,0 +1,129 @@
+/* 
+    Document   : customer_chat
+    Created on : Mar 13, 2014, 10:20:48 AM
+    Author     : mohammed
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.chat-titles {
+    margin: 0px !important;
+}
+    
+    
+#main-chat-header {
+    margin: 0;
+    border-bottom: 1px solid #DDDDDD;
+    background-color: #f5f5f5;
+    border-color: #DDDDDD;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px 15px;
+}
+    
+#main-chat-body {
+    margin: 0px;
+    background-color: #FFFFFF;
+    overflow-y: auto;
+    max-height: 350px;
+    position: relative;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    list-style: none;
+}
+
+#main-chat-window {
+    right: 10px;
+    margin: 0;
+    width: 24%;
+    max-width: 300px;
+    z-index: 1000;
+    bottom: 5px;
+    background-color: #ffffff;
+    position: fixed;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border: 1px solid #DDDDDD;
+    display: block;
+}
+
+#main-chat-footer {
+    background-color: #F5F5F5;
+    border-top: 1px solid #DDDDDD;
+    margin: 0px;
+}
+
+#main-chat-messages {
+    margin:0;
+    list-style: none;
+    padding: 10px;
+}
+
+.chat-message {
+    margin: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    list-style: none;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+#chat-message-input {
+    margin: 0;
+    padding: 10px;
+}
+
+#chat-btn-input {
+    width: 76% !important;
+}
+
+.chat-message-right {
+    margin-right: 55px;
+}
+
+.chat-message-left {
+    margin-left: 55px;
+}
+
+.chat-timeago {
+    padding-left: 5px;
+}
+
+.chat-window-messages {
+    margin: 0px 2px;
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+@media (max-width: 768px) {
+    #main-chat-window {
+        width: 95%;
+        max-width: 95%;
+    }
+}
+
+.chat-status.offline {
+    background-color: #DF5F40;
+    box-shadow: 0 0 7px #DF5F40;
+}
+
+.chat-status {
+    background-color: #47CA70;
+    border-radius: 500px;
+    box-shadow: 0 0 7px #5EC767;
+    display: inline-block;
+    height: 14px;
+    margin-right: 3px;
+    margin-top: -3px;
+    transition: all 0.3s ease 0s;
+    vertical-align: middle;
+    width: 14px;
+}
+
+.chat-status-text {
+    display: inline-block;
+    padding-top: 4px;
+}

@@ -290,7 +290,7 @@ class com_user extends component implements user_manager_interface {
 		// the custom config in com_configure i14 will never happen
 		// and because of caching, it will not get properly loaded like it should
 		// here.
-		if (($tmp_user->sys_config || $tmp_user->com_config) && $pines->depend->check('component', 'com_example'))
+		if (($tmp_user->sys_config || $tmp_user->com_config) && $pines->depend->check('component', 'com_configure'))
 			$pines->configurator->load_per_user_array($tmp_user->sys_config, $tmp_user->com_config);
 		pines_session('close');
 	}

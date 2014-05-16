@@ -490,11 +490,11 @@ class com_mailer extends component {
 			if (strpos($cur_field, '#to_username#') !== false)
 				$cur_field = str_replace('#to_username#', htmlspecialchars($recipient->username ? $recipient->username : $recipient->groupname), $cur_field);
 			if (strpos($cur_field, '#to_name#') !== false)
-				$cur_field = str_replace('#to_name#', htmlspecialchars($recipient->name), $cur_field);
+				$cur_field = str_replace('#to_name#', htmlspecialchars(ucwords($recipient->name)), $cur_field);
 			if (strpos($cur_field, '#to_first_name#') !== false)
-				$cur_field = str_replace('#to_first_name#', htmlspecialchars($recipient->name_first), $cur_field);
+				$cur_field = str_replace('#to_first_name#', htmlspecialchars(ucwords($recipient->name_first)), $cur_field);
 			if (strpos($cur_field, '#to_last_name#') !== false)
-				$cur_field = str_replace('#to_last_name#', htmlspecialchars($recipient->name_last), $cur_field);
+				$cur_field = str_replace('#to_last_name#', htmlspecialchars(ucwords($recipient->name_last)), $cur_field);
 			if (strpos($cur_field, '#to_email#') !== false)
 				$cur_field = str_replace('#to_email#', htmlspecialchars($recipient->email), $cur_field);
 			// Current User

@@ -287,6 +287,15 @@ function sendMessage(msg) {
 }
 
 /*
+ * Removes the Chat Div (For when we want to deny chat access)
+ */
+function removeGAEChat() {
+    // We need to remove chat because this person doesn't have permission
+    $("#main-chat-window").remove();
+    $("#gae-chat-variables").remove();
+}
+
+/*
  * Posts to Pines to get a token for this person
  * 
  */
@@ -299,7 +308,12 @@ function connectToChannel() {
         data: {},
         dataType: 'json',
         success: function(data) {
-            setChannelInfo(data.channel_id, data.channel_token);
+            if (data.status != 'success' || data.action == 'terminate') {
+                removeGAEChat();
+            } else {
+                $("#main-chat-window").removeClass('hide');
+                setChannelInfo(data.channel_id, data.channel_token);
+            }
         },
         error: function() {
             // Let the user know we could not connect to get a token

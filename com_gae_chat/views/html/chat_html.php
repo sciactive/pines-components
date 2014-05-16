@@ -23,7 +23,7 @@
 <div id="additional_clients"></div>
 <?php } ?>
 
-<div class="container" id="main-chat-window">
+<div class="container hide" id="main-chat-window">
     <div class="row" id="main-chat-header">
         <span class="chat-status offline"></span>
         <span class="chat-status-text">Offline</span>

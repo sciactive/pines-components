@@ -51,6 +51,10 @@ root {
     display: block;
 }
 
+#main-chat-window.hide {
+    display: none !important;
+}
+
 #main-chat-footer {
     background-color: #F5F5F5;
     border-top: 1px solid #DDDDDD;

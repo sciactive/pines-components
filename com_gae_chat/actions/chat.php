@@ -55,6 +55,13 @@ if ($pines->config->com_gae_chat->chat_disabled) {
     return;
 }
 
+// Need to check if incoming IP is part of our blocked list
+$disabled_ips = explode(',', str_replace(' ', '', $pines->config->com_gae_chat->disabled_ips));
+if (in_array($_SERVER['REMOTE_ADDR'], $disabled_ips)) {
+    $pines->page->override_doc(json_encode(array('status' => false, 'action' => 'terminate')));
+    return;
+}
+
 $have_user = isset($_SESSION['user']);
 
 if ($have_user) {
@@ -77,6 +84,7 @@ if ($have_user) {
             $response = $pines->com_gae_chat->renew_chat_token($channel_id);
             
             $params = array(
+                'status'    => 'success',
                 'username'  => $response->username,
                 'guid'      => $guid,
                 'channel_id'    => $response->channel_id,
@@ -98,6 +106,7 @@ if ($have_user) {
             
         } else {
             $params = array(
+                'status'    => 'success',
                 'username'  => $_SESSION['channel_username'],
                 'guid'      => $_SESSION['channel_guid'],
                 'channel_id'    => $_SESSION['channel_id'],
@@ -124,6 +133,7 @@ if ($have_user) {
             $date = new DateTime($response->expires);
 
             $params = array(
+                'status'    => 'success',
                 'username' => $response->username, 
                 'guid' => $guid,
                 'channel_id' => $response->channel_id,
@@ -144,7 +154,7 @@ if ($have_user) {
             $pines->session('close');
             
         } else {
-            $params = array('status' => false);
+            $params = array('status' => 'false');
         }
         
     }
@@ -162,6 +172,7 @@ if ($have_user) {
         $token = $response->token;
         
         $params = array(
+                'status'    => 'success',
                 'username' => $response->username, 
                 'guid' => 0,
                 'channel_id' => $response->channel_id,
@@ -196,6 +207,7 @@ if ($have_user) {
         $token = $response->token;
 
         $params = array(
+            'status'    => 'success',
             'username' => $username, 
             'guid' => $guid,
             'channel_id' => $response->channel_id,

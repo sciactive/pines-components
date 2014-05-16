@@ -108,6 +108,12 @@ return array(
         'description'   => 'The module position for the chat html',
         'value' => 'bottom'
     ),
+    array(
+        'name'  => 'disabled_ips',
+        'cname' => 'List of IPs to disable chat on',
+        'description'   => 'A CSV of IPs to block from accessing gae_chat',
+        'value' => ''
+    ),
 );
 
 ?>

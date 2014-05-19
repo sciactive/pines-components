@@ -25,8 +25,11 @@ if (!isset($customer->guid)) {
 	$pines->page->override_doc('false');
 	return;
 }
-
-$employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
+$employee = $_REQUEST['employee'];
+if ($employee == '') {
+	$employee = $_SESSION['user']->guid;
+}
+$employee = com_hrm_employee::factory((int) $employee);
 if (!isset($employee)) {
 	$pines->page->override_doc('false');
 	return;

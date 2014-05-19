@@ -47,14 +47,16 @@
     </div>
     <div class="row" id="main-chat-body">
         <?php if ($employee) { ?>
-        <div class="row chat-titles" id="employee-chat-clients">
-            <h4 class="main-chat-div-list">Employees</h4>
-        </div>
         <div class="row chat-titles" id="customer-chat-clients">
             <h4 class="main-chat-div-list">Customers</h4>
         </div>
+        <div class="row chat-titles" id="employee-chat-clients">
+            <h4 class="main-chat-div-list">Employees</h4>
+        </div>
         <?php } else { ?>
-        <ul id="main-chat-messages"></ul>
+        <ul id="main-chat-messages">
+            <li><h4 class="chat-opening-title">Welcome to Live Support Chat!</h4></li>
+        </ul>
         <?php } ?>
     </div>
     <?php if (!$employee) { ?>

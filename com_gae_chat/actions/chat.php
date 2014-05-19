@@ -128,7 +128,7 @@ if ($have_user) {
             $username = $user->name_first;
             $guid = $user->guid;
             $email = $user->email;
-            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee);
+            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee, false);
 
             $date = new DateTime($response->expires);
 
@@ -201,7 +201,12 @@ if ($have_user) {
         $username = 'Guest '. substr(mt_rand(), 0, 5);
         $guid = 0;
         $email = '';
-        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false);
+        $distinguish = false;
+        $ip = $_SERVER['REMOTE_ADDR'];
+        if ($ip == $pines->config->com_gae_chat->corporate_ip && $pines->config->com_gae_chat->distinguish_employees) {
+            $distinguish = true;
+        }
+        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false, $distinguish);
         
         $expires = new DateTime($response->expires);
         $token = $response->token;
@@ -214,6 +219,8 @@ if ($have_user) {
             'channel_token' => $token,
             'existing'  => false,
             'expires'   => $expires,
+            'ip'        => $ip,
+            'distinguish'   => $distinguish
         );
         
         $pines->session('write');

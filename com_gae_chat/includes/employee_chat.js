@@ -9,6 +9,7 @@ pines(function() {
     getTokenURL = $("#get_token_url").attr('data-url');
     onlineTestURL = $("#online_test_url").attr('data-url');
     onlineCheckURL = $("#send_online_check_url").attr('data-url');
+    minMainChatBtn = $("#min-main-chat-btn");
     
     // Setting this to false so that when we get the chat_history, we won't get notifications all at once
     // This will allow for new messages to have notifications, but not chat history
@@ -268,18 +269,25 @@ pines(function() {
      *
      */
     function handleMessageHistory(data) {
+        if (!data.messages) {
+            return;
+        }
         var count = data.messages.length;
         if (count < 1) {
             return;
         }
-
+        displayNotifications = false;
         for (var i=0; i<count; i++) {
             var message = data.messages[i];
             if (!chatHistory[message.message_id]) {
                 createChannelWindow(message.channel_id);
                 appendChannelMessage(message.channel_id, message.message, message.from_username, getTimeago(message.timestamp), "#"+message.channel_id+"-chat", message.from_channel == channel_id, message.message_id);
+                if (message.page_url) {
+                    $("#" + message.channel_id + "-div").find('.last-page-url').html('<a href="' + message.page_url + '" target="_blank">' + message.page_url + '</a>');
+                }
             }
         }
+        displayNotifications = true;
     }
     
     /*
@@ -449,7 +457,7 @@ pines(function() {
                     need_to_pull = true;
             }
             appendChannelMessage(data.to_channel, data.message, data.username, getTimeago(data.timestamp), chat_id, need_to_pull, data.message_id);
-            setNewMessageIndicator("#" + data.to_channel + "-div");
+            if (need_to_pull) setNewMessageIndicator("#" + data.to_channel + "-div");
         } else {
             createChannelWindow(data.to_channel);
             handleEmployeeChannelMessage(data);
@@ -468,6 +476,9 @@ pines(function() {
             var chat_body = "#" + data.from_channel + "-chat";
             var chat_div = "#" + data.from_channel + "-div";
             appendChannelMessage(data.from_channel, data.message, data.username, getTimeago(data.timestamp), chat_body, false, data.message_id);
+            if (data.page_url) {
+                $(chat_div).find('.last-page-url').html('<a href="' + data.page_url + '" target="_blank">' + data.page_url + '</a>');
+            }
             setNewMessageIndicator(chat_div);
         } else {
             createChannelWindow(data.from_channel);
@@ -584,6 +595,7 @@ pines(function() {
 
             return;
         }
+        
 
         if (is_employee) {
             var newEmployeeChannelHTML = '<div class="list-group employee-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
@@ -593,11 +605,17 @@ pines(function() {
             // Append it to the employee's div
             $("#employee-chat-clients").append(newEmployeeChannelHTML);
         } else {
-            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
+            var distinguished = 'nondistinguished-chat-user';
+            if (data.distinguished) {
+                distinguished = 'distinguished-chat-user';
+            }
+            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list ' + distinguished + '" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><div class="list-group-item channel-name-div">' +
                         '<h4 class="chat-client-div-username">' + data.username + '</h4>' +
                         '<p class="chat-client-div-info">' + data.city + ', ' + data.region + '</p>' +
+                        '<p class="last-chat-message chat-ellipsis"></p>' +
+                        '<p class="last-page-url chat-ellipsis"></p>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
-                        '</a></div>';
+                        '</div></div>';
             // Append it to the customer's div
             $("#customer-chat-clients").append(newChannelCustomerHTML);
         }
@@ -629,6 +647,7 @@ pines(function() {
         $("#" + channel + "-chat-body").scrollTop($(chat_id).height());
         $('abbr.timeago').timeago();
         addToChatHistory(message_id, channel, username, timestamp, message);
+        $("#" + channel + "-div").find('.last-chat-message').html(message);
     }
 
 
@@ -661,7 +680,7 @@ pines(function() {
                 '</span></div></div></div>';
 
         $('#additional_clients').append(newChannelClientHTML);
-        
+        //openClients.push(customer_channel);
         realignChatWindows();
     }
 
@@ -730,14 +749,16 @@ pines(function() {
      * Changes the icon for the button depending on the state
      * Remember to update the header with the relevant class as well
      */
-    $("#min-main-chat-btn").click(function() {
+    minMainChatBtn.click(function() {
 
         if (main_chat_body.hasClass("chat-minimized")) {
             main_chat_body.removeClass("chat-minimized").show();
             $(this).html('<i class="icon-chevron-down"></i>');
+            localStorage.setItem('chatminimized', "no");
         } else {
             main_chat_body.addClass("chat-minimized").hide();
             $(this).html('<i class="icon-chevron-up"></i>');
+            localStorage.setItem('chatminimized', "yes");
         }
     });
 
@@ -806,8 +827,9 @@ pines(function() {
             return;
         }
         if (main_chat_body.hasClass("chat-minimized")) {
-            $("#min-main-chat-btn").html('<i class="icon-chevron-down"></i>');
+            minMainChatBtn.html('<i class="icon-chevron-down"></i>');
             main_chat_body.removeClass("chat-minimized").show();
+            localStorage.setItem("chatminimized", "no");
         }
     });
 
@@ -843,6 +865,9 @@ pines(function() {
         }
     });
     
+    if (localStorage.getItem('chatminimized') == "yes") {
+        minMainChatBtn.click();
+    }
     $.timeago.settings.strings.seconds = "seconds";
     $("abbr.timeago").timeago();
     connectToEmployeeChannel();

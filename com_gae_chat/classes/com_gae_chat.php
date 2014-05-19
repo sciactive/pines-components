@@ -93,10 +93,12 @@ class com_gae_chat extends component {
      * @param int $guid The guid of the user to get a token for
      * @param string $username The username of the user to get a token for
      * @param bool $employee Whether the user is an employee or not
+     * @param bool $distinguish Whether to distingish a guest as an employee
      * @return array JSON Response from App Engine
      */
-    function get_channel_token($guid = 0, $username = '', $email = '', $employee = false) {
+    function get_channel_token($guid = 0, $username = '', $email = '', $employee = false, $distinguish = false) {
         global $pines;
+        pines_log('Value of distinguish: '.json_encode($distinguish), 'notice');
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $pines->config->com_gae_chat->token_url,
@@ -107,7 +109,8 @@ class com_gae_chat extends component {
                 'guid'      => $guid,
                 'employee'  => $employee,
                 'username'  => $username,
-                'email'     => $email
+                'email'     => $email,
+                'distinguished'   => $distinguish
             )
         ));
         

@@ -179,7 +179,6 @@ function setUpChannel() {
  */
 function handleOnlineCheck() {
     // Need to make sure we have http and https enabled on app engine
-    var url = "//chat-dot-webapp108.appspot.com/chat/testonline";
     var params = {"channel_id": channel_id, "channel_token": channel_token};
     
     if ($.browser.msie && window.XDomainRequest) {
@@ -233,9 +232,7 @@ function sendMessage(msg) {
         var offset = time_now.getTimezoneOffset() * 60 * 1000;
         var utc_time = new Date(timestamp + offset);
         
-        //var url = "//chat-dot-webapp108.appspot.com/chat/message";
-        
-        var params = {"channel_id": channel_id, "msg": msg, "timestamp": utc_time.getTime(), "channel_token": channel_token};
+        var params = {"channel_id": channel_id, "msg": msg, "timestamp": utc_time.getTime(), "channel_token": channel_token, "page_url": window.location.href};
         
         if ($.browser.msie && window.XDomainRequest) {
             // Use MS XDR

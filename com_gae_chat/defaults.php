@@ -114,6 +114,18 @@ return array(
         'description'   => 'A CSV of IPs to block from accessing gae_chat',
         'value' => ''
     ),
+    array(
+        'name'  => 'distinguish_employees',
+        'cname' => 'Distinguish when employees connect as guests',
+        'description'   => 'Whether to distinguish guests who originate from the corporate ip',
+        'value' => false
+    ),
+    array(
+        'name'  => 'corporate_ip',
+        'cname' => 'The Corporate IP address of employees',
+        'description'   => 'The corporate IP address of the employees. Used to distinguish guests from this ip',
+        'value' => ''
+    ),
 );
 
 ?>

@@ -90,8 +90,8 @@ root {
 #main-chat-window {
     right: 10px;
     margin: 0;
-    width: 18%;
-    max-width: 200px;
+    width: 13%;
+    max-width: 15%;
     z-index: 1000;
     bottom: 5px;
     background-color: #ffffff;
@@ -150,6 +150,10 @@ root {
     padding-right: 5px;
 }
 
+.distinguished-chat-user {
+    background-color: pink !important;
+}
+
 .chat-status.offline {
  background-color: #DF5F40;
  box-shadow: 0 0 7px #DF5F40;
@@ -179,6 +183,20 @@ background-color: #EADB60;
 box-shadow: 0 0 7px #EADB60;
 animation:blink 1s infinite;
 -webkit-animation:blink 1s infinite;
+}
+
+.chat-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.last-chat-message {
+    margin: 1px 0px;
+}
+
+.chat-client-div-info {
+    margin: 1px 0px 0px;
 }
 
 

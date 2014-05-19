@@ -1,9 +1,9 @@
 [class*="picon"]:before {
-	background-image: url('http://lh5.ggpht.com/THdYcAiTZoXI08ffj9j6KzMFyeoY5gUJUilMUd-UaeL8T2MLlaAGkm2NCRMqdWdfTJBPPXxnPxTq2bDz0Pcg=s1528');
+	background-image: url('https://lh5.ggpht.com/THdYcAiTZoXI08ffj9j6KzMFyeoY5gUJUilMUd-UaeL8T2MLlaAGkm2NCRMqdWdfTJBPPXxnPxTq2bDz0Pcg=s1528');
 	vertical-align: text-top;
 }
 .picon-32:before {
-	background-image: url('http://lh6.ggpht.com/aapSBcBKlL2FYiC6ksz5kMv-Pk4yLw6LbpYJz789yKobaBZjbdDqpJvmXc_onzOZNVDdLxDVul0qENds7aOC=s1562');
+	background-image: url('https://lh6.ggpht.com/aapSBcBKlL2FYiC6ksz5kMv-Pk4yLw6LbpYJz789yKobaBZjbdDqpJvmXc_onzOZNVDdLxDVul0qENds7aOC=s1562');
 	vertical-align: text-top;
 }
 body .ui-pgrid-toolbar .picon {
@@ -1523,5 +1523,5 @@ body .btn .picon-32 {
 .picon-zoom-original:before { background-position: -144px -1314px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .picon-zoom-out:before { background-position: -144px -1332px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
 .picon-zoom-select:before { background-position: -144px -1350px !important; width: 16px; height: 16px; content: ""; display:inline-block; margin: 0 3px } 
-.drive-icon:before {background: url("http://lh6.ggpht.com/0VD9N7NeXpmcvEH93F1l_ns2B0iMzYnOc1VOVWQZb_h7Ywe2wvfvJmlyX1k59ehSt7arVvZ6ePQnPnWjKi8=s16"); width: 16px; height: 16px; content: ""; display:inline-block; }
-.picon-32.picon-throbber:before {background: url("http://lh4.ggpht.com/F8ufQkegK5SEU6KamDos-QhLYa_GD2reAFC88-hX3obVO8NXlomYKqO2vlGqUsVoSlOos3jysrJzkJTst3em=s32"); width: 32px; height: 32px; content: ""; display:inline-block; }
+.drive-icon:before {background: url("https://lh6.ggpht.com/0VD9N7NeXpmcvEH93F1l_ns2B0iMzYnOc1VOVWQZb_h7Ywe2wvfvJmlyX1k59ehSt7arVvZ6ePQnPnWjKi8=s16"); width: 16px; height: 16px; content: ""; display:inline-block; }
+.picon-32.picon-throbber:before {background: url("https://lh4.ggpht.com/F8ufQkegK5SEU6KamDos-QhLYa_GD2reAFC88-hX3obVO8NXlomYKqO2vlGqUsVoSlOos3jysrJzkJTst3em=s32"); width: 32px; height: 32px; content: ""; display:inline-block; }

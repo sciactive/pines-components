@@ -20,6 +20,7 @@ pines(function() {
     // Structure will be {channel_id1: {username: 'username', token: 'token', online_status: 'status', city: 'city', state: 'state'}, channel_id2: {}, channel_id3: {}}
     // This way, I can set up the initial objects and then lookup based on channel id to get the info about a customer
     connected_clients = {};
+    extra_clients = {};
     // Variable to hold all of our chat messages so we don't end up duplication messages
     chatHistory = {};
     needToRestartChannels = false;
@@ -199,14 +200,10 @@ pines(function() {
      * Updates customer info with their current city and region (Based on IP)
      */
     function updateCustomerInfo(chan_id, city, region, page_url) {
-        if (!connected_clients[chan_id]) {
-            return;
-        }
         var chat_div = $("#" + chan_id + "-div");
+        if (!chat_div.length) return;
         chat_div.find('.chat-client-div-info').html(city.capitalize() + ", " + region.capitalize());
         chat_div.find('.last-page-url').html('<a href="' + page_url + '" target="_blank">' + page_url + '</a>');
-        connected_clients[chan_id].city = city;
-        connected_clients[chan_id].region = region;
     }
     
     /*

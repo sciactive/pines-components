@@ -100,6 +100,7 @@ function onChannelOpen() {
     connectedToChannel = true;
     chat_status.removeClass('offline checking');
     chat_status_text.html('Online');
+    setTimeout(welcomeChat, 1000);
 }
 
 
@@ -311,7 +312,6 @@ function connectToChannel() {
             } else {
                 $("#main-chat-window").removeClass('hide');
                 setChannelInfo(data.channel_id, data.channel_token);
-                welcomeChat();
             }
         },
         error: function() {

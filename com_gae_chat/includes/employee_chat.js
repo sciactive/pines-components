@@ -78,6 +78,10 @@ pines(function() {
     // At this point, we don't have permission, let's leave the person alone
     }
     
+    String.prototype.capitalize = function() {
+        return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    }
+    
     /*
      * Add the message to the chat history object
      */
@@ -107,7 +111,6 @@ pines(function() {
         chat_status.removeClass('offline checking');
         chat_status_text.html('Online');
         connectedToChannel = true;
-        // Show them on their chat console that they are online
     }
     
     
@@ -157,7 +160,7 @@ pines(function() {
                 displayNotifications = true;
                 
             } else if (data.type == "customer_update") {
-                updateCustomerInfo(data.channel_id, data.city, data.region);
+                updateCustomerInfo(data.channel_id, data.city, data.region, data.page_url);
                 
             } else {
                 // For some reason, this is a message we don't know about.
@@ -195,8 +198,14 @@ pines(function() {
     /*
      * Updates customer info with their current city and region (Based on IP)
      */
-    function updateCustomerInfo(chan_id, city, region) {
-        $("#" + chan_id + "-div").find('.chat-client-div-info').html(city + ", " + region);
+    function updateCustomerInfo(chan_id, city, region, page_url) {
+        if (!connected_clients[chan_id]) {
+            connected_clients[chan_id] = {"city": city, "region": region, "page_url": page_url};
+            return;
+        }
+        var chat_div = $("#" + chan_id + "-div");
+        chat_div.find('.chat-client-div-info').html(city.capitalize() + ", " + region.capitalize());
+        chat_div.find('.last-page-url').html('<a href="' + page_url + '" target="_blank">' + page_url + '</a>');
         connected_clients[chan_id].city = city;
         connected_clients[chan_id].region = region;
     }
@@ -206,7 +215,6 @@ pines(function() {
      */
     function restartChannel() {
         needToRestartChannels = false;
-        //socket.close();
         connectToEmployeeChannel(true);
     }
     
@@ -599,7 +607,7 @@ pines(function() {
 
         if (is_employee) {
             var newEmployeeChannelHTML = '<div class="list-group employee-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
-                        '<h4 class="chat-client-div-username">' + data.username + '</h4>' +
+                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
                         '</a></div>';
             // Append it to the employee's div
@@ -609,9 +617,15 @@ pines(function() {
             if (data.distinguished) {
                 distinguished = 'distinguished-chat-user';
             }
+            
+            var div_info = '<span class="chat-client-div-info badge"></span>';
+            if (data.city) {
+                div_info = '<span class="chat-client-div-info badge">' + data.city.capitalize() + ", " + data.region.capitalize() + "</span>";
+            }
+            
             var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list ' + distinguished + '" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><div class="list-group-item channel-name-div">' +
-                        '<h4 class="chat-client-div-username">' + data.username + '</h4>' +
-                        '<p class="chat-client-div-info">' + data.city + ', ' + data.region + '</p>' +
+                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
+                        div_info +
                         '<p class="last-chat-message chat-ellipsis"></p>' +
                         '<p class="last-page-url chat-ellipsis"></p>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
@@ -727,19 +741,18 @@ pines(function() {
      */
     main_chat_body.on("click", ".channel-client-list", function() {
         var chan_id = $(this).attr("data-channelid");
-
-
+        
         if (doesElementExist(chan_id)) {
             // Need to check if we have this element in the openClients array
             if (openClients.indexOf(chan_id) === -1) {
                 // We need to add it 
                 openClients.push(chan_id);
-
             }
-            realignChatWindows();
         } else {
             createChannelWindow(chan_id);
+            openClients.push(chan_id);
         }
+        realignChatWindows();
     });
 
 

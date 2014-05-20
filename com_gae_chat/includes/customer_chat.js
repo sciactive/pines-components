@@ -17,6 +17,7 @@ sendMessageURL = $("#send_message_url").attr('data-url');
 getTokenURL = $("#get_token_url").attr('data-url');
 onlineTestURL = $("#online_test_url").attr('data-url');
 onlineCheckURL = $("#send_online_check_url").attr('data-url');
+welcomeChatURL = $("#welcome_chat_url").attr('data-url');
 
 var customer_pic_url = $("#chat_customer_pic").attr('data-url');
 var employee_pic_url = $("#chat_employee_pic").attr('data-url');
@@ -310,6 +311,7 @@ function connectToChannel() {
             } else {
                 $("#main-chat-window").removeClass('hide');
                 setChannelInfo(data.channel_id, data.channel_token);
+                welcomeChat();
             }
         },
         error: function() {
@@ -364,7 +366,45 @@ function appendChannelMessage(message, username, timestamp, is_employee) {
     chat_body.scrollTop(chat_messages.height());
     $("abbr.timeago").timeago();
     
+}
 
+function welcomeChat() {
+    
+    var params = {"channel_token": channel_token, "channel_id": channel_id, "page_url": window.location.href};
+    
+    if ($.browser.msie && window.XDomainRequest) {
+            // Use MS XDR
+            var xdr = new XDomainRequest();
+            xdr.onload = function() {
+                // Don't care about results
+            };
+            xdr.onerror = function() {
+                // Don't care
+            };
+            xdr.ontimeout = function() {
+                // Don't care
+            };
+            xdr.onprogress = function() {
+                // Don't need to update them on progress
+            };
+            xdr.timeout = 8000;
+            xdr.open("POST", welcomeChatURL);
+            xdr.send($.param(params));
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: welcomeChatURL,
+                data: params,
+                crossDomain: true,
+                dataType: 'json',
+                success: function() {
+                    // Don't care
+                },
+                error: function () {
+                    // No care
+                }
+            });
+        }
 }
 
 /*

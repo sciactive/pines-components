@@ -22,7 +22,8 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_gae_chat extends component {
     
-    private $js_loaded = false;
+    private $customer_js_loaded = false;
+    private $employee_js_loaded = false;
     
     /**
      * Loads the Customer JS Files for GAE Chat
@@ -32,13 +33,13 @@ class com_gae_chat extends component {
      */
     function load_customer_js() {
         global $pines;
-        if (!$this->js_loaded) {
+        if (!$this->customer_js_loaded) {
                 if ($pines->config->compress_cssjs) {
                         $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
                         $js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
                         // Add Css and JS
                         $js[] =  $file_root.'components/com_gae_chat/includes/'.($pines->config->debug_mode ? 'customer_chat.js' : 'customer_chat.min.js');
-                        $js[] =  $pines->config->com_gae_chat->channels_js_url;
+                        $js[] =  $file_root.'components/com_gae_chat/includes/channel.js';
                         $pines->config->loadcompressedjs = $js;
                         
                         $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
@@ -48,7 +49,7 @@ class com_gae_chat extends component {
                         $module = new module('com_gae_chat', 'chat_customer_js', 'bottom');
                         $module->render();
                 }
-                $this->js_loaded = true;
+                $this->customer_js_loaded = true;
         }
     }
     
@@ -57,13 +58,13 @@ class com_gae_chat extends component {
      */
     function load_employee_js() {
         global $pines;
-        if (!$this->js_loaded) {
+        if (!$this->employee_js_loaded) {
                 if ($pines->config->compress_cssjs) {
                         $file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
                         $js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
                         // Add Css, and JS
                         $js[] =  $file_root.'components/com_gae_chat/includes/'.($pines->config->debug_mode ? 'employee_chat.js' : 'employee_chat.min.js');
-                        $js[] =  $pines->config->com_gae_chat->channels_js_url;
+                        $js[] =  $file_root.'components/com_gae_chat/includes/channel.js';
                         $pines->config->loadcompressedjs = $js;
                         
                         $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
@@ -73,7 +74,7 @@ class com_gae_chat extends component {
                         $module = new module('com_gae_chat', 'chat_js', 'bottom');
                         $module->render();
                 }
-                $this->js_loaded = true;
+                $this->employee_js_loaded = true;
         }
     }
     

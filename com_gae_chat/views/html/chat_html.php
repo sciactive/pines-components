@@ -16,6 +16,7 @@
     <div id="get_token_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->pines_token_url;?>"></div>
     <div id="online_test_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->ping_test_url;?>"></div>
     <div id="send_online_check_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->online_check_url;?>"></div>
+    <div id="welcome_chat_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->welcome_chat_url;?>"></div>
     <div id="chat_customer_pic" class="hide" data-url="<?php echo $pines->config->com_gae_chat->customer_pic;?>"></div>
     <div id="chat_employee_pic" class="hide" data-url="<?php echo $pines->config->com_gae_chat->employee_pic;?>"></div>
 </div>

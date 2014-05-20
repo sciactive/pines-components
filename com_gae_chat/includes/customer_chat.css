@@ -131,3 +131,8 @@ root {
     display: inline-block;
     padding-top: 4px;
 }
+
+.chat-opening-title {
+    border-bottom: 1px solid black;
+    text-align: center;
+}

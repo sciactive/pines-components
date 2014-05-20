@@ -9,6 +9,7 @@ pines(function() {
     getTokenURL = $("#get_token_url").attr('data-url');
     onlineTestURL = $("#online_test_url").attr('data-url');
     onlineCheckURL = $("#send_online_check_url").attr('data-url');
+    minMainChatBtn = $("#min-main-chat-btn");
     
     // Setting this to false so that when we get the chat_history, we won't get notifications all at once
     // This will allow for new messages to have notifications, but not chat history
@@ -19,6 +20,7 @@ pines(function() {
     // Structure will be {channel_id1: {username: 'username', token: 'token', online_status: 'status', city: 'city', state: 'state'}, channel_id2: {}, channel_id3: {}}
     // This way, I can set up the initial objects and then lookup based on channel id to get the info about a customer
     connected_clients = {};
+    extra_clients = {};
     // Variable to hold all of our chat messages so we don't end up duplication messages
     chatHistory = {};
     needToRestartChannels = false;
@@ -77,6 +79,10 @@ pines(function() {
     // At this point, we don't have permission, let's leave the person alone
     }
     
+    String.prototype.capitalize = function() {
+        return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    }
+    
     /*
      * Add the message to the chat history object
      */
@@ -106,7 +112,6 @@ pines(function() {
         chat_status.removeClass('offline checking');
         chat_status_text.html('Online');
         connectedToChannel = true;
-        // Show them on their chat console that they are online
     }
     
     
@@ -156,7 +161,7 @@ pines(function() {
                 displayNotifications = true;
                 
             } else if (data.type == "customer_update") {
-                updateCustomerInfo(data.channel_id, data.city, data.region);
+                updateCustomerInfo(data.channel_id, data.city, data.region, data.page_url);
                 
             } else {
                 // For some reason, this is a message we don't know about.
@@ -194,10 +199,11 @@ pines(function() {
     /*
      * Updates customer info with their current city and region (Based on IP)
      */
-    function updateCustomerInfo(chan_id, city, region) {
-        $("#" + chan_id + "-div").find('.chat-client-div-info').html(city + ", " + region);
-        connected_clients[chan_id].city = city;
-        connected_clients[chan_id].region = region;
+    function updateCustomerInfo(chan_id, city, region, page_url) {
+        var chat_div = $("#" + chan_id + "-div");
+        if (!chat_div.length) return;
+        chat_div.find('.chat-client-div-info').html(city.capitalize() + ", " + region.capitalize());
+        chat_div.find('.last-page-url').html('<a href="' + page_url + '" target="_blank">' + page_url + '</a>');
     }
     
     /*
@@ -205,7 +211,6 @@ pines(function() {
      */
     function restartChannel() {
         needToRestartChannels = false;
-        //socket.close();
         connectToEmployeeChannel(true);
     }
     
@@ -268,18 +273,25 @@ pines(function() {
      *
      */
     function handleMessageHistory(data) {
+        if (!data.messages) {
+            return;
+        }
         var count = data.messages.length;
         if (count < 1) {
             return;
         }
-
+        displayNotifications = false;
         for (var i=0; i<count; i++) {
             var message = data.messages[i];
             if (!chatHistory[message.message_id]) {
                 createChannelWindow(message.channel_id);
                 appendChannelMessage(message.channel_id, message.message, message.from_username, getTimeago(message.timestamp), "#"+message.channel_id+"-chat", message.from_channel == channel_id, message.message_id);
+                if (message.page_url) {
+                    $("#" + message.channel_id + "-div").find('.last-page-url').html('<a href="' + message.page_url + '" target="_blank">' + message.page_url + '</a>');
+                }
             }
         }
+        displayNotifications = true;
     }
     
     /*
@@ -449,7 +461,7 @@ pines(function() {
                     need_to_pull = true;
             }
             appendChannelMessage(data.to_channel, data.message, data.username, getTimeago(data.timestamp), chat_id, need_to_pull, data.message_id);
-            setNewMessageIndicator("#" + data.to_channel + "-div");
+            if (need_to_pull) setNewMessageIndicator("#" + data.to_channel + "-div");
         } else {
             createChannelWindow(data.to_channel);
             handleEmployeeChannelMessage(data);
@@ -468,6 +480,9 @@ pines(function() {
             var chat_body = "#" + data.from_channel + "-chat";
             var chat_div = "#" + data.from_channel + "-div";
             appendChannelMessage(data.from_channel, data.message, data.username, getTimeago(data.timestamp), chat_body, false, data.message_id);
+            if (data.page_url) {
+                $(chat_div).find('.last-page-url').html('<a href="' + data.page_url + '" target="_blank">' + data.page_url + '</a>');
+            }
             setNewMessageIndicator(chat_div);
         } else {
             createChannelWindow(data.from_channel);
@@ -584,20 +599,33 @@ pines(function() {
 
             return;
         }
+        
 
         if (is_employee) {
             var newEmployeeChannelHTML = '<div class="list-group employee-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
-                        '<h4 class="chat-client-div-username">' + data.username + '</h4>' +
+                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
                         '</a></div>';
             // Append it to the employee's div
             $("#employee-chat-clients").append(newEmployeeChannelHTML);
         } else {
-            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
-                        '<h4 class="chat-client-div-username">' + data.username + '</h4>' +
-                        '<p class="chat-client-div-info">' + data.city + ', ' + data.region + '</p>' +
+            var distinguished = 'nondistinguished-chat-user';
+            if (data.distinguished) {
+                distinguished = 'distinguished-chat-user';
+            }
+            
+            var div_info = '<span class="chat-client-div-info badge"></span>';
+            if (data.city) {
+                div_info = '<span class="chat-client-div-info badge">' + data.city.capitalize() + ", " + data.region.capitalize() + "</span>";
+            }
+            
+            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list ' + distinguished + '" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><div class="list-group-item channel-name-div">' +
+                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
+                        div_info +
+                        '<p class="last-chat-message chat-ellipsis"></p>' +
+                        '<p class="last-page-url chat-ellipsis"></p>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
-                        '</a></div>';
+                        '</div></div>';
             // Append it to the customer's div
             $("#customer-chat-clients").append(newChannelCustomerHTML);
         }
@@ -629,6 +657,7 @@ pines(function() {
         $("#" + channel + "-chat-body").scrollTop($(chat_id).height());
         $('abbr.timeago').timeago();
         addToChatHistory(message_id, channel, username, timestamp, message);
+        $("#" + channel + "-div").find('.last-chat-message').html(message);
     }
 
 
@@ -661,7 +690,7 @@ pines(function() {
                 '</span></div></div></div>';
 
         $('#additional_clients').append(newChannelClientHTML);
-        
+        //openClients.push(customer_channel);
         realignChatWindows();
     }
 
@@ -708,19 +737,18 @@ pines(function() {
      */
     main_chat_body.on("click", ".channel-client-list", function() {
         var chan_id = $(this).attr("data-channelid");
-
-
+        
         if (doesElementExist(chan_id)) {
             // Need to check if we have this element in the openClients array
             if (openClients.indexOf(chan_id) === -1) {
                 // We need to add it 
                 openClients.push(chan_id);
-
             }
-            realignChatWindows();
         } else {
             createChannelWindow(chan_id);
+            openClients.push(chan_id);
         }
+        realignChatWindows();
     });
 
 
@@ -730,14 +758,16 @@ pines(function() {
      * Changes the icon for the button depending on the state
      * Remember to update the header with the relevant class as well
      */
-    $("#min-main-chat-btn").click(function() {
+    minMainChatBtn.click(function() {
 
         if (main_chat_body.hasClass("chat-minimized")) {
             main_chat_body.removeClass("chat-minimized").show();
             $(this).html('<i class="icon-chevron-down"></i>');
+            localStorage.setItem('chatminimized', "no");
         } else {
             main_chat_body.addClass("chat-minimized").hide();
             $(this).html('<i class="icon-chevron-up"></i>');
+            localStorage.setItem('chatminimized', "yes");
         }
     });
 
@@ -806,8 +836,9 @@ pines(function() {
             return;
         }
         if (main_chat_body.hasClass("chat-minimized")) {
-            $("#min-main-chat-btn").html('<i class="icon-chevron-down"></i>');
+            minMainChatBtn.html('<i class="icon-chevron-down"></i>');
             main_chat_body.removeClass("chat-minimized").show();
+            localStorage.setItem("chatminimized", "no");
         }
     });
 
@@ -843,6 +874,9 @@ pines(function() {
         }
     });
     
+    if (localStorage.getItem('chatminimized') == "yes") {
+        minMainChatBtn.click();
+    }
     $.timeago.settings.strings.seconds = "seconds";
     $("abbr.timeago").timeago();
     connectToEmployeeChannel();

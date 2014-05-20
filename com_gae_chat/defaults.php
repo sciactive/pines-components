@@ -19,12 +19,6 @@ return array(
         'value' => '',
     ),
     array(
-        'name' => 'channels_js_url',
-        'cname' => 'The Channels JS from App Engine',
-        'description' => 'The url of Google\'s Channels JS file hosted on your App Engine account',
-        'value' => '',
-    ),
-    array(
         'name' => 'employee_auth',
         'cname' => 'Employee Secret Auth Token',
         'description' => 'The token for which employees get employee status on App Engine',
@@ -112,6 +106,24 @@ return array(
         'name'  => 'disabled_ips',
         'cname' => 'List of IPs to disable chat on',
         'description'   => 'A CSV of IPs to block from accessing gae_chat',
+        'value' => ''
+    ),
+    array(
+        'name'  => 'distinguish_employees',
+        'cname' => 'Distinguish when employees connect as guests',
+        'description'   => 'Whether to distinguish guests who originate from the corporate ip',
+        'value' => false
+    ),
+    array(
+        'name'  => 'corporate_ip',
+        'cname' => 'The Corporate IP address of employees',
+        'description'   => 'The corporate IP address of the employees. Used to distinguish guests from this ip',
+        'value' => ''
+    ),
+    array(
+        'name'  => 'welcome_chat_url',
+        'cname' => 'The Welcome To Chat URL for customers',
+        'description'   => 'The chat url for users to update the user entity in App Engine',
         'value' => ''
     ),
 );

@@ -17,6 +17,7 @@ sendMessageURL = $("#send_message_url").attr('data-url');
 getTokenURL = $("#get_token_url").attr('data-url');
 onlineTestURL = $("#online_test_url").attr('data-url');
 onlineCheckURL = $("#send_online_check_url").attr('data-url');
+welcomeChatURL = $("#welcome_chat_url").attr('data-url');
 
 var customer_pic_url = $("#chat_customer_pic").attr('data-url');
 var employee_pic_url = $("#chat_employee_pic").attr('data-url');
@@ -99,6 +100,7 @@ function onChannelOpen() {
     connectedToChannel = true;
     chat_status.removeClass('offline checking');
     chat_status_text.html('Online');
+    setTimeout(welcomeChat, 1000);
 }
 
 
@@ -179,7 +181,6 @@ function setUpChannel() {
  */
 function handleOnlineCheck() {
     // Need to make sure we have http and https enabled on app engine
-    var url = "//chat-dot-webapp108.appspot.com/chat/testonline";
     var params = {"channel_id": channel_id, "channel_token": channel_token};
     
     if ($.browser.msie && window.XDomainRequest) {
@@ -233,9 +234,7 @@ function sendMessage(msg) {
         var offset = time_now.getTimezoneOffset() * 60 * 1000;
         var utc_time = new Date(timestamp + offset);
         
-        //var url = "//chat-dot-webapp108.appspot.com/chat/message";
-        
-        var params = {"channel_id": channel_id, "msg": msg, "timestamp": utc_time.getTime(), "channel_token": channel_token};
+        var params = {"channel_id": channel_id, "msg": msg, "timestamp": utc_time.getTime(), "channel_token": channel_token, "page_url": window.location.href};
         
         if ($.browser.msie && window.XDomainRequest) {
             // Use MS XDR
@@ -367,7 +366,45 @@ function appendChannelMessage(message, username, timestamp, is_employee) {
     chat_body.scrollTop(chat_messages.height());
     $("abbr.timeago").timeago();
     
+}
 
+function welcomeChat() {
+    
+    var params = {"channel_token": channel_token, "channel_id": channel_id, "page_url": window.location.href};
+    
+    if ($.browser.msie && window.XDomainRequest) {
+            // Use MS XDR
+            var xdr = new XDomainRequest();
+            xdr.onload = function() {
+                // Don't care about results
+            };
+            xdr.onerror = function() {
+                // Don't care
+            };
+            xdr.ontimeout = function() {
+                // Don't care
+            };
+            xdr.onprogress = function() {
+                // Don't need to update them on progress
+            };
+            xdr.timeout = 8000;
+            xdr.open("POST", welcomeChatURL);
+            xdr.send($.param(params));
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: welcomeChatURL,
+                data: params,
+                crossDomain: true,
+                dataType: 'json',
+                success: function() {
+                    // Don't care
+                },
+                error: function () {
+                    // No care
+                }
+            });
+        }
 }
 
 /*

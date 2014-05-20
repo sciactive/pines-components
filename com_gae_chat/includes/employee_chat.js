@@ -200,7 +200,6 @@ pines(function() {
      */
     function updateCustomerInfo(chan_id, city, region, page_url) {
         if (!connected_clients[chan_id]) {
-            connected_clients[chan_id] = {"city": city, "region": region, "page_url": page_url};
             return;
         }
         var chat_div = $("#" + chan_id + "-div");

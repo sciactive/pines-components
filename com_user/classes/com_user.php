@@ -293,6 +293,13 @@ class com_user extends component implements user_manager_interface {
 		if ($pines->depend->check('component', 'com_configure')) {
 			include('components/com_configure/init/i14custom_config.php');
 		}
+		// Add username and groups, and protect them - be used by phpcache.
+		$_SESSION['username'] = md5($tmp_user->username);
+		$group_names = array();
+		foreach ($tmp_user->groups as $cur_group) {
+			$group_names[] = md5(strtoupper($cur_group->groupname));
+		}
+		$_SESSION['groups'] = $group_names;
 		pines_session('close');
 	}
 

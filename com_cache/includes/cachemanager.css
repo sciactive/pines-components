@@ -165,6 +165,25 @@
 	border: 1px dotted #999;
 	color: #666;
 }
+.p_cache_cachemanager tr td.dull,
+.p_cache_cachemanager tr td.dull:hover{
+	background: #eee !important;
+}
+.p_cache_cachemanager .global-exceptions-modal td {
+	cursor: pointer;
+}
+.p_cache_cachemanager .global-exceptions-modal td:not(.dull):hover:after {
+	content: "\f00d";
+	padding: 0 5px 0 10px;
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	color: #666;
+	cursor: pointer;
+	float: right;
+}
 @media (max-width: 1200px) {
 	.p_cache_cachemanager .hide-small {
 		display: none;

@@ -19,7 +19,11 @@ if ( !gatekeeper('com_cache/managecache') )
 	$result = false;
 
 if ($result !== false) { 
-	if (isset($_REQUEST['exceptions'])) {
+	if (isset($_REQUEST['save_global_exceptions'])) {
+		$users = $_REQUEST['users'];
+		$groups = $_REQUEST['groups'];
+		$result = $pines->com_cache->save_global_exceptions($users, $groups);
+	} else if (isset($_REQUEST['exceptions'])) {
 		$component = $_REQUEST['component'];
 		$action = $_REQUEST['caction'];
 		$domain = $_REQUEST['domain'];

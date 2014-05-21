@@ -19,6 +19,12 @@ $pines->com_timeago->load();
 $this->title = 'Cache Manager';
 $cache_on = $this->cacheoptions['cache_on'];
 $parent_directory = $this->cacheoptions['parent_directory'];
+$global_exceptions = $this->cacheoptions['global_exceptions'];
+$c_users = count($global_exceptions['users']);
+$c_groups = count($global_exceptions['groups']);
+// This will give you the count for the loop:
+$max_exceptions = ($c_users >= $c_groups) ? $c_users : $c_groups;
+$max_type = ($c_users == $c_groups) ? 'both' : (($c_users > $c_groups) ? 'users': 'groups');
 $cachelist = $this->cacheoptions['cachelist'];
 ksort($cachelist); // Puts component directives in order.
 $get_file_count = $this->get_file_count;
@@ -240,6 +246,22 @@ $get_file_count = $this->get_file_count;
 							</select>
 						</td>
 						<td style="width: 100px;"><button class="btn btn-block edit-setting-btn" type="button"><i class="icon-pencil"></i> Edit</button></td>
+					</tr>
+					<tr>
+						<td><strong>Manange Global Exceptions</strong></td>
+						<td class="text-center" style="vertical-align:middle;"><span class="edit-helper" data-title="Use this for certain groups or users that should not use caching at all."><i class="icon-question-sign"></i></span></td>
+						<td style="vertical-align:middle;">
+							List of groups and/or users to exclude from caching all together.
+						</td>
+						<td style="width: 100px;"><button class="btn btn-block global-exceptions-btn" type="button"><i class="icon-pencil"></i> Edit</button></td>
+					</tr>
+					<tr>
+						<td><strong>Pinlock Protected Actions</strong></td>
+						<td class="text-center" style="vertical-align:middle;"><span class="edit-helper" data-title="Pinlocking will not be accessible on cached pages."><i class="icon-question-sign"></i></span></td>
+						<td style="vertical-align:middle;" colspan="2">
+							Remember not to cache pinlock protected actions. These are your pin-locked actions: <br/>
+							<strong><?php echo implode(', ', $pines->config->com_pinlock->actions);?></strong>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -627,6 +649,49 @@ $get_file_count = $this->get_file_count;
 				There are no cached files yet. Turn caching on, create directives, and watch the magic happen!
 			</h3>
 			<?php } ?>
+			<div class="global-exceptions-modal modal hide fade in" data-backdrop="static" data-keyboard="false">
+				<div class="modal-header">
+					<h4 class="text-center" style="text-transform: uppercase;">Global Exceptions</h4>
+				</div>
+				<div class="modal-body">
+					<p class="alert alert-info"><i class="icon-info-sign"></i> Use the group-name and not display name for groups!</p>
+					<table class="table table-bordered table-hover" style="margin: auto;">
+						<thead>
+							<th style="width: 50%;" colspan="2">Users</th>
+							<th style="width: 50%;" colspan="2">Groups</th>
+						</thead>
+						<tbody>
+							<?php if ($c_users != 0 || $c_groups != 0) { 
+							for ($i = 0; $i < $max_exceptions; $i++) { 
+								$cur_user = isset($global_exceptions['users'][$i]) ? $global_exceptions['users'][$i] : null;
+								$cur_group = isset($global_exceptions['groups'][$i]) ? $global_exceptions['groups'][$i] : null; 
+								?>
+								<tr class="exception-row">
+									<?php if (($max_type == 'both') || ($cur_group && $cur_user)) { ?>
+									<td colspan="2" class="remove-exception user" style="width: 50%;"><?php echo htmlspecialchars($global_exceptions['users'][$i]); ?></td>
+									<td colspan="2" class="remove-exception group" style="width: 50%;"><?php echo htmlspecialchars($global_exceptions['groups'][$i]); ?></td>
+									<?php } else { ?>
+										<td colspan="2" class="user <?php echo ($cur_user ? 'remove-exception' : 'dull'); ?>" style="width: 50%;"><?php echo ($cur_user ? $cur_user : ''); ?></td>
+										<td colspan="2" class="group <?php echo ($cur_group ? 'remove-exception' : 'dull'); ?>" style="width: 50%;"><?php echo ($cur_group ? $cur_group : ''); ?></td>
+									<?php } ?>
+								</tr>
+							<?php } } ?>
+								<tr class="exception-new">
+									<td class="dull"><input name="excep_user" type="text" class="global-exceptions-input" placeholder="Username"/></td>
+									<td class="dull"><button class="btn add-exception" type="button" data-input="excep_user">Add</button></td>
+									<td class="dull"><input name="excep_group" type="text" class="global-exceptions-input" placeholder="Group name"/></td>
+									<td class="dull"><button class="btn add-exception" type="button" data-input="excep_group">Add</button></td>
+								</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<div style="padding: 4px; font-weight:bold; " class="pull-left text-success success hide"><i class="icon-ok"></i> Saved!</div>
+					<div style="padding: 4px; font-weight:bold; " class="pull-left text-success saving hide"><i class="icon-spin icon-spinner"></i> Saving ...</div>
+					<div style="padding: 4px; font-weight:bold; " class="pull-left text-error error hide"><i class="icon-remove"></i> Error</div>
+					<a class="btn" data-dismiss="modal" href="javascript:void(0);">Done</a>
+				</div>
+			</div>
 			<?php } ?>
 		</div>
 	</div>
@@ -634,6 +699,7 @@ $get_file_count = $this->get_file_count;
 	<div class="cache-urls hide">
 		<div class="save-edit-url"><?php echo (pines_url('com_cache', 'save', array('edit_directive' => 'true'))); ?></div>
 		<div class="cache-manager-url"><?php echo (pines_url('com_cache', 'manager')); ?></div>
+		<div class="save-exception-url"><?php echo (pines_url('com_cache', 'save', array('save_global_exceptions' => 'true'))); ?></div>
 		<div class="domain-explore-url"><?php echo (pines_url('com_cache', 'domain_explore')); ?></div>
 		<div class="save-url"><?php echo (pines_url('com_cache', 'save')); ?></div>
 		<div class="refresh-url"><?php echo (pines_url('com_cache', 'refresh')); ?></div>

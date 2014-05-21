@@ -42,10 +42,15 @@ pines(function(){
 	var submit_exceptions = container.find('.submit-exceptions');
 	var details_modal = container.find('.details.modal');
 	var view_details_btns = container.find('.view-domain');
+	var global_exceptions_btn = container.find('.global-exceptions-btn');
+	var global_exceptions_input = container.find('.global-exceptions-input');
+	var global_exceptions_modal = container.find('.global-exceptions-modal.modal');
+	var global_add_exceptions = global_exceptions_modal.find('.add-exception');
 
 	var urls_container = container.find('.cache-urls');
 	var save_edit_url = urls_container.find('.save-edit-url').text();
 	var cache_manager_url = urls_container.find('.cache-manager-url').text();
+	var save_exception_url = urls_container.find('.save-exception-url').text();
 	var domain_explore_url = urls_container.find('.domain-explore-url').text();
 	var refresh_url = urls_container.find('.refresh-url').text();
 	var save_url = urls_container.find('.save-url').text();
@@ -371,6 +376,93 @@ pines(function(){
 				}
 			}
 		});
+	}
+	
+	function recalculate_exceptions(){
+		global_exceptions_modal.find('.error').hide();
+		global_exceptions_modal.find('.success').hide();
+		
+		// Get the users
+		var users = [];
+		global_exceptions_modal.find('.exception-row td.user').each(function(){
+			var cur_user = $(this);
+			var text = cur_user.text();
+			if (!cur_user.hasClass('dull') && text.length)
+				users.push(text);
+		});
+		
+		// Get the groups
+		var groups = [];
+		global_exceptions_modal.find('.exception-row td.group').each(function(){
+			var cur_group = $(this);
+			var text = cur_group.text();
+			if (!cur_group.hasClass('dull') && text.length)
+				groups.push(text);
+		});
+		
+		var values = {};
+		values.users = users;
+		values.groups = groups; 
+		
+		$.ajax({
+			url: save_exception_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			beforeSend: function() {
+				global_exceptions_modal.find('.success').hide();
+				global_exceptions_modal.find('.saving').fadeIn();
+			},
+			error: function(){
+				global_exceptions_modal.find('.success').hide();
+				global_exceptions_modal.find('.saving').hide();
+				global_exceptions_modal.find('.error').fadeIn();
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					global_exceptions_modal.find('.success').hide();
+					global_exceptions_modal.find('.saving').hide();
+					global_exceptions_modal.find('.error').fadeIn();
+				} else {
+					global_exceptions_modal.find('.saving').hide();
+					global_exceptions_modal.find('.success').fadeIn();
+				}
+				
+				setTimeout(function(){
+					global_exceptions_modal.find('.success, .error, .saving').fadeOut();
+				}, 3000);
+			}
+		});
+	}
+	
+	function add_global_exception(input_type) {
+		var input_selector = '[name='+input_type+']';
+		var before_row = global_exceptions_modal.find('.exception-new');
+		var last_row = global_exceptions_modal.find('.exception-row').last();
+		var input_elem = global_exceptions_modal.find(input_selector);
+		var user_or_group = input_elem.val();
+		
+		if (user_or_group == '')
+			return;
+		
+		var td = (input_type == 'excep_user') ? last_row.find('td').first() : last_row.find('td').last();
+		
+		if (input_type == 'excep_user') {
+			if (td.hasClass('dull')) {
+				global_exceptions_modal.find('.dull.user').first().text(user_or_group).toggleClass('dull remove-exception');
+			} else {
+				before_row.before('<tr class="exception-row"><td colspan="2" class="user remove-exception" style="width: 50%;">'+user_or_group+'</td><td colspan="2" class="dull group" style="width: 50%;"></td></tr>');
+			}
+		} else {
+			if (td.hasClass('dull')) {
+				global_exceptions_modal.find('.dull.group').first().text(user_or_group).toggleClass('dull remove-exception');
+			} else {
+				before_row.before('<tr class="exception-row"><td colspan="2" class="dull user" style="width: 50%;"></td><td colspan="2" class="group remove-exception" style="width: 50%;">'+user_or_group+'</td></tr>');
+			}
+		}
+		
+		input_elem.val('').change();
 	}
 	
 	var get_readmore_heights = function(selector){
@@ -874,4 +966,76 @@ pines(function(){
 	
 	var num_directives = container.find('.directives-table tbody tr').length;
 	container.find('.num-directives').html(num_directives - 1); // the add one.
+	
+	
+	global_exceptions_btn.click(function(){
+		// Bring up the modal for editing global exceptions.
+		global_exceptions_modal.modal();
+	});
+	
+	global_add_exceptions.click(function(){
+		var btn = $(this);
+		var input_type = btn.attr('data-input');
+		var input = global_exceptions_modal.find('[name='+input_type+']')
+		if (input.val() == '')
+			return;
+		add_global_exception(input_type);
+		recalculate_exceptions();
+	});
+	
+	global_exceptions_input.change(function(){
+		var cur_input = $(this);
+		var cur_btn = global_exceptions_modal.find('[data-input='+cur_input.attr('name')+']');
+		if (cur_input.val() != '') {
+			cur_btn.addClass('btn-success');
+		} else
+			cur_btn.removeClass('btn-success');
+	});
+	
+	global_exceptions_input.keypress(function(e){
+		var cur_input = $(this);
+		var cur_btn = global_exceptions_modal.find('[data-input='+cur_input.attr('name')+']');
+		if (cur_input.val() != '' && e.which == 13) {
+			cur_btn.click();
+		}
+	});
+	
+	global_exceptions_modal.on('click', '.remove-exception', function(){
+		var td = $(this);
+		var tr = td.closest('tr');
+		var user = td.hasClass('user');
+		var other_td = (user) ? tr.find('.group') : tr.find('.user');
+		var tbody = td.closest('tbody');
+		
+		if (other_td.hasClass('dull')) {
+			tr.remove();
+		} else {
+			td.remove(); // get rid of this so it won't count below.
+			var user_tds = tbody.find('td.user').filter(':not(.dull)');
+			var group_tds = tbody.find('td.group').filter(':not(.dull)');
+			tbody.find('.exception-row').remove();
+			var length = (user_tds.length < group_tds.length) ? group_tds.length : user_tds.length;
+			for (var i = 0; i < length; i++) {
+				var new_tr = $('<tr class="exception-row"></tr>');
+				var user_td = user_tds.eq(i);
+				var group_td = group_tds.eq(i);
+				
+				if (!user_td.length && !group_td.length)
+					break;
+				
+				if (user_td.length)
+					new_tr.append(user_td);
+				else 
+					new_tr.append('<td style="width: 50%;" class="user dull" colspan="2" data-here="sad"></td>');
+				
+				if (group_td.length)
+					new_tr.append(group_td);
+				else 
+					new_tr.append('<td style="width: 50%;" class="group dull" colspan="2" data-here="mad"></td>');
+				
+				tbody.find('.exception-new').before(new_tr);
+			}
+		}
+		recalculate_exceptions();
+	});
 });

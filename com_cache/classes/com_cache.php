@@ -53,7 +53,6 @@ class com_cache extends component {
 	 * Save the current configuration
 	 */
 	function saveconfig($directive, $component, $action, $domain, $delete = false, $edit = false) {
-		global $pines;
 		// Save the config to core/system
 		if (!file_exists('system/cacheoptions.php'))
 			return false;
@@ -141,7 +140,6 @@ class com_cache extends component {
 	 * Save the exceptions.
 	 */
 	function save_exceptions($component, $action, $domain, $exceptions) {
-		global $pines;
 		// Save the config to core/system
 		if (!file_exists('system/cacheoptions.php'))
 			return false;
@@ -160,6 +158,33 @@ class com_cache extends component {
 		else {
 			// Write changes.
 			$cacheoptions['cachelist'] = $new_cachelist;
+			$file_contents = sprintf("<?php\nreturn %s;\n?>",
+				var_export($cacheoptions, true)
+			);
+			file_put_contents('system/cacheoptions.php', $file_contents);
+			return true;
+		}
+	}
+	
+	
+	/**
+	 * Save the exceptions.
+	 */
+	function save_global_exceptions($users, $groups) {
+		// Save the config to core/system
+		if (!file_exists('system/cacheoptions.php'))
+			return false;
+		
+		$cacheoptions = include('system/cacheoptions.php');
+		$global_exceptions = $cacheoptions['global_exceptions'];
+		
+		$new_exceptions = array('users' => array_values(array_unique($users)), 'groups' => array_values(array_unique($groups)));
+		
+		if ($global_exceptions === $new_exceptions) 
+			return true; // Nothing to write.
+		else {
+			// Write changes.
+			$cacheoptions['global_exceptions'] = $new_exceptions;
 			$file_contents = sprintf("<?php\nreturn %s;\n?>",
 				var_export($cacheoptions, true)
 			);

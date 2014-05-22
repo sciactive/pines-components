@@ -378,10 +378,7 @@ pines(function() {
      * Get's the timeago string with the user's own timezone
      */
     function getTimeago(time) {
-        var d = new Date();
-        var d_offset = d.getTimezoneOffset() * 60 * 1000;
-        var real_time = new Date(time - d_offset);
-        return real_time.toISOString();
+        return new Date(Number(time)).toISOString();
     }
 
 
@@ -392,23 +389,24 @@ pines(function() {
     
     function setNewMessageIndicator(chat_div) {
         var new_message_indication = setInterval(function() {
-                if ($(chat_div).hasClass('displaying-new-message-notification')) {
-                    $(chat_div).css('background-color', '#cf8282').removeClass('displaying-new-message-notification');
+                if ($(chat_div).hasClass('alert-info')) {
+                    $(chat_div).removeClass('alert-info');
                 } else {
-                    $(chat_div).addClass('displaying-new-message-notification').css('background-color', 'orange');
+                    $(chat_div).addClass('alert-info');
                 }
             }, 1000);
-            var new_message_timeout = setTimeout(function() {
-                clearInterval(new_message_indication);
-                $(chat_div).removeClass('displaying-new-message-notification').css('background-color', '#cf8282');
-            }, 5000);
             
-            $(chat_div).on('click', function() {
-                // jQuery listerner for when employees clicks on name of person with pending message
-                clearInterval(new_message_indication);
-                clearTimeout(new_message_timeout);
-                $(chat_div).removeClass('displaying-new-message-notification').css('background-color', 'white');
-            });
+        var new_message_timeout = setTimeout(function() {
+            clearInterval(new_message_indication);
+            $(chat_div).addClass('alert-info');
+        }, 5000);
+
+        $(chat_div).on('click', function() {
+            // jQuery listerner for when employees clicks on name of person with pending message
+            clearInterval(new_message_indication);
+            clearTimeout(new_message_timeout);
+            $(chat_div).removeClass('alert-info');
+        });
     }
     
     
@@ -461,7 +459,7 @@ pines(function() {
                     need_to_pull = true;
             }
             appendChannelMessage(data.to_channel, data.message, data.username, getTimeago(data.timestamp), chat_id, need_to_pull, data.message_id);
-            if (need_to_pull) setNewMessageIndicator("#" + data.to_channel + "-div");
+            if (!need_to_pull) setNewMessageIndicator("#" + data.to_channel + "-div");
         } else {
             createChannelWindow(data.to_channel);
             handleEmployeeChannelMessage(data);
@@ -498,8 +496,14 @@ pines(function() {
     function handleChannelDisconnect(data) {
         // We have a customer who disconnected
         // Need to hide the div from #main_chat_body
-        $('#'+data.channel_id).find('.chat-status').removeClass('checking').addClass('offline');
-        $("#" + data.channel_id + "-div").hide();
+        var chan_id = data.channel_id;
+        var disconnect_timeout = setTimeout(function() {
+            $('#'+ chan_id).find('.chat-status').removeClass('checking').addClass('offline');
+            $("#" + chan_id + "-div").hide();
+            connected_clients[chan_id].disconnect_timeout = null;
+        }, 10000);
+        
+        connected_clients[chan_id].disconnect_timeout = disconnect_timeout;
     }
     
     
@@ -510,15 +514,12 @@ pines(function() {
      */
     function sendMessage(msg, to_channel) {
         if (connectedToChannel) {
-            var time_now = new Date();
-            var timestamp = time_now.getTime();
-            var offset = time_now.getTimezoneOffset() * 60 * 1000;
-            var utc_time = new Date(timestamp + offset);
+            var timestamp = new Date().getTime();
 
             $.ajax({
                 type: "POST",
                 url: sendMessageURL,
-                data: {"to_channel": to_channel, "msg": msg, "from_channel": channel_id, "timestamp": utc_time.getTime(), "channel_token": channel_token},
+                data: {"to_channel": to_channel, "msg": msg, "from_channel": channel_id, "timestamp": timestamp, "channel_token": channel_token},
                 crossDomain: true,
                 dataType: "json",
                 success: function() {
@@ -572,7 +573,7 @@ pines(function() {
     function addToConnectedClients(data) {
         if (!connected_clients[data.channel_id]) {
             connected_clients[data.channel_id] = {username: data.username, token: data.token, online_status: false, city: data.city, region: data.region,
-                header: 'header_div', chat_body: 'chat_body_div', online_icon: 'online_icon_status', checking_online: false};
+                header: 'header_div', chat_body: 'chat_body_div', online_icon: 'online_icon_status', checking_online: false, "username_link" : data.username_link, "page_url": data.page_url};
         }
     }
     
@@ -583,6 +584,14 @@ pines(function() {
     function addNewChannelCustomer(data, is_employee) {
         // Need to check if a customer or an employee connected
         // If it was a customer, append the customers list else append the employees' list
+        var client = connected_clients[data.channel_id];
+        
+        if (Boolean(client) && Boolean(client.disconnect_timeout)) {
+            clearTimeout(connected_clients[data.channel_id].disconnect_timeout);
+            connected_clients[data.channel_id].disconnect_timeout = null;
+            return;
+        }
+        
         addToConnectedClients(data);
         
         if (data.channel_id == channel_id) {
@@ -614,6 +623,18 @@ pines(function() {
                 distinguished = 'distinguished-chat-user';
             }
             
+            var username_link = data.username;
+            if (Boolean(data.username_link)) {
+                // Need to check if we actually have a ?, &, or = in the url
+                // If we don't, then just use what it has
+                var regex = /[\?\&\=]/;
+                if (regex.test(data.username_link)) {
+                    username_link = '<a href="' + data.username_link + '" target="_blank">' + data.username + '</a>';
+                }               
+            }
+            
+            connected_clients[data.channel_id].username_link = username_link;
+            
             var div_info = '<span class="chat-client-div-info badge"></span>';
             if (data.city) {
                 div_info = '<span class="chat-client-div-info badge">' + data.city.capitalize() + ", " + data.region.capitalize() + "</span>";
@@ -623,7 +644,7 @@ pines(function() {
                         '<strong class="chat-client-div-username">' + data.username + '</strong>' +
                         div_info +
                         '<p class="last-chat-message chat-ellipsis"></p>' +
-                        '<p class="last-page-url chat-ellipsis"></p>' +
+                        '<p class="last-page-url chat-ellipsis"><a href="' + data.page_url + '" target="_blank">' + data.page_url + '</a>' +'</p>' +
                         '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
                         '</div></div>';
             // Append it to the customer's div
@@ -677,7 +698,7 @@ pines(function() {
         }
 
         var newChannelClientHTML = '<div style="display: none;" class="container chat-window chat-container" id="' + customer_channel + '"><div class="row chat-header" data-channelid="' + customer_channel +'">' +
-                '<span class="chat-status"></span><span class="username">' + connected_clients[customer_channel].username + '</span><div class="btn-group pull-right">' +
+                '<span class="chat-status"></span><span class="username">' + connected_clients[customer_channel].username_link + '</span><div class="btn-group pull-right">' +
                 '<button type="button" class="btn btn-small min-max-btn" data-channelid="' + customer_channel + '"><i class="icon-chevron-down"></i></button>' +
                 '<button type="button" class="btn btn-small close-chat-btn" data-channelid="' + customer_channel + '"><i class="icon-remove"></i></button>' +
                 '<button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown">' +

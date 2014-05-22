@@ -133,6 +133,9 @@ root {
 }
 
 .chat-opening-title {
-    border-bottom: 1px solid black;
+    border-bottom: 1px dotted #AAA;
+    color: #666;
+    margin-top: -5px;
+    padding-bottom: 4px;
     text-align: center;
 }

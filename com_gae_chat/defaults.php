@@ -11,6 +11,10 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
+$base_link = pines_url('com_customer', 'customer/edit');
+$symbol = (preg_match('#\?#', $base_link)) ? '&' : '?';
+$base_link = $base_link.$symbol.'id=';
+
 return array(
     array(
         'name' => 'application_id',
@@ -125,6 +129,35 @@ return array(
         'cname' => 'The Welcome To Chat URL for customers',
         'description'   => 'The chat url for users to update the user entity in App Engine',
         'value' => ''
+    ),
+    array(
+        'name'  => 'user_link_type',
+        'cname' => 'User Link Type',
+        'description'   => 'The username link on chat windows.',
+        'options' => array(
+            'Use a constructed url' => 'constructed_url',
+            'Use Mail To' => 'mail_to',
+            'No Link'   => 'no_link'
+        ),
+        'value' => ''
+    ),
+    array(
+        'name'  => 'user_link_class',
+        'cname' => 'User Link Class',
+        'description'   => 'The class from which to factory the user to obtain a variable',
+        'value' => 'com_customer_customer'
+    ),
+    array(
+        'name'  => 'user_link_variable',
+        'cname' => 'User Link Variable',
+        'description'   => 'The variable on the class to use in the link',
+        'value' => 'guid'
+    ),
+    array(
+        'name'  => 'user_link_base',
+        'cname' => 'User Link Base',
+        'description'   => 'The base of the link which we will append the variable to',
+        'value' => $base_link
     ),
 );
 

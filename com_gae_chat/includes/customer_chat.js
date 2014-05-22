@@ -76,10 +76,7 @@ if ( !Date.prototype.toISOString) {
  *
  */
 function getTimeagoString(time) {
-    var d = new Date();
-    var d_offset = d.getTimezoneOffset() * 60 * 1000;
-    var real_time = new Date(time - d_offset);
-    return real_time.toISOString();
+    return new Date(Number(time)).toISOString();
 }
 
 /*
@@ -100,7 +97,6 @@ function onChannelOpen() {
     connectedToChannel = true;
     chat_status.removeClass('offline checking');
     chat_status_text.html('Online');
-    setTimeout(welcomeChat, 1000);
 }
 
 
@@ -121,6 +117,8 @@ function onChannelMessage(msg) {
                 appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), true);
             } else if (data.type == "chat_history") {
                 handleChatHistory(data);
+                // After connecting and receiving the chat history, we want to do welcomeChat()
+                welcomeChat();
             } else if (data.type == "online_check") {
                 handleOnlineCheck();
             } else {
@@ -154,7 +152,7 @@ function onChannelClose() {
     chat_status_text.html('Offline');
     if (channel_errors && channel_retries < 5) {
         channel_retries++;
-        connectToChannel();
+        connectToChannel("true");
 
     }
 }
@@ -228,13 +226,9 @@ function handleOnlineCheck() {
  */
 function sendMessage(msg) {
     if (connectedToChannel) {
-        // remember that this is in milliseconds
-        var time_now = new Date();
-        var timestamp = time_now.getTime();
-        var offset = time_now.getTimezoneOffset() * 60 * 1000;
-        var utc_time = new Date(timestamp + offset);
+        var timestamp = new Date().getTime();
         
-        var params = {"channel_id": channel_id, "msg": msg, "timestamp": utc_time.getTime(), "channel_token": channel_token, "page_url": window.location.href};
+        var params = {"channel_id": channel_id, "msg": msg, "timestamp": timestamp, "channel_token": channel_token};
         
         if ($.browser.msie && window.XDomainRequest) {
             // Use MS XDR
@@ -242,7 +236,7 @@ function sendMessage(msg) {
             xdr.onload = function() {
                 var data = JSON.parse(xdr.responseText);
                 if (data.status == "success") {
-                    appendChannelMessage(msg, data.username, getTimeagoString(utc_time.getTime()), false);
+                    appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false);
                     addMessageToHistory(data.message_id, channel_id, msg, data.username);
                 }
             };
@@ -269,7 +263,7 @@ function sendMessage(msg) {
                 dataType: 'json',
                 success: function(data) {
                     if (data.status == "success") {
-                        appendChannelMessage(msg, data.username, getTimeagoString(utc_time.getTime()), false);
+                        appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false);
                     }
                 },
                 error: function () {
@@ -298,13 +292,13 @@ function removeGAEChat() {
  * Posts to Pines to get a token for this person
  * 
  */
-function connectToChannel() {
+function connectToChannel(force) {
     chat_status.removeClass('offline').addClass('checking');
     chat_status_text.html('Connecting');
     $.ajax({
         type: "POST",
         url: getTokenURL,
-        data: {},
+        data: {"force_new_token": force},
         dataType: 'json',
         success: function(data) {
             if (data.status != 'success' || data.action == 'terminate') {
@@ -370,7 +364,7 @@ function appendChannelMessage(message, username, timestamp, is_employee) {
 
 function welcomeChat() {
     
-    var params = {"channel_token": channel_token, "channel_id": channel_id, "page_url": window.location.href};
+    var params = {"channel_token": channel_token, "channel_id": channel_id};
     
     if ($.browser.msie && window.XDomainRequest) {
             // Use MS XDR

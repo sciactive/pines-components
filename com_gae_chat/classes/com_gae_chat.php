@@ -95,9 +95,11 @@ class com_gae_chat extends component {
      * @param string $username The username of the user to get a token for
      * @param bool $employee Whether the user is an employee or not
      * @param bool $distinguish Whether to distingish a guest as an employee
+     * @param string $username_link The link to use for the person's chat window title
+     * @param string $page_url The current page the user is requesting the token from
      * @return array JSON Response from App Engine
      */
-    function get_channel_token($guid = 0, $username = '', $email = '', $employee = false, $distinguish = false) {
+    function get_channel_token($guid = 0, $username = '', $email = '', $employee = false, $distinguish = false, $username_link = '', $page_url = '') {
         global $pines;
         pines_log('Value of distinguish: '.json_encode($distinguish), 'notice');
         $ch = curl_init();
@@ -111,7 +113,9 @@ class com_gae_chat extends component {
                 'employee'  => $employee,
                 'username'  => $username,
                 'email'     => $email,
-                'distinguished'   => $distinguish
+                'distinguished'   => $distinguish,
+                'username_link' => $username_link,
+                'page_url'      => $page_url
             )
         ));
         
@@ -145,6 +149,66 @@ class com_gae_chat extends component {
         $message = json_decode($response);
         
         return $message;
+    }
+    
+    /**
+     * Get Base Link for Usernames in Chat Windows
+     */
+    function getBaseLink() {
+        global $pines;
+        
+        $link_type = $pines->config->com_gae_chat->user_link_type;
+        
+        if ($link_type == 'constructed_url') {
+            $class = $pines->config->com_gae_chat->user_link_class;
+            $link_variable = $pines->config->com_gae_chat->user_link_variable;
+            $baselink = $pines->config->com_gae_chat->user_link_base;
+            
+            $skip_factory = array('user', 'com_customer_customer', 'com_hrm_employee');
+            $com_customer_installed = $pines->depend->check('component', 'com_customer');
+            $using_cust_safe = ($class == 'com_customer_customer' && $com_customer_installed);
+            
+            $user_base_link = pines_url('com_user', 'user/edit');
+            $symbol = (preg_match('#\?#', $baselink)) ? '&' : '?';
+            $user_base_link = $user_base_link.$symbol.'id=';
+            
+            // Checking here if we can safely use com_customer_link and if not, check if we still specified com_customer
+            // If we still specified com_customer, it will go to the com_user link and if it's not com_customer, it will use that the person specified
+            $baselink = ($using_cust_safe) ? $baselink : (($class == 'com_customer_customer') ? $user_base_link : $baselink);
+            
+            $class = ($using_cust_safe) ? $class : (($class == 'com_customer_customer') ? 'user' : $class);
+            
+            if (!in_array($class, $skip_factory)) {
+                $customer_guid = $_SESSION['user']->guid;
+                $entity = $pines->entity_manager->get_entity(
+                        array('class' => $class),
+                        array('&', 
+                            'ref' => array('customer', $customer_guid))
+                        );
+                
+                if (!isset($entity->guid)) {
+                    // We don't have an actual entity
+                    // Default back to Session User
+                    $entity = $_SESSION['user'];
+                    
+                }
+                
+            } else {
+                $entity = $_SESSION['user'];
+            }
+            
+            $var_value = $entity->{$link_variable};
+            $link = $baselink.$var_value;
+            
+        } else if ($link_type == 'mail_to') {
+            $link = 'mailto:' . (isset($_SESSION['user']->email)) ? $_SESSION['user']->email : $_SESSION['user']->verify_email;
+            
+        } else if ($link_type == 'no_link') {
+            $link = $_SESSION['user']->name_first;
+            
+        }
+        
+        return $link;
     }
 }
 ?>

@@ -67,7 +67,7 @@ $have_user = isset($_SESSION['user']);
 if ($have_user) {
     
     // We have a session user
-    if (isset($_SESSION['gae_channels'])) {
+    if (isset($_SESSION['gae_chat_channels'])) {
         // This means we have a revisiting user
         $now = new Datetime();
         $expires = $_SESSION['channel_token_expire_date'];
@@ -125,10 +125,11 @@ if ($have_user) {
         // We are checking to seee if the person is and employee and has priliveges or is not an employee
         if (($employee && gatekeeper('com_gae_chat/employeechat')) || !$employee) {
             // Might want to remove any non-digits from uniqid. Don't really need it to be the most unique thing
-            $username = $user->name_first;
+            $username = ($employee) ? $user->name_first : $user->name;
             $guid = $user->guid;
             $email = $user->email;
-            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee, false);
+            $name_link = ($employee) ? $username : $pines->com_gae_chat->getBaseLink();
+            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee, false, $name_link, $_SERVER['REQUEST_URI']);
 
             $date = new DateTime($response->expires);
 
@@ -139,11 +140,12 @@ if ($have_user) {
                 'channel_id' => $response->channel_id,
                 'channel_token' => $response->token,
                 'existing'  => false,
-                'expires'   => $date
+                'expires'   => $date,
+                'link'  => $name_link
             );
 
             $pines->session('write');
-            $_SESSION['gae_channels'] = true;
+            $_SESSION['gae_chat_channels'] = true;
             $_SESSION['channel_username'] = $response->username;
             $_SESSION['channel_guid'] = $guid;
             $_SESSION['channel_email'] = $email;
@@ -151,6 +153,7 @@ if ($have_user) {
             $_SESSION['channel_token_expire_date'] = $date;
             $_SESSION['channel_id'] = $response->channel_id;
             $_SESSION['channel_token'] = $response->token;
+            $_SESSION['channel_username_link'] = $name_link;
             $pines->session('close');
             
         } else {
@@ -183,7 +186,7 @@ if ($have_user) {
         
         // Save to their session and save a cookie
         $pines->session('write');
-        $_SESSION['gae_channels'] = true;
+        $_SESSION['gae_chat_channels'] = true;
         $_SESSION['channel_username'] = $response->username;
         $_SESSION['channel_guid'] = 0;
         $_SESSION['channel_email'] = '';
@@ -206,7 +209,7 @@ if ($have_user) {
         if ($ip == $pines->config->com_gae_chat->corporate_ip && $pines->config->com_gae_chat->distinguish_employees) {
             $distinguish = true;
         }
-        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false, $distinguish);
+        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false, $distinguish, $username, $_SERVER['REQUEST_URI']);
         
         $expires = new DateTime($response->expires);
         $token = $response->token;
@@ -224,7 +227,7 @@ if ($have_user) {
         );
         
         $pines->session('write');
-        $_SESSION['gae_channels'] = true;
+        $_SESSION['gae_chat_channels'] = true;
         $_SESSION['channel_username'] = $username;
         $_SESSION['channel_guid'] = $guid;
         $_SESSION['channel_email'] = $email;

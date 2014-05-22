@@ -497,6 +497,9 @@ pines(function() {
         // We have a customer who disconnected
         // Need to hide the div from #main_chat_body
         var chan_id = data.channel_id;
+        if (!Boolean(connected_clients[chan_id])) {
+            connected_clients[chan_id] = {};
+        }
         var disconnect_timeout = setTimeout(function() {
             $('#'+ chan_id).find('.chat-status').removeClass('checking').addClass('offline');
             $("#" + chan_id + "-div").hide();

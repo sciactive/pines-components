@@ -129,7 +129,7 @@ if ($have_user) {
             $guid = $user->guid;
             $email = $user->email;
             $name_link = ($employee) ? $username : $pines->com_gae_chat->getBaseLink();
-            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee, false, $name_link, $_SERVER['REQUEST_URI']);
+            $response = $pines->com_gae_chat->get_channel_token($guid, $username, $email, $employee, false, $name_link, $_SERVER['HTTP_REFERER']);
 
             $date = new DateTime($response->expires);
 
@@ -209,7 +209,7 @@ if ($have_user) {
         if ($ip == $pines->config->com_gae_chat->corporate_ip && $pines->config->com_gae_chat->distinguish_employees) {
             $distinguish = true;
         }
-        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false, $distinguish, $username, $_SERVER['REQUEST_URI']);
+        $response = $pines->com_gae_chat->get_channel_token(0, $username, '', false, $distinguish, $username, $_SERVER['HTTP_REFERER']);
         
         $expires = new DateTime($response->expires);
         $token = $response->token;

@@ -303,6 +303,9 @@ pines(function() {
         $("#" + data.channel_id + "-div").show();
         $('#'+data.channel_id).find('.chat-status').removeClass('offline checking');
         connected_clients[data.channel_id].checking_online = false;
+        if (Boolean(connected_clients[data.channel_id].disconnect_timeout)) {
+            clearTimeout(connected_clients[data.channel_id].disconnect_timeout);
+        }
         addNewChannelCustomer(data, false);
     }
 

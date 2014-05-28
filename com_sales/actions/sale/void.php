@@ -28,6 +28,15 @@ if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) 
 } else {
 	if ($entity->void($_REQUEST['force'] == 'true') && $entity->save()) {
 		pines_notice('The sale has been voided.');
+		if ($pines->config->com_sales->email_void_receipt){
+			if ($entity->email_receipt()) {
+				pines_log('Receipt for sale [GUID: '.$entity->guid.'] successfully emailed to '.$entity->customer->email.' [Cust GUID: '.$entity->customer->guid.']','notice');
+				pines_notice('Automatic Receipt Email Sent');	
+			} else {
+				pines_log('Receipt for sale [GUID: '.$entity->guid.'] failed to send to '.$entity->customer->email.' [Cust GUID:'.$entity->customer->guid.']','error');
+				pines_error('Automatic Receipt Email Failed to send');
+			}
+		}
 	} elseif ($entity->save()) {
 		pines_notice('The sale could not be voided.');
 	} else {

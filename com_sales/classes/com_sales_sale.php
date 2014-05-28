@@ -646,10 +646,10 @@ class com_sales_sale extends entity {
 	 * @return module The receipt's module.
 	 */
 	public function print_receipt($auto_print_ok = false) {
+		$actions = new module('com_sales', 'sale/receiptactions', 'content');
+		$actions->entity = $this;
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
-		$actions = new module('com_sales', 'sale/receiptactions', 'right');
-		$actions->entity = $this;
 		$actions->auto_print_ok = $auto_print_ok;
 
 		return $module;

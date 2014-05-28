@@ -290,6 +290,20 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'email_void_receipt',
+		'cname' => 'Email Void Receipt',
+		'description' => 'Email a copy of the void receipt to the customer when the sale is voided.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'email_return_receipt',
+		'cname' => 'Email Return Receipt',
+		'description' => 'Email a copy of the return receipt to the customer when the sale is returned.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'email_from_address',
 		'cname' => 'From Address',
 		'description' => 'The address the email will be sent from.',

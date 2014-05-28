@@ -261,6 +261,17 @@ if (!isset($return->status) || $return->status == 'quoted') {
 
 if ($return->save()) {
 	pines_notice('Saved return ['.$return->id.']');
+	
+	if ($pines->config->com_sales->email_return_receipt){
+		if ($return->email_receipt()) {
+			pines_log('Receipt for return [GUID: '.$return->guid.'] successfully emailed to '.$return->customer->email.' [Cust GUID: '.$return->customer->guid.']','notice');
+			pines_notice('Automatic Receipt Email Sent');	
+		} else {
+			pines_log('Receipt for return [GUID: '.$return->guid.'] failed to send to '.$return->customer->email.' [Cust GUID:'.$return->customer->guid.']','error');
+			pines_error('Automatic Receipt Email Failed to send');
+		}
+	}
+	
 	pines_redirect(pines_url('com_sales', 'return/receipt', array('id' => $return->guid)));
 } else {
 	$return->print_form();

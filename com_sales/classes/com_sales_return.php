@@ -418,7 +418,27 @@ class com_sales_return extends entity {
 		}
 		return $discount_price;
 	}
+	
+	/**
+	 * Email a receipt of the return to the customer's email.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function email_receipt() {
+		global $pines;
+		if (empty($this->customer->email))
+			return false;
+		$module = new module('com_sales', 'sale/receipt_email');
+		$module->entity = $this;
 
+		$macros = array(
+			'receipt' => $module->render(),
+			'sale_id' => htmlspecialchars($this->id),
+			'sale_total' => htmlspecialchars($this->total),
+		);
+		return $pines->com_mailer->send_mail('com_sales/sale_receipt', $macros, $this->customer);
+	}
+	
 	/**
 	 * Get a product array from an attached sale.
 	 *
@@ -539,9 +559,11 @@ class com_sales_return extends entity {
 	 * @return module The form's module.
 	 */
 	function print_receipt() {
+		$actions = new module('com_sales', 'sale/receiptactions', 'content');
+		$actions->entity = $this;
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
-
+		
 		return $module;
 	}
 

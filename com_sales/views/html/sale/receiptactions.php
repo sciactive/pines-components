@@ -34,10 +34,9 @@ $sale = $this->entity->has_tag('sale');
 		<?php } } ?>
 	});
 </script>
-<div style="text-align: center;">
+<div>
 	<?php if (isset($this->entity->customer->email)) { ?>
 	<button id="p_muid_email" class="btn"><i class="icon-envelope"></i> Email Customer</button>
-	<br /><br />
 	<?php } if ($pines->config->com_sales->receipt_printer) { ?>
 	<button id="p_muid_print" class="btn"><i class="icon-print"></i> Receipt Printer</button>
 	<?php } ?>

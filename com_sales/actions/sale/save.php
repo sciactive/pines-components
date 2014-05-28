@@ -269,6 +269,17 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 
 if ($sale->save()) {
 	pines_notice('Saved sale ['.$sale->id.']');
+	
+	if ($sale->status == 'paid' && $pines->config->com_sales->email_receipt){
+		if ($sale->email_receipt()) {
+			pines_log('Receipt for sale [GUID: '.$sale->guid.'] successfully emailed to '.$sale->customer->email.' [Cust GUID: '.$sale->customer->guid.']','notice');
+			pines_notice('Automatic Receipt Email Sent');	
+		} else {
+			pines_log('Receipt for sale [GUID: '.$sale->guid.'] failed to send to '.$sale->customer->email.' [Cust GUID:'.$sale->customer->guid.']','error');
+			pines_error('Automatic Receipt Email Failed to send');
+		}
+	}
+	
 	pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid, 'autoprint' => 'ok')));
 } else {
 	$sale->print_form();

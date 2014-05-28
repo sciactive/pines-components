@@ -101,6 +101,18 @@ return array(
                 'description' => 'The domain name to check to bypass SendGrid\'s List Management',
                 'value' => ''
         ),
+        array(
+                'name' => 'one_sender',
+                'cname' => 'Send all email from one email address',
+                'description' => 'Enable this if you want to send all emails from one email address',
+                'value' => false
+        ),
+        array(
+                'name' => 'sendgrid_from_address',
+                'cname' => 'The From Address to use in SendGrid emails',
+                'description' => 'The From Field in the email',
+                'value' => 'support@'.$_SERVER['SERVER_NAME']
+        ),
 );
 
 ?>

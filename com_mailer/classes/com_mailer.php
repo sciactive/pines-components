@@ -586,11 +586,15 @@ class com_mailer extends component {
                 $bypass_domain = true;
             }
             
-            $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
-            if ($matching_from > 0) {
-                $from_email = $matches_from[2];
+            if ($pines->config->com_mailer->one_sender) {
+                $from_email = $pines->config->com_mailer->sendgrid_from_address;
             } else {
-                $from_email = $from;
+                $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
+                if ($matching_from > 0) {
+                    $from_email = $matches_from[2];
+                } else {
+                    $from_email = $from;
+                }
             }
             
             // Construct the array
@@ -614,16 +618,18 @@ class com_mailer extends component {
                     $xsmtpapi['category'][] = $category;
                 }
             }
-
+            
             // Note that we have to include a to variable even though we already set it in the x-smtpapi header
             // The X-SMTPAPI will override the to field here and it won't let multiple recipients see other people's emails
+            // For the x-smptapi header, we need to encode it in json and unescape PHP 5.3's escaping of forward slashes
             $params = array(
                 'api_user'  => $pines->config->com_mailer->sendgrid_api_user,
                 'api_key'   => $pines->config->com_mailer->sendgrid_api_key,
-                'x-smtpapi' => json_encode($xsmtpapi, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP),
+                'x-smtpapi' => str_replace('\\/', '/', json_encode($xsmtpapi, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)),
                 'subject'   => $subject,
                 'html'      => $message,
                 'from'      => $from_email,
+                'fromname'  => $pines->config->system_name,
                 'replyto'   => $from_email,
                 'to'        => $to_email,
             );

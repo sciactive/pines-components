@@ -130,7 +130,7 @@ return array(
 	array(
 		'name' => 'verify_email_domain',
 		'cname' => 'Verify Email Domain',
-		'description' => 'The verify email domain - if it is different than the domain the email was generated from (backend). Use Slash. Use on condition to make it different if managing multiple sites. Also, this affects the verify email change and email cancel emails as well.',
+		'description' => 'The verify email domain - if it is different than the domain the email was generated from (backend). Do not use an ending slash. Use on condition to make it different if managing multiple sites. Also, this affects the verify email change and email cancel emails as well.',
 		'value' => '',
 		'peruser' => true,
 	),

@@ -35,28 +35,40 @@ pines(function(){
 		});
 	}
 	
+	function resend_email() {
+		$.ajax({
+			url: resend_verify_url,
+			type: "POST",
+			dataType: "json",
+			beforeSend: function(){
+				email_notice.find('.label.resend-verify').html('<i class="icon-spin icon-spinner"></i> Re-Send the verification email');
+			},
+			success: function(data){
+				if (data) {
+					// Turn it green and change the text.. and then fade it out
+					email_notice.removeClass('alert-error alert-info')
+					.addClass('alert-success').find('.message')
+					.html('Email Sent!').end().find('.leave-for-errors').hide();
+					setTimeout(function(){
+						close_notice();
+					}, 2000);
+				} else {
+					// Turn it red
+					email_notice.removeClass('alert-success alert-info')
+					.addClass('alert-error').find('.message')
+					.html('Email did not send properly.');
+					email_notice.find('.label').removeClass('label-info').addClass('label-important')
+				}
+			}
+		});
+	}
+	
 	$(window).resize(function(){
 		fix_chat_height();
 	});
 	
 	email_notice.find('.resend-verify').click(function(){
-		$.post(resend_verify_url, function(data){
-			if (data) {
-				// Turn it green and change the text.. and then fade it out
-				email_notice.removeClass('alert-error alert-info')
-				.addClass('alert-success').find('.message')
-				.html('Email Sent!').end().find('.leave-for-errors').hide();
-				setTimeout(function(){
-					close_notice();
-				}, 2000);
-			} else {
-				// Turn it red
-				email_notice.removeClass('alert-success alert-info')
-				.addClass('alert-error').find('.message')
-				.html('Email did not send properly.');
-				email_notice.find('.label').removeClass('label-info').addClass('label-important')
-			}
-		}, "json");
+		resend_email();
 	});
 	
 	

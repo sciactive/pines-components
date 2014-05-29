@@ -17,7 +17,7 @@ sendMessageURL = $("#send_message_url").attr('data-url');
 getTokenURL = $("#get_token_url").attr('data-url');
 onlineTestURL = $("#online_test_url").attr('data-url');
 onlineCheckURL = $("#send_online_check_url").attr('data-url');
-welcomeChatURL = $("#welcome_chat_url").attr('data-url');
+getMessagesURL = $("#get_messages_url").attr('data-url');
 
 var customer_pic_url = $("#chat_customer_pic").attr('data-url');
 var employee_pic_url = $("#chat_employee_pic").attr('data-url');
@@ -97,6 +97,7 @@ function onChannelOpen() {
     connectedToChannel = true;
     chat_status.removeClass('offline checking');
     chat_status_text.html('Online');
+    getMessages();
 }
 
 
@@ -108,24 +109,19 @@ function onChannelOpen() {
 function onChannelMessage(msg) {
     var data = jQuery.parseJSON(msg.data);
         if (data !== undefined) {
-            
-            if (data.type == "customer_message") {
+            if (data.type == "message") {
+                appendChannelMessage(data.message.message, data.message.from_username, getTimeagoString(data.message.timestamp), true);
+            } else if (data.type == "customer_message") {
                 addMessageToHistory(data.message_id, data.from_channel, data.message, data.username);
                 appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), false);
             } else if (data.type == "employee_message") {
                 addMessageToHistory(data.message_id, data.from_channel, data.message, data.username);
                 appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), true);
-            } else if (data.type == "chat_history") {
-                handleChatHistory(data);
-                // After connecting and receiving the chat history, we want to do welcomeChat()
-                welcomeChat();
             } else if (data.type == "online_check") {
                 handleOnlineCheck();
             } else {
                 chat_messages.append("<li><p>" + data.message + "</p></li>");
             }
-        } else {
-            // Ignore messages that don't have a type
         }
 }
 
@@ -148,7 +144,7 @@ function onChannelError(err) {
  */
 function onChannelClose() {
     connectedToChannel = false;
-    chat_status.addClass('Offline');
+    chat_status.addClass('offline');
     chat_status_text.html('Offline');
     if (channel_errors && channel_retries < 5) {
         channel_retries++;
@@ -320,11 +316,11 @@ function connectToChannel(force) {
  * Handles the chat history of customers
  * Appends the messages to the chat window if they haven't already been appended
  */
-function handleChatHistory(data) {
-    var count = data.messages.length;
+function handleChatHistory(messages) {
+    var count = messages.length;
 
     for (var i=0; i<count; i++) {
-        var message = data.messages[i];
+        var message = messages[i];
         if (!chatHistory[message.message_id]) {
             appendChannelMessage(message.message, message.from_username, getTimeagoString(message.timestamp), channel_id != message.from_channel);
             addMessageToHistory(message.message_id, message.from_channel, message.message, message.from_username);
@@ -362,15 +358,18 @@ function appendChannelMessage(message, username, timestamp, is_employee) {
     
 }
 
-function welcomeChat() {
+function getMessages() {
     
     var params = {"channel_token": channel_token, "channel_id": channel_id};
     
     if ($.browser.msie && window.XDomainRequest) {
             // Use MS XDR
             var xdr = new XDomainRequest();
-            xdr.onload = function() {
+            xdr.onload = function(data) {
                 // Don't care about results
+                if (data.status == 'success') {
+                    handleChatHistory(data.messages);
+                }
             };
             xdr.onerror = function() {
                 // Don't care
@@ -382,17 +381,19 @@ function welcomeChat() {
                 // Don't need to update them on progress
             };
             xdr.timeout = 8000;
-            xdr.open("POST", welcomeChatURL);
+            xdr.open("GET", getMessagesURL);
             xdr.send($.param(params));
         } else {
             $.ajax({
-                type: 'POST',
-                url: welcomeChatURL,
+                type: 'GET',
+                url: getMessagesURL,
                 data: params,
                 crossDomain: true,
                 dataType: 'json',
-                success: function() {
-                    // Don't care
+                success: function(data) {
+                    if (data.status == 'success') {
+                        handleChatHistory(data.messages);
+                    }
                 },
                 error: function () {
                     // No care

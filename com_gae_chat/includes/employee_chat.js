@@ -9,11 +9,20 @@ pines(function() {
     getTokenURL = $("#get_token_url").attr('data-url');
     onlineTestURL = $("#online_test_url").attr('data-url');
     onlineCheckURL = $("#send_online_check_url").attr('data-url');
+    pingAllCustomersURL = $("#ping_all_customers_url").attr('data-url');
+    refreshOnlineUsersURL = $("#refresh_online_users_url").attr('data-url');
+    getMessagesURL = $("#get_customer_messages_url").attr('data-url');
+    getUsersPlusMessagesURL = $("#get_users_and_messages_url").attr('data-url');
     minMainChatBtn = $("#min-main-chat-btn");
+    additionalClients = $("#additional_clients");
     
     // Setting this to false so that when we get the chat_history, we won't get notifications all at once
     // This will allow for new messages to have notifications, but not chat history
     displayNotifications = false;
+    
+    disconnect_timeouts = {};
+    
+    customer_chat_histories = {};
     
     connectedToChannel = false;
     
@@ -83,15 +92,6 @@ pines(function() {
         return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
     }
     
-    /*
-     * Add the message to the chat history object
-     */
-    function addToChatHistory(message_id, from_channel, username, timestamp, message) {
-        if (!connected_clients[from_channel]) {
-            connected_clients[from_channel] = {username: username};
-        }
-        chatHistory[message_id] = {"from_channel": from_channel, "username": username, "timestamp": timestamp, "message": message}
-    }
 
     /*
      * Set's the channel info parameters and connect to the channel
@@ -112,6 +112,7 @@ pines(function() {
         chat_status.removeClass('offline checking');
         chat_status_text.html('Online');
         connectedToChannel = true;
+        getUsersPlusMessages();
     }
     
     
@@ -125,30 +126,19 @@ pines(function() {
         // Parse the data that comes through
         var data = JSON.parse(msg.data);
         if (data !== undefined) {
-            if (data.type == 'customer_connect') {
-                addNewChannelCustomer(data, false);
-                handleMessageHistory(data);
-
-            } else if (data.type == 'customer_disconnect') {
-                handleChannelDisconnect(data);
-
-            } else if (data.type == 'employee_connect') {
-                addNewChannelCustomer(data, true);
-
-            } else if (data.type == 'employee_disconnect') {
-                handleChannelDisconnect(data);
-
-            } else if (data.type == "customer_message") {
-                handleCustomerChannelMessage(data, false);
-
-            } else if (data.type == "employee_message") {
-                handleEmployeeChannelMessage(data, true);
-
-            } else if (data.type == "employee_to_employee") {
-                handleEmployeeToEmployeeMessage(data, true);
-
-            } else if (data.type == "online_users") {
-                handleOnlineUsersList(data);
+            
+            // Consolidate both types of connections into one
+            if (data.type == "connection") {
+                addChannelUser(data.user);
+                createChannelWindow(data.user.channel_id);
+                // We should also do an ajax call to get their chat history
+                getCustomerChatHistory(data.user.channel_id);
+                
+            } else if (data.type == "disconnection") {
+                handleChannelDisconnect(data.channel_id);
+                
+            } else if (data.type == "message") {
+                addChannelMessage(data.message);
 
             } else if (data.type == "online_check") {
                 handleOnlineTest(data);
@@ -156,21 +146,12 @@ pines(function() {
             } else if (data.type == "customer_check") {
                 handleCustomerReconnect(data);
                 
-            } else if (data.type == "message_history") {
-                handleMessageHistory(data);
-                displayNotifications = true;
-                
             } else if (data.type == "customer_update") {
-                updateCustomerInfo(data.channel_id, data.city, data.region, data.page_url);
+                updateUserProperties(data.user);
                 
-            } else {
-                // For some reason, this is a message we don't know about.
-                // We want to see it just so we can see what the hell is going on
-                handleCustomerChannelMessage(data);
+            } else if (data.type == "connection_update") {
+                handleConnectionUpdate(data.connected_clients, data.disconnected_clients);
             }
-
-        } else {
-            // Malformed Message, Ignore it
         }
     }
     
@@ -211,7 +192,7 @@ pines(function() {
      */
     function restartChannel() {
         needToRestartChannels = false;
-        connectToEmployeeChannel(true);
+        connectToEmployeeChannel("true");
     }
     
     /*
@@ -248,15 +229,17 @@ pines(function() {
 
         for (var i=0; i<chat_windows_open; i++) {
             var chan_id = "#" + openClients[i];
+            var margin_to_right;
+            var margin_for_right_percent;
             if (i==0) {
                 // Need to just add it to the regular chat div width
-                var margin_to_right = used_chat_percent + (i * regular_chat_div_width * 100) + 2;
-                var margin_for_right_percent = margin_to_right.toString() + "%";
+                margin_to_right = used_chat_percent + (i * regular_chat_div_width * 100) + 2;
+                margin_for_right_percent = margin_to_right.toString() + "%";
             } else {
                 var first_chan_width = "#" + openClients[0];
                 var real_div_width = $(first_chan_width).width() / $(window).width();
-                var margin_to_right = used_chat_percent + (i * real_div_width * 100) + (i + 1 + regular_chat_div_margin_extra);
-                var margin_for_right_percent = margin_to_right.toString() + "%";
+                margin_to_right = used_chat_percent + (i * real_div_width * 100) + (i + 1 + regular_chat_div_margin_extra);
+                margin_for_right_percent = margin_to_right.toString() + "%";
             }
             
             $(chan_id).css('right', margin_for_right_percent);
@@ -266,47 +249,78 @@ pines(function() {
     }
 
     
-    /*
-     * Appends the messages to the ChatHistory object as well as appending to the chat window
-     *
-     * Can make it so saving messages to localStorage as well
-     *
-     */
-    function handleMessageHistory(data) {
-        if (!data.messages) {
-            return;
-        }
-        var count = data.messages.length;
-        if (count < 1) {
-            return;
-        }
-        displayNotifications = false;
-        for (var i=0; i<count; i++) {
-            var message = data.messages[i];
-            if (!chatHistory[message.message_id]) {
-                createChannelWindow(message.channel_id);
-                appendChannelMessage(message.channel_id, message.message, message.from_username, getTimeago(message.timestamp), "#"+message.channel_id+"-chat", message.from_channel == channel_id, message.message_id);
-                if (message.page_url) {
-                    $("#" + message.channel_id + "-div").find('.last-page-url').html('<a href="' + message.page_url + '" target="_blank">' + message.page_url + '</a>');
+    function handleConnectionUpdate(connections, disconnections) {
+        var connect_length = connections.length;
+        var disconnect_length = disconnections.length;
+        for (var i=0; i < connect_length; i++) {
+            var chan = connections[i];
+            $("#" + chan + "-div").show();
+            $('#'+ chan).find('.chat-status').removeClass('offline checking');
+            
+            if (typeof disconnect_timeouts[chan] === "undefined") continue;
+            
+            if (disconnect_timeouts[chan].length) {
+                for (var timeout in disconnect_timeouts[chan]) {
+                    clearTimeout(timeout);
                 }
+                disconnect_timeouts[chan] = [];
             }
         }
-        displayNotifications = true;
+        
+        for (var i=0; i < disconnect_length; i++) {
+            var d = disconnections[i];
+            $("#" + d + "-div").hide();
+            $('#'+ chan).find('.chat-status').removeClass('checking').addClass('offline');
+        }
+    }
+    
+    function getCustomerChatHistory(customer_channel) {
+        if (customer_channel === channel_id) return;
+        if (customer_chat_histories[customer_channel] !== "undefined") {
+            return;
+        }
+        $.ajax({
+           type: 'GET',
+           url: getMessagesURL,
+           data: {"customer_channel": customer_channel, "channel_token": channel_token, "channel_id": channel_id},
+           crossDomain: true,
+           dataType: 'json',
+           success: function (data) {
+               if (data.status === 'success') {
+                   customer_chat_histories[customer_channel] = true;
+                   handleChatMessageHistory(data.messages);
+               }
+           },
+           error: function () {
+               // No need to handle error
+           }
+       });
     }
     
     /*
      * Handles a customer reconnecting to the channel
+     * We want to make sure the name is showing in the client list
+     * We also want to make sure that the status is set to online
      * 
      */
     function handleCustomerReconnect(data) {
         // We have a customer who reconnected
-        $("#" + data.channel_id + "-div").show();
+        var chat_div = "#" + data.channel_id + "-div";
+        $(chat_div).show();
         $('#'+data.channel_id).find('.chat-status').removeClass('offline checking');
-        connected_clients[data.channel_id].checking_online = false;
-        if (Boolean(connected_clients[data.channel_id].disconnect_timeout)) {
-            clearTimeout(connected_clients[data.channel_id].disconnect_timeout);
+        
+        if (typeof disconnect_timeouts[data.channel_id] === "undefined") {
+            disconnect_timeouts[data.channel_id] = [];
+            return;
         }
-        addNewChannelCustomer(data, false);
+        
+        if (disconnect_timeouts[data.channel_id].length) {
+            for (var t in disconnect_timeouts[data.channel_id]) {
+                clearTimeout(t);
+            }
+            disconnect_timeouts[data.channel_id] = [];
+        }
+        if (typeof data.page_url !== 'undefined') updateCustomerURL(chat_div, data.page_url);
     }
 
     /*
@@ -314,23 +328,28 @@ pines(function() {
      */
     function sendOnlineCheck(customer_channel) {
         $('#'+customer_channel).find('.chat-status').removeClass('offline').addClass('checking');
-        connected_clients[customer_channel].checking_online = true;
-
+        
+        if (typeof disconnect_timeouts[customer_channel] === "undefined") {
+            disconnect_timeouts[customer_channel] = [];
+        }
+        
+        var online_timeout = setTimeout(function() {
+                  if (disconnect_timeouts[customer_channel].length) {
+                      $('#'+customer_channel).find('.chat-status').removeClass('checking').addClass('offline');
+                      disconnect_timeouts[customer_channel] = [];
+                  } else {
+                  }
+              }, 5000);
+        disconnect_timeouts[customer_channel].push(online_timeout);
+        
 
         $.ajax({
            type: 'POST',
            url: onlineCheckURL,
-           data: {"customer_channel": customer_channel, "channel_token": channel_token},
+           data: {"customer_channel": customer_channel, "channel_token": channel_token, "channel_id": channel_id},
            crossDomain: true,
            dataType: 'json',
            success: function () {
-              setTimeout(function() {
-                  if (connected_clients[customer_channel].checking_online) {
-                      $('#'+customer_channel).find('.chat-status').removeClass('checking').addClass('offline');
-                      connected_clients[customer_channel].checking_online = false;
-                  } else {
-                  }
-              }, 5000);
            },
            error: function () {
                // No need to handle error
@@ -346,7 +365,7 @@ pines(function() {
         $.ajax({
             type: 'POST',
             url: onlineTestURL,
-            data: {"channel_token": channel_token},
+            data: {"channel_token": channel_token, "channel_id": channel_id},
             crossDomain: true,
             dataType: "json",
             success: function () {
@@ -365,15 +384,14 @@ pines(function() {
      * Need to save all the tokens here as well so we can just use tokens to send messages
      *
      */
-    function handleOnlineUsersList(data) {
-        var count = data.online_users.length;
-        var e_count = data.online_employees.length;
-        for (var i=0; i<count; i++) {
-            addNewChannelCustomer(data.online_users[i], false);	
+    function handleOnlineUsersList(users) {
+        var user_length = users.length;
+        if (!user_length) {
+            return;
         }
-
-        for (var i=0; i<e_count; i++) {
-            addNewChannelCustomer(data.online_employees[i], true);
+        
+        for (var i=0; i<user_length; i++) {
+            addChannelUser(users[i]);
         }
     }
     
@@ -384,13 +402,8 @@ pines(function() {
         return new Date(Number(time)).toISOString();
     }
 
-
-    // Convience function to test whether a given element already exists
-    function doesElementExist(element_id) {
-        return document.contains(document.getElementById(element_id));
-    }
-    
     function setNewMessageIndicator(chat_div) {
+        if (!displayNotifications) return;
         var new_message_indication = setInterval(function() {
                 if ($(chat_div).hasClass('alert-info')) {
                     $(chat_div).removeClass('alert-info');
@@ -412,104 +425,24 @@ pines(function() {
         });
     }
     
-    
-    /*
-     * Handles an employee to employee message
-     * Checks to see if it's our message or not and appends it to the right chat window
-     */
-    function handleEmployeeToEmployeeMessage(data) {
-        // Is this the message we sent to another employee
-        if (data.from_channel == channel_id) {
-            // This is just the message that we sent and we are getting it back as confirmation
-            if (document.contains(document.getElementById(data.to_channel))) {
-                //$("#" + data.to_channel + "-chat-body").show();
-                var chat_id = "#" + data.to_channel + "-chat";
-                appendChannelMessage(data.to_channel, data.message, channel_username, getTimeago(data.timestamp), chat_id, true, data.message_id);
-            } else {
-                createChannelWindow(data.to_channel);
-                handleEmployeeToEmployeeMessage(data);
-            }
-
-        } else {
-            // This is a message coming from someone else
-            // We need to see who is sending this message
-            // Here we need to make a mark as this is an employee-to-employee
-            // Also need to check if it is the first message that is being sent
-            if (document.contains(document.getElementById(data.from_channel))) {
-                //$("#" + data.from_channel + "-chat-body").show();
-                var chat_id = "#" + data.from_channel + "-chat";
-                appendChannelMessage(data.from_channel, data.message, data.username, getTimeago(data.timestamp), chat_id, false, data.message_id);
-                setNewMessageIndicator("#" + data.from_channel + "-div");
-            } else {
-                createChannelWindow(data.from_channel);
-                handleEmployeeToEmployeeMessage(data);
-            }
-        }
-    }
-
-
-    /*
-     * Takes an employee message directed at a customer and appends it to the right window
-     */
-    function handleEmployeeChannelMessage(data) {
-        if (doesElementExist(data.to_channel)) {
-            // Pop up the relevant chat window
-            // In the future, can just make it to where the chat client flashes a color or something,
-            //$("#" + data.to_channel + "-chat-body").show();
-            var chat_id = "#" + data.to_channel + "-chat";
-            var need_to_pull = false;
-            if (data.from_channel == channel_id) {
-                    need_to_pull = true;
-            }
-            appendChannelMessage(data.to_channel, data.message, data.username, getTimeago(data.timestamp), chat_id, need_to_pull, data.message_id);
-            if (!need_to_pull) setNewMessageIndicator("#" + data.to_channel + "-div");
-        } else {
-            createChannelWindow(data.to_channel);
-            handleEmployeeChannelMessage(data);
-        }
-    }
-
-    /*
-     * Handles a customer message
-     * Appends the message to the right window and it notifies the user that they have a new message
-     */
-    function handleCustomerChannelMessage(data) {
-        // This is a message from the customer
-        // Need to check if we already have a chat window for this customer
-        
-        if (doesElementExist(data.from_channel)) {
-            var chat_body = "#" + data.from_channel + "-chat";
-            var chat_div = "#" + data.from_channel + "-div";
-            appendChannelMessage(data.from_channel, data.message, data.username, getTimeago(data.timestamp), chat_body, false, data.message_id);
-            if (data.page_url) {
-                $(chat_div).find('.last-page-url').html('<a href="' + data.page_url + '" target="_blank">' + data.page_url + '</a>');
-            }
-            setNewMessageIndicator(chat_div);
-        } else {
-            createChannelWindow(data.from_channel);
-            handleCustomerChannelMessage(data);
-        }
-
-    }
 
     /*
      * Handle a user being disconnected from their channel
      * We want to remove their div and also change their status to offline
      */
-    function handleChannelDisconnect(data) {
+    function handleChannelDisconnect(channel_id) {
         // We have a customer who disconnected
         // Need to hide the div from #main_chat_body
-        var chan_id = data.channel_id;
-        if (!Boolean(connected_clients[chan_id])) {
-            connected_clients[chan_id] = {};
+        if (typeof disconnect_timeouts[channel_id] === "undefined") {
+            disconnect_timeouts[channel_id] = [];
         }
         var disconnect_timeout = setTimeout(function() {
-            $('#'+ chan_id).find('.chat-status').removeClass('checking').addClass('offline');
-            $("#" + chan_id + "-div").hide();
-            connected_clients[chan_id].disconnect_timeout = null;
+            $('#'+ channel_id).find('.chat-status').removeClass('checking').addClass('offline');
+            $("#" + channel_id + "-div").hide();
+            disconnect_timeouts[channel_id] = [];
         }, 10000);
         
-        connected_clients[chan_id].disconnect_timeout = disconnect_timeout;
+        disconnect_timeouts[channel_id].push(disconnect_timeout);
     }
     
     
@@ -525,13 +458,15 @@ pines(function() {
             $.ajax({
                 type: "POST",
                 url: sendMessageURL,
-                data: {"to_channel": to_channel, "msg": msg, "from_channel": channel_id, "timestamp": timestamp, "channel_token": channel_token},
+                data: {"to_channel": to_channel, "msg": msg, "from_channel": channel_id, "timestamp": timestamp, "channel_token": channel_token, "channel_id": channel_id},
                 crossDomain: true,
                 dataType: "json",
-                success: function() {
+                success: function(data) {
                     // No need to handle success since we get the message right back
+                    // Might want to append the message anyway after success
+                    // The addMessage function will check out if we already have received this message
                 },
-                error: function (msg) {
+                error: function() {
                     $("#" + to_channel + "-chat").append("<li><p>There was an error sending the message.</p></li>");
                 }
 
@@ -567,91 +502,200 @@ pines(function() {
         });
 
     }
-
     
-    /**
-     * Used to add customer info to the object connected_clients
-     * 
-     * We add information so that we can lookup the customer info without having to navigate the DOM
-     * We use the channel_id as the key that holds the customer object
-     *
-     */
-    function addToConnectedClients(data) {
-        if (!connected_clients[data.channel_id]) {
-            connected_clients[data.channel_id] = {username: data.username, token: data.token, online_status: false, city: data.city, region: data.region,
-                header: 'header_div', chat_body: 'chat_body_div', online_icon: 'online_icon_status', checking_online: false, "username_link" : data.username_link, "page_url": data.page_url};
+    function handleChatMessageHistory(messages) {
+        var count = messages.length;
+        if (!count) return;
+        displayNotifications = false;
+        for (var i=0; i<count; i++) {
+            var message = messages[i];
+            if (typeof chatHistory[message.message_id] === 'undefined' && $("#" + message.channel_id).length) {
+                addChannelMessage(message);
+            }
         }
+        displayNotifications = true;
     }
     
-    /*
-     * This adds a new chat window for the connected customer
-     * Determines whether to append it to the employees or customer list
-     */
-    function addNewChannelCustomer(data, is_employee) {
-        // Need to check if a customer or an employee connected
-        // If it was a customer, append the customers list else append the employees' list
-        var client = connected_clients[data.channel_id];
-        
-        if (Boolean(client) && Boolean(client.disconnect_timeout)) {
-            clearTimeout(connected_clients[data.channel_id].disconnect_timeout);
-            connected_clients[data.channel_id].disconnect_timeout = null;
-            return;
+    function getUsersPlusMessages() {
+        $.ajax({
+            type: 'GET',
+            url: getUsersPlusMessagesURL,
+            data: {"token": channel_token, "channel_id": channel_id},
+            dataType: "json",
+            crossDomain: true,
+            success: function (data) {
+                // We get back {"status": "success", "users": [users]}
+                if (data.status == "success") {
+                    // users is structured as [{'user': {}, 'messages': []}, {'user': {}, 'messages': []}]
+                    var u_length = data.users.length;
+                    for (var i = 0; i<u_length; i++) {
+                        addChannelUser(data.users[i].user);
+                        createChannelWindow(data.users[i].user.channel_id);
+                        handleChatMessageHistory(data.users[i].messages);
+                    }
+                }
+            },
+            error: function () {
+                // Need to let them know that they couldn't connect
+            }
+        });
+    }
+    
+    function sendCheckToAllCustomers() {
+        for (var customer in connected_clients) {
+            disconnect_timeouts[customer.channel_id] = [];
         }
         
-        addToConnectedClients(data);
+        setTimeout(function() {
+            for (var customer in connected_clients) {
+                // If you haven't cleared your disconnects, then set the person offline'
+                if (disconnect_timeouts[customer.channel_id].length) {
+                    setCustomerOffline(customer);
+                }
+            }
+        }, 8000);
         
-        if (data.channel_id == channel_id) {
-            return;
-        }
+        $.ajax({
+            type: 'POST',
+            url: pingAllCustomersURL,
+            data: {"channel_token": channel_token, "channel_id": channel_id},
+            dataType: "json",
+            crossDomain: true,
+            success: function () {
+            },
+            error: function () {
+                // Need to let them know that they couldn't connect
+            }
+        });
 
-        var chat_div = data.channel_id + "-div";
+    }
+    
+    function setCustomerOffline(channel_id) {
+        $(connected_clients[channel_id]['chat_div']).hide();
+        $(connected_clients[channel_id]['chat_window']).find('.chat-status').removeClass('checking').addClass('offline');
+    }
+    
+    function refreshOnlineList() {
+        $.ajax({
+            type: 'GET',
+            url: refreshOnlineUsersURL,
+            data: {"channel_token": channel_token, "channel_id": channel_id},
+            dataType: "json",
+            crossDomain: true,
+            success: function (data) {
+                if (data.status == 'success') {
+                    handleOnlineUsersList(data.users);
+                }
+            },
+            error: function () {
+                // Need to let them know that they couldn't connect
+            }
+        });
+    }
+    
+    
+    function handleUserList(online_users) {
+        // Get an array of objects
+        
+        var users_length = online_users.length;
+        
+        if (!users_length) return;
+        
+        for (var i = 0; i < users_length; i++) {
+            addChannelUser(online_users[i]);
+            createChannelWindow(online_users[i]);
+        }
+        realignChatWindows();
+    }
+    
+    function updateUserProperties(user) {
+        if (typeof user === "undefined") return;
+        var chat_user = connected_clients[user.channel_id];
+        if (Object.keys(chat_user).length === 0) {
+            connected_clients[user.channel_id] = {};
+        }
+        for (var prop in user) {
+            if (user.hasOwnProperty(prop)) {
+                connected_clients[user.channel_id][prop] = user[prop];
+            }
+        }
+        
+        var div_to_update = '#' + user.channel_id + '-div';
+        updateCustomerLocation(div_to_update, user.city, user.region);
+    }
+    
+    function addChannelUser(user) {
+        
+        if (user.channel_id == channel_id) {
+            return;
+        }
+        
+        var timeouts = disconnect_timeouts[user.channel_id];
+        
+        if (typeof timeouts !== 'undefined' && timeouts.length) {
+            for (var timeout in disconnect_timeouts[user.channel_id]) {
+                clearTimeout(timeout);
+            }
+            disconnect_timeouts[user.channel_id] = [];
+        }
+        
+        connected_clients[user.channel_id] = {};
+        for (var prop in user) {
+            if (user.hasOwnProperty(prop)) {
+                connected_clients[user.channel_id][prop] = user[prop];
+            }
+        }
+        
+        // Later on, the ChatUser object will have a property chat_div that has this element
+        var chat_div = user.channel_id + "-div";
         // Can replace this code with a check to see if the channel id is the the connect_clients object
         // Since we are going to be updating the Online Indicator instead of appending a message, we can just keep track of clients in the object
         // That way, we don't need to check if the element exists, because it will be in the var
-        if (doesElementExist(chat_div)) {
-            $("#"+chat_div).show();
-            $("#"+data.channel_id).find('.chat-status').removeClass('offline checking');
-
+        if ($("#" + chat_div).length) {
+            $("#" + chat_div).show();
+            $("#" + user.channel_id).find('.chat-status').removeClass('offline checking');
             return;
         }
         
-
-        if (is_employee) {
-            var newEmployeeChannelHTML = '<div class="list-group employee-channel-clients-list channel-client-list" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><a class="list-group-item channel-name-div">' +
-                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
-                        '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
+        
+        // This will be a function on the chatUser object
+        // chatUser.appendToClientList()
+        if (Boolean(user.is_employee)) {
+            var newEmployeeChannelHTML = '<div class="list-group employee-channel-clients-list channel-client-list" id="' + user.channel_id + '-div" data-channelid="' + user.channel_id + '"><a class="list-group-item channel-name-div">' +
+                        '<strong class="chat-client-div-username">' + user.username + '</strong>' +
+                        '<input type="text" style="display:none;" value="' + user.channel_id + '"/>' +
                         '</a></div>';
             // Append it to the employee's div
             $("#employee-chat-clients").append(newEmployeeChannelHTML);
         } else {
             var distinguished = 'nondistinguished-chat-user';
-            if (data.distinguished) {
+            if (user.distinguished == "true") {
                 distinguished = 'distinguished-chat-user';
             }
             
-            var username_link = data.username;
-            if (Boolean(data.username_link)) {
+            var username_link = user.username;
+            if (Boolean(user.username_link)) {
                 // Need to check if we actually have a ?, &, or = in the url
                 // If we don't, then just use what it has
                 var regex = /[\?\&\=]/;
-                if (regex.test(data.username_link)) {
-                    username_link = '<a href="' + data.username_link + '" target="_blank">' + data.username + '</a>';
+                if (regex.test(user.username_link)) {
+                    username_link = '<a href="' + user.username_link + '" target="_blank">' + user.username + '</a>';
                 }               
             }
             
-            connected_clients[data.channel_id].username_link = username_link;
+            connected_clients[user.channel_id].username_link = username_link;
             
             var div_info = '<span class="chat-client-div-info badge"></span>';
-            if (data.city) {
-                div_info = '<span class="chat-client-div-info badge">' + data.city.capitalize() + ", " + data.region.capitalize() + "</span>";
+            if (user.city) {
+                div_info = '<span class="chat-client-div-info badge">' + user.city.capitalize() + ", " + user.region.capitalize() + "</span>";
             }
             
-            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list ' + distinguished + '" id="' + data.channel_id + '-div" data-channelid="' + data.channel_id + '"><div class="list-group-item channel-name-div">' +
-                        '<strong class="chat-client-div-username">' + data.username + '</strong>' +
+            var newChannelCustomerHTML = '<div class="list-group customer-channel-clients-list channel-client-list ' + distinguished + '" id="' + user.channel_id + '-div" data-channelid="' + user.channel_id + '"><div class="list-group-item channel-name-div">' +
+                        '<strong class="chat-client-div-username">' + user.username + '</strong>' +
                         div_info +
                         '<p class="last-chat-message chat-ellipsis"></p>' +
-                        '<p class="last-page-url chat-ellipsis"><a href="' + data.page_url + '" target="_blank">' + data.page_url + '</a>' +'</p>' +
-                        '<input type="text" style="display:none;" value="' + data.channel_id + '"/>' +
+                        '<p class="last-page-url chat-ellipsis"><a href="' + user.page_url + '" target="_blank">' + user.page_url + '</a>' +'</p>' +
+                        '<input type="text" style="display:none;" value="' + user.channel_id + '"/>' +
                         '</div></div>';
             // Append it to the customer's div
             $("#customer-chat-clients").append(newChannelCustomerHTML);
@@ -659,35 +703,80 @@ pines(function() {
     }
     
     
-    /*
-     * Appends the Channel Message to it's respective chat window
-     */
-    function appendChannelMessage(channel, message, username, timestamp, chat_id, is_employee, message_id) {
-        if (is_employee) {
-            var chat_message = '<li class="chat-message"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
+    function addChannelMessage(message) {
+        // We just want to get the msg, the sender's channel_id, the receipent's channel_id, timestamp
+        
+        // Get the sender
+        var chat_div;
+        var chat_html;
+        var chat_body;
+        var ourselves = message.from_channel === channel_id;
+        var div_to_update;
+        var timestamp = getTimeago(message.timestamp);
+        var username = message.from_username;
+        
+        if (Boolean(message.channel_id)) {
+            // This is a message that is for a customer
+            chat_div = "#" + message.channel_id + "-chat";
+            chat_body = "#" + message.channel_id + "-chat-body";
+            div_to_update = "#" + message.channel_id + "-div";
+        } else if (ourselves) {
+            
+            if (Boolean(message.employee_to_employee)) {
+                chat_div = "#" + message.to_channel + "-chat";
+                chat_body = "#" + message.to_channel + "-chat-body";
+                div_to_update = "#" + message.to_channel + "-div";
+            } else {
+                chat_div = "#" + message.channel_id + "-chat";
+                chat_body = "#" + message.channel_id + "-chat-body";
+                div_to_update = "#" + message.channel_id + "-div";
+            }
+            // This is a message from us and most likely to another 
+            
+        } else {
+            chat_div = "#" + message.from_channel + "-chat";
+            chat_body = "#" + message.from_channel + "-chat-body";
+            div_to_update = "#" + message.from_channel + "-div";
+        }
+        
+        
+        if (ourselves) {
+            chat_html = '<li class="chat-message"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                 '<div class="chat-message-right clearfix"><div class="header">' +
                   '<small class="text-muted">' +
                   '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small>'+
                   '<strong class="pull-right primary-font">' + username + '</strong>' +
-                '</div><p>' + message + '</p></div></li>';
+                '</div><p>' + message.message + '</p></div></li>';
         } else {
-        //playNotification();
-        notifyMe(username, message, username);
-        //alertTabTitle("A New Message");
-        var chat_message = '<li class="chat-message"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
+            chat_html = '<li class="chat-message"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                                 '<div class="chat-message-left clearfix"><div class="header"><strong class="primary-font">' + username + '</strong> ' +
                                 '<small class="pull-right text-muted">' +
                                 '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small></div>' +
-                                    '<p>' + message + '</p></div></li>';
+                                    '<p>' + message.message + '</p></div></li>';
+            updateCustomerURL(div_to_update, message.page_url);
+            notifyMe(username, message.message, username);
+            setNewMessageIndicator(div_to_update);
         }
-        $(chat_id).append(chat_message);
-        $("#" + channel + "-chat-body").scrollTop($(chat_id).height());
+        
+        $(chat_div).append(chat_html);
+        $(chat_body).scrollTop($(chat_div).height());
+        $(div_to_update).find('.last-chat-message').html(message);
+        chatHistory[message.message_id] = message;
+        
         $('abbr.timeago').timeago();
-        addToChatHistory(message_id, channel, username, timestamp, message);
-        $("#" + channel + "-div").find('.last-chat-message').html(message);
+        
+
     }
-
-
+    
+    function updateCustomerURL(customer_div, url) {
+        if (typeof url === 'undefined' || !Boolean(url)) return;
+        $(customer_div).find('.last-page-url').html('<a href="'+ url + '" target="_blank">' + url + '</a>');
+    }
+    
+    function updateCustomerLocation(customer_div, city, region) {
+        $(customer_div).find('.badge').html(city.capitalize() + ', ' + region.capitalize());
+    }
+   
     /*
      * Creates a chat window for the customer
      * 
@@ -698,13 +787,15 @@ pines(function() {
 
         // If we already have the client window, don't open another one,
         // Maybe alert the current one
-        if (document.contains(document.getElementById(customer_channel))) {
+        if ($("#" + customer_channel).length || customer_channel == channel_id) {
             // We should not have the element with this is yet
             return;
         }
+        
+        var user = connected_clients[customer_channel];
 
         var newChannelClientHTML = '<div style="display: none;" class="container chat-window chat-container" id="' + customer_channel + '"><div class="row chat-header" data-channelid="' + customer_channel +'">' +
-                '<span class="chat-status"></span><span class="username">' + connected_clients[customer_channel].username_link + '</span><div class="btn-group pull-right">' +
+                '<span class="chat-status"></span><span class="chat-username">' + user.username_link + '</span><div class="btn-group pull-right">' +
                 '<button type="button" class="btn btn-small min-max-btn" data-channelid="' + customer_channel + '"><i class="icon-chevron-down"></i></button>' +
                 '<button type="button" class="btn btn-small close-chat-btn" data-channelid="' + customer_channel + '"><i class="icon-remove"></i></button>' +
                 '<button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown">' +
@@ -716,8 +807,7 @@ pines(function() {
                 '<span class="input-group-btn"><button  type="button" class="btn btn-warning chat-button send-chat-btn" data-channelid="' + customer_channel + '">Send</button>' +
                 '</span></div></div></div>';
 
-        $('#additional_clients').append(newChannelClientHTML);
-        //openClients.push(customer_channel);
+        additionalClients.append(newChannelClientHTML);
         realignChatWindows();
     }
 
@@ -726,7 +816,7 @@ pines(function() {
      * 
      * Take the value of the input, make sure it's not empty, send the message, and clear the input
      */
-    $("#additional_clients").on("keyup", ".chat-input-box", function(e) {
+    additionalClients.on("keyup", ".chat-input-box", function(e) {
         if (e.which == 13) {
             var chan_id = $(this).attr('data-channelid');
             var msg = $(this).val();
@@ -745,7 +835,7 @@ pines(function() {
      * We grab the value, check to make sure it isn't empty and then send it
      * Finally, we clear the text
      */
-    $("#additional_clients").on("click", ".chat-button", function(e) {
+    additionalClients.on("click", ".chat-button", function(e) {
         var chan_id = $(this).attr('data-channelid');
         var chan_input = "#" + chan_id + "-btn-input";
         var msg = $(chan_input).val();
@@ -765,7 +855,7 @@ pines(function() {
     main_chat_body.on("click", ".channel-client-list", function() {
         var chan_id = $(this).attr("data-channelid");
         
-        if (doesElementExist(chan_id)) {
+        if ($("#" + chan_id).length) {
             // Need to check if we have this element in the openClients array
             if (openClients.indexOf(chan_id) === -1) {
                 // We need to add it 
@@ -802,7 +892,7 @@ pines(function() {
     /*
      * A jQuery listener for when an employee wants to minimize/maximize an individual chat client
      */
-    $("#additional_clients").on("click", ".min-max-btn", function() {
+    additionalClients.on("click", ".min-max-btn", function() {
         // Need to make it switch just like before from min-to-max and vice-versa
         // Give class to parent div so that we can max chat when we click on the chat heading
 
@@ -828,7 +918,7 @@ pines(function() {
      *      - Need to make it so that we keep track of the hidden divs because of the margin issues
      *
      */
-    $("#additional_clients").on("click", ".close-chat-btn", function(e) {
+    additionalClients.on("click", ".close-chat-btn", function(e) {
         var chan_id = $(this).attr("data-channelid");
         var channel_location = openClients.indexOf(chan_id);
         openClients.splice(channel_location, 1);
@@ -844,7 +934,7 @@ pines(function() {
      * When they click the header, the chat window will maximize itself to show the chat body
      * It will also change the icon and add a chat-minimized class to the header for checking
      */
-    $("#additional_clients").on("click", ".chat-header", function(e) {
+    additionalClients.on("click", ".chat-header", function(e) {
         if (e.target != this) {
             return;
         }
@@ -870,7 +960,7 @@ pines(function() {
     });
 
     // Listener for clicking the online check button
-    $("#additional_clients").on("click", ".do-online-check", function() {
+    additionalClients.on("click", ".do-online-check", function() {
 
         var customer_channel = $(this).attr("data-channelid");
         sendOnlineCheck(customer_channel);
@@ -900,6 +990,20 @@ pines(function() {
             });
         }
     });
+    
+    $("#ping_all_customers").click(function(e) {
+        if (e.target != this) {
+            return;
+        }
+        sendCheckToAllCustomers();
+    });
+    
+    $("#refresh_online_users_list").click(function(e) {
+        if (e.target != this) {
+            return;
+        }
+        refreshOnlineList();
+    })
     
     if (localStorage.getItem('chatminimized') == "yes") {
         minMainChatBtn.click();

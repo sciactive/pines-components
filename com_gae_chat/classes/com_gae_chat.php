@@ -101,7 +101,6 @@ class com_gae_chat extends component {
      */
     function get_channel_token($guid = 0, $username = '', $email = '', $employee = false, $distinguish = false, $username_link = '', $page_url = '') {
         global $pines;
-        pines_log('Value of distinguish: '.json_encode($distinguish), 'notice');
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $pines->config->com_gae_chat->token_url,

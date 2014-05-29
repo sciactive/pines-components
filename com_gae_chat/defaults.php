@@ -23,12 +23,6 @@ return array(
         'value' => '',
     ),
     array(
-        'name' => 'employee_auth',
-        'cname' => 'Employee Secret Auth Token',
-        'description' => 'The token for which employees get employee status on App Engine',
-        'value' => 'mohammed',
-    ),
-    array(
         'name' => 'chat_disabled',
         'cname' => 'Disabled Chat',
         'description' => 'Enable or disable GAE Chat',
@@ -125,9 +119,9 @@ return array(
         'value' => ''
     ),
     array(
-        'name'  => 'welcome_chat_url',
-        'cname' => 'The Welcome To Chat URL for customers',
-        'description'   => 'The chat url for users to update the user entity in App Engine',
+        'name'  => 'get_messages_url',
+        'cname' => 'The URL for customers to get their messages',
+        'description'   => 'The chat url for users to retrieve their message history from App Engine',
         'value' => ''
     ),
     array(
@@ -139,7 +133,7 @@ return array(
             'Use Mail To' => 'mail_to',
             'No Link'   => 'no_link'
         ),
-        'value' => ''
+        'value' => 'constructed_url'
     ),
     array(
         'name'  => 'user_link_class',
@@ -158,6 +152,30 @@ return array(
         'cname' => 'User Link Base',
         'description'   => 'The base of the link which we will append the variable to',
         'value' => $base_link
+    ),
+    array(
+        'name'  => 'refresh_online_users_url',
+        'cname' => 'URL to get an updated online list',
+        'description'   => 'The URL to refresh the customer list',
+        'value' => ''
+    ),
+    array(
+        'name'  => 'ping_all_customers_url',
+        'cname' => 'URL to ping all customers',
+        'description'   => 'The URL to check every customer if they are still online.',
+        'value' => ''
+    ),
+    array(
+        'name'  => 'get_customer_messages_url',
+        'cname' => 'URL to get a customer\'s message as an employee',
+        'description'   => 'The URL for employees to GET a customer\'s message history',
+        'value' => ''
+    ),
+    array(
+        'name'  => 'get_users_and_messages_url',
+        'cname' => 'URL to get all online users and their chat histories',
+        'description'   => 'The URL for employees to all online users and their chat histories. For when employees connect to channels',
+        'value' => ''
     ),
 );
 

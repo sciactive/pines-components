@@ -230,6 +230,10 @@ class user extends able_object implements user_interface {
 		if (!empty($url))
 			$params['url'] = $url;
 		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', $params, true));
+		if (!empty($pines->config->com_user->verify_email_domain)) {
+			$domain = $pines->config->com_user->verify_email_domain;
+			$link = $domain.htmlspecialchars(pines_url('com_user', 'verifyuser', $params));
+		}
 		$macros = array(
 			'verify_link' => $link,
 			'to_phone' => htmlspecialchars(format_phone($this->phone)),

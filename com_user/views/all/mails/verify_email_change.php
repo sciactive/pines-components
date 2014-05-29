@@ -11,10 +11,11 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = '#to_first_name#, Please confirm your new email address for #system_name#.';
+$site_link = (!empty($pines->config->com_user->verify_email_domain)) ? $pines->config->com_user->verify_email_domain : '#site_link#';
 ?>
 Hi #to_name#,<br />
 <br />
-We've received a request to change your email address at <a href="#site_link#" target="_blank">#site_link#</a>.
+We've received a request to change your email address at <a href="<?php echo $site_link; ?>" target="_blank"><?php echo $site_link; ?></a>.
 Please confirm your new email by clicking on the following link:<br />
 <br />
 <a href="#verify_link#" target="_blank">#verify_link#</a><br />

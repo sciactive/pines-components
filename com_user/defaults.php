@@ -121,6 +121,27 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'verify_edit_email_link',
+		'cname' => 'Verify Edit Email Link',
+		'description' => 'The verify email notice provides a link to edit the user\'s email.',
+		'value' => pines_url('com_user', 'editself'),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'verify_email_domain',
+		'cname' => 'Verify Email Domain',
+		'description' => 'The verify email domain - if it is different than the domain the email was generated from (backend). Use Slash. Use on condition to make it different if managing multiple sites. Also, this affects the verify email change and email cancel emails as well.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'verify_email_contact_url',
+		'cname' => 'Verify Email Contact URL',
+		'description' => 'Leave blank if there is no contact us page to link to. Otherwise put the full link.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'default_domain',
 		'cname' => 'Default Login Domain',
 		'description' => 'When using email address as username, the domain name listed here will be automatically appended to short logins. For example, you could put "sciactive.com" to be able to sign in with "hunter" instead of "hunter@sciactive.com".',

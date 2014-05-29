@@ -38,6 +38,34 @@ class com_user extends component implements user_manager_interface {
 	private $js_loaded_user = false;
 	
 	/**
+	 * Whether the Cache Manager scripts have been loaded.
+	 * @access private
+	 * @var bool $css_loaded
+	 */
+	private $check_verify_scripts_loaded = false;
+	/**
+	 * Load the CSS and JS needed for the Cache Manager.
+	 */
+	function load_check_verify() {
+		global $pines;
+		if (!$this->check_verify_scripts_loaded) {
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'] . $pines->config->location);
+				$css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+				$css[] = $file_root . 'components/com_user/includes/'. ($pines->config->debug_mode ? 'checkverify.css' : 'checkverify.min.css');
+				$pines->config->loadcompressedcss = $css;
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] = $file_root . 'components/com_user/includes/'.($pines->config->debug_mode ? 'checkverify.js' : 'checkverify.min.js');
+				$pines->config->loadcompressedjs = $js;
+			} else
+				$module = new module('com_cache', 'scripts', 'head');
+			// Not needed since no other libraries are loaded.
+			//$module->render();
+			$this->check_verify_scripts_loaded = true;
+		}
+	}
+	
+	/**
 	 * Activate the SAWASC system.
 	 * @return bool True if SAWASC could be activated, false otherwise.
 	 */

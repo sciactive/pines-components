@@ -11,32 +11,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
+$pines->com_user->load_check_verify();
 ?>
-<style type="text/css">
-.ui-pnotify.p_muid_notice {
-right: auto;
-top: auto;
-}
-</style>
-<script type="text/javascript">
-pines(function(){$.pnotify({
-	type: 'info',
-	title: 'Email Verification',
-	text: 'You haven\'t verified your email address yet. <a href="javascript:void(0);" class="resend badge badge-info">Request another verification email</a> if you\'re having trouble.',
-	hide: false,
-	addclass: "p_muid_notice",
-	stack: {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25},
-	history: false,
-	after_init: function(pnotify){
-		pnotify.on("click", ".resend", function(){
-			$.post(<?php echo json_encode(pines_url('com_user', 'resend_verification')); ?>, function(data){
-				if (data) {
-					$.pnotify({type: "success", title: "Email Sent", text: "The verification email has been resent."});
-					pnotify.pnotify_remove();
-				} else
-					pines.error("The email could not be sent. Please try again in a few minutes.");
-			}, "json");
-		});
-	}
-});});
-</script>
+<div class="hide resend-verification-url"><?php echo pines_url('com_user', 'resend_verification'); ?></div>
+<div class="hide check-verification-url"><?php echo pines_url('com_user', 'checkverify'); ?></div>
+<div class="alert hide alert-info notice-email-verify"><div><span class="email-notice-title"><i class="icon-envelope"></i> <strong>Email Verification</strong></span> <span class="message">You haven't verified your email yet. Check your email, <a class="label label-info resend-verify" href="javascript:void(0);">Re-Send the verification email</a>, or</span> <span class="leave-for-errors"><a class="label label-info edit-email" href="<?php echo htmlspecialchars($pines->config->com_user->verify_edit_email_link); ?>">edit your email</a>.</span></div></div>

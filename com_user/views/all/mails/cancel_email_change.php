@@ -11,10 +11,11 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = '#to_first_name#, Your email address has been changed on #system_name#.';
+$site_link = (!empty($pines->config->com_user->verify_email_domain)) ? $pines->config->com_user->verify_email_domain : '#site_link#';
 ?>
 Hi #to_name#,<br />
 <br />
-We've received a request to change your email address at <a href="#site_link#" target="_blank">#site_link#</a>
+We've received a request to change your email address at <a href="<?php echo $site_link; ?>" target="_blank"><?php echo $site_link; ?></a>
 to #new_email#. If you didn't request this change, you can cancel it by clicking
 this link:<br />
 <br />

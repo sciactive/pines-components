@@ -251,6 +251,13 @@ if ($user->save()) {
 		// Send the verification email.
 		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true));
 		$link2 = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true));
+		
+		if (!empty($pines->config->com_user->verify_email_domain)) {
+			$domain = $pines->config->com_user->verify_email_domain;
+			$link = $domain.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret)));
+			$link2 = $domain.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret)));
+		}
+		
 		$macros = array(
 			'old_email' => htmlspecialchars($user->email),
 			'new_email' => htmlspecialchars($user->new_email_address),

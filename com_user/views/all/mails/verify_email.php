@@ -11,14 +11,20 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = '#to_first_name#, Welcome to #system_name#. Please confirm your email.';
+$site_link = (!empty($pines->config->com_user->verify_email_domain)) ? $pines->config->com_user->verify_email_domain : '#site_link#';
 ?>
 Welcome #to_name#,<br />
 <br />
-Thank you for signing up at <a href="#site_link#" target="_blank">#site_link#</a>.
+Thank you for signing up at <a href="<?php echo $site_link; ?>" target="_blank"><?php echo $site_link; ?></a>.
 Please confirm your email by clicking on the following link to activate your
 account:<br />
 <br />
 <a href="#verify_link#" target="_blank">#verify_link#</a><br />
+<?php if (!empty($pines->config->com_user->verify_email_contact_url)) { ?>
 <br />
+<br />
+For any questions or help with our online services, please <a href="<?php echo htmlspecialchars($pines->config->com_user->verify_email_contact_url); ?>" target="_blank">contact us</a>.
+<?php } ?>
+<br /><br />
 Regards,<br />
 #system_name#

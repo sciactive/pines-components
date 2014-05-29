@@ -669,7 +669,7 @@ pines(function() {
             $("#employee-chat-clients").append(newEmployeeChannelHTML);
         } else {
             var distinguished = 'nondistinguished-chat-user';
-            if (user.distinguished == "true") {
+            if (Boolean(user.distinguished)) {
                 distinguished = 'distinguished-chat-user';
             }
             

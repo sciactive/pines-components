@@ -135,6 +135,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'verify_redirect_domain',
+		'cname' => 'Verify Redirect to Domain',
+		'description' => 'Use the domain above to redirect the user after verifying their email.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'verify_email_contact_url',
 		'cname' => 'Verify Email Contact URL',
 		'description' => 'Leave blank if there is no contact us page to link to. Otherwise put the full link.',

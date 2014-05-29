@@ -11,7 +11,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = '#to_first_name#, Your email address has been changed on #system_name#.';
-$site_link = (!empty($pines->config->com_user->verify_email_domain)) ? $pines->config->com_user->verify_email_domain : '#site_link#';
+$site_link = (!empty($pines->config->com_user->verify_email_domain)) ? htmlspecialchars($pines->config->com_user->verify_email_domain) : '#site_link#';
 ?>
 Hi #to_name#,<br />
 <br />

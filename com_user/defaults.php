@@ -121,6 +121,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'verify_position',
+		'cname' => 'Verify Notice Position',
+		'description' => 'The position in the template where the verify email notice will go.',
+		'value' => 'bottom',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'verify_edit_email_link',
 		'cname' => 'Verify Edit Email Link',
 		'description' => 'The verify email notice provides a link to edit the user\'s email.',

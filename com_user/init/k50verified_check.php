@@ -17,8 +17,9 @@ defined('P_RUN') or die('Direct access prohibited');
 // Always include this module for users that are logged in.
 // With caching, we have to load a module that uses ajax to check for the secret
 // instead of doing that check here.
+$position = (!empty($pines->config->com_user->verify_position)) ? htmlspecialchars($pines->config->com_user->verify_position) : 'bottom';
 if (gatekeeper()) {
-	$module = new module('com_user', 'resend_verification', 'bottom');
+	$module = new module('com_user', 'resend_verification', $position);
 	unset($module);
 }
 ?>

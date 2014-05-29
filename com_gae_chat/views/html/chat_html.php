@@ -16,9 +16,13 @@
     <div id="get_token_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->pines_token_url;?>"></div>
     <div id="online_test_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->ping_test_url;?>"></div>
     <div id="send_online_check_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->online_check_url;?>"></div>
-    <div id="welcome_chat_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->welcome_chat_url;?>"></div>
+    <div id="get_messages_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->get_messages_url;?>"></div>
+    <div id="get_customer_messages_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->get_customer_messages_url;?>"></div>
+    <div id="get_users_and_messages_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->get_users_and_messages_url;?>"></div>
     <div id="chat_customer_pic" class="hide" data-url="<?php echo $pines->config->com_gae_chat->customer_pic;?>"></div>
     <div id="chat_employee_pic" class="hide" data-url="<?php echo $pines->config->com_gae_chat->employee_pic;?>"></div>
+    <div id="ping_all_customers_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->ping_all_customers_url;?>"></div>
+    <div id="refresh_online_users_url" class="hide" data-url="<?php echo $pines->config->com_gae_chat->refresh_online_users_url;?>"></div>
 </div>
 <?php if ($employee) { ?>
 <div id="additional_clients"></div>
@@ -28,7 +32,7 @@
     <div class="row" id="main-chat-header">
         <span class="chat-status offline"></span>
         <span class="chat-status-text">Offline</span>
-        <div class="btn-group pull-right">
+        <div class="btn-group pull-right dropup">
             <button type="button" class="btn btn-small" id="min-main-chat-btn">
                     <i class="icon-chevron-down"></i>
             </button>
@@ -38,6 +42,12 @@
             </button>
             <ul class="dropdown-menu slidedown">
                 <li>
+                    <a href="#" id="refresh_online_users_list">
+                        <i class="icon-chevron-right"></i> Refresh Online Users
+                    </a>
+                    <a href="#" id="ping_all_customers">
+                        <i class="icon-chevron-right"></i> Check All Customers
+                    </a>
                     <a href="#" id="enableNotifications">
                         <i class="icon-chevron-right"></i> Enable Notifications
                     </a>

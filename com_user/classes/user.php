@@ -224,6 +224,7 @@ class user extends able_object implements user_interface {
 	 */
 	public function send_email_verification($url = '') {
 		global $pines;
+		pines_log(json_encode(isset($this->secret)), 'notice');
 		if (!isset($this->guid) || !isset($this->secret))
 			return false;
 		$params = array('id' => $this->guid, 'type' => 'register', 'secret' => $this->secret);
@@ -243,7 +244,52 @@ class user extends able_object implements user_interface {
 		);
 		return $pines->com_mailer->send_mail('com_user/verify_email', $macros, $this);
 	}
+	
+	/**
+	 * Send the user a change of email verification email.
+	 * 
+	 * The user must have a guid and a new_email_secret.
+	 * 
+	 * @return bool True on success, false on failure.
+	 */
+	public function send_changed_email_verification() {
+		global $pines;
+		
+		if (!$pines->config->com_user->confirm_email || !isset($this->guid))
+			return false;
+		
+		// Send the changed verification email.
+		$link = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'change', 'secret' => $this->new_email_secret), true));
+		$link2 = htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'cancelchange', 'secret' => $this->cancel_email_secret), true));
 
+		if (!empty($pines->config->com_user->verify_email_domain)) {
+			$domain = $pines->config->com_user->verify_email_domain;
+			$link = $domain.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'change', 'secret' => $this->new_email_secret)));
+			$link2 = $domain.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $this->guid, 'type' => 'cancelchange', 'secret' => $this->cancel_email_secret)));
+		}
+		$macros = array(
+			'old_email' => htmlspecialchars($this->cancel_email_address),
+			'new_email' => htmlspecialchars($this->new_email_address),
+			'to_phone' => htmlspecialchars(format_phone($this->phone)),
+			'to_fax' => htmlspecialchars(format_phone($this->fax)),
+			'to_timezone' => htmlspecialchars($this->timezone),
+			'to_address' => $this->address_type == 'us' ? htmlspecialchars("{$this->address_1} {$this->address_2}").'<br />'.htmlspecialchars("{$this->city}, {$this->state} {$this->zip}") : '<pre>'.htmlspecialchars($this->address_international).'</pre>'
+		);
+		$macros2 = $macros;
+		$macros['verify_link'] = $link;
+		$macros2['cancel_link'] = $link2;
+		// Two emails, first goes to the new address for verification.
+		// Second goes to the old email address to cancel the change.
+		$recipient = (object) array(
+			'email' => $this->new_email_address,
+			'username' => $this->username,
+			'name' => $this->name,
+			'name_first' => $this->name_first,
+			'name_last' => $this->name_last,
+		);
+		return ($pines->com_mailer->send_mail('com_user/verify_email_change', $macros, $recipient) && $pines->com_mailer->send_mail('com_user/cancel_email_change', $macros2, $this));
+	}
+	
 	public function print_form() {
 		global $pines;
 		$module = new module('com_user', 'form_user', 'content');

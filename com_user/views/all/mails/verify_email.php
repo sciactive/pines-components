@@ -13,8 +13,9 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = '#to_first_name#, Welcome to #system_name#. Please confirm your email.';
 $site_link = (!empty($pines->config->com_user->verify_email_domain)) ? htmlspecialchars($pines->config->com_user->verify_email_domain) : '#site_link#';
 // Add the Redirect URL if that option is being used.
-$redirect = (!empty($pines->config->com_user->verify_email_domain) && $pines->config->com_user->verify_redirect_domain) ? '?url='.$site_link : '';
-pines_log('the site link is: '.$site_link, 'notice');
+$test_link = pines_url('com_user', 'verify', array('something' => 'something'));
+$symbol = (preg_match('/\?/', $test_link)) ? '&' : '?';
+$redirect = (!empty($pines->config->com_user->verify_email_domain) && $pines->config->com_user->verify_redirect_domain) ? $symbol.'url='.$site_link : '';
 ?>
 Welcome #to_name#,<br />
 <br />

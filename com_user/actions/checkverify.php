@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
 
-$result = ( !gatekeeper() || !$pines->config->com_user->confirm_email || !isset($_SESSION['user']->secret)) ? false : true;
+$result = ( !gatekeeper() || !$pines->config->com_user->confirm_email || !(isset($_SESSION['user']->secret) || isset($_SESSION['user']->new_email_secret)) ) ? false : true;
 
 $pines->page->override_doc(json_encode($result));
 ?>

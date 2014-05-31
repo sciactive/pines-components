@@ -24,6 +24,30 @@ return array(
 			'sale_total' => 'The sale total.',
 		),
 	),
+	'void_receipt' => array(
+		'cname' => 'Void Receipt',
+		'description' => 'A void receipt email.',
+		'view' => 'mails/void_receipt',
+		'has_recipient' => true,
+		'unsubscribe' => false,
+		'macros' => array(
+			'receipt' => 'The receipt content.',
+			'sale_id' => 'The sale ID.',
+			'sale_total' => 'The sale total.',
+		),
+	),
+	'return_receipt' => array(
+		'cname' => 'Return Receipt',
+		'description' => 'A return receipt email.',
+		'view' => 'mails/return_receipt',
+		'has_recipient' => true,
+		'unsubscribe' => false,
+		'macros' => array(
+			'receipt' => 'The receipt content.',
+			'sale_id' => 'The sale ID.',
+			'sale_total' => 'The sale total.',
+		),
+	),
 	'sale_shipped_tracking' => array(
 		'cname' => 'Sale Shipped (Tracking Available)',
 		'description' => 'A notification of a warehouse order that has been shipped. Will include tracking URLs.',

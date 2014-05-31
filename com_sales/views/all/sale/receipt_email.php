@@ -49,7 +49,7 @@ switch ($this->entity->status) {
 				<span><img src="<?php echo htmlspecialchars($group_logo); ?>" alt="<?php echo htmlspecialchars($pines->config->system_name); ?>" /></span>
 			</td>
 			<td valign="top" align="right">
-				<span><?php echo htmlspecialchars($this->doc_title); ?></span><br />
+				<span><strong><?php echo htmlspecialchars($this->doc_title); ?></strong></span><br />
 				<img src="<?php echo htmlspecialchars(pines_url('com_barcode', 'image', array('code' => $doc_id, 'height' => '60', 'width' => '300', 'style' => '850'), true)); ?>" alt="<?php echo htmlspecialchars($doc_id); ?>" />
 			</td>
 		</tr>

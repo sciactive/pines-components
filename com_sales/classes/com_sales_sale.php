@@ -383,6 +383,11 @@ class com_sales_sale extends entity {
 			'sale_id' => htmlspecialchars($this->id),
 			'sale_total' => htmlspecialchars($this->total),
 		);
+		
+		if ($this->status =='voided') {
+			return $pines->com_mailer->send_mail('com_sales/void_receipt', $macros, $this->customer);
+		}
+		
 		return $pines->com_mailer->send_mail('com_sales/sale_receipt', $macros, $this->customer);
 	}
 

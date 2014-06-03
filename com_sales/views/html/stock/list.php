@@ -169,7 +169,9 @@ if (isset($pines->com_googledrive)) {
 			<th>GUID</th>
 			<th>SKU</th>
 			<th>Product</th>
+			<?php if (gatekeeper('com_sales/viewstockserial')) { ?>
 			<th>Serial</th>
+			<?php } ?>
 			<th>Vendor</th>
 			<?php if (!$this->removed) { ?>
 			<th>Location</th>
@@ -187,7 +189,9 @@ if (isset($pines->com_googledrive)) {
 			<td><a data-entity="<?php echo htmlspecialchars($stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($stock->guid); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
 			<td><a data-entity="<?php echo htmlspecialchars($stock->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
+			<?php if (gatekeeper('com_sales/viewstockserial')) { ?>
 			<td><?php echo htmlspecialchars($stock->serial); ?></td>
+			<?php } ?>
 			<td><a data-entity="<?php echo htmlspecialchars($stock->vendor->guid); ?>" data-entity-context="com_sales_vendor"><?php echo htmlspecialchars($stock->vendor->name); ?></a></td>
 			<?php if (!$this->removed) { ?>
 			<td><a data-entity="<?php echo htmlspecialchars($stock->location->guid); ?>" data-entity-context="group"><?php echo $stock->location->guid ? htmlspecialchars($stock->location->info('name')) : ''; ?></a></td>

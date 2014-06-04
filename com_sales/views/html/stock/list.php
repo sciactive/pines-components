@@ -55,6 +55,7 @@ if (isset($pines->com_googledrive)) {
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_sales/viewstockbuttons')) { ?>
 				<?php if (!$this->removed) { ?>
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){stock_grid.location_form();}},
 				{type: 'separator'},
@@ -89,6 +90,7 @@ if (isset($pines->com_googledrive)) {
 				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'stock/list')); ?>},
 				<?php } ?>
 				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -186,9 +188,9 @@ if (isset($pines->com_googledrive)) {
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo htmlspecialchars($stock->guid); ?>">
-			<td><a data-entity="<?php echo htmlspecialchars($stock->guid); ?>" data-entity-context="com_sales_stock"><?php echo htmlspecialchars($stock->guid); ?></a></td>
+			<td><?php echo (gatekeeper('com_sales/viewstockserial')) ? ('<a data-entity="'.htmlspecialchars($stock->guid).'" data-entity-context="com_sales_stock">'.htmlspecialchars($stock->guid).'</a>') : htmlspecialchars($stock->guid); ?></td>
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
-			<td><a data-entity="<?php echo htmlspecialchars($stock->product->guid); ?>" data-entity-context="com_sales_product"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
+			<td><?php echo (gatekeeper('com_sales/viewstockserial')) ? '<a data-entity="'.htmlspecialchars($stock->product->guid).'" data-entity-context="com_sales_product">'.htmlspecialchars($stock->product->name).'</a>' : htmlspecialchars($stock->product->name); ?></td>
 			<?php if (gatekeeper('com_sales/viewstockserial')) { ?>
 			<td><?php echo htmlspecialchars($stock->serial); ?></td>
 			<?php } ?>

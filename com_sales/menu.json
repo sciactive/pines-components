@@ -120,7 +120,7 @@
 				"text": "Inventory",
 				"href": ["com_sales","stock/list"],
 				"depend": {
-					"ability": "com_sales/managestock"
+					"ability": "com_sales/seestock"
 				}
 			},
 			{

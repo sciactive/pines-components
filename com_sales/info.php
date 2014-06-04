@@ -36,6 +36,7 @@ return array(
 		array('seestock', 'See Stock', 'User can see stock.'),
 		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('viewstockserial', 'View Stock Serial', 'User can view the stocks\' serial numbers.'),
+		array('viewstockbuttons', 'View Stock Buttons', 'User can view buttons on the inventory grid.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
 		array('warehouse', 'Warehouse Sales', 'User can fulfill warehouse sales.'),
 		array('viewwarehouse', 'View Warehouse Sales', 'User can view pending warehouse sales.'),

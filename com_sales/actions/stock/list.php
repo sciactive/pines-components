@@ -11,13 +11,20 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managestock') && !gatekeeper('com_sales/seestock') )
+if (!( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/seestock') ))
 	punt_user(null, pines_url('com_sales', 'stock/list'));
 
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 
+$removed = $_REQUEST['removed'] == 'true';
+
+if (!gatekeeper('com_sales/viewstockserial')) {
+	$location = $_SESSION['user']->group;
+	$removed = false;
+}
+
 $descendants = ($_REQUEST['descendants'] == 'true');
 
-$pines->com_sales->list_stock($_REQUEST['removed'] == 'true', $location, $descendants);
+$pines->com_sales->list_stock($removed, $location, $descendants);
 ?>

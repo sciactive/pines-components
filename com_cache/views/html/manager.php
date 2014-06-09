@@ -208,7 +208,7 @@ $get_file_count = $this->get_file_count;
 			<?php } else { ?>
 			<h3>Cache Settings</h3>
 			<hr/>
-			<table class="table table-bordered">
+			<table class="table table-bordered cache-settings">
 				<tbody>
 					<tr>
 						<td colspan="2"><strong>Cache On</strong></td>
@@ -277,7 +277,7 @@ $get_file_count = $this->get_file_count;
 						<th>Component</th>
 						<th>Action</th>
 						<th class="hide-small" colspan="2">Cache Query</th>
-						<th class="hide-small">Cache Logged In</th>
+						<th class="hide-small" colspan="2">Cache Logged In</th>
 						<th class="hide-small">Cache Expire Time</th>
 						<th class="hide-small">Domain</th>
 						<th>Refresh Cache</th>
@@ -316,9 +316,17 @@ $get_file_count = $this->get_file_count;
 								<?php } ?>
 							</td>
 							<?php if ($cur_options['cachequery']) { ?>
-							<td class="text-center hide-small"><button class="btn btn-mini exception-btn <?php echo (!empty($cur_options['exceptions'])) ? (($cur_options['disabled']) ? 'active' : 'btn-success') : ''; ?>" data-name="<?php echo htmlspecialchars($name); ?>" data-component="<?php echo htmlspecialchars($component); ?>" data-action="<?php echo htmlspecialchars($action); ?>" data-domain="<?php echo htmlspecialchars($cur_domain);?>" data-exceptions="<?php echo (empty($cur_options['exceptions'])) ? '' : htmlspecialchars(json_encode($cur_options['exceptions'])); ?>">Exceptions</button></td>
+							<td class="text-center hide-small"><button class="btn btn-mini exception-btn <?php echo (!empty($cur_options['exceptions'])) ? (($cur_options['disabled']) ? 'active' : 'btn-success') : ''; ?>" data-name="<?php echo htmlspecialchars($name); ?>" data-component="<?php echo htmlspecialchars($component); ?>" data-action="<?php echo htmlspecialchars($action); ?>" data-domain="<?php echo htmlspecialchars($cur_domain);?>" data-exceptions="<?php echo (empty($cur_options['exceptions'])) ? '' : htmlspecialchars(json_encode($cur_options['exceptions'])); ?>" data-users="<?php echo (empty($cur_options['unique_users'])) ? '' : htmlspecialchars(json_encode($cur_options['unique_users'])); ?>">Exceptions</button></td>
 							<?php } ?>
-							<td class="edit-directive cacheloggedin hide-small"><?php echo ($cur_options['cacheloggedin'] ? 'On': 'Off'); ?></td>
+							<td class="edit-directive cacheloggedin hide-small" <?php echo ($cur_options['cacheloggedin']) ? '' : 'colspan="2"'; ?>>
+								<?php echo ($cur_options['cacheloggedin']) ? 'On' : 'Off';
+								if (!$cur_options['cacheloggedin'] && !empty($cur_options['unique_users'])) { ?>
+									<span class="unique_users-span hide" data-users="<?php echo htmlspecialchars(json_encode($cur_options['unique_users'])); ?>" data-all="<?php echo htmlspecialchars(json_encode($cur_options['all_unique'])); ?>"></span>
+								<?php } ?>
+							</td>
+							<?php if ($cur_options['cacheloggedin']) { ?>
+							<td class="text-center hide-small"><button class="btn btn-mini unique-users-btn <?php echo (!empty($cur_options['unique_users']) || $cur_options['all_unique']) ? (($cur_options['disabled']) ? 'active' : 'btn-success') : ''; ?>" data-name="<?php echo htmlspecialchars($name); ?>" data-component="<?php echo htmlspecialchars($component); ?>" data-action="<?php echo htmlspecialchars($action); ?>" data-domain="<?php echo htmlspecialchars($cur_domain);?>" data-exceptions="<?php echo (empty($cur_options['exceptions'])) ? '' : htmlspecialchars(json_encode($cur_options['exceptions'])); ?>" data-users="<?php echo (empty($cur_options['unique_users'])) ? '' : htmlspecialchars(json_encode($cur_options['unique_users'])); ?>" data-all="<?php echo htmlspecialchars(json_encode($cur_options['all_unique'])); ?>">Unique Users</button></td>
+							<?php } ?>
 							<td class="edit-directive cachetime hide-small"><?php echo htmlspecialchars($cur_options['time']); ?></td>
 							<td class="edit-directive domain hide-small"><?php echo htmlspecialchars($cur_domain); ?></td>
 							<td class="text-center <?php echo ($cur_options['disabled']) ? 'edit-directive' : ''; ?>">
@@ -362,7 +370,7 @@ $get_file_count = $this->get_file_count;
 									<option value="Off">Off</option>
 								</select>	
 							</td>
-							<td>
+							<td colspan="2">
 								<select class="add full-field" name="cacheloggedin">
 									<option value=""></option>
 									<option value="On">On</option>
@@ -602,11 +610,61 @@ $get_file_count = $this->get_file_count;
 					<a class="btn btn-info submit-exceptions" href="javascript:void(0);"><i class="icon-plus"></i> Save</a>
 				</div>
 			</div>
+			<div class="unique-users-modal modal hide fade in" data-backdrop="static" data-keyboard="false">
+				<div class="modal-header">
+					<h4 class="text-center" style="text-transform: uppercase;">Unique user cache for <span class="item-name" style="color: #339533;"></span></h4>
+				</div>
+				<div class="modal-body">
+					<h3 class="text-center"><a href="javascript:void(0);" class="exception-readmore-link">Read about Unique User Cache</a> before using it.</h3>
+					<p class="well hide exception-readmore" style="padding: 5px;"><small>Directives with logged in cache set to On will create folders based
+						on ability hashes. Sometimes different users require unique caches, despite being in the same ability hash (same groups/abilities), <strong>so
+						providing user names here will ensure that the user gets their own unique cache [hash] for this directive.</strong> <br/><br/>
+						If you had many customers, you would not want too many unique caches, but if you have certain employees that need unique ability hashes
+						without having to get them unique abilities, you can set that here.</small>
+					</p>
+					<hr/>
+					<h3>Users</h3>
+					<div class="btn-group text-center apply-to-container">
+						<button class="btn apply-to-hash">Apply Unique Hash To</button>
+						<button class="btn apply-btn apply-to-all btn-info">All Users</button>
+						<button class="btn apply-btn apply-to-users btn-info">Users Below</button>
+					</div>
+					<table class="table users table-bordered table-hover" style="margin: auto;">
+						<thead>
+							<th>Username</th>
+							<th>Remove</th>
+						</thead>
+						<tbody></tbody>
+					</table>
+					<table  class="table users-form table-bordered table-hover" style="margin: 10px 0;">
+						<tbody>
+							<tr>
+								<td>
+									<input type="text" name="add_user" placeholder="username"/>
+								</td>
+								<td class="text-center" style="width: 55px; vertical-align:middle;"><button class="btn btn-info add-user-btn"><i class="icon-plus"></i></button></td>
+							</tr>
+						</tbody>
+					</table>
+					<br/>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="component" value=""/>
+					<input type="hidden" name="caction" value=""/>
+					<input type="hidden" name="domain" value=""/>
+					<input type="hidden" name="all_unique" value=""/>
+					<input type="hidden" name="orig_all_unique" value=""/>
+					<input type="hidden" name="unique_users" value=""/>
+					<input type="hidden" name="orig_unique_users" value=""/>
+					<a class="btn cancel-users" data-dismiss="modal" href="javascript:void(0);">Cancel</a>
+					<a class="btn btn-info submit-users" href="javascript:void(0);"><i class="icon-plus"></i> Save</a>
+				</div>
+			</div>
 			<br/>
 			<h3>Current Domains</h3>
 			<hr/>
 			<?php if (count($this->domains) > 0) { ?>
-			<table class="table table-hover table-bordered">
+			<table class="table table-hover table-bordered files-table">
 				<thead>
 					<th>Domain</th>
 					<th>File Count</th>
@@ -644,6 +702,32 @@ $get_file_count = $this->get_file_count;
 					<a class="btn cancel-exceptions" data-dismiss="modal" href="javascript:void(0);">Done</a>
 				</div>
 			</div>
+			
+			<h3>Look Up User Hash</h3>
+			<hr/>
+			<table class="table table-bordered lookup-table">
+				<thead>
+					<th colspan="2">Username</th>
+					<th>
+						Ability Hash
+						<span data-original-title="" class="edit-helper pull-right" data-title="These hashes will match many users, like customers, so be careful when refreshing the cache by ability."><i class="icon-warning-sign"></i></span>
+						<span class="pull-right badge hide ability-badge" style="margin-right:4px;"></span>
+					</th>
+					<th>
+						Unique Hash
+						<span data-original-title="" class="edit-helper pull-right" data-title="Unique hash means refreshing will only affect 1 unique user."><i class="icon-info-sign"></i></span>
+						<span class="pull-right badge hide unique-badge" style="margin-right:4px;"></span>
+					</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" name="check_user_hash" class="full-field" placeholder="Type Username"/></td>
+						<td class="text-center" style="width: 40px;"><button class="btn btn-info lookup-btn"><i class="icon-search"></i></button></td>
+						<td class="hash-result ability text-center" data-orig="Type a username to get hash." style="width: 35%;">Type a username to get hash.</td>
+						<td class="hash-result unique text-center" data-orig="Unique hash will display if applicable." style="width: 35%;">Unique hash will display if applicable.</td>
+					</tr>
+				</tbody>
+			</table>
 			<?php } else { ?>
 			<h3 class="text-center" style="margin-top: 0; font-weight: normal;">
 				There are no cached files yet. Turn caching on, create directives, and watch the magic happen!
@@ -702,6 +786,7 @@ $get_file_count = $this->get_file_count;
 		<div class="save-exception-url"><?php echo (pines_url('com_cache', 'save', array('save_global_exceptions' => 'true'))); ?></div>
 		<div class="domain-explore-url"><?php echo (pines_url('com_cache', 'domain_explore')); ?></div>
 		<div class="save-url"><?php echo (pines_url('com_cache', 'save')); ?></div>
+		<div class="check-user-hash-url"><?php echo (pines_url('com_cache', 'lookup')); ?></div>
 		<div class="refresh-url"><?php echo (pines_url('com_cache', 'refresh')); ?></div>
 	</div>
 </div>

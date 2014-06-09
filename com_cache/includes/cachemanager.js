@@ -46,7 +46,13 @@ pines(function(){
 	var global_exceptions_input = container.find('.global-exceptions-input');
 	var global_exceptions_modal = container.find('.global-exceptions-modal.modal');
 	var global_add_exceptions = global_exceptions_modal.find('.add-exception');
-
+	var unique_users_modal = container.find('.unique-users-modal');
+	var submit_users = container.find('.submit-users');
+	var check_user_hash = container.find('[name=check_user_hash]');
+	var lookup_btn = container.find('.lookup-btn');
+	var hash_result = container.find('.hash-result');
+	var apply_hash_buttons = container.find('.apply-btn');
+	
 	var urls_container = container.find('.cache-urls');
 	var save_edit_url = urls_container.find('.save-edit-url').text();
 	var cache_manager_url = urls_container.find('.cache-manager-url').text();
@@ -54,6 +60,7 @@ pines(function(){
 	var domain_explore_url = urls_container.find('.domain-explore-url').text();
 	var refresh_url = urls_container.find('.refresh-url').text();
 	var save_url = urls_container.find('.save-url').text();
+	var check_user_hash_url = urls_container.find('.check-user-hash-url').text();
 	urls_container.remove();
 
 	function save_directive() {
@@ -65,6 +72,7 @@ pines(function(){
 		values.cachetime = directive_modal.find('[name=cachetime]').val();
 		values.domain = directive_modal.find('[name=domain]').val();
 		values.maintain_exceptions = directive_modal.find('.exception-btn').attr('data-exceptions');
+		values.maintain_unique_users = directive_modal.find('.unique-users-btn').attr('data-users');
 		values.manage = directive_modal.find('[name=manage]').val();
 
 		$.ajax({
@@ -301,6 +309,68 @@ pines(function(){
 		});
 	}
 	
+	function generate_users(users) {
+		var remove_td = '<td style="width: 30px;vertical-align:middle;" class="text-center"><button class="btn-danger btn remove-user"><i class="icon-remove"></i></button></td>';
+		var users_html = $('<div></div>');
+		$.each(users, function(index, cur_user){
+			var cur_user_html = $('<tr></tr>');
+				cur_user_html.append('<td class="name">'+cur_user+'</td>');
+				cur_user_html.append(remove_td);
+				users_html.append(cur_user_html);
+		});
+		var gen_users = {};
+		gen_users = users_html.html();
+		return gen_users;
+	}
+	
+	function refactor_unique_users() {
+		var users_table = unique_users_modal.find('.table.users');
+		var user_rows = users_table.find('tbody tr');
+		
+		var users = [];
+
+		user_rows.each(function(){
+			var name = $(this).find('td.name').text();
+			users.push(name);
+		});
+
+		var new_users;
+		if (!user_rows.length)
+			new_users = '';
+		else
+			new_users = JSON.stringify(users)
+		unique_users_modal.find('[name="unique_users"]').val(new_users).change();
+	}
+	
+	function save_users() {
+		var values = {};
+		values.component = unique_users_modal.find('[name=component]').val();
+		values.caction = unique_users_modal.find('[name=caction]').val();
+		values.domain = unique_users_modal.find('[name=domain]').val();
+		values.all_unique = unique_users_modal.find('[name=all_unique]').val();
+		values.unique_users = unique_users_modal.find('[name=unique_users]').val();
+		values.save_unique_users = true;
+
+		$.ajax({
+			url: save_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				submit_users.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('users-cancel');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					submit_users.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger').addClass('users-cancel');
+				} else {
+					// Change header location.
+					location.href = cache_manager_url;
+				}
+			}
+		});
+	}
+	
 	function get_folder_files(path, files_container){
 		$.ajax({
 			url: domain_explore_url,
@@ -465,6 +535,128 @@ pines(function(){
 		input_elem.val('').change();
 	}
 	
+	function refresh_by_ability(ability_hash, element) {
+		var values = {};
+		values.domain = 'all';
+		values.ability_hash = ability_hash;
+
+		$.ajax({
+			url: refresh_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			error: function(){
+				element.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger');
+				return;
+			},
+			success: function(data){
+				if (data === false) {
+					element.html('<i class="icon-undo"></i>').removeClass('btn-success').addClass('btn-danger');
+				} else {
+					element.closest('.hash-result').html('<span class="text-success"><i class="icon-ok"></i> Refreshed '+data+' file(s)!</span>');
+				}
+			}
+		});
+	}
+	
+	function lookup_ability_hash(username) {
+		var values = {};
+		values.username = username;
+
+		$.ajax({
+			url: check_user_hash_url,
+			type: "POST",
+			dataType: "json",
+			data: values,
+			beforeSend: function(){
+				hash_result.html('<i class="icon-spin icon-spinner"></i> Searching the Database...');
+				lookup_btn.html('<i class="icon-spin icon-spinner"></i>').removeClass('btn-success btn-info').addClass('btn-danger');
+				container.find('.ability-badge').hide();
+				container.find('.unique-badge').hide();
+			},
+			error: function(){
+				hash_result.html('Did not find this user or it failed.');
+				lookup_btn.html('<i class="icon-undo"></i>').removeClass('btn-success btn-info').addClass('btn-danger');
+				return;
+			},
+			success: function(data){
+				if (!data) {
+					hash_result.html('Did not find this user or it failed.');
+					lookup_btn.html('<i class="icon-undo"></i>').removeClass('btn-success btn-info').addClass('btn-danger');
+				} else {
+					// Change header location.
+					lookup_btn.html('<i class="icon-undo"></i>').removeClass('btn-danger btn-info').addClass('btn-success');
+					
+					var ability_html = '<table class="table hash-result-table table-bordered"><tbody><tr><td class="text-center hash"><input type="text" class="hash-label full-field text-center" value="'+pines.safe(data.ability_hash)+'"></td><td class="text-center hash-control"><span class="hash-refresh"><i class="icon-refresh"></i></span></td></tr></tbody></table>';
+					hash_result.filter('.ability').html(ability_html);
+					
+					var ability_class = (data.ability_count > 0) ? 'badge-success' : 'badge-info';
+					container.find('.ability-badge').removeClass('badge-success badge-info').addClass(ability_class).text(data.ability_count).fadeIn();
+					
+					if (data.unique_hash != undefined) {
+						var unique_html = '<table class="table hash-result-table table-bordered"><tbody><tr><td class="text-center hash"><input type="text" class="hash-label full-field text-center" value="'+pines.safe(data.unique_hash)+'"></td><td class="text-center hash-control"><span class="hash-refresh"><i class="icon-refresh"></i></span></td></tr></tbody></table>';
+						hash_result.filter('.unique').html(unique_html);
+						
+						var unique_class = (data.unique_count > 0) ? 'badge-success' : 'badge-info';
+						container.find('.unique-badge').removeClass('badge-success badge-info').addClass(unique_class).text(data.unique_count).fadeIn();
+					} else {
+						hash_result.filter('.unique').html('No unique hash.');
+					}
+					
+					hash_result.find('.hash-label').click(function(){
+						$(this).select();
+					});
+				}
+			}
+		});
+		lookup_btn.addClass('clear');
+	}
+	
+	lookup_btn.click(function(){
+		if (lookup_btn.hasClass('clear')) {
+			check_user_hash.val('');
+			hash_result.html(hash_result.attr('data-orig'));
+			lookup_btn.html('<i class="icon-search"></i>').removeClass('btn-danger btn-success clear').addClass('btn-info');
+			check_user_hash.focus();
+			container.find('.ability-badge').hide();
+			container.find('.unique-badge').hide();
+			return;
+		}
+		var username = check_user_hash.val();
+		if (username == '')
+			return;
+		lookup_ability_hash(username);
+	});
+	
+	check_user_hash.focusin(function(){
+		if (lookup_btn.hasClass('clear')) {
+			check_user_hash.val('');
+			container.find('.ability-badge').hide();
+			container.find('.unique-badge').hide();
+			hash_result.html(hash_result.attr('data-orig'));
+			lookup_btn.html('<i class="icon-search"></i>').removeClass('btn-danger btn-success clear').addClass('btn-info');
+		}
+	});
+	
+	check_user_hash.keypress(function(e){
+		var cur_input = $(this);
+		if (cur_input.val() != '' && e.which == 13) {
+			lookup_btn.click();
+		} else if (lookup_btn.hasClass('clear')) {
+			container.find('.ability-badge').hide();
+			container.find('.unique-badge').hide();
+			hash_result.html(hash_result.attr('data-orig'));
+			lookup_btn.html('<i class="icon-search"></i>').removeClass('btn-danger btn-success clear').addClass('btn-info');
+		}
+	});
+	
+	container.on('click', '.hash-refresh', function(){
+		var element = $(this);
+		var hash = element.closest('tr').find('.hash input').val();
+		element.html('<i class="icon-spin icon-spinner"></i>');
+		refresh_by_ability(hash, element);
+	});
+	
 	var get_readmore_heights = function(selector){
 		container.find(selector+'.readmore').each(function(){
 			var cur_readmore = $(this);
@@ -557,13 +749,14 @@ pines(function(){
 		var tr_component = tr.find('td.component').text();
 		var tr_action = tr.find('td.action').text();
 		var tr_cachequery = tr.find('td.cachequery').text().replace(/\s/g, '');
-		var tr_cacheloggedin = tr.find('td.cacheloggedin').text();
+		var tr_cacheloggedin = tr.find('td.cacheloggedin').text().replace(/\s/g, '');
 		var tr_cachetime = tr.find('td.cachetime').text();
 		var tr_domain = tr.find('td.domain').text();
-		var exception_btn = (tr.find('.exception-btn').length) ? tr.find('.exception-btn') : undefined;
+//		var exception_btn = (tr.find('.exception-btn').length) ? tr.find('.exception-btn') : undefined;
 
-		// Find exception btn and remove it.
+		// Find exception/unique users btns and remove them.
 		directive_modal.find('.exception-btn').remove();
+		directive_modal.find('.unique-users-btn').remove();
 		directive_modal.find('.item-name').text(name);
 		directive_modal.find('[name=component]').val(tr_component);
 		directive_modal.find('[name=action]').val(tr_action);
@@ -583,6 +776,19 @@ pines(function(){
 			directive_modal.find('[name=cachequery]').removeAttr('style').addClass('full-field').after(exceptions_button);
 			directive_modal.find('.exception-btn').addClass('hide');
 		}
+		
+		var users_span = tr.find('.unique-users-span');
+		var users_btn = tr.find('.unique-users-btn');
+		var tr_users = (users_btn.length) ? users_btn.attr("data-users").replace(/"/g, '&quot;') : ((users_span.length) ? users_span.attr('data-users').replace(/"/g, '&quot;') : '');
+		var users_btn_class = (users_btn.hasClass('btn-success')) ? 'btn-success' : '';
+		var users_button = '<button style="width:48%; float:right;padding:4px;" class="btn btn-mini unique-users-btn '+users_btn_class+'" data-name="'+name+'" data-component="'+tr_component+'" data-action="'+tr_action+'" data-domain="'+tr_domain+'" data-users="'+tr_users+'">Unique Users</button>';
+		if (users_btn.length) {
+			directive_modal.find('[name=cacheloggedin]').after(users_button).css('width', '48%').removeClass('full-field');
+		} else {
+			directive_modal.find('[name=cacheloggedin]').removeAttr('style').addClass('full-field').after(users_button);
+			directive_modal.find('.unique-users-btn').addClass('hide');
+		}
+		
 		directive_modal.find('[name=cacheloggedin]').find("option:contains('"+tr_cacheloggedin+"')").prop('selected', true);
 		directive_modal.find('[name=cacheloggedin]').attr('data-orig', tr_cacheloggedin);
 		directive_modal.find('[name=cachetime]').val(tr_cachetime).attr('data-orig', tr_cachetime);
@@ -805,6 +1011,8 @@ pines(function(){
 		}
 	});
 
+	// DIRECTIVE EXCEPTIONS
+
 	container.on('click', '.exception-btn', function(){
 		var cur_btn = $(this);
 		var name = cur_btn.attr('data-name');
@@ -967,6 +1175,7 @@ pines(function(){
 	var num_directives = container.find('.directives-table tbody tr').length;
 	container.find('.num-directives').html(num_directives - 1); // the add one.
 	
+	// GLOBAL EXCEPTIONS
 	
 	global_exceptions_btn.click(function(){
 		// Bring up the modal for editing global exceptions.
@@ -1037,5 +1246,159 @@ pines(function(){
 			}
 		}
 		recalculate_exceptions();
+	});
+	
+	//	UNIQUE USERS
+	
+	container.on('click', '.unique-users-btn', function(){
+		var cur_btn = $(this);
+		var name = cur_btn.attr('data-name');
+		var component = cur_btn.attr('data-component');
+		var action = cur_btn.attr('data-action');
+		var domain = cur_btn.attr('data-domain');
+		var all_unique = !(cur_btn.attr('data-all') == 'false');
+		var get_unique_users = cur_btn.attr('data-users');
+		var users_html;
+		if (get_unique_users == '') {
+			users_html = '';
+		} else {
+			var clean_users = get_unique_users.replace(/&quot;/, '"');
+			var users = JSON.parse(clean_users);
+			users_html = generate_users(users);
+		}
+		
+		// adjust toggles
+		
+		unique_users_modal.find('.btn-group .btn').removeClass('active');
+		var apply_selector = (all_unique) ? '.apply-to-all' : '.apply-to-users';
+		unique_users_modal.find(apply_selector).addClass('active');
+		
+		// Adjust if table looks disabled...
+		if (all_unique) {
+			unique_users_modal.find('.users').addClass('disabled');
+			unique_users_modal.find('.users-form [name=add_user]').attr('disabled', 'disabled');
+		} else {
+			unique_users_modal.find('.users').removeClass('disabled');
+			unique_users_modal.find('.users-form [name=add_user]').removeAttr('disabled');
+		}
+	
+		unique_users_modal.find('.item-name').text(name);
+		unique_users_modal.find('[name=component]').val(component);
+		unique_users_modal.find('[name=caction]').val(action);
+		unique_users_modal.find('[name=domain]').val(domain);
+		unique_users_modal.find('[name=orig_unique_users]').val(get_unique_users);
+		unique_users_modal.find('[name=unique_users]').val(get_unique_users);
+		unique_users_modal.find('[name=all_unique]').val(all_unique);
+		unique_users_modal.find('[name=orig_all_unique]').val(all_unique);
+		unique_users_modal.find('.table.users tbody').html(users_html);
+
+		unique_users_modal.find('.remove-user').click(function(){
+			if (unique_users_modal.find('.users').hasClass('disabled'))
+				return;
+			var tr = $(this).closest('tr');
+			tr.remove();
+			// Refactor the hidden input.
+			refactor_unique_users();
+		});
+
+		unique_users_modal.modal();
+	});
+	
+	apply_hash_buttons.click(function(){
+		var cur_btn = $(this);
+		if (cur_btn.hasClass('active'))
+			return;
+		apply_hash_buttons.removeClass('active');
+		cur_btn.addClass('active');
+		var cur_val;
+		// Switch the user table class
+		if (cur_btn.hasClass('apply-to-all')) {
+			cur_val = true;
+			unique_users_modal.find('.users').addClass('disabled');
+			unique_users_modal.find('.users-form [name=add_user]').attr('disabled', 'disabled');
+		} else {
+			cur_val = false;
+			unique_users_modal.find('.users').removeClass('disabled');
+			unique_users_modal.find('.users-form [name=add_user]').removeAttr('disabled');
+		}
+		// Switch input value...
+		unique_users_modal.find('[name=all_unique]').val(cur_val);
+		var orig_val = !(unique_users_modal.find('[name=orig_all_unique]').val() == 'false');
+		
+		// preserve btn-success if change is from users..?
+		var cur_users_value = unique_users_modal.find('[name=unique_users]').val();
+		var orig_users = unique_users_modal.find('[name=orig_unique_users]').val();
+		
+		if ((orig_val == cur_val) && (orig_users == cur_users_value)) {
+			submit_users.addClass('btn-info').removeClass('btn-success');
+		} else {
+			// One of the above is "changed".. meaning we need to save changes.
+			submit_users.removeClass('btn-info').addClass('btn-success');
+		}
+		
+	});
+	
+	// The actual cancel button.
+	container.find('.cancel-users').click(function(){
+		submit_users.html('<i class="icon-plus"></i> Save').addClass('btn-info').removeClass('btn-success btn-danger');
+	});
+	
+	submit_users.click(function(){
+		if (submit_users.hasClass('btn-success')) {
+			// Submit for saving
+			submit_users.html('<i class="icon-spin icon-spinner"></i>');
+			save_users();
+		} else if (submit_users.hasClass('users-cancel')) {
+			submit_users.html('<i class="icon-plus"></i> Save').addClass('btn-info').removeClass('btn-success btn-danger');
+		}
+	});
+	
+	unique_users_modal.find('[name=unique_users]').change(function(){
+		var cur_users = $(this);
+		var cur_users_value = cur_users.val();
+		var orig_users = unique_users_modal.find('[name=orig_unique_users]').val();
+
+		if (orig_users == cur_users_value) {
+			submit_users.addClass('btn-info').removeClass('btn-success');
+		} else {
+			submit_users.removeClass('btn-info').addClass('btn-success');
+		}
+	});
+	
+	unique_users_modal.find('.add-user-btn').click(function(){
+		var user_table = unique_users_modal.find('.table.users tbody');
+		var tr = $(this).closest('tr');
+		var name_input = tr.find('[name=add_user]');
+		var name = name_input.val();
+		if (name == '')
+			return;
+
+		var validate = true;
+		// Check if name and value combo exists?
+		user_table.find('td.name').each(function(){
+			var cur_td = $(this);
+			if (cur_td.text() == name) {
+				pines.notice('That username is already listed.', 'notice');
+				validate = false;
+				return;
+			}
+		});
+		name_input.val('');
+		if (!validate)
+			return;
+		var remove_td = '<td style="width: 30px;vertical-align:middle;" class="text-center"><button class="btn-danger btn remove-user"><i class="icon-remove"></i></button></td>';
+		var user = $('<tr></tr>');
+
+		user.append('<td class="name">'+name+'</td>');
+		user.append(remove_td);
+
+		user_table.append(user);
+		unique_users_modal.find('.remove-user').click(function(){
+			var tr = $(this).closest('tr');
+			tr.remove();
+			// Refactor the hidden input.
+			refactor_unique_users();
+		});
+		refactor_unique_users();
 	});
 });

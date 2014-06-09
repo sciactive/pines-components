@@ -19,7 +19,14 @@ if ( !gatekeeper('com_cache/managecache') )
 	$result = false;
 
 if ($result !== false) { 
-	if (isset($_REQUEST['save_global_exceptions'])) {
+	if (isset($_REQUEST['save_unique_users'])) {
+		$component = $_REQUEST['component'];
+		$action = $_REQUEST['caction'];
+		$domain = $_REQUEST['domain'];
+		$all_unique = ($_REQUEST['all_unique'] == 'true');
+		$unique_users = json_decode($_REQUEST['unique_users'], true);
+		$result = $pines->com_cache->save_users($component, $action, $domain, $all_unique, $unique_users);
+	} else if (isset($_REQUEST['save_global_exceptions'])) {
 		$users = $_REQUEST['users'];
 		$groups = $_REQUEST['groups'];
 		$result = $pines->com_cache->save_global_exceptions($users, $groups);
@@ -58,6 +65,7 @@ if ($result !== false) {
 			$directive[$component][$action][$domain]['cacheloggedin'] = ($_REQUEST['cacheloggedin'] == 'On');
 			$directive[$component][$action][$domain]['disabled'] = ($_REQUEST['manage'] == 'disable') ? true : false;
 			$directive[$component][$action][$domain]['exceptions'] = json_decode($_REQUEST['maintain_exceptions'], true);
+			$directive[$component][$action][$domain]['unique_users'] = json_decode($_REQUEST['maintain_unique_users'], true);
 
 			$delete = ($_REQUEST['manage'] == 'delete');
 			$edit = ($_REQUEST['edit_directive'] == 'true');

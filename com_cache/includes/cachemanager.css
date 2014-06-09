@@ -184,6 +184,48 @@
 	cursor: pointer;
 	float: right;
 }
+.p_cache_cachemanager .hash-label {
+	font-weight:bold; 
+	text-transform: uppercase;
+	vertical-align:bottom;
+	border: none; 
+	box-shadow: none; 
+	padding: 0; 
+	margin: 0; 
+	height: 35px
+}
+.p_cache_cachemanager .hash-result-table {
+	width:100%; 
+	margin:0;
+	cursor: pointer;
+}
+.p_cache_cachemanager .hash-result-table .hash {
+	padding: 0;
+}
+.p_cache_cachemanager .hash-result-table .hash-control {
+	background: #eee;
+	color: #666;
+	text-shadow: 1px 1px #fff;
+}
+.p_cache_cachemanager .hash-result-table .hash-control:hover {
+	background: #D9EDF7;
+	color: #8DA1AB;
+	text-shadow: 1px 1px #ddd;
+}
+.p_cache_cachemanager .apply-to-container {
+	width:100%;
+	margin-bottom:10px;
+}
+.p_cache_cachemanager .apply-to-hash {
+	text-transform:uppercase;
+	font-size: 12px;
+	font-weight: bold;
+}
+.p_cache_cachemanager .unique-users-modal .users.disabled {
+	background: #eee;
+	color: #aaa;
+	cursor: not-allowed;
+}
 @media (max-width: 1200px) {
 	.p_cache_cachemanager .hide-small {
 		display: none;
@@ -193,6 +235,18 @@
 	}
 	.p_cache_cachemanager li.span4 {
 		height: auto;
+	}
+}
+@media (max-width: 600px) {
+	.p_cache_cachemanager .directives-table,
+	.p_cache_cachemanager .cache-settings,
+	.p_cache_cachemanager .files-table, 
+	.p_cache_cachemanager .lookup-table {
+		font-size: .7em !important;
+	}
+	.p_cache_cachemanager .directives-table td,
+	.p_cache_cachemanager .cache-settings td {
+		padding: 2px !important;
 	}
 }
  

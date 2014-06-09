@@ -1,7 +1,7 @@
 <?php
 
 /*
- * com_cache's refresh action to clear cache depending on criteria.
+ * com_cache's action to look up a user's hash.
  * 
  * @package Components\cache
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -19,12 +19,9 @@ if ( !gatekeeper('com_cache/managecache') )
 	$result = false;
 
 if ($result !== false) { 
-	if (isset($_REQUEST['domain'])) {
-		$domain = $_REQUEST['domain'];
-		$file_name = (isset($_REQUEST['file_name'])) ? $_REQUEST['file_name'] : null;
-		$ability_hash = (isset($_REQUEST['ability_hash'])) ? $_REQUEST['ability_hash'] : null;
-		// Either equals specific domain or all
-		$result = $pines->com_cache->refreshconfig($domain, $file_name, $ability_hash);
+	if (isset($_REQUEST['username'])) {
+		$username = $_REQUEST['username'];
+		$result = $pines->com_cache->lookup($username);
 	} else {
 		$result = false;
 	}

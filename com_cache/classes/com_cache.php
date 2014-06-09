@@ -166,6 +166,132 @@ class com_cache extends component {
 		}
 	}
 	
+	/**
+	 * Save the exceptions.
+	 */
+	function save_users($component, $action, $domain, $all_unique, $unique_users) {
+		// Save the config to core/system
+		if (!file_exists('system/cacheoptions.php'))
+			return false;
+		
+		$cacheoptions = include('system/cacheoptions.php');
+		$cachelist = $cacheoptions['cachelist'];
+		
+		$new_cachelist = $cachelist;
+		if (!isset($new_cachelist[$component][$action][$domain]))
+			return false;
+		
+		$new_cachelist[$component][$action][$domain]['unique_users'] = $unique_users;
+		$new_cachelist[$component][$action][$domain]['all_unique'] = $all_unique;
+		
+		if ($cachelist === $new_cachelist) 
+			return true; // Nothing to write.
+		else {
+			// Write changes.
+			$cacheoptions['cachelist'] = $new_cachelist;
+			$file_contents = sprintf("<?php\nreturn %s;\n?>",
+				var_export($cacheoptions, true)
+			);
+			file_put_contents('system/cacheoptions.php', $file_contents);
+			return true;
+		}
+	}
+	
+	/**
+	 * Look up ability hash by username.
+	 */
+	function lookup($username) {
+		global $pines;
+		// Save the config to core/system
+		if (!file_exists('system/cacheoptions.php'))
+			return false;
+		
+		// Determine the user's ability hash from user info:
+		$user = $pines->entity_manager->get_entity(
+					array('class' => user),
+					array('&',
+						'tag' => array('user', 'com_user'),
+						'data' => array('username', $username)
+					)
+				);
+		if (!isset($user->guid))
+			return false;
+		
+		$ability_hash = $this->get_ability_hash($user);
+		
+		$cacheoptions = include('system/cacheoptions.php');
+		$cachelist = $cacheoptions['cachelist'];
+		
+		// We were going to check if unique hash is necessary - but
+		// we will just automatically show it:
+		$unique = md5($username);
+		
+		$ability_folder = glob($cacheoptions['parent_directory'].'*/a'.$ability_hash); // All Domains -> Ability hash
+		$unique_folder = glob($cacheoptions['parent_directory'].'*/a'.md5($ability_hash.$unique)); // All Domains -> Ability hash
+		$ability_count = 0;
+		foreach($ability_folder as $cur_folder) {
+			$ability_count += $this->get_file_count($cur_folder);
+		}
+		$unique_count = 0;
+		foreach($unique_folder as $cur_folder) {
+			$unique_count += $this->get_file_count($cur_folder);
+		}
+		
+		$result = array();
+		$result['ability_hash'] = 'a'.$ability_hash;
+		$result['ability_count'] = $ability_count;
+		if ($unique != false)
+			$result['unique_hash'] = 'a'.md5($ability_hash.$unique);
+			$result['unique_count'] = $unique_count;
+		return $result;
+	}
+	
+	/**
+	 * Get Ability hash - used by lookup
+	 */
+	function get_ability_hash($user_entity) {
+		$abilities_array = array();
+		if ($user_entity->inherit_abilities) {
+			$abilities_array['inherited_abilities'] = $user_entity->abilities;
+			foreach ($user_entity->groups as $cur_group) {
+				// Check that any group conditions are met before adding the abilities.
+				if ($cur_group->conditions && $pines->config->com_user->conditional_groups) {
+					$pass = true;
+					foreach ($cur_group->conditions as $cur_type => $cur_value) {
+						if (!$pines->depend->check($cur_type, $cur_value)) {
+							$pass = false;
+							break;
+						}
+					}
+					if (!$pass)
+						continue;
+				}
+				// Any conditions are met, so add this group's abilities.
+				$abilities_array['inherited_abilities'] = array_merge($abilities_array['inherited_abilities'], $cur_group->abilities);
+			}
+			if (isset($user_entity->group)) {
+				// Check that any group conditions are met before adding the abilities.
+				$pass = true;
+				if ($user_entity->group->conditions && $pines->config->com_user->conditional_groups) {
+					foreach ($user_entity->group->conditions as $cur_type => $cur_value) {
+						if (!$pines->depend->check($cur_type, $cur_value)) {
+							$pass = false;
+							break;
+						}
+					}
+				}
+				// If all conditions are met, add this group's abilities.
+				if ($pass)
+					$abilities_array['inherited_abilities'] = array_merge($abilities_array['inherited_abilities'], $user_entity->group->abilities);
+			}
+		} else {
+			$abilities_array['abilities'] = $user_entity->abilities;
+		}
+		$abilities = (isset($abilities_array['inherited_abilities'])) ? $abilities_array['inherited_abilities'] : $abilities_array['abilities'];
+		asort($abilities);
+		return md5(serialize($abilities));
+	}
+	
 	
 	/**
 	 * Save the exceptions.
@@ -258,7 +384,7 @@ class com_cache extends component {
 	/**
 	 * Refresh "Deletes" cached files for a domain or all domains.
 	 */
-	function refreshconfig($domain = 'all', $file_name = null) {
+	function refreshconfig($domain = 'all', $file_name = null, $ability_hash = null) {
 		// Need to know where the cache dir is. If the cacheoptions file
 		// does not exist or is wrong - then it won't refresh/delete files
 		// and must be done manually.
@@ -268,6 +394,18 @@ class com_cache extends component {
 		$cacheoptions = include('system/cacheoptions.php');
 		// Should not be hard because it's either a singular domain,
 		// or all domains.
+		
+		if ($ability_hash != null) {
+			// We want to delete one user's hash on all domains.
+			$ability_folder = glob($cacheoptions['parent_directory'].'*/'.$ability_hash); // All Domains -> Ability hash
+			$count = 0;
+			foreach($ability_folder as $cur_folder) {
+				$count += $this->get_file_count($cur_folder);
+				$this->destroy_dir($cur_folder);
+			}
+			// Done, Leave.
+			return $count;
+		}
 		
 		if ($file_name == null) {
 			// Delete domain folders.

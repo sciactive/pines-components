@@ -165,7 +165,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 			$columns = 4;
 		
 		foreach ($this->entity->important as $cur_important) {
-			$imortant_count[$cur_important->guid] = 0;
+			$important_count[$cur_important->guid] = 0;
 			$employees = $cur_important->get_users();
 			$pines->entity_manager->sort($employees, 'job_title');
 		?>

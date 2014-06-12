@@ -4,213 +4,208 @@
  *
  * @package Components\reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Zak Huber <zak@sciactive.com>
+ * @author Angela Murrell <amasiell.g@gmail.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = htmlspecialchars($this->entity->company_name).' Warboard';
+
+$positions = $this->entity->positions;
+$cols = $this->entity->columns;
+$span_num = (12 / $cols); // bootstrap 12 columns..
+if (isset($_REQUEST['template'])) { ?>
+	<link type="text/css" rel="stylesheet" media="all" href="components/com_bootstrap/includes/themes/normal/css/bootstrap.css"/>
+	<link type="text/css" rel="stylesheet" media="all" href="components/com_bootstrap/includes/fontawesome/css/font-awesome.css"/>
+	<br/>
+	<style type="text/css">
+		body {
+			padding: 0 10px;
+		}
+		h3 {
+			font-size: 14px;
+			line-height: 18px;
+		}
+		td {
+			font-size: .9em;
+			padding: 1px 0 !important;
+			line-height: 12px !important;
+		}
+		.row-fluid {
+			margin-left: 0 !important;
+		}
+	</style>
+<?php } else {
+	$this->title = htmlspecialchars($this->entity->company_name).' Warboard';
+}
+function make_location($location, $positions, $span_num) {
+	$location_mod = new module('com_reports', 'warboard_location');
+	$location_mod->location = $location;
+	$location_mod->span_num = $span_num;
+	$location_mod->positions = $positions;
+	return $location_mod->render();
+}
+
+function make_important($important, $positions, $span_num) {
+	$important_mod = new module('com_reports', 'warboard_important');
+	$important_mod->important = $important;
+	$important_mod->span_num = $span_num;
+	$important_mod->positions = $positions;
+	return $important_mod->render();
+}
+
+function make_headquarters($headquarters, $span_num) {
+	$hq_mod = new module('com_reports', 'warboard_headquarters');
+	$hq_mod->hq = $headquarters;
+	$hq_mod->span_num = $span_num;
+	return $hq_mod->render();
+}
 ?>
 <style type="text/css" >
-	#p_muid_warboard_table {
-		background-color: white;
-		color: black;
-		font-size: 8pt;
+	.warboard-container .text-center {
 		text-align: center;
-		white-space: nowrap;
-		width: 100%;
 	}
-	#p_muid_warboard_table td {
-		vertical-align: text-top;
-		width: <?php echo 100 / $this->entity->columns; ?>%;
+	.warboard-container table {
+		font-size: .9em;
+		margin: 0;
 	}
-	#p_muid_warboard_table .location, .important, .hq {
-		border-collapse: collapse;
-		border-spacing: 0;
-		width: 100%;
+	.warboard-container table td {
+		text-align:center;
 	}
-	#p_muid_warboard_table .location td, .important td, .hq td {
-		border: solid 1px;
+	.warboard-container .alert {
+		padding: 5px;
+		border-radius: 0;
+		margin:0;
+		border-bottom:0;
 	}
-	#p_muid_warboard_table .location .wb_label {
-		background-color: beige;
+	.warboard-container .alert h3 {
+		margin: 0;
 	}
-	#p_muid_warboard_table .location .heading {
-		background-color: gainsboro;
-		color: #2B2B2B;
+	.warboard-container .section-container {
+		border: 1px solid #eee;
 	}
-	#p_muid_warboard_table .important .wb_label {
-		background-color: lightsteelblue;
+	.warboard-container i.block {
+		font-size: 1.4em;
+		display:block;
 	}
-	#p_muid_warboard_table .hq .wb_label {
-		background-color: palegreen;
+	.warboard-container .location,
+	.warboard-container .important {
+		font-size: .8em;
 	}
-	#p_muid_warboard_table .empty {
-		background-color: #F1F1F1;
+	.warboard-container .location .phone-numbers td {
+		padding-top: 3px;
 	}
-	#p_muid_warboard_table .newhire {
-		background-color: #CCFFCC;
+	.warboard-container .location td,
+	.warboard-container .important td {
+		padding: 0px 5px;
+	}
+	.warboard-container .emp-name {
+		text-align: left;
+	}
+	.warboard-container .emp-phone {
+		font-weight:bold;
+		text-align: right;
+	}
+	.warboard-container .title-label {
+		font-weight:bold;
+		text-transform: uppercase;
+	}
+	.warboard-container .emp-name {
+		text-transform: uppercase;
+	}
+	.warboard-container .border-right,
+	.warboard-container .hire-date {
+		border-right: 1px solid #ddd;
+	}
+	.warboard-container .hire-date {
+		text-align: left;
+	}
+	.warboard-container .hire-date .badge {
+		float: right;
+		margin-top: 1px;
+	}
+	.warboard-container .section-container {
+		margin-bottom: 10px;
+	}
+	.warboard-container .important td {
+		border-right: 1px solid #ddd;
+	}
+	.warboard-container .important .emp-phone {
+		text-align:center;
+	}
+	@media (min-width: 768px) {
+		.warboard-container .row-fluid {
+			margin-left: 15px;
+		}
+		.warboard-container .span4 {
+			margin-left: 5px;
+		}
+		.warboard-container .span4 .row-fluid {
+			margin-left: 0;
+		}
+	}
+	@media (min-width: 1100px) {
+		.warboard-container .row-fluid {
+			margin-left: 25px;
+		}
 	}
 </style>
-<table id="p_muid_warboard_table">
-	<tr>
+<div class="warboard-container">
 	<?php
-	$count = 0;
-	$location_rows = $important_rows = 0;
-	foreach ($this->entity->locations as $cur_location) {
-		$location_count[$cur_location->guid] = 0;
-		$employees = $cur_location->get_users();
-		$pines->entity_manager->sort($employees, 'hire_date');
-		if ($count > 0 && ($count / $this->entity->columns) == floor($count / $this->entity->columns)) { ?>
-		</tr>
-		<tr>
-		<?php } ?>
-			<td>
-				<table class="location" id="p_muid_location_<?php echo htmlspecialchars($cur_location->guid); ?>">
-					<tr class="wb_label">
-						<td colspan="2">
-							<strong><?php
-							echo htmlspecialchars($cur_location->name);
-							if ($pines->config->com_reports->warboard_states)
-								echo ', ' . htmlspecialchars($cur_location->state);
-							?></strong>
-						</td>
-						<td><?php echo htmlspecialchars(format_phone($cur_location->phone)); ?></td>
-					</tr>
-					<?php if ($pines->config->com_reports->warboard_phone2_show) { ?>
-					<tr class="wb_label">
-						<td colspan="2" style="text-align: right;"><?php echo htmlspecialchars($pines->config->com_reports->warboard_phone2_label); ?>&nbsp;</td>
-						<td><?php echo htmlspecialchars(format_phone($cur_location->phone2)); ?></td>
-					</tr>
-					<?php } ?>
-					<tr class="heading">
-						<td colspan="3">District</td>
-					</tr>
-					<tr>
-						<td colspan="3"><?php echo isset($cur_location->parent->name) ? htmlspecialchars($cur_location->parent->name) : '-'; ?></td>
-					</tr>
-					<?php
-					foreach ($this->entity->positions as $cur_title) {
-						$location_count[$cur_location->guid]++;
-						$empty = true;
-					?>
-					<tr class="heading <?php echo strtolower(str_replace(' ', '_', $cur_location->guid.$cur_title)); ?>">
-						<td colspan="3"><?php echo htmlspecialchars($cur_title).$plural; ?></td>
-					</tr>
-					<?php
-					foreach ($employees as $cur_employee) {
-						if (!$cur_employee->employee || $cur_employee->terminated || $cur_employee->job_title != $cur_title)
-							continue;
-						$location_count[$cur_location->guid]++;
-						$empty = false;
-						?>
-					<tr <?php echo ($cur_employee->new_hire) ? 'class="newhire"' : ''; ?>>
-						<td style="width: 25%;"><?php echo htmlspecialchars(format_date($cur_employee->hire_date, 'custom', 'n/j/y')); ?></td>
-						<td style="width: 50%;"><?php echo htmlspecialchars($cur_employee->name); ?></td>
-						<td style="width: 25%;"><?php echo htmlspecialchars(format_phone($cur_employee->phone)); ?></td>
-					</tr>
-						<?php
+	// Make the warboard locations and important numbers:
+	$made_hq = false;
+	$num_rows = count($this->entity->rows);
+	if ($num_rows > 1) {
+		$c = 1;
+		foreach ($this->entity->rows as $cur_row) { ?>
+			<div class="row-fluid">
+				<?php foreach ($cur_row as $cur_block) { 
+					if ($cur_block['type'] == 'location') {
+						echo make_location($cur_block['location'], $positions, $span_num);
+					} else if ($cur_block['type'] == 'stack') {
+						if ($cur_block['stack_hq']) {
+							echo '<div class="span'.$span_num.'">';
+							echo '<div class="row-fluid">'; // start stack1
+							echo make_important($cur_block['important'], $positions, 12);
+							echo '</div>'; // finish stack1
+							echo '<div class="row-fluid">';// start stack2
+							echo make_headquarters($this->entity->hq, 12);
+							$made_hq = true;
+							echo '</div>'; // finish stack2
+							echo '</div>';
+						} else {
+							echo '<div class="span'.$span_num.'">';
+							echo '<div class="row-fluid">'; // start stack1
+							echo make_important($cur_block['stack1'], $positions, 12);
+							echo '</div>'; // finish stack1
+							echo '<div class="row-fluid">';// start stack2
+							echo make_important($cur_block['stack2'], $positions, 12);
+							echo '</div>'; // finish stack2
+							echo '</div>';
+							
+							if ($cur_block['make_hq'] && count($cur_row) < $cols) {
+								// This means its the end of importants
+								// And we ALSO checked if we had room to put the hq here
+								echo make_headquarters($this->entity->hq, $span_num);
+								$made_hq = true;
+							}
+						}
+					} else {
+						echo make_important($cur_block['important'], $positions, $span_num);
 					}
-					if ($empty) {
-						$location_count[$cur_location->guid]--; ?>
-					<script type="text/javascript">
-						pines(function(){
-							$(".<?php echo strtolower(str_replace(' ', '_', $cur_location->guid.$cur_title)); ?>").hide();
-						});
-					</script>
-					<?php }
-					}
-					if ($location_count[$cur_location->guid] > $location_rows) $location_rows = $location_count[$cur_location->guid];
-					?>
-				</table>
-			</td>
-		<?php $count++; } ?>
-	</tr>
-	<tr>
-		<td colspan="<?php echo htmlspecialchars($this->entity->columns); ?>"><strong>Important Numbers</strong></td>
-	</tr>
-	<tr>
-		<td>
-			<table class="hq">
-				<tr>
-					<td class="wb_label"><strong><?php echo htmlspecialchars($this->entity->hq->name); ?></strong></td>
-				</tr>
-				<tr>
-					<td><?php echo htmlspecialchars(format_phone($this->entity->hq->phone)); ?></td>
-				</tr>
-				<?php if ($pines->config->com_reports->warboard_phone2_show) { ?>
-				<tr>
-					<td><?php echo htmlspecialchars(rtrim($pines->config->com_reports->warboard_phone2_label, ': ')); ?>: <?php echo htmlspecialchars(format_phone($this->entity->hq->phone2)); ?></td>
-				</tr>
-				<?php } ?>
-				<tr>
-					<td>FAX: <?php echo htmlspecialchars(format_phone($this->entity->hq->fax)); ?></td>
-				</tr>
-				<tr>
-					<td><?php echo htmlspecialchars($this->entity->hq->address_1); ?></td>
-				</tr>
-				<tr>
-					<td><?php echo htmlspecialchars($this->entity->hq->city); ?>, <?php echo htmlspecialchars($this->entity->hq->state); ?> <?php echo htmlspecialchars($this->entity->hq->zip); ?></td>
-				</tr>
-			</table>
-		</td>
-		<?php
-		
-		if ($pines->config->com_reports->use_extension && $pines->config->com_reports->use_other_phone)
-			$columns = 5;
-		elseif (!$pines->config->com_reports->use_extension && !$pines->config->com_reports->use_other_phone)
-			$columns = 3;
-		else 
-			$columns = 4;
-		
-		foreach ($this->entity->important as $cur_important) {
-			$important_count[$cur_important->guid] = 0;
-			$employees = $cur_important->get_users();
-			$pines->entity_manager->sort($employees, 'job_title');
-		?>
-		<td colspan="<?php echo floor(($this->entity->columns - 1)/count($this->entity->important)); ?>">
-			<table class="important" id="p_muid_important_<?php echo htmlspecialchars($cur_important->guid); ?>">
-				<tr>
-					<td colspan="<?php echo $columns; ?>" class="wb_label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
-				</tr>
-				<?php
-				foreach ($employees as $cur_employee) {
-					if (!$cur_employee->employee || $cur_employee->terminated)
-						continue;
-					$important_count[$cur_important->guid]++;
-				?>
-				<tr>
-					<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_employee->job_title); ?></td>
-					<td><?php echo htmlspecialchars(format_phone($cur_employee->phone)); ?></td>
-					<?php if ($pines->config->com_reports->use_extension) { ?>
-					<td><?php echo !empty($cur_employee->phone_ext) ? 'ext '.htmlspecialchars($cur_employee->phone_ext) : ''; ?></td>
-					<?php } if ($pines->config->com_reports->use_other_phone) { ?>
-					<td><?php echo !empty($cur_employee->other_phone) ? $pines->config->com_reports->other_phone_label.' '.htmlspecialchars(format_phone($cur_employee->other_phone)) : ''; ?></td>
-					<?php } ?>
-				</tr>
-				<?php } ?>
-			</table>
-		</td>
-		<?php if ($important_count[$cur_important->guid] > $important_rows) $important_rows = $important_count[$cur_important->guid]; } ?>
-	</tr>
-</table>
-<script type="text/javascript">
-	pines(function(){
-<?php
-foreach ($this->entity->locations as $cur_location) {
-	$add_rows = $location_rows - $location_count[$cur_location->guid];
-	for ($i=0; $i < $add_rows; $i++) { ?>
-		$("#p_muid_location_"+<?php echo json_encode($cur_location->guid); ?>).append('<tr class="empty"><td style="width: 25%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td><td style="width: 25%;">&nbsp;</td></tr>');
-<?php
+				} 
+				if ($c == $num_rows && (count($cur_row) < $cols) && !$made_hq) {
+					// Put the HQ here...
+					echo make_headquarters($this->entity->hq, $span_num);
+					$made_hq = true;
+				} ?>
+			</div>
+	<?php	}
+	} 
+	if (!$made_hq) {
+		echo '<div class="row-fluid">';
+		echo make_headquarters($this->entity->hq, $span_num);
+		echo '</div>';
 	}
-}
-foreach ($this->entity->important as $cur_important) {
-	$add_rows = $important_rows - $important_count[$cur_important->guid];
-	for ($i=0; $i < $add_rows; $i++) { ?>
-		$("#p_muid_important_"+<?php echo json_encode($cur_important->guid); ?>).append('<tr class="empty"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
-<?php } } ?>
-		return;
-	});
-</script>
+	?>
+</div>

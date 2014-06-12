@@ -175,6 +175,10 @@ $pines->com_pgrid->load();
 					</select></label>
 			</div>
 			<div class="pf-element">
+				<label><span class="pf-label">Show Warboard</span>
+					<input class="pf-field" type="checkbox" name="show_warboard" value="ON" <?php echo (isset($this->entity->show_warboard)) ? (($this->entity->show_warboard) ? 'checked="checked"' : '') : 'checked="checked"'; ?>/></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Training Completion Date</span>
 					<input class="pf-field" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : htmlspecialchars(format_date($this->entity->training_completion_date, 'date_sort')); ?>" /></label>
 			</div>

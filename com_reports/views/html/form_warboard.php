@@ -40,6 +40,28 @@ $pines->com_pgrid->load();
 		});
 
 		$("#p_muid_group_grid").pgrid_expand_rows($("#p_muid_group_grid").pgrid_get_all_rows());
+		
+		var stack_buttons = $('#p_muid_group_grid').find('.stack-full');
+		
+		stack_buttons.click(function(){
+			var btn = $(this);
+			var td = btn.closest('td');
+			var checkbox = td.find('input');
+			var guid = checkbox.attr('data-guid');
+			
+			if (!checkbox.is(':checked')) {
+				alert('Check the important group first.');
+				return;
+			}
+			if (btn.hasClass('full')) {
+				btn.text('stack').removeClass('badge-info full').addClass('stack');
+				checkbox.val(guid+'_stack');
+			} else {
+				btn.text('full').addClass('badge-info full').removeClass('stack');
+				checkbox.val(guid);
+			}
+			
+		});
 	});
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'savewarboard')); ?>">
@@ -64,12 +86,6 @@ $pines->com_pgrid->load();
 			<option value="2" <?php echo ($this->entity->columns == 2) ? 'selected="selected"' : ''; ?>>2</option>
 			<option value="3" <?php echo ($this->entity->columns == 3) ? 'selected="selected"' : ''; ?>>3</option>
 			<option value="4" <?php echo ($this->entity->columns == 4) ? 'selected="selected"' : ''; ?>>4</option>
-			<option value="5" <?php echo ($this->entity->columns == 5) ? 'selected="selected"' : ''; ?>>5</option>
-			<option value="6" <?php echo ($this->entity->columns == 6) ? 'selected="selected"' : ''; ?>>6</option>
-			<option value="7" <?php echo ($this->entity->columns == 7) ? 'selected="selected"' : ''; ?>>7</option>
-			<option value="8" <?php echo ($this->entity->columns == 8) ? 'selected="selected"' : ''; ?>>8</option>
-			<option value="9" <?php echo ($this->entity->columns == 9) ? 'selected="selected"' : ''; ?>>9</option>
-			<option value="10" <?php echo ($this->entity->columns == 10) ? 'selected="selected"' : ''; ?>>10</option>
 		</select>
 	</div>
 	<div class="pf-element pf-full-width">
@@ -84,10 +100,14 @@ $pines->com_pgrid->load();
 				</tr>
 			</thead>
 			<tbody>
-			<?php foreach($this->groups as $cur_group) { ?>
+			<?php foreach($this->groups as $cur_group) {
+				$stacked = is_array($this->entity->stack) && in_array($cur_group->guid, $this->entity->stack); ?>
 				<tr title="<?php echo htmlspecialchars($cur_group->guid); ?>">
 					<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
-					<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
+					<td class="important_label">
+						<input type="checkbox" name="important[]" data-guid="<?php echo htmlspecialchars($cur_group->guid); ?>" value="<?php echo htmlspecialchars($cur_group->guid); echo ($stacked) ? '_stack' : '' ; ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/>
+						<span class="stack-full <?php echo ($stacked) ? 'stack badge' : 'full badge badge-info' ; ?>"><?php echo ($stacked) ? 'stack' : 'full' ; ?></span>
+					</td>
 					<td class="hq_label"><input type="radio" name="hq" value="<?php echo htmlspecialchars($cur_group->guid); ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
 					<td><a data-entity="<?php echo htmlspecialchars($cur_group->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->name); ?></a></td>
 					<td><a data-entity="<?php echo htmlspecialchars($cur_group->parent->guid); ?>" data-entity-context="group"><?php echo htmlspecialchars($cur_group->parent->name); ?></a></td>

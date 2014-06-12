@@ -15,8 +15,8 @@ $positions = $this->entity->positions;
 $cols = $this->entity->columns;
 $span_num = (12 / $cols); // bootstrap 12 columns..
 if (isset($_REQUEST['template'])) { ?>
-	<link type="text/css" rel="stylesheet" media="all" href="components/com_bootstrap/includes/themes/normal/css/bootstrap.css"/>
-	<link type="text/css" rel="stylesheet" media="all" href="components/com_bootstrap/includes/fontawesome/css/font-awesome.css"/>
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_bootstrap/includes/themes/normal/css/bootstrap.css"/>
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_bootstrap/includes/fontawesome/css/font-awesome.css"/>
 	<br/>
 	<style type="text/css">
 		body {

@@ -105,7 +105,7 @@ class tpl_simple extends template {
 				if (preg_match('/'.preg_quote($root, '/').'/', $cur_url)) {
 					$cur_url = preg_replace('/'.preg_quote($root, '/').'/', '', $cur_url);
 				}
-				$mtime = filemtime($cur_url);
+				$mtime = filemtime($root.$cur_url);
 				$last_mod = ($mtime > $last_mod) ? $mtime : $last_mod;
             }
 			unset($cur_url);

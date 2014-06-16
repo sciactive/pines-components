@@ -37,7 +37,7 @@ class com_jqueryuitouch extends component {
 			if ($pines->config->compress_cssjs) {
 				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
 				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
-				$js[] =  $file_root.'components/com_jqueryitouch/includes/'.($pines->config->debug_mode ? 'jquery.ui.touch-punch.js' : 'jquery.ui.touch-punch.min.js');
+				$js[] =  $file_root.'components/com_jqueryuitouch/includes/'.($pines->config->debug_mode ? 'jquery.ui.touch-punch.js' : 'jquery.ui.touch-punch.min.js');
 				$pines->config->loadcompressedjs = $js;
 			} else {
 				$module = new module('com_jqueryuitouch', 'jqueryuitouch', 'head');

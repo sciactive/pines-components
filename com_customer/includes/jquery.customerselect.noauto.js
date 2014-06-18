@@ -13,16 +13,23 @@ $.fn.customerselect = function(options){
 var all = this;
 all.each(function(){
 	var cs = $(this);
+        var identifier = cs[0].id;
+        var modal_id = 'customermodal';
+        var back_to_search_id = 'back_to_search';
+        if (identifier.length) {
+            modal_id += '-' + identifier;
+            back_to_search_id += '-' + identifier;
+        }
         var results_array = [];
         var search_term = '';
         var found_result = '';
-        var modal_markup = '<div style="display: block;" id="customermodal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="customerselect" aria-hidden="false"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="myModalLabel">Pick A Customer:</h3></div><div id="#customerselect-body" class="modal-body" style="min-height: 130px;"><div style="text-align: center; margin-top: 30px;" id="throbber"><i style="font-size: 30px; margin-bottom: 10px;" class="icon-spinner icon-spin icon-large"> </i><br />Loading...</div></div></div>';
-        var error_message = '<div class="alert alert-info"><h4>No Result Found</h4><p>The person may not exist, or your term is misspelled.</p><a id="back_to_search" class="btn btn-info">Back to Search</a></div>';
+        var modal_markup = '<div style="display: block;" id="' + modal_id + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="customerselect" aria-hidden="false"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="myModalLabel">Pick A Customer:</h3></div><div id="#customerselect-body" class="modal-body" style="min-height: 130px;"><div style="text-align: center; margin-top: 30px;" id="throbber"><i style="font-size: 30px; margin-bottom: 10px;" class="icon-spinner icon-spin icon-large"> </i><br />Loading...</div></div></div>';
+        var error_message = '<div class="alert alert-info"><h4>No Result Found</h4><p>The person may not exist, or your term is misspelled.</p><a id="' + back_to_search_id + '" class="btn btn-info">Back to Search</a></div>';
         // Need to append modal_markup to html body
         $('body').append(modal_markup);
-        var cust_modal = $('#customermodal');
-        var cust_body = $('#customermodal .modal-body');
-        var throbber = $('#customermodal #throbber');
+        var cust_modal = $("#" + modal_id);
+        var cust_body = $('#'+ modal_id + ' .modal-body');
+        var throbber = $('#' + modal_id + ' #throbber');
         function searchHandler() {
             search_term = cs.val();
             $.ajax({
@@ -33,7 +40,7 @@ all.each(function(){
                     if (!data) {
                             results_array = [];
                             cust_body.html(error_message);
-                            $("#back_to_search").click(function(e) {
+                            $("#" + back_to_search_id).click(function(e) {
                                 cust_modal.modal('toggle');
                                 cs.focus();
                             });

@@ -53,6 +53,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'front_page_title',
+		'cname' => 'Front Page Title',
+		'description' => 'The title to use on the front page.\nThis will replace the default title, so please append or prepend the default f you wish to keep it.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'global_meta_tags',
 		'cname' => 'Global Meta Tags',
 		'description' => 'Meta tags for every page. The format is name:content.',

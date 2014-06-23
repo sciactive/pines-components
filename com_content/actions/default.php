@@ -15,6 +15,9 @@ defined('P_RUN') or die('Direct access prohibited');
 if ($pines->config->com_content->front_page_meta_tags)
 	$module = new module('com_content', 'front_page_meta_tags', 'head');
 
+if (!empty($pines->config->com_content->front_page_title))
+	$pines->config->page_title = $pines->config->com_content->front_page_title;
+
 // Set the variant for the front page.
 if ($pines->config->com_content->front_page_variant && $pines->com_content->is_variant_valid($pines->config->com_content->front_page_variant)) {
 	$cur_template = $pines->current_template;

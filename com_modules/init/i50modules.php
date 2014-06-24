@@ -14,6 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!$pines->config->com_modules->show_modules)
 	return;
 
+if (XMLREQUEST)
+	return;
+
 $modules = (array) $pines->entity_manager->get_entities(
 		array('class' => com_modules_module),
 		array('&',

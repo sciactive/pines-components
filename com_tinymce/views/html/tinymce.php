@@ -22,6 +22,11 @@ $("textarea.peditor").tinymce({
 	script_url: '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 	// General options
 	theme: "advanced",
+        protect: [
+            /<noscript>([\s\S]*?)<\/noscript>/g // Doesn't escape out of noscript tag elements
+        ],
+        valid_elements: "*[*]",
+        extended_valid_elements: "*[*]",
 	<?php switch ($pines->config->com_tinymce->skin) {
 		case 'default':
 		default:
@@ -129,6 +134,8 @@ $("textarea.peditor").tinymce({
 $("textarea.peditor-simple").tinymce({
 	script_url: '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 	theme: "advanced",
+        valid_elements: "*[*]",
+        extended_valid_elements: "*[*]",
 	theme_advanced_buttons1: "newdocument,|,bold,italic,underline,strikethrough,|,undo,redo,|,bullist,numlist",
 	theme_advanced_buttons2: "",
 	theme_advanced_buttons3: "",
@@ -164,6 +171,8 @@ $("textarea.peditor-simple").tinymce({
 $("textarea.peditor-email").tinymce({
 	script_url : '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 	theme : "advanced",
+        valid_elements: "*[*]",
+        extended_valid_elements: "*[*]",
 	<?php switch ($pines->config->com_tinymce->skin) {
 		case 'default':
 		default:

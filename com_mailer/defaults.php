@@ -150,6 +150,13 @@ return array(
 		'value' => '',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'email_templates_send_limit',
+		'cname' => 'Email Templates Send Limit',
+		'description' => 'The user may send only this number of emails per transaction. 0 means unlimited.',
+		'value' => 0,
+		'peruser' => true,
+	),
 );
 
 ?>

@@ -20,6 +20,7 @@ $module->email_templates = $pines->com_mailer->get_email_templates();
 $module->email_suffix = '@'.$pines->config->com_mailer->email_templates_domain;
 $module->email_prefix = $pines->config->com_mailer->email_templates_prefix_group ? preg_replace('#@.*$#', '', $_SESSION['user']->group->email) : (!empty($pines->config->com_mailer->email_templates_prefix_default) ? $pines->config->com_mailer->email_templates_prefix_default : preg_replace('#@.*$#', '', $_SESSION['user']->email));
 $module->edit_email = (gatekeeper('com_mailer/editsendtemplateemail')) ? true : false;
+$module->select_rows_limit = !empty($pines->config->com_mail->email_templates_send_limit) ? (int) $pines->config->com_mail->email_templates_send_limit : 0; // 0 means no limit.
 $pines->page->override_doc($module->render());
 
 ?>

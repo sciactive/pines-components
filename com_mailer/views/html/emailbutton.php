@@ -58,7 +58,7 @@ defined('P_RUN') or die('Direct access prohibited'); ?>
 					</div>
 				</div>
 				<hr style="margin: 5px 0;"/>
-				<div class="text-center"><button class="btn-large btn btn-info send-email-btn"><i class="icon-envelope"></i> Send Email</button></div>
+				<div class="text-center"><button class="btn-large btn btn-info send-email-btn" data-send="<?php echo $this->select_rows_limit; ?>"><i class="icon-envelope"></i> Send Email</button></div>
 				<div class="text-center" style="margin-top:10px;"><h5 class="text-error send-status"></h5></div>
 			</div>
 			<div class="results-container hide">

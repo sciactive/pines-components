@@ -40,6 +40,8 @@
 
 			if (row_callback)
 				new_rows.each(row_callback);
+			
+			pgrid.trigger('rows_added.pgrid');
 		});
 		return this;
 	};
@@ -264,7 +266,24 @@
 		});
 		return this;
 	};
-
+	$.fn.pgrid_add_toolbar_item = function(item) {
+		var pgrid = this.get(0);
+		if (!item)
+			return this;
+		if (!pgrid.pines_grid)
+			return this;
+		pgrid = pgrid.pines_grid;
+		if (!pgrid.pgrid_toolbar)
+			return this;
+		
+		var toolbar_container = pgrid.closest('.ui-pgrid').find('.ui-pgrid-toolbar');
+		// Use HTML
+		toolbar_container.append(item);
+		item.fadeIn(parseInt(item.attr('data-show')));
+		
+		item.trigger('toolbar_item_added.pgrid');
+		return this;
+	};
 	$.fn.pgrid = function(options) {
 		// Build main options before element iteration.
 		var opts = $.extend({}, $.fn.pgrid.defaults, options);
@@ -1364,11 +1383,12 @@
 				pgrid.pgrid_widget.append(pgrid.footer);
 			// Put the header selector into the DOM.
 			pgrid.pgrid_widget.append(pgrid.pgrid_header_select);
-
+			
 			// Save the pgrid object in the DOM, so we can access it.
 			this.pines_grid = pgrid;
+			pgrid.trigger('pgrid_loaded.pgrid');
 		});
-
+		
 		return this;
 	};
 

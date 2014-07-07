@@ -48,6 +48,7 @@ $(window).load(function(){
 		var partial_skipped_num = email_modal.find('.partial-skipped-num');
 		var partial_failed_num = email_modal.find('.partial-failed-num');
 		var partial_result_items = email_modal.find('.partial-result-item');
+		var select_rows_limit = parseInt(send_email_btn.attr('data-send'));
 
 		function get_entity_class(){
 			var title = pgrid_table.find('tr.ui-state-default').first().attr('title');
@@ -74,7 +75,10 @@ $(window).load(function(){
 				alert('Please make a selection before performing this operation.');
 				return;
 			}
-
+			if (num_rows > select_rows_limit) {
+				alert('You may only select '+select_rows_limit+' rows per transaction.');
+				return;
+			}
 			var guids = [];
 			selected_rows.each(function(){
 				var cur_guid = $(this).attr('title');

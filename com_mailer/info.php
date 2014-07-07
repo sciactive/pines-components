@@ -32,10 +32,12 @@ return array(
 		array('newrendition', 'Create Renditions', 'User can create new renditions.'),
 		array('editrendition', 'Edit Renditions', 'User can edit current renditions.'),
 		array('deleterendition', 'Delete Renditions', 'User can delete current renditions.'),
-		array('listtemplates', 'List Templates', 'User can see templates.'),
-		array('newtemplate', 'Create Templates', 'User can create new templates.'),
-		array('edittemplate', 'Edit Templates', 'User can edit current templates.'),
-		array('deletetemplate', 'Delete Templates', 'User can delete current templates.'),
+		array('sendtemplateemail', 'Send Email Textual Templates', 'User can send pre-written email templates on certain grids.'),
+		array('editsendtemplateemail', 'Edit Email Prefix on Templates', 'User edit their sending mail address prefix (not the domain).'),
+		array('listtemplates', 'List Design Templates', 'User can see templates.'),
+		array('newtemplate', 'Create Design Templates', 'User can create new templates.'),
+		array('edittemplate', 'Edit Design Templates', 'User can edit current templates.'),
+		array('deletetemplate', 'Delete Design Templates', 'User can delete current templates.'),
 	),
 );
 

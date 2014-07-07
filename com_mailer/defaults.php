@@ -59,60 +59,97 @@ return array(
 		'value' => '-femail@example.com',
 		'peruser' => true,
 	),
-        array(
-                'name' => 'sendgrid',
-                'cname' => 'Send Emails via SendGrid',
-                'description' => 'Enabling this will try to send emails via SendGrid',
-                'value' => false,
-        ),
-        array(
-                'name' => 'sendgrid_default_template',
-                'cname' => 'Use SendGrid Default Template',
-                'description' => 'When using SendGrid, default to the SendGrid template instead of default Pines.',
-                'value' => false,
-        ),
-        array(
-                'name' => 'sendgrid_url',
-                'cname' => 'SendGrid API URL',
-                'description' => 'The URL to POST to for SendGrid',
-                'value' => 'https://api.sendgrid.com/api/mail.send.json'
-        ),
-        array(
-                'name' => 'sendgrid_api_user',
-                'cname' => 'SendGrid Username',
-                'description' => 'Your SendGrid Account Username',
-                'value' => ''
-        ),
-        array(
-                'name' => 'sendgrid_api_key',
-                'cname' => 'SendGrid Password',
-                'description' => 'Your SendGrid Account Password',
-                'value' => ''
-        ),
-        array(
-                'name' => 'bypass_sendgrid_list',
-                'cname' => 'Bypass SendGrid\'s List Management',
-                'description' => 'This option is a SendGrid filter which will bypass unsubscribed and bounced emails',
-                'value' => false
-        ),
-        array(
-                'name' => 'domain_bypass',
-                'cname' => 'Domain to bypass emails',
-                'description' => 'The domain name to check to bypass SendGrid\'s List Management',
-                'value' => ''
-        ),
-        array(
-                'name' => 'one_sender',
-                'cname' => 'Send all email from one email address',
-                'description' => 'Enable this if you want to send all emails from one email address',
-                'value' => false
-        ),
-        array(
-                'name' => 'sendgrid_from_address',
-                'cname' => 'The From Address to use in SendGrid emails',
-                'description' => 'The From Field in the email',
-                'value' => 'support@'.$_SERVER['SERVER_NAME']
-        ),
+	array(
+			'name' => 'sendgrid',
+			'cname' => 'Send Emails via SendGrid',
+			'description' => 'Enabling this will try to send emails via SendGrid',
+			'value' => false,
+			'peruser' => true,
+	),
+	array(
+			'name' => 'sendgrid_default_template',
+			'cname' => 'Use SendGrid Default Template',
+			'description' => 'When using SendGrid, default to the SendGrid template instead of default Pines.',
+			'value' => false,
+			'peruser' => true,
+	),
+	array(
+			'name' => 'sendgrid_url',
+			'cname' => 'SendGrid API URL',
+			'description' => 'The URL to POST to for SendGrid',
+			'value' => 'https://api.sendgrid.com/api/mail.send.json',
+			'peruser' => true,
+	),
+	array(
+			'name' => 'sendgrid_api_user',
+			'cname' => 'SendGrid Username',
+			'description' => 'Your SendGrid Account Username',
+			'value' => '',
+			'peruser' => true,
+	),
+	array(
+			'name' => 'sendgrid_api_key',
+			'cname' => 'SendGrid Password',
+			'description' => 'Your SendGrid Account Password',
+			'value' => '',
+			'peruser' => true,
+	),
+	array(
+			'name' => 'bypass_sendgrid_list',
+			'cname' => 'Bypass SendGrid\'s List Management',
+			'description' => 'This option is a SendGrid filter which will bypass unsubscribed and bounced emails',
+			'value' => false,
+			'peruser' => true,
+	),
+	array(
+			'name' => 'domain_bypass',
+			'cname' => 'Domain to bypass emails',
+			'description' => 'The domain name to check to bypass SendGrid\'s List Management',
+			'value' => '',
+			'peruser' => true,
+	),
+	array(
+			'name' => 'one_sender',
+			'cname' => 'Send all email from one email address',
+			'description' => 'Enable this if you want to send all emails from one email address',
+			'value' => false,
+			'peruser' => true,
+	),
+	array(
+			'name' => 'sendgrid_from_address',
+			'cname' => 'The From Address to use in SendGrid emails',
+			'description' => 'The From Field in the email',
+			'value' => 'support@'.$_SERVER['SERVER_NAME'],
+			'peruser' => true,
+	),
+	array(
+		'name' => 'email_templates_file',
+		'cname' => 'Email Templates File',
+		'description' => 'The file that contains the definitions of all manual email templates.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'email_templates_domain',
+		'cname' => 'Email Templates Domain',
+		'description' => 'The file that contains the definitions of all manual email templates.',
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'email_templates_prefix_group',
+		'cname' => 'Email Templates Sender Prefix Group',
+		'description' => 'The email templates modal will by default use the user\'s group email prefix. Leave blank if default is the user or the default below takes over.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'email_templates_prefix_default',
+		'cname' => 'Email Templates Sender Prefix Default',
+		'description' => 'The group email prefix will override this one.',
+		'value' => '',
+		'peruser' => true,
+	),
 );
 
 ?>

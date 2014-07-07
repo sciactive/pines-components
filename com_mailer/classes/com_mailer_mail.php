@@ -85,6 +85,7 @@ class com_mailer_mail {
 		if (!$message)
 			pines_error('Invalid value for email message.');
 		$this->sender = $sender;
+		$this->sender_name = $pines->config->system_name;
 		$this->recipient = $recipient;
 		$this->subject = $subject;
 		$this->message = $message;
@@ -285,7 +286,7 @@ class com_mailer_mail {
                     
                 } else {
                     // Add from headers.
-                    $required_headers['From'] = $this->sender;
+                    $required_headers['From'] = $this->sender_name." <{$this->sender}>";
                     $required_headers['Return-Path'] = $this->sender;
                     $required_headers['Reply-To'] = $this->sender;
                     $required_headers['X-Sender'] = $this->sender;

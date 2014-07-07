@@ -29,6 +29,40 @@ class com_mailer extends component {
 	 * @access private
 	 */
 	private $db;
+	
+	/**
+	 * To manage whether the email button css/js has been loaded.
+	 * @var boolean
+	 * @access private
+	 */
+	private $load_emailbutton;
+	
+	/**
+	 * Load the external JS and CSS for the email button module.
+	 *
+	 * This will place the required scripts/styles into the document's head section.
+	 */
+	function load_emailbutton() {
+		global $pines;
+		if (!$this->load_emailbutton) {
+			if ($pines->config->compress_cssjs) {
+				$file_root = htmlspecialchars($_SERVER['DOCUMENT_ROOT'].$pines->config->location);
+				// Build CSS
+				$css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
+				$css[] = $file_root.'components/com_mailer/includes/'.($pines->config->debug_mode ? 'emailbutton.css' : 'emailbutton.min.css');
+				$pines->config->loadcompressedcss = $css;
+
+				$js = (is_array($pines->config->loadcompressedjs)) ? $pines->config->loadcompressedjs : array();
+				$js[] =  $file_root.'components/com_mailer/includes/'.($pines->config->debug_mode ? 'emailbutton.js' : 'emailbutton.min.js');
+				$pines->config->loadcompressedjs = $js;
+			} else {
+				$module = new module('com_mifi', 'application/loadexternal', 'head');
+				$module->render();
+			}
+			$this->load_emailbutton = true;
+		}
+	}
+	
 
 	/**
 	 * Get a mail's definition array.
@@ -286,7 +320,7 @@ class com_mailer extends component {
 	 * @param bool $send If this is set to false, the com_mailer_mail object is returned before being sent. Allows for adding attachments, etc.
 	 * @return bool|com_mailer_mail True on success, false on failure. If $send is false, returns the mail instead.
 	 */
-	public function send_mail($mail, $macros = array(), $recipient = null, $send = true) {
+	public function send_mail($mail, $macros = array(), $recipient = null, $send = true, $from = null) {
 		global $pines;
 		if ((array) $mail !== $mail) {
 			list($component, $defname) = explode('/', $mail, 2);
@@ -299,7 +333,7 @@ class com_mailer extends component {
 		if (!$def)
 			return false;
 
-		$from = $pines->config->com_mailer->from_address;
+		$from = !isset($from) ? $pines->config->com_mailer->from_address : $from;
 
 		// Format recipient.
 		if ($recipient && is_string($recipient))
@@ -560,126 +594,208 @@ class com_mailer extends component {
 		return $email;
 	}
         
-        /**
-         * Send an email via SendGrid
-         * @param string $to The recipient of the email
-         * @param string $from The sender of the email
-         * @param string $message The html message to send
-         * @param array $attachments An array of file paths to include with email
-         * @param array $categories An array of tags to be added to the email for analytics
-         * @param bool $has_template A boolean indicating whether the emails is already using a predefined template
-         * @return bool true if the email was sent, else false
-         * 
-         */
-        public function sendgridit($to, $from, $subject, $message, $attachments, $categories, $has_template=true) {
-            global $pines;
-            // Format email
-            $emails_exploded = explode(",", $to);
-            $to_email = array();
-            $from_email;
-            $bypass_domain = false;
-            foreach ($emails_exploded as $cur_email) {
-                $to_email[] = trim($cur_email);
-            }
-            
-            if ($pines->config->com_mailer->bypass_sendgrid_list && strpos($to, $pines->config->com_mailer->domain_bypass) !== false) {
-                $bypass_domain = true;
-            }
-            
-            if ($pines->config->com_mailer->one_sender) {
-                $from_email = $pines->config->com_mailer->sendgrid_from_address;
-            } else {
-                $matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
-                if ($matching_from > 0) {
-                    $from_email = $matches_from[2];
-                } else {
-                    $from_email = $from;
-                }
-            }
-            
-            // Construct the array
-            // We define the to array in the X-SMTPAPI header because this hides email addresses from others if $to is an array
-            $xsmtpapi = array(
-                'to' => $to_email,
-            );
-            
-            // If the message has a template, then disable our global template
-            if ($has_template) {
-                $xsmtpapi['filters']['template']['settings']['enable'] = 0;
-            }
-            
-            // Check if we want to enable the bypass_list_management filter
-            if ($bypass_domain) {
-                $xsmtpapi['filters']['bypass_list_management']['settings']['enable'] = 1;
-            }
-            
-            if ($categories) {
-                foreach ($categories as $category) {
-                    $xsmtpapi['category'][] = $category;
-                }
-            }
-            
-            // Note that we have to include a to variable even though we already set it in the x-smtpapi header
-            // The X-SMTPAPI will override the to field here and it won't let multiple recipients see other people's emails
-            // For the x-smptapi header, we need to encode it in json and unescape PHP 5.3's escaping of forward slashes
-            $params = array(
-                'api_user'  => $pines->config->com_mailer->sendgrid_api_user,
-                'api_key'   => $pines->config->com_mailer->sendgrid_api_key,
-                'x-smtpapi' => str_replace('\\/', '/', json_encode($xsmtpapi, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)),
-                'subject'   => $subject,
-                'html'      => $message,
-                'from'      => $from_email,
-                'fromname'  => $pines->config->system_name,
-                'replyto'   => $from_email,
-                'to'        => $to_email,
-            );
-            
-            // Need to add any attachments
-            foreach ($attachments as $attachment) {
-                $params['files['.basename($attachment).']'] = '@'.$attachment;
-            }
-            
-            $ch = curl_init();
-            curl_setopt_array($ch, array(
-                CURLOPT_URL => $pines->config->com_mailer->sendgrid_url,
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_POST => 1,
-                CURLOPT_POSTFIELDS => $params
-            ));
-            $result = curl_exec($ch);
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            // Response is in json
-            $result_message = json_decode($result);
-            curl_close($ch);
-            switch ($http_code) {
-                case 200:
-                    // Good to go
-                    break;
-                case 400:
-                    pines_log("SendGrid returned Invalid Input 400 error.", 'error');
-                    pines_log($result, 'error');
-                    return false;
-                case 500:
-                    pines_log('SendGrid returned Application Error 500 error.', 'error');
-                    pines_log($result, 'error');
-                    return false;
-                default:
-                    pines_log('SendGrid returned unrecognized response. Code: '.$http_code, 'error');
-                    pines_log($result, 'error');
-                    return false;
-            }
-            
-            // Look at the 'message' key. Either success or error
-            if ($result_message->message == 'success') {
-                pines_log("Email successfully sent to: ".$to, 'notice');
-                return true;
-            } else {
-                pines_log("Email was not successfully sent to: ".$to, 'notice');
-                pines_log("SendGrid Reponse Message: ".$result_message);
-                return false;
-            }
-            
-        }
+	/**
+	 * Send an email via SendGrid
+	 * @param string $to The recipient of the email
+	 * @param string $from The sender of the email
+	 * @param string $message The html message to send
+	 * @param array $attachments An array of file paths to include with email
+	 * @param array $categories An array of tags to be added to the email for analytics
+	 * @param bool $has_template A boolean indicating whether the emails is already using a predefined template
+	 * @return bool true if the email was sent, else false
+	 * 
+	 */
+	public function sendgridit($to, $from, $subject, $message, $attachments, $categories, $has_template=true) {
+		global $pines;
+		// Format email
+		$emails_exploded = explode(",", $to);
+		$to_email = array();
+		$from_email;
+		$bypass_domain = false;
+		foreach ($emails_exploded as $cur_email) {
+			$to_email[] = trim($cur_email);
+		}
+
+		if ($pines->config->com_mailer->bypass_sendgrid_list && strpos($to, $pines->config->com_mailer->domain_bypass) !== false) {
+			$bypass_domain = true;
+		}
+
+		if ($pines->config->com_mailer->one_sender) {
+			$from_email = $pines->config->com_mailer->sendgrid_from_address;
+		} else {
+			$matching_from = preg_match("/(.*)<(.*)>/", $from, $matches_from);
+			if ($matching_from > 0) {
+				$from_email = $matches_from[2];
+			} else {
+				$from_email = $from;
+			}
+		}
+
+		// Construct the array
+		// We define the to array in the X-SMTPAPI header because this hides email addresses from others if $to is an array
+		$xsmtpapi = array(
+			'to' => $to_email,
+		);
+
+		// If the message has a template, then disable our global template
+		if ($has_template) {
+			$xsmtpapi['filters']['template']['settings']['enable'] = 0;
+		}
+
+		// Check if we want to enable the bypass_list_management filter
+		if ($bypass_domain) {
+			$xsmtpapi['filters']['bypass_list_management']['settings']['enable'] = 1;
+		}
+
+		if ($categories) {
+			foreach ($categories as $category) {
+				$xsmtpapi['category'][] = $category;
+			}
+		}
+
+		// Note that we have to include a to variable even though we already set it in the x-smtpapi header
+		// The X-SMTPAPI will override the to field here and it won't let multiple recipients see other people's emails
+		// For the x-smptapi header, we need to encode it in json and unescape PHP 5.3's escaping of forward slashes
+		$params = array(
+			'api_user'  => $pines->config->com_mailer->sendgrid_api_user,
+			'api_key'   => $pines->config->com_mailer->sendgrid_api_key,
+			'x-smtpapi' => str_replace('\\/', '/', json_encode($xsmtpapi, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)),
+			'subject'   => $subject,
+			'html'      => $message,
+			'from'      => $from_email,
+			'fromname'  => $pines->config->system_name,
+			'replyto'   => $from_email,
+			'to'        => $to_email,
+		);
+
+		// Need to add any attachments
+		foreach ($attachments as $attachment) {
+			$params['files['.basename($attachment).']'] = '@'.$attachment;
+		}
+
+		$ch = curl_init();
+		curl_setopt_array($ch, array(
+			CURLOPT_URL => $pines->config->com_mailer->sendgrid_url,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_POST => 1,
+			CURLOPT_POSTFIELDS => $params
+		));
+		$result = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		// Response is in json
+		$result_message = json_decode($result);
+		curl_close($ch);
+		switch ($http_code) {
+			case 200:
+				// Good to go
+				break;
+			case 400:
+				pines_log("SendGrid returned Invalid Input 400 error.", 'error');
+				pines_log($result, 'error');
+				return false;
+			case 500:
+				pines_log('SendGrid returned Application Error 500 error.', 'error');
+				pines_log($result, 'error');
+				return false;
+			default:
+				pines_log('SendGrid returned unrecognized response. Code: '.$http_code, 'error');
+				pines_log($result, 'error');
+				return false;
+		}
+
+		// Look at the 'message' key. Either success or error
+		if ($result_message->message == 'success') {
+			pines_log("Email successfully sent to: ".$to, 'notice');
+			return true;
+		} else {
+			pines_log("Email was not successfully sent to: ".$to, 'notice');
+			pines_log("SendGrid Reponse Message: ".$result_message);
+			return false;
+		}
+
+	}
+	
+	/**
+	 * Get the Email Templates
+	 * @return array The template definitions.
+	 */
+	public function get_email_templates() {
+		global $pines;
+		$file = $pines->config->com_mailer->email_templates_file;
+		if (empty($file) || !file_exists($file))
+			return array();
+		return include($file);
+	}
+	
+	/**
+	 * Get Email Entity
+	 * 
+	 * @param $definition array The definition used to get all needed entities.
+	 * @param $given_entity object An entity we already have that we can use to get the needed entities.
+	 */
+	public function get_email_entities($definition, $given_entity) {
+		global $pines;
+		if (empty($definition))
+			return false;
+		$data = array();
+		foreach ($definition as $needed_entity) {
+			// Get Entity: $given_entity (self)
+			if ($needed_entity['use_ref'] == 'self') {
+				$add_entity = $given_entity;
+			}
+			// Get Entity: use entity manager. This is the grid_entity
+			if ($needed_entity['use_ref'] == 'this') {
+				$add_entity = $pines->entity_manager->get_entity(
+					array('class' => $needed_entity['class']),
+					array('&', 'ref' => array($needed_entity['use_entity'], $given_entity->guid))
+				);
+			}
+			// Get Entity: $given_entity->variable
+			if (!empty($needed_entity['variable'])) {
+				$add_entity = $given_entity->$needed_entity['variable'];
+			}
+		
+			if (!isset($add_entity->guid))
+				return false;
+			
+			$data[$needed_entity['name']] = $add_entity;
+			
+			if ($needed_entity['get_remaining_data']) {
+				$data['get_remaining_data'] = $needed_entity['class'];
+				$data['given_entity'] = $add_entity;
+			}
+		}
+		return $data;
+	}
+	
+	/**
+	 * Get Email Template Data
+	 * 
+	 * @param array $template The template.
+	 * @param object $grid_entity The entity we got from the grid itself.
+	 * @return array An array of all the entities we need.
+	 */
+	public function get_email_template_data($template, $grid_entity, $grid_class) {
+		// Use the grid entity definition first with the grid entity.
+		$definition = !empty($template[$grid_class]) ? $template[$grid_class] : array();
+		$data1 = $this->get_email_entities($definition, $grid_entity);
+		if (!$data1)
+			return false;
+		
+		// Use the 2nd definition if get remaining data is on.
+		if (isset($data1['get_remaining_data'])) {
+			$new_def = $template[$data1['get_remaining_data']];
+			$data2 = $this->get_email_entities($new_def, $data1['given_entity']);
+			if (!$data2)
+				return false;
+			unset($data1['get_remaining_data'], $data1['given_entity']);
+		} else
+			$data2 = array();
+		
+		// Prepare the data array
+		$data = array_merge($data1, $data2);
+		return $data;
+	}
 }
 
 ?>

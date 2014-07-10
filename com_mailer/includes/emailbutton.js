@@ -75,7 +75,7 @@ $(window).load(function(){
 				alert('Please make a selection before performing this operation.');
 				return;
 			}
-			if (num_rows > select_rows_limit) {
+			if (num_rows > select_rows_limit && select_rows_limit > 0) {
 				alert('You may only select '+select_rows_limit+' rows per transaction.');
 				return;
 			}

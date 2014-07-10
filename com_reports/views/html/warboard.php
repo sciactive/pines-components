@@ -134,7 +134,7 @@ function make_headquarters($headquarters, $span_num) {
 		text-align:center;
 	}
 	@media (min-width: 768px) {
-		.warboard-container .row-fluid {
+		.warboard-container .row-fluid:not(.cols2) {
 			margin-left: 15px;
 		}
 		.warboard-container .span4 {
@@ -145,7 +145,7 @@ function make_headquarters($headquarters, $span_num) {
 		}
 	}
 	@media (min-width: 1100px) {
-		.warboard-container .row-fluid {
+		.warboard-container .row-fluid:not(.cols2) {
 			margin-left: 25px;
 		}
 	}
@@ -158,7 +158,7 @@ function make_headquarters($headquarters, $span_num) {
 	if ($num_rows > 1) {
 		$c = 1;
 		foreach ($this->entity->rows as $cur_row) { ?>
-			<div class="row-fluid">
+			<div class="row-fluid <?php echo 'cols'.$cols;?>">
 				<?php foreach ($cur_row as $cur_block) { 
 					if ($cur_block['type'] == 'location') {
 						echo make_location($cur_block['location'], $positions, $span_num);
@@ -192,6 +192,12 @@ function make_headquarters($headquarters, $span_num) {
 						}
 					} else {
 						echo make_important($cur_block['important'], $positions, $span_num);
+						if ($cur_block['make_hq'] && count($cur_row) < $cols) {
+							// This means its the end of importants
+							// And we ALSO checked if we had room to put the hq here
+							echo make_headquarters($this->entity->hq, $span_num);
+							$made_hq = true;
+						}
 					}
 				} 
 				if ($c == $num_rows && (count($cur_row) < $cols) && !$made_hq) {

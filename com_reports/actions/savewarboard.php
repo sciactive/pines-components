@@ -117,6 +117,9 @@ while (($loc_remaining > 0) || ($imp_remaining > 0)) {
 				$block['important'] = $warboard->important[$imp_c];
 				$block['type'] = 'important';
 				$imp_remaining--;
+				if ($imp_remaining == 0 && isset($warboard->hq)) {
+					$block['make_hq'] = true;
+				}
 				$row[] = $block;
 			}
 		}

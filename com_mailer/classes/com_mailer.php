@@ -754,13 +754,12 @@ class com_mailer extends component {
 			if (!empty($needed_entity['variable'])) {
 				$add_entity = $given_entity->$needed_entity['variable'];
 			}
-		
-			if (!isset($add_entity->guid))
-				return false;
+			// Only add the entity if there's a guid. Let the email functions
+			// Check if $data['entity'] isset and control skipping etc from there.
+			if (isset($add_entity->guid))
+				$data[$needed_entity['name']] = $add_entity;
 			
-			$data[$needed_entity['name']] = $add_entity;
-			
-			if ($needed_entity['get_remaining_data']) {
+			if ($needed_entity['get_remaining_data'] && isset($add_entity->guid)) {
 				$data['get_remaining_data'] = $needed_entity['class'];
 				$data['given_entity'] = $add_entity;
 			}

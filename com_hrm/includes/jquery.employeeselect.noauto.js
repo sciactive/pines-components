@@ -16,7 +16,7 @@ all.each(function(){
         var results_array = [];
         var search_term = '';
         var found_result = '';
-        var modal_markup = '<div style="display: block;" id="employeemodal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="employeeselect" aria-hidden="false"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="myModalLabel">Pick An Employee:</h3></div><div id="#employeeselect-body" class="modal-body" style="min-height: 130px;"><div style="text-align: center; margin-top: 30px;" id="throbber"><i style="font-size: 30px; margin-bottom: 10px;" class="icon-spinner icon-spin icon-large"> </i><br />Loading...</div></div></div>';
+        var modal_markup = '<div id="employeemodal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="employeeselect" aria-hidden="false"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h3 id="myModalLabel">Pick An Employee:</h3></div><div id="#employeeselect-body" class="modal-body" style="min-height: 130px;"><div style="text-align: center; margin-top: 30px;" id="throbber"><i style="font-size: 30px; margin-bottom: 10px;" class="icon-spinner icon-spin icon-large"> </i><br />Loading...</div></div></div>';
         var error_message = '<div class="alert alert-info"><h4>No Result Found</h4><p>The person may not exist, or your term is misspelled.</p><a id="emp_back_to_search" class="btn btn-info">Back to Search</a></div>';
         // Need to append modal_markup to html body
         $('body').append(modal_markup);

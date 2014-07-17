@@ -20,8 +20,6 @@ pines(function() {
 	var cur_width = $(window).width();
 	var backdrop_code = '<div class="modal-backdrop fade simple-menu-backdrop in"></div>';
 	
-	nav_collapse.addClass('hide');
-	
 	// Get Unique Number
 	function get_unique(){
 		return Math.floor(Math.random() * 100000);

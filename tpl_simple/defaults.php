@@ -110,9 +110,10 @@ return array(
 		'name' => 'mobile_menu',
 		'cname' => 'Mobile Menu',
 		'description' => 'Use the mobile menu from bootstrap or an adjusted one.',
-		'value' => 'adjusted',
+		'value' => 'new_adjusted',
 		'options' => array(
-			'Use Adjusted' => 'adjusted',
+			'New Adjusted' => 'new_adjusted',
+			'Old Adjusted' => 'adjusted',
 			'Use Bootstrap' => 'bootstrap',
 		),
 		'peruser' => true,

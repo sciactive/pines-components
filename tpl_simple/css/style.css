@@ -17,6 +17,15 @@ html body {
 .navbar-fixed-top, .navbar-fixed-bottom {
     z-index: 900;
 }
+.btn.btn-navbar {
+	border-radius: 0;
+	border:0;
+	background: #ddd;
+}
+.btn.btn-navbar .icon-bar {
+	background-color: #999;
+	box-shadow: none;
+}
 div.navbar-fixed-top {
     margin-bottom: 0px !important;
 }
@@ -73,22 +82,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             background-color: transparent !important;
 	}
 }
-/*.navbar-inner .dropdown-menu b.caret {
-    color: #D95825 !important;
-}
-div.navbar .nav > li > .dropdown-menu:after {
-    border-bottom-color: #171313;
-}
-.navbar-inner .dropdown-menu li > a {
-    color: #D95825 !important;
-    font-size: 1.3em !important;
-}
-.nav-collapse .dropdown-submenu > a:after {
-    border-color: transparent transparent transparent #D95825;
-}
-.nav-collapse .dropdown-submenu:hover > a:after {
-    border-left-color: #D95825 !important;
-}*/
 .ui-dialog-buttonset button {
     margin-left: 5px;
 }
@@ -207,4 +200,111 @@ display: inline-block;
 	.quick-dash-button {
 		display: none;
 	}
+}
+/* Main Menu Container */
+.simple-menu {
+	background: none repeat scroll 0 0 #EEEEEE;
+    position: absolute;
+    top: 47px;
+    z-index: 30000;
+	height: 100%;
+	padding: 10px;
+	left: -100%;
+	width: 100%;
+	display: block;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+.simple-menu .main-trans, .simple-menu.main-trans {
+  -moz-transition: all 0.5s cubic-bezier(.13,.99,.75,1.01) 0s;
+  -webkit-transition: all 0.5s cubic-bezier(.13,.99,.75,1.01) 0s;
+  transition: all 0.5s cubic-bezier(.13,.99,.75,1.01) 0s;
+}
+.simple-menu.menu-show {
+	left: 0;
+}
+
+/* Items, Carets, Links */
+.simple-menu .menu-item {
+	background: none repeat scroll 0 0 #DDDDDD;
+    color: #777777;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 5px;
+    padding: 10px 10px 10px 80px;
+    text-transform: uppercase;
+	position: relative;
+}
+.simple-menu .menu-caret,
+.simple-menu .no-caret {
+	background: #CCCCCC;
+    padding: 0 10px;
+	top: 0;
+	left: 0;
+	position: absolute;
+	height: 100%;
+	line-height: 40px;
+	width: 40px;
+	font-size: 2em;
+	text-align:center;
+}
+.simple-menu .menu-item.link {
+	padding: 0 10px;
+}
+.simple-menu .menu-link {
+	color: #0088cc;
+	display: block;
+    margin-left: 70px;
+    padding: 10px 0;
+}
+
+
+/* Dropdown Containers */
+.simple-menu .dropdown-container {
+    color: #EEEEEE;
+	background: #C5C5C5;
+    font-weight: bold;
+    left: 5%;
+    padding: 0;
+    position: absolute;
+    text-transform: uppercase;
+    width: 90%;
+	z-index: 20000;
+	display:block;
+	top: -2000px;
+	-webkit-transform: translateZ(0);
+}
+.simple-menu .dropdown-container.send-back {
+	z-index: 200;
+}
+.simple-menu .dropdown-container.dropdown-show {
+	top: 0;
+}
+/* Dropdown Titles */
+.simple-menu .dropdown-container .dropdown-box-title {
+    background: #999999;
+    padding: 10px;
+	position: relative;
+}
+/* Dropdown Box */
+.simple-menu .dropdown-container  .dropdown-box {
+    background: #C5C5C5;
+}
+.simple-menu .dropdown-container .dropdown-box-close {
+	background: #888888;
+    border-radius: 100px;
+    padding: 10px;
+    position: absolute;
+    right: -10px;
+    text-align: center;
+    top: -10px;
+    width: 20px;
+}
+/* Carets in a Dropdown Box */
+.simple-menu .dropdown-container .dropdown-box .menu-caret {
+	background: #aaa;
+}
+.simple-menu .dropdown-container .dropdown-box .no-caret {
+	background: #ccc;
 }

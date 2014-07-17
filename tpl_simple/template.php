@@ -82,7 +82,10 @@ if ($pines->config->tpl_simple->navbar_trigger == "hover") {
 } 
 if ($pines->config->tpl_simple->mobile_menu == "adjusted") {
     $js[] =  $file_root_location.'templates/tpl_simple/js/mobilemenu.js';
-} if ($pines->config->tpl_simple->footer_height == "adjusted" && $pines->config->tpl_simple->footer_type != "fixed") {
+} else if ($pines->config->tpl_simple->mobile_menu == "new_adjusted") {
+	$js[] =  $file_root_location.'templates/tpl_simple/js/'.($pines->config->debug_mode ? 'newmobilemenu.js' : 'newmobilemenu.min.js');
+}
+if ($pines->config->tpl_simple->footer_height == "adjusted" && $pines->config->tpl_simple->footer_type != "fixed") {
     $js[] =  $file_root_location.'templates/tpl_simple/js/adjustedfooter.js';
 } if (!empty($pines->config->tpl_simple->load_js)) {
     $load_js = explode(',', $pines->config->tpl_simple->load_js);

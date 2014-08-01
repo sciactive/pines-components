@@ -560,6 +560,9 @@
 	border: 0;
 	bottom: 29px;
 }
+#main-chat-window.dark.chat-minimized .chat-container {
+	bottom: -1000px
+}
 #main-chat-window.dark .channel-client-list:hover {
 	background: #333;
 }

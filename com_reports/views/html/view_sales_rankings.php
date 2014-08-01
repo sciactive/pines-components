@@ -131,7 +131,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Tr %</th>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<th style="width: 15%;">Lead</th>
-					<th style="width: 15%;">Prize</th>
 					<?php } else { ?>
 					<th style="width: 15%;">Stores</th>
 					<th style="width: 15%;">Avg</th>
@@ -181,19 +180,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
                                         } else {
                                             echo $prefix.htmlspecialchars(round(($loc_array[$cur_rank['rank']] - $loc_array[$cur_rank['rank'] - 1]) * $multiplier, 2));
                                         } ?>
-					<td class="right_justify">
-						<?php switch ($cur_rank['rank']) {
-							case 1:
-								echo '$1500';
-								break;
-							case 2:
-								echo '$1000';
-								break;
-                                                        default:
-                                                                echo '$0';
-                                                                break;
-						} ?>
-					</td>
 					<?php } else { ?>
 					<td style="text-align: center;"><?php echo (int) $cur_rank['child_count']; ?></td>
 					<td style="text-align: center;"><?php echo $prefix.htmlspecialchars(round($cur_rank['child_count'] > 0 ? $cur_rank['trend'] / $cur_rank['child_count'] * $multiplier : 0, 2)); ?></td>
@@ -217,7 +203,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($totals['pct'], 0)); ?>%</td>
-					<td colspan="2"></td>
+					<td></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -238,7 +224,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
 					<th style="width: 15%;">Lead</th>
-					<th style="width: 15%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -267,31 +252,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<td class="right_justify"><?php echo ($cur_rank['rank'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
-					<td class="right_justify">
-						<?php switch ($cur_rank['rank']) {
-							case 1:
-								echo '$650';
-								break;
-							case 2:
-								echo '$550';
-								break;
-							case 3:
-								echo '$450';
-								break;
-							case 4:
-								echo '$350';
-								break;
-							case 5:
-								echo '$300';
-								break;
-//							case 6:
-//								echo '$250';
-//								break;
-//							case 7:
-//								echo '$200';
-//								break;
-						} ?>
-					</td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -311,7 +271,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 6%;">Trend</th>
 					<th style="width: 6%;">Tr %</th>
 					<th style="width: 15%;">Lead</th>
-					<th style="width: 15%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -343,19 +302,6 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<td class="right_justify"><?php echo ($cur_rank['rank'] == 1) ? '0' : $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
-					<td class="right_justify">
-						<?php // switch ($cur_rank['rank']) {
-							//case 1:
-							//	echo '$200';
-							//	break;
-							//case 2:
-							//	echo '$150';
-							//	break;
-							//case 3:
-							//	echo '$100';
-							//	break;
-					//	} ?>
-					</td>
 				</tr>
 				<?php } ?>
 			</tbody>

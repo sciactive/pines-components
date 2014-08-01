@@ -177,6 +177,12 @@ return array(
         'description'   => 'The URL for employees to all online users and their chat histories. For when employees connect to channels',
         'value' => ''
     ),
+    array(
+        'name'  => 'dark_theme',
+        'cname' => 'Use Dark Theme',
+        'description'   => 'Whether to use the dark theme or not.',
+        'value' => false
+    ),
 );
 
 ?>

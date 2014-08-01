@@ -19,15 +19,29 @@ onlineTestURL = $("#online_test_url").attr('data-url');
 onlineCheckURL = $("#send_online_check_url").attr('data-url');
 getMessagesURL = $("#get_messages_url").attr('data-url');
 
+var chat_window = $("#main-chat-window");
 var customer_pic_url = $("#chat_customer_pic").attr('data-url');
 var employee_pic_url = $("#chat_employee_pic").attr('data-url');
 var chat_body = $("#main-chat-body");
 var chat_messages = $("#main-chat-messages");
 var chat_header = $("#main-chat-header");
-var chat_status = chat_header.find('.chat-status');
-var chat_status_text = chat_header.find('.chat-status-text');
+var chat_footer = $("#main-chat-footer");
+var chat_notice_bar = $("#main-chat-notice");
+var chat_send_message_btn = $('#chat-send-message-btn');
+var chat_message_input = $("#chat-btn-input");
+var chat_toggle_icon_container = $('.main-chat-notice-toggle');
+var chat_toggle_icon = chat_toggle_icon_container.find('i');
+var chat_container = chat_window.find('.chat-container');
+var chat_status = chat_notice_bar.find('.chat-status');
+var page_title = $('title');
+
+// Messages Notices
+var chat_notice_messages_container = chat_notice_bar.find('.main-chat-notice-messages');
+var chat_notice_messages_num = chat_notice_bar.find('.main-chat-notice-num-messages');
 
 
+var start_width = 0;
+var start_height = 0;
 /*
  * Sets the Channel Token and ID
  * Proceeds to connect to the channel
@@ -96,7 +110,11 @@ function addMessageToHistory(message_id, chan_id, message, username) {
 function onChannelOpen() {
     connectedToChannel = true;
     chat_status.removeClass('offline checking');
-    chat_status_text.html('Online');
+	if (chat_visibility == 'open' && $(window).width() > 768) {
+		chat_notice_bar.click();
+	}
+	chat_toggle_icon.removeClass('icon-spin icon-spinner icon-ban-circle');
+	adjust_toggle_icon();
     getMessages();
 }
 
@@ -110,13 +128,16 @@ function onChannelMessage(msg) {
     var data = jQuery.parseJSON(msg.data);
         if (data !== undefined) {
             if (data.type == "message") {
-                appendChannelMessage(data.message.message, data.message.from_username, getTimeagoString(data.message.timestamp), true);
+                appendChannelMessage(data.message.message, data.message.from_username, getTimeagoString(data.message.timestamp), true, true);
+				update_messages();
             } else if (data.type == "customer_message") {
                 addMessageToHistory(data.message_id, data.from_channel, data.message, data.username);
-                appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), false);
+                appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), false, true);
+				update_messages();
             } else if (data.type == "employee_message") {
                 addMessageToHistory(data.message_id, data.from_channel, data.message, data.username);
-                appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), true);
+                appendChannelMessage(data.message, data.username, getTimeagoString(data.timestamp), true, true);
+				update_messages();
             } else if (data.type == "online_check") {
                 handleOnlineCheck();
             } else {
@@ -145,7 +166,11 @@ function onChannelError(err) {
 function onChannelClose() {
     connectedToChannel = false;
     chat_status.addClass('offline');
-    chat_status_text.html('Offline');
+	chat_window.addClass('chat-minimized');
+	$('body').removeClass('chat-mobile-open');
+	adjust_toggle_icon();
+	chat_toggle_icon.removeClass('icon-chevron-down icon-chevron-down icon-spin icon-spinner')
+	.addClass('icon-ban-circle');
     if (channel_errors && channel_retries < 5) {
         channel_retries++;
         connectToChannel("true");
@@ -232,8 +257,9 @@ function sendMessage(msg) {
             xdr.onload = function() {
                 var data = JSON.parse(xdr.responseText);
                 if (data.status == "success") {
-                    appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false);
+                    appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false, false);
                     addMessageToHistory(data.message_id, channel_id, msg, data.username);
+					update_messages();
                 }
             };
             xdr.onerror = function() {
@@ -259,7 +285,8 @@ function sendMessage(msg) {
                 dataType: 'json',
                 success: function(data) {
                     if (data.status == "success") {
-                        appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false);
+                        appendChannelMessage(msg, data.username, getTimeagoString(timestamp), false, false);
+						update_messages();
                     }
                 },
                 error: function () {
@@ -280,8 +307,8 @@ function sendMessage(msg) {
  */
 function removeGAEChat() {
     // We need to remove chat because this person doesn't have permission
-    $("#main-chat-window").remove();
-    $("#gae-chat-variables").remove();
+    chat_window.remove();
+    gae_variables.remove();
 }
 
 /*
@@ -290,7 +317,9 @@ function removeGAEChat() {
  */
 function connectToChannel(force) {
     chat_status.removeClass('offline').addClass('checking');
-    chat_status_text.html('Connecting');
+	chat_toggle_icon.removeClass('icon-chevron-down icon-chevron-down icon-ban-circle')
+	.addClass('icon-spin icon-spinner');
+	// Connecting!
     $.ajax({
         type: "POST",
         url: getTokenURL,
@@ -300,7 +329,7 @@ function connectToChannel(force) {
             if (data.status != 'success' || data.action == 'terminate') {
                 removeGAEChat();
             } else {
-                $("#main-chat-window").removeClass('hide');
+                chat_window.removeClass('hide');
                 setChannelInfo(data.channel_id, data.channel_token);
             }
         },
@@ -322,11 +351,11 @@ function handleChatHistory(messages) {
     for (var i=0; i<count; i++) {
         var message = messages[i];
         if (!chatHistory[message.message_id]) {
-            appendChannelMessage(message.message, message.from_username, getTimeagoString(message.timestamp), channel_id != message.from_channel);
+            appendChannelMessage(message.message, message.from_username, getTimeagoString(message.timestamp), channel_id != message.from_channel, false);
             addMessageToHistory(message.message_id, message.from_channel, message.message, message.from_username);
         }
     }
-
+	update_messages();
 }
 
 
@@ -336,15 +365,15 @@ function handleChatHistory(messages) {
  * Floats it right or left based on if the message is coming from an employee
  * 
  */
-function appendChannelMessage(message, username, timestamp, is_employee) {
+function appendChannelMessage(message, username, timestamp, is_employee, count_unread) {
     if (is_employee) {
-        var chat_message = '<li class="left clearfix chat-message"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
+        var chat_message = '<li class="left clearfix chat-message main-trans"><span class="chat-img pull-left"><img src="' + employee_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
                             '<div class="chat-message-left"><div class="header"><strong class="primary-font chat-username">' + username + '</strong> ' +
                             '<small class="pull-right text-muted">' +
                             '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small></div>' +
                                 '<p>' + message + '</p></div></li>';
     } else {
-        var chat_message = '<li class="right clearfix chat-message"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
+        var chat_message = '<li class="right clearfix chat-message main-trans"><span class="chat-img pull-right"><img src="' + customer_pic_url + '" alt="User Avatar" class="img-circle"/></span>' +
             '<div class="chat-message-right"><div class="header">' +
               '<small class="text-muted">' +
               '<i class="icon-time"></i><abbr class="timeago chat-timeago" title="' + timestamp + '">' + timestamp + '</abbr></small>'+
@@ -356,6 +385,16 @@ function appendChannelMessage(message, username, timestamp, is_employee) {
     chat_body.scrollTop(chat_messages.height());
     $("abbr.timeago").timeago();
     
+//	if (count_unread && chat_window.hasClass('chat-minimized')) {
+//		message_num++;
+//		make_cookie('main_chat_messages_num', message_num, 2);
+//		chat_notice_messages_num.text(message_num).addClass('blink-me');
+//		title_notice('on');
+//		chat_notice_messages_container.fadeIn();
+//	}
+	if (count_unread && chat_window.hasClass('chat-minimized')) {
+		chat_messages.find('.chat-message').last().addClass('flash');
+	}
 }
 
 function getMessages() {
@@ -403,60 +442,316 @@ function getMessages() {
 }
 
 /*
+ * Determines the correct style/sizing for mobile and non mobile chat.
+ */
+function size_chat(window_resize) {
+	var window_width = $(window).width();
+	var window_height = $(window).height();
+
+	var header_height = chat_header.outerHeight();
+	var nav_height = $('#nav').outerHeight();
+	var footer_height = chat_footer.outerHeight();
+	var notice_height = chat_notice_bar.outerHeight();
+	var set_body_height = (window_height - (nav_height + header_height + footer_height + notice_height)) - (chat_body.outerHeight() - chat_body.height()) + 10;
+	var set_container_height = window_height - (notice_height + nav_height) + 10;
+	if (window_width < 768 && !chat_window.hasClass('chat-minimized')) {
+		// Do all maximized mobile chat things here
+		$('html,body').addClass('chat-mobile-open');
+		$('body').css('height', window_height+'px');
+		chat_container.css('height', set_container_height+'px');
+		chat_body.css('height', set_body_height+'px');
+		
+		// On mobile, dont use this cookie.
+		erase_cookie('main_chat_visibility');
+	} else {
+		// Undo maximized mobile chat
+		$('html,body').removeClass('chat-mobile-open');
+		$('body').removeAttr('style');
+		chat_container.add(chat_body).removeAttr('style');
+		
+		// Erase the cookie even if minimized on MOBILE.
+		if (window_width < 768) {
+			erase_cookie('main_chat_visibility');
+		}
+	}
+
+	start_width = window_width;
+	start_height = window_height;
+}
+
+/*
+ * Figures out the correct up or down arrow to apply to the chat toggle icon.
+ */
+function adjust_toggle_icon() {
+	chat_toggle_icon.removeClass('icon-chevron-up icon-chevron-down');
+	if (chat_window.hasClass('chat-minimized')) {
+		chat_toggle_icon.addClass('icon-chevron-up');
+	} else {
+		chat_toggle_icon.addClass('icon-chevron-down');
+	}
+}
+
+/*
+ * Make a Cookie.
+ */
+function make_cookie(name,value,days){
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+/*
+ * Read a Cookie.
+ */
+function read_cookie(name){
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+};
+
+/*
+ * Delete a Cookie.
+ */
+function erase_cookie(name) {
+    make_cookie(name,"",-1);
+}
+
+/*
+ * Keep track of messages
+ */
+var messages_num = 0;
+var first_message_load = true;
+function update_messages(){
+	var chat_messages = chat_window.find('.chat-message');
+	// Read Cookie, Set Unread messages
+	if (first_message_load) {
+		var cookie = read_cookie('main_chat_messages_num');
+		if (cookie !== null) {
+			messages_num = parseInt(cookie);
+			var flash_num = -1 * messages_num;
+			chat_messages.slice(flash_num).addClass('flash');
+			toggle_indicator(messages_num);
+			title_notice('on');
+		}
+		first_message_load = false;
+	} else {
+		// Set the cookie based on flashes.
+		messages_num = chat_messages.filter('.flash').length;
+		make_cookie('main_chat_messages_num', messages_num, 1);
+		
+		// If we have messages..
+		if (messages_num > 0 && chat_window.hasClass('chat-minimized')) {
+			toggle_indicator(messages_num);
+			title_notice('on');
+		} else {
+			erase_cookie('main_chat_messages_num');
+			toggle_indicator(0);
+			title_notice('off');
+		}
+	}
+}
+
+function check_message_cookies() {
+	// We never set the message cookies to 0, we erase it.
+	// So if there's no cookie after we've loaded, the user viewed it on another
+	// chat tab.
+	var chat_messages = chat_window.find('.chat-message');
+	var cookie = read_cookie('main_chat_messages_num');
+	if (cookie == null && chat_messages.filter('.flash').length) {
+		chat_messages.removeClass('flash');
+		update_messages();
+	}
+}
+
+
+/*
+ * Toggle the indicator on the chat bar to alert the user of messages.
+ */
+function toggle_indicator(num) {
+	if (num > 0) {
+		chat_notice_messages_num.text(num);
+		chat_notice_messages_container.fadeIn();
+	} else {
+		chat_notice_messages_container.fadeOut();
+	}
+}
+
+
+
+var title_timeout = null;
+/*
+ * The function to call in the title timeout.
+ * - Checks the cookie to ensure accurracy.
+ */
+function title_notice_blink() {
+	var new_words = (message_num == 1) ? messages_num+' Unread Message!' : messages_num+' Unread Messages!';
+	var original_words = page_title.attr('data-title');
+	if (page_title.text() == original_words)
+		page_title.text(new_words);
+	else
+		page_title.text(original_words);
+	check_message_cookies(); // Dangerous possible recursion.
+	title_notice('on');
+	
+}
+
+/*
+ * Make the page title blink when there's new messages.
+ * 
+ */
+function title_notice(on_off){
+	clearTimeout(title_timeout);
+	if (on_off == 'off' || messages_num < 1) {
+		page_title.text(page_title.attr('data-title'));
+		return;
+	}
+	
+	title_timeout = setTimeout(title_notice_blink, 1000);
+}
+
+
+
+/*
  * jQuery Listener for when the user presses the send button
  */
-$('#chat-send-message-btn').click(function() {
-    var msg = $("#chat-btn-input").val();
+chat_send_message_btn.click(function() {
+    var msg = chat_message_input.val();
     if (msg) {
+		size_chat(false);
         sendMessage(msg);
-        $("#chat-btn-input").val("");
+        chat_message_input.val("");
     }
 });
 
 /*
  * jQuery Listener for when the user presses the enter key to send a message
  */
-$("#chat-btn-input").on('keyup', function(e) {
+chat_message_input.on('keyup', function(e) {
     // jQuery normalizes the keys, using which
     // 13 == Enter Key
-    var msg = $('#chat-btn-input').val();
+    var msg = chat_message_input.val();
     if (e.which == 13 && msg) {
         sendMessage(msg);
-        $('#chat-btn-input').val("");
-    }
-});
-
-/*
- * jQuery Listener to maximize chat window
- */
-chat_header.on('click', function(e) {
-    if (e.target != this) {
-        return;
-    }
-    if ($(this).hasClass("chat-minimized")) {
-        chat_body.show();
-        $(this).removeClass("chat-minimized");
-        $("#min-main-chat-btn").html("<i class='icon-chevron-down'></i>");
+        chat_message_input.val("");
     }
 });
 
 /*
  * jQuery listener to switch between a max and min state for the chat window
  */
-$("#min-main-chat-btn").on('click', function(e) {
-    if (chat_header.hasClass("chat-minimized")) {
-        chat_body.show();
-        chat_header.removeClass("chat-minimized");
-        $(this).html("<i class='icon-chevron-down'></i>");
+chat_notice_bar.on('click', function(e) {
+	if (chat_toggle_icon_container.hasClass('offline') || chat_toggle_icon_container.hasClass('checking'))
+		return;
+    if (chat_window.hasClass("chat-minimized")) {
+		chat_window.attr('data-offset', window.pageYOffset);
+		$('html,body').animate({
+			scrollTop: 0
+		}, 100);
+		chat_window.removeClass("chat-minimized");
+		chat_toggle_icon_container.html("<i class='icon-chevron-down'></i>");
+		update_messages();
 
+		// Flash New Messages When Opened.
+		var chat_messages = $('.chat-message').filter('.flash');
+		setTimeout(function(){
+			chat_messages.removeClass('flash');
+		}, 4000);
+
+		make_cookie('main_chat_visibility', 'open', 2);
     } else {
-        chat_body.hide();
-        chat_header.addClass("chat-minimized");
-        $(this).html("<i class='icon-chevron-up'></i>");
+		$('html,body').animate({
+			scrollTop: parseInt(chat_window.attr('data-offset'))
+		}, 400);
+        chat_window.addClass("chat-minimized");
+        chat_toggle_icon_container.html("<i class='icon-chevron-up'></i>");
+		make_cookie('main_chat_visibility', 'closed', 2);
     }
+	size_chat(false);
 });
 
+/*
+ * jQuery Listener for when the browser is resized.
+ */
+$(window).resize(function(){
+	size_chat(true);
+	if (!chat_window.hasClass('chat-minimized')) {
+		var js_chat_body = document.getElementById('main-chat-body');
+		chat_body.animate({
+			scrollTop: js_chat_body.scrollHeight
+		}, 300);
+	}
+}).resize();
+
+
+/* 
+ * Read Cookies
+ * 
+ */
+var read_message_num_cookie = read_cookie('main_chat_messages_num');
+var message_num = (read_message_num_cookie != null) ? read_message_num_cookie : 0;
+// Cookies for Chat Open/Close - NO MOBILE cookies for this.
+var chat_visibility = read_cookie('main_chat_visibility');
+
+
+// Set Existing page title
+page_title.attr('data-title', page_title.text());
+// Set Timeago Settings
 $.timeago.settings.strings.seconds = "seconds";
-connectToChannel();
+
+/*
+ * Wait to load chat.
+ * - Wait for click, scroll, or do not wait if cookie set.
+ * - only this intense for customers to decrease initial page load time.
+ */
+function do_when_fully_loaded() {
+	pines(function(){
+		var main_chat_window = $('#main-chat-window');
+		var main_chat_notice = $('#main-chat-notice');
+		var first_time = true;
+		// Save cookie to say that the customer has already been to the page once.
+		var loaded_already = read_cookie('chat-loaded');
+		if (loaded_already != null) {
+			connectToChannel(); // Load the chat without waiting.
+			return; // don't set the listeners below.
+		}
+		
+		// Default, show the chat bar, but nothing loaded yet with channels.
+		main_chat_window.removeClass('hide');
+		
+		// Make Channels Load on Click
+		main_chat_notice.click(function(){
+			if (first_time) {
+				first_time = false;
+				make_cookie('chat-loaded', 'true', 7);
+				connectToChannel();
+			}
+		});
+		
+		// Make Channels Load on Scroll
+		$(document).scroll(function(){
+			if (first_time) {
+				make_cookie('chat-loaded', 'true', 7);
+				first_time = false;
+				connectToChannel();
+			}
+		});
+	});
+}
+
+if (window.addEventListener)
+	window.addEventListener("load", do_when_fully_loaded, false);
+else if (window.attachEvent)
+	window.attachEvent("onload", do_when_fully_loaded);
+else 
+	window.onload = do_when_fully_loaded;
 
 });

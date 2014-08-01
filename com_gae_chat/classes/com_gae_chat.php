@@ -43,7 +43,7 @@ class com_gae_chat extends component {
                         $pines->config->loadcompressedjs = $js;
                         
                         $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
-                        $css[] = $file_root.'components/com_gae_chat/includes/customer_chat.css';
+                        $css[] = $file_root.'components/com_gae_chat/includes/'.($pines->config->debug_mode ? 'customer_chat.css' : 'customer_chat.min.css');
                         $pines->config->loadcompressedcss = $css;
                 } else {
                         $module = new module('com_gae_chat', 'chat_customer_js', 'bottom');
@@ -68,7 +68,7 @@ class com_gae_chat extends component {
                         $pines->config->loadcompressedjs = $js;
                         
                         $css = (is_array($pines->config->loadcompressedcss)) ? $pines->config->loadcompressedcss : array();
-                        $css[] = $file_root.'components/com_gae_chat/includes/employee_chat.css';
+                        $css[] = $file_root.'components/com_gae_chat/includes/'.($pines->config->debug_mode ? 'employee_chat.css' : 'employee_chat.min.css');
                         $pines->config->loadcompressedcss = $css;
                 } else {
                         $module = new module('com_gae_chat', 'chat_js', 'bottom');

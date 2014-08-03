@@ -1450,7 +1450,7 @@ pines(function() {
 	*/
 	$(window).resize(function(){
 //		close_chat();
-		if (additionalClients.find('.chat-input-box').is(':focused')) {
+		if (additionalClients.find('.chat-input-box').is(':focus')) {
 			return;
 		}
 		size_chat(true);

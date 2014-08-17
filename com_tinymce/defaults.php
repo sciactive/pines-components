@@ -81,6 +81,13 @@ return array(
 		'value' => false,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'convert_urls',
+		'cname' => 'Convert Urls',
+		'description' => 'Turn off to make the editor NOT change any of your URLS.',
+		'value' => true,
+		'peruser' => true,
+	),
 );
 
 ?>

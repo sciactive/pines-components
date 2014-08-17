@@ -125,6 +125,7 @@ $("textarea.peditor").tinymce({
 	relative_urls: false,
 	<?php } ?>
 	// Template's editor CSS
+	convert_urls: <?php echo ($pines->config->com_tinymce->convert_urls) ? 'true' : 'false'; ?>,
 	content_css: <?php echo json_encode(implode(',', $content_css)); ?>,
 	preformatted: <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>,
 	schema: "html5",

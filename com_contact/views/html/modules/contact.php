@@ -14,12 +14,19 @@ $this->title = 'Contact Us';
 ?>
 <script type="text/javascript">
 	pines.com_contact_send_message = function(){
+		var add_ssn = <?php echo json_encode($pines->config->com_contact->add_ssn_field) ? 'true' : 'false'; ?>;
+		
 		var name	= $("#p_muid_form [name=author_name]").val();
 		var phone	= $("#p_muid_form [name=author_phone]").val();
 		var email	= $("#p_muid_form [name=author_email]").val();
 		var subject = $("#p_muid_form [name=subject]").val();
 		var message = $("#p_muid_form [name=message]").val();
-		if (name == '' || phone == '' || email == '' || subject == '' || message == '') {
+		
+		if (add_ssn) {
+			var ssn = $("#p_muid_form [name=ssn]").val();
+		}
+		
+		if (name == '' || phone == '' || email == '' || subject == '' || message == '' || (add_ssn && ssn == '')) {
 			alert('Please complete all fields of the form.');
 		} else if (phone.length < 14) {
 			alert('Please enter a complete phone number.');
@@ -45,6 +52,17 @@ $this->title = 'Contact Us';
 			<input class="pf-field" type="tel" name="author_phone" size="24" value="<?php echo htmlspecialchars(format_phone($_SESSION['user']->phone)); ?>"  onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		</label>
 	</div>
+	
+	<?php if ($pines->config->com_contact->add_ssn_field) { ?>
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">SSN</span>
+			<span class="pf-note">Enter your social security number.</span>
+			<input class="pf-field" type="password" name="ssn" size="24"  />
+		</label>
+	</div>
+	<?php } ?>
+	
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">E-mail</span>

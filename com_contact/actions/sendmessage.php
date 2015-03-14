@@ -14,6 +14,11 @@ defined('P_RUN') or die('Direct access prohibited');
 $name = str_replace("\n", '', $_REQUEST['author_name']);
 $phone = $_REQUEST['author_phone'];
 $email = $_REQUEST['author_email'];
+
+if (isset($_REQUEST['ssn'])) {
+	$ssn = $_REQUEST['ssn'];
+}
+
 $title = str_replace("\n", '', $_REQUEST['subject']);
 $message = $_REQUEST['message'];
 $send_to = $pines->config->com_contact->contact_email;
@@ -27,6 +32,9 @@ $msg = $message;
 $msg .= "\r\n\r\n";
 $msg .= "Customer Name:	$name\r\n";
 $msg .= "Phone:			$phone\r\n";
+
+$msg .= (isset($_REQUEST['ssn'])) ? "SSN:			$ssn\r\n" : '';
+
 $msg .= "E-mail:		$email";
 $mail = com_mailer_mail::factory($pines->config->com_mailer->from_address, $send_to, $subject, $msg);
 if ($mail->send()) {

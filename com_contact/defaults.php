@@ -46,6 +46,13 @@ return array(
 		'options' => $pages,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'add_ssn_field',
+		'cname' => 'Add SSN field',
+		'description' => 'The social security number will be added to the form.',
+		'value' => false,
+		'peruser' => true,
+	),
 );
 
 ?>

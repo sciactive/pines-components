@@ -29,11 +29,11 @@ if (empty($name) || empty($phone) || empty($email) || empty($title) || empty($me
 
 $subject = "$title - $name";
 $msg = $message;
-$msg .= "\r\n\r\n";
-$msg .= "Customer Name:	$name\r\n";
-$msg .= "Phone:			$phone\r\n";
+$msg .= "<br/><br/><br/>";
+$msg .= "Customer Name:	$name<br/>";
+$msg .= "Phone:			$phone<br/>";
 
-$msg .= (isset($_REQUEST['ssn'])) ? "SSN:			$ssn\r\n" : '';
+$msg .= (isset($_REQUEST['ssn'])) ? "SSN:			$ssn<br/>" : '';
 
 $msg .= "E-mail:		$email";
 $mail = com_mailer_mail::factory($pines->config->com_mailer->from_address, $send_to, $subject, $msg);
